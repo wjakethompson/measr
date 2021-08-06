@@ -21,7 +21,8 @@ Imports:
     rstan (>= 2.19.2)
 Suggests:
     testthat (>= 3.0.0),
-    cmdstanr (>= 0.4.0)
+    cmdstanr (>= 0.4.0),
+    spelling
 Additional_repositories:
     https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
