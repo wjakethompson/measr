@@ -1,0 +1,12 @@
+home:
+  title: Estimate Diagnostic Classification Models with Stan
+
+authors:
+  W. Jake Thompson:
+    href: https://wjakethompson.com
+
+template:
+  bootstrap: 4
+
+development:
+  mode: auto
