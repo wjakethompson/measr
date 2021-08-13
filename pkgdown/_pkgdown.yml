@@ -1,9 +1,13 @@
+url: https://measr.dev
+
 home:
   title: Estimate Diagnostic Classification Models with Stan
 
 authors:
   W. Jake Thompson:
     href: https://wjakethompson.com
+  Institute of Education Sciences:
+    href: https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546
 
 template:
   bootstrap: 4
