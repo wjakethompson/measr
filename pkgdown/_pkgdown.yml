@@ -1,16 +1,51 @@
-url: https://measr.netlify.app
+url: https://measr.info
 
 home:
   title: Estimate Diagnostic Classification Models with Stan
 
+development:
+  mode: auto
+
+template:
+  bootstrap: 4
+  opengraph:
+    image:
+      src: man/figures/card.png
+      alt: ""
+    twitter:
+      creator: "@wjakethompson"
+      site: "@atlas4learning"
+      card: summary_large_image
+  bslib:
+    base_font:
+      google: "Open Sans"
+    heading_font:
+      google: "Playfair Display"
+    code_font:
+      google: "Fira Code"
+    bg: "#FFFFFF"
+    fg: "#333"
+
 authors:
+  footer:
+    roles: [cre]
+  sidebar:
+    roles: [aut]
   W. Jake Thompson:
     href: https://wjakethompson.com
   Institute of Education Sciences:
     href: https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546
 
-template:
-  bootstrap: 4
-
-development:
-  mode: auto
+footer:
+  left:
+    structure: [authors]
+  right:
+    structure: [ies]
+    components:
+      ies: |
+        The research reported here was supported by the Institute of Education
+        Science, U.S. Department of Education, through Grant
+        [R305D210045](https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546)
+        to the University of Kansas. The opinions expressed are those of the
+        authors and do not represent the views of the the Institute or the U.S.
+        Department of Education.
