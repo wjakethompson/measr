@@ -4,6 +4,9 @@
 # measr <img src="man/figures/logo.png" align = "right" width="120"/>
 
 <!-- badges: start -->
+
+[![Netlify
+Status](https://api.netlify.com/api/v1/badges/b82caf01-0611-4f8b-bbca-5b89b5a80791/deploy-status)](https://app.netlify.com/sites/measr/deploys)
 <!-- badges: end -->
 
 The goal of measr is to …
