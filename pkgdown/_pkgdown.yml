@@ -49,3 +49,9 @@ footer:
         to the University of Kansas. The opinions expressed are those of the
         authors and do not represent the views of the the Institute or the U.S.
         Department of Education.
+
+reference:
+-title: Data sets
+ contents:
+ - ecpe_data
+ - ecpe_qmatrix
