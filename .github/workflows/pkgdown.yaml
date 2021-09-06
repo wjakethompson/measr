@@ -56,6 +56,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pak::repo_add(stan_dev = "https://mc-stan.org/r-packages/")
           pak::local_install_dev_deps(upgrade = TRUE)
           pak::pkg_install("r-lib/pkgdown")
         shell: Rscript {0}
