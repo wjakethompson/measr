@@ -24,17 +24,17 @@
 #' @references Buck, G., & Tatsuoka, K. K. (1998). Application of the rule-space
 #'   procedure to language testing: Examining attributes of a free response
 #'   listening test. *Language Testing, 15*(2) 119-157.
-#'   https://doi.org/10.1177/026553229801500201
+#'   \url{https://doi.org/10.1177/026553229801500201}
 #' @references Henson, R., & Templin, J. (2007, April). *Large-scale language
 #'   assessment using cognitive diagnosis models.* Paper presented at the Annual
 #'   meeting of the National Council on Measurement in Education, Chicago, IL.
 #' @references Templin, J., & Hoffman, L. (2013). Obtaining diagnostic
 #'   classification model estimates using Mplus. *Educational Measurement:
-#'   Issues and Practice, 32*(2), 37-50. https://doi.org/10.1111/emip.12010
+#'   Issues and Practice, 32*(2), 37-50. \url{https://doi.org/10.1111/emip.12010}
 #' @references Templin, J., & Bradshaw, L. (2014). Hierarchical diagnostic
 #'   classification models: A family of models for estimating and testing
 #'   attribute hierarchies. *Psychometrika, 79*(2), 317-339.
-#'   https://doi.org/10.1007/s11336-013-9362-0
+#'   \url{https://doi.org/10.1007/s11336-013-9362-0}
 #' @rdname ecpe
 "ecpe_data"
 
