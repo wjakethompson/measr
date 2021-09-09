@@ -6,6 +6,8 @@
 \alias{measr-package}
 \title{measr: Bayesian Psychometric Measurement Using 'Stan'}
 \description{
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+
 What the package does (one paragraph).
 }
 \seealso{
