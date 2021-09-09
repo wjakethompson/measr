@@ -39,7 +39,7 @@ In the second year of the project, measr will be officially released to [CRAN](h
 Work in the second phase includes writing journal articles about how to use measr, presenting at conferences, and using measr in new research projects to guide best practices for the implemenation of DCMs in applied research settings.
 
 ```{r echo = FALSE}
-knitr::include_graphics(here::here("man", "figures", "measr-timeline.png"))
+knitr::include_graphics("https://raw.githubusercontent.com/wjakethompson/measr/main/man/figures/measr-timeline.png")
 ```
 
 

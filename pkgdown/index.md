@@ -33,7 +33,7 @@ articles about how to use measr, presenting at conferences, and using
 measr in new research projects to guide best practices for the
 implemenation of DCMs in applied research settings.
 
-<img src="/Users/jakethompson/Documents/GIT/packages/measr/man/figures/measr-timeline.png" width="100%" />
+<img src="https://raw.githubusercontent.com/wjakethompson/measr/main/man/figures/measr-timeline.png" width="100%" />
 
 ## Project Goals
 
