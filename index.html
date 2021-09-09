@@ -70,50 +70,31 @@
 </nav><div class="container template-home">
 <div class="row">
   <div class="contents col-md-9">
-
-<img src="package-logo.png" class="pkg-logo" alt="" width="120"><div id="overview" class="section level1">
+<img src="package-logo.png" class="pkg-logo" alt="" width="120"><div id="diagnostic-classification-models-with-r-and-stan" class="section level1">
 <div class="pb-2 mt-4 mb-2 border-bottom"><h1 class="hasAnchor">
-<a href="#overview" class="anchor" aria-hidden="true"></a>Overview</h1></div>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec nunc urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis placerat sapien at leo commodo, sit amet semper libero elementum. Etiam sollicitudin facilisis urna eget semper. Etiam tempor metus felis, vitae eleifend ipsum tempus cursus. Pellentesque lobortis pulvinar suscipit. Quisque vel dui sapien. Nulla ornare suscipit luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<a href="#diagnostic-classification-models-with-r-and-stan" class="anchor" aria-hidden="true"></a>Diagnostic Classification Models with R and Stan</h1></div>
+<p>measr is an R package for the estimation and evaluation of educational measurement, or psychometric, models. Initial development is focused on diagnostic classification models (DCMs), specifically the loglinear cognitive diagnostic model (LCDM). DCMs are a powerful tool that can be used to estimate mastery profiles for respondents on a set of pre-defined skills that are measured by the assessment. The measr package will provide improved model estimation techniques, including a fully Bayesian estimation using <a href="https://mc-stan.org/" class="external-link">Stan</a>. Additionally, measr will include functions to easily evaluate how well the estimated model fits the observed data.</p>
+<p>This package is under active development, and functions may change prior to the initial release. If you’d like to use the development version, it can be installed from GitHub.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjakethompson/measr" class="external-link">measr</a></span><span class="op">)</span>
-
-<span class="va">ecpe_qmatrix</span>
-<span class="co">#&gt; # A tibble: 28 × 4</span>
-<span class="co">#&gt;    item_id skill1 skill2 skill3</span>
-<span class="co">#&gt;    &lt;chr&gt;    &lt;int&gt;  &lt;int&gt;  &lt;int&gt;</span>
-<span class="co">#&gt;  1 E1           1      1      0</span>
-<span class="co">#&gt;  2 E2           0      1      0</span>
-<span class="co">#&gt;  3 E3           1      0      1</span>
-<span class="co">#&gt;  4 E4           0      0      1</span>
-<span class="co">#&gt;  5 E5           0      0      1</span>
-<span class="co">#&gt;  6 E6           0      0      1</span>
-<span class="co">#&gt;  7 E7           1      0      1</span>
-<span class="co">#&gt;  8 E8           0      1      0</span>
-<span class="co">#&gt;  9 E9           0      0      1</span>
-<span class="co">#&gt; 10 E10          1      0      0</span>
-<span class="co">#&gt; # … with 18 more rows</span></code></pre></div>
-<p>Sed non mattis ligula. Nulla lacinia turpis sit amet dictum eleifend. Cras leo lacus, placerat sit amet erat eget, egestas cursus nibh. Aenean molestie nunc venenatis, dapibus leo non, tincidunt metus. Duis sapien quam, vestibulum in pretium eget, ornare vel tortor. Proin elementum nunc a varius rhoncus. Mauris laoreet ornare massa quis aliquet. Cras venenatis convallis ex in convallis. Vivamus quis leo vitae quam aliquet blandit non nec lectus. Integer varius mauris et magna bibendum porta. Quisque iaculis lobortis dui accumsan vulputate. Quisque rutrum et nunc non ullamcorper.</p>
-<div id="level-2" class="section level2">
+<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"wjakethompson/measr"</span><span class="op">)</span></code></pre></div>
+<div id="timeline" class="section level2">
 <h2 class="hasAnchor">
-<a href="#level-2" class="anchor" aria-hidden="true"></a>Level 2</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec nunc urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis placerat sapien at leo commodo, sit amet semper libero elementum. Etiam sollicitudin facilisis urna eget semper. Etiam tempor metus felis, vitae eleifend ipsum tempus cursus. Pellentesque lobortis pulvinar suscipit. Quisque vel dui sapien. Nulla ornare suscipit luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-<p>Sed non mattis ligula. Nulla lacinia turpis sit amet dictum eleifend. Cras leo lacus, placerat sit amet erat eget, egestas cursus nibh. Aenean molestie nunc venenatis, dapibus leo non, tincidunt metus. Duis sapien quam, vestibulum in pretium eget, ornare vel tortor. Proin elementum nunc a varius rhoncus. Mauris laoreet ornare massa quis aliquet. Cras venenatis convallis ex in convallis. Vivamus quis leo vitae quam aliquet blandit non nec lectus. Integer varius mauris et magna bibendum porta. Quisque iaculis lobortis dui accumsan vulputate. Quisque rutrum et nunc non ullamcorper.</p>
+<a href="#timeline" class="anchor" aria-hidden="true"></a>Timeline</h2>
+<p>There are two main phases to the project. During the first year of the project, effort is focused on developing measr. This includes building functionality, documenting usage, and providing example case studies. In the second year of the project, measr will be officially released to <a href="https://cran.r-project.org/" class="external-link">CRAN</a> and effort will shift to dissemination. Work in the second phase includes writing journal articles about how to use measr, presenting at conferences, and using measr in new research projects to guide best practices for the implemenation of DCMs in applied research settings.</p>
+<p><img src="/Users/jakethompson/Documents/GIT/packages/measr/man/figures/measr-timeline.png" width="100%"></p>
 </div>
-<div id="another-level-2" class="section level2">
+<div id="project-goals" class="section level2">
 <h2 class="hasAnchor">
-<a href="#another-level-2" class="anchor" aria-hidden="true"></a>Another Level 2</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec nunc urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis placerat sapien at leo commodo, sit amet semper libero elementum. Etiam sollicitudin facilisis urna eget semper. Etiam tempor metus felis, vitae eleifend ipsum tempus cursus. Pellentesque lobortis pulvinar suscipit. Quisque vel dui sapien. Nulla ornare suscipit luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-<p>Sed non mattis ligula. Nulla lacinia turpis sit amet dictum eleifend. Cras leo lacus, placerat sit amet erat eget, egestas cursus nibh. Aenean molestie nunc venenatis, dapibus leo non, tincidunt metus. Duis sapien quam, vestibulum in pretium eget, ornare vel tortor. Proin elementum nunc a varius rhoncus. Mauris laoreet ornare massa quis aliquet. Cras venenatis convallis ex in convallis. Vivamus quis leo vitae quam aliquet blandit non nec lectus. Integer varius mauris et magna bibendum porta. Quisque iaculis lobortis dui accumsan vulputate. Quisque rutrum et nunc non ullamcorper.</p>
+<a href="#project-goals" class="anchor" aria-hidden="true"></a>Project Goals</h2>
+<p>Initial development of measr is being funded by a grant from the <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">Institute of Education Sciences</a>. Within the scope of the grant, there are two main goals:</p>
+<ol style="list-style-type: decimal">
+<li><p>Develop a user-friendly R package for the estimation of the LCDM and other common DCMs. This is accomplished with extensive documentation, example case studies, and an accessible website to support use by applied researchers.</p></li>
+<li><p>Provide best practices for the evaluation of DCMs in practice. During the second phase of work, a simulation study will be conducted, using measr, to evaluate different measures of model and examine how each relates to how accurately the model identifies respondent mastery of the assessed skills.</p></li>
+</ol>
+<p>After the grant funding period as ended, we plan to explore incorporating functionality for additional educational measurement models, such as item response theory.</p>
 </div>
 </div>
-<div id="level-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#level-1" class="anchor" aria-hidden="true"></a>Level 1</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec nunc urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis placerat sapien at leo commodo, sit amet semper libero elementum. Etiam sollicitudin facilisis urna eget semper. Etiam tempor metus felis, vitae eleifend ipsum tempus cursus. Pellentesque lobortis pulvinar suscipit. Quisque vel dui sapien. Nulla ornare suscipit luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-<p>Sed non mattis ligula. Nulla lacinia turpis sit amet dictum eleifend. Cras leo lacus, placerat sit amet erat eget, egestas cursus nibh. Aenean molestie nunc venenatis, dapibus leo non, tincidunt metus. Duis sapien quam, vestibulum in pretium eget, ornare vel tortor. Proin elementum nunc a varius rhoncus. Mauris laoreet ornare massa quis aliquet. Cras venenatis convallis ex in convallis. Vivamus quis leo vitae quam aliquet blandit non nec lectus. Integer varius mauris et magna bibendum porta. Quisque iaculis lobortis dui accumsan vulputate. Quisque rutrum et nunc non ullamcorper.</p>
-</div>
-
   </div>
 
   <div class="col-md-3 d-none d-md-block" id="pkgdown-sidebar">

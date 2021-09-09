@@ -80,6 +80,10 @@
     background-color: var(--nav-bkg);
 }
 
+span.navbar-toggler-icon {
+    filter: brightness(0) saturate(100%) invert(68%) sepia(34%) saturate(366%) hue-rotate(154deg) brightness(107%) contrast(88%);
+}
+
 
 /* sidebar ------------------------------------------------------------------ */
 #pkgdown-sidebar a {
