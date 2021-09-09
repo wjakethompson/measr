@@ -39,7 +39,7 @@ This is a basic example which shows you how to solve a common problem:
 
 ## Code of Conduct
   
-Please note that the measr project is released with a [Contributor Code of Conduct](https://measr.dev/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+Please note that the measr project is released with a [Contributor Code of Conduct](https://measr.info/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
 
 ---
 
