@@ -51,7 +51,7 @@ footer:
         Department of Education.
 
 reference:
--title: Data sets
- contents:
- - ecpe_data
- - ecpe_qmatrix
+- title: Data sets
+  contents:
+  - ecpe_data
+  - ecpe_qmatrix
