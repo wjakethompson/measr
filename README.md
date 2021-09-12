@@ -5,27 +5,39 @@
 
 <!-- badges: start -->
 
+[![Project Status: WIP – Initial development is in progress, but there
+has not yet been a stable, usable release suitable for the
+public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/measr)](https://CRAN.R-project.org/package=measr)
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+
+[![R-CMD-check](https://github.com/wjakethompson/measr/workflows/R-CMD-check/badge.svg)](https://github.com/wjakethompson/measr/actions)
+[![codecov](https://codecov.io/gh/wjakethompson/measr/branch/main/graph/badge.svg?token=TECvfoOYHh)](https://codecov.io/gh/wjakethompson/measr)
 [![Netlify
 Status](https://api.netlify.com/api/v1/badges/b82caf01-0611-4f8b-bbca-5b89b5a80791/deploy-status)](https://app.netlify.com/sites/measr/deploys)
+
+[![Signed
+by](https://img.shields.io/badge/Keybase-Verified-brightgreen.svg)](https://keybase.io/wjakethompson)
 <!-- badges: end -->
 
-The goal of measr is to …
+The goal of measr is to provide a user-friendly interface for estimating
+and evaluating educational measurement, or psychometric, models with
+[R](https://www.r-project.org/) and [Stan](https://mc-stan.org/).
+Initial development work is focused on diagnostic classification models
+(DCMs; also known as cognitive diagnosis models \[CDMs\]). This project
+is still in development and should not be considered stable. The API is
+likely to change as development progresses until the package is
+officially released to [CRAN](https://cran.r-project.org/).
 
 ## Installation
 
-You can install the released version of measr from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the development version of measr from
+[GitHub](https://github.com/wjakethompson/measr) with:
 
 ``` r
-install.packages("measr")
-```
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-## basic example code
+# install.packages("remotes")
+remotes::install_github("wjakethompson/measr")
 ```
 
 ## Code of Conduct
