@@ -20,9 +20,33 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v1
+      - name: Install pak and query dependencies
+        run: |
+          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
+          pak::repo_add(stan_dev = "https://mc-stan.org/r-packages/")
+          saveRDS(pak::pkg_deps("local::.", dependencies = TRUE), ".github/r-depends.rds")
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        uses: actions/cache@v2
         with:
-          extra-packages: lintr
+          path: ${{ env.R_LIBS_USER }}
+          key: ubuntu-18.04-${{ steps.install-r.outputs.installed-r-version }}-1-${{ hashFiles('.github/r-depends.rds') }}
+          restore-keys: ubuntu-18.04-${{ steps.install-r.outputs.installed-r-version }}-1-
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          pak::local_system_requirements(execute = TRUE)
+          pak::pkg_system_requirements("pkgdown", execute = TRUE)
+        shell: Rscript {0}
+
+      - name: Install dependencies
+        run: |
+          pak::repo_add(stan_dev = "https://mc-stan.org/r-packages/")
+          pak::local_install_dev_deps(upgrade = TRUE)
+          pak::pkg_install("lintr")
+        shell: Rscript {0}
 
       - name: Lint
         run: lintr::lint_package()
