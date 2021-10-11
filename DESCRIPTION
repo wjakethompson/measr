@@ -7,7 +7,7 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "wjakethompson@gmail.com",
            comment = c(ORCID = "0000-0001-7339-0300")),
-    person("University of Kansas Center for Research", role = c("cph")),
+    person("University of Kansas", role = c("cph")),
     person("Institute of Education Sciences", role = c("fnd"))
     )
 Description: What the package does (one paragraph).
