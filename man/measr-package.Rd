@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
-What the package does (one paragraph).
+Estimate diagnostic classification models (DCMs; also called cognitive diagnostic models [CDMs]) with 'Stan'. Automatically generate 'Stan' code for a variety of models, estimate your model, and evaluate how well the model fits your data.
 }
 \seealso{
 Useful links:
