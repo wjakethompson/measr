@@ -18,14 +18,20 @@ License: MIT + file LICENSE
 URL: https://github.com/wjakethompson/measr
 BugReports: https://github.com/wjakethompson/measr/issues
 Depends:
-    R (>= 3.6.0)
+    R (>= 4.1.0)
 Imports:
     tibble,
-    rstan (>= 2.19.2)
+    rstan (>= 2.21.2),
+    rlang (>= 0.4.11),
+    glue,
+    dplyr (>= 1.0.0),
+    stringr,
+    tidyr
 Suggests:
     testthat (>= 3.0.0),
     cmdstanr (>= 0.4.0),
-    spelling
+    spelling,
+    roxygen2
 Additional_repositories:
     https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
@@ -33,4 +39,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
