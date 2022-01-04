@@ -23,7 +23,7 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item University of Kansas Center for Research [copyright holder]
+  \item University of Kansas [copyright holder]
   \item Institute of Education Sciences [funder]
 }
 
