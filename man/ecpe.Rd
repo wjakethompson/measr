@@ -13,10 +13,10 @@ response data with 2,922 rows and 29 variables.
 \item \code{E1}-\code{E28}: Dichotomous item responses to the 28 ECPE items
 }
 
-\code{ecpe_qmatrix} is a \link[tibble:tibble-package]{tibble} that identifies which
-skills are measured by each ECPE item. This section of the ECPE contains 28
-items measuring 3 skills. The \code{ecpe_qmatrix} correspondingly is made up of
-28 rows and 4 variables.
+\code{ecpe_qmatrix} is a \link[tibble:tibble-package]{tibble} that identifies
+which skills are measured by each ECPE item. This section of the ECPE
+contains 28 items measuring 3 skills. The \code{ecpe_qmatrix} correspondingly is
+made up of 28 rows and 4 variables.
 \itemize{
 \item \code{item_id}: Item identifier, corresponds to \code{E1}-\code{E28} in \code{\link{ecpe_data}}
 \item \code{skill1}-\code{skill3}: Dichotomous indicator for whether or not the skill is
@@ -61,7 +61,8 @@ meeting of the National Council on Measurement in Education, Chicago, IL.
 
 Templin, J., & Hoffman, L. (2013). Obtaining diagnostic
 classification model estimates using Mplus. \emph{Educational Measurement:
-Issues and Practice, 32}(2), 37-50. \url{https://doi.org/10.1111/emip.12010}
+Issues and Practice, 32}(2), 37-50.
+\url{https://doi.org/10.1111/emip.12010}
 
 Templin, J., & Bradshaw, L. (2014). Hierarchical diagnostic
 classification models: A family of models for estimating and testing

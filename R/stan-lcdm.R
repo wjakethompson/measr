@@ -51,7 +51,8 @@ lcdm_script <- function(qmatrix) {
       ),
       vector_def = dplyr::case_when(
         num_comp == 0 ~ glue::glue(""),
-        TRUE ~ glue::glue("vector[{num_comp}] v{item_id}_{param_level} = [{comp_atts}];")
+        TRUE ~ glue::glue("vector[{num_comp}] v{item_id}_{param_level} = ",
+                          "[{comp_atts}];")
       ),
       param_def = dplyr::case_when(
         vector_def == "" ~ glue::glue("real{constraint} {param_name};"),

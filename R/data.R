@@ -30,7 +30,8 @@
 #'   meeting of the National Council on Measurement in Education, Chicago, IL.
 #' @references Templin, J., & Hoffman, L. (2013). Obtaining diagnostic
 #'   classification model estimates using Mplus. *Educational Measurement:
-#'   Issues and Practice, 32*(2), 37-50. \url{https://doi.org/10.1111/emip.12010}
+#'   Issues and Practice, 32*(2), 37-50.
+#'   \url{https://doi.org/10.1111/emip.12010}
 #' @references Templin, J., & Bradshaw, L. (2014). Hierarchical diagnostic
 #'   classification models: A family of models for estimating and testing
 #'   attribute hierarchies. *Psychometrika, 79*(2), 317-339.
@@ -38,10 +39,10 @@
 #' @rdname ecpe
 "ecpe_data"
 
-#' @format `ecpe_qmatrix` is a [tibble][tibble::tibble-package] that identifies which
-#' skills are measured by each ECPE item. This section of the ECPE contains 28
-#' items measuring 3 skills. The `ecpe_qmatrix` correspondingly is made up of
-#' 28 rows and 4 variables.
+#' @format `ecpe_qmatrix` is a [tibble][tibble::tibble-package] that identifies
+#' which skills are measured by each ECPE item. This section of the ECPE
+#' contains 28 items measuring 3 skills. The `ecpe_qmatrix` correspondingly is
+#' made up of 28 rows and 4 variables.
 #' * `item_id`: Item identifier, corresponds to `E1`-`E28` in [`ecpe_data`]
 #' * `skill1`-`skill3`: Dichotomous indicator for whether or not the skill is
 #'   measured by each item. A value of `1` indicates the skill is measured by
