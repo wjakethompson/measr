@@ -1,7 +1,10 @@
-abort_bad_argument <- function(arg, must, not = NULL) {
+abort_bad_argument <- function(arg, must, not = NULL, extra = NULL) {
   msg <- glue::glue("`{arg}` must {must}")
   if (!is.null(not)) {
     msg <- glue::glue("{msg}; not {not}")
+  }
+  if (!is.null(extra)) {
+    msg <- glue::glue("{msg}", "{extra}", .sep = "\n")
   }
 
   rlang::abort("error_bad_argument",
@@ -21,7 +24,7 @@ check_qmatrix <- function(x, name) {
   }
   x <- dplyr::mutate(x, dplyr::across(dplyr::everything(), as.integer))
 
-  if (!all(lapply(x, \(.x) all(.x %in% c(0L, 1L))))) {
+  if (!all(sapply(x, \(.x) all(.x %in% c(0L, 1L))))) {
     abort_bad_argument(name, must = "contain only 0 or 1")
   }
 
@@ -30,6 +33,22 @@ check_qmatrix <- function(x, name) {
   } else {
     x
   }
+}
+
+check_logical <- function(x, allow_na = FALSE, name) {
+  if (!is.logical(x)) {
+    abort_bad_argument(name, must = "be a logical scalar", not = typeof(x))
+  }
+
+  if (length(x) != 1) {
+    abort_bad_argument(name, must = "be of length 1", not = length(x))
+  }
+
+  if (is.na(x) & !allow_na) {
+    abort_bad_argument(name, must = "be non-missing")
+  }
+
+  x
 }
 
 check_integer <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE, name) {
@@ -63,6 +82,26 @@ check_integer <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE, name) {
       glue::glue("be between {lb} and {ub}")
     }
     abort_bad_argument(name, must = msg)
+  }
+
+  x
+}
+
+check_character <- function(x, allow_na = FALSE, name) {
+  if (any(is.na(x))) {
+    x[is.na(x)] <- NA_character_
+  }
+
+  if (!is.character(x)) {
+    abort_bad_argument(name, must = "be a character scalar", not = typeof(x))
+  }
+
+  if (length(x) != 1) {
+    abort_bad_argument(name, must = "be of length 1", not = length(x))
+  }
+
+  if (is.na(x) & !allow_na) {
+    abort_bad_argument(name, must = "be non-missing")
   }
 
   x
