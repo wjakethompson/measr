@@ -22,13 +22,13 @@ lcdm_script <- function(qmatrix) {
   # parameters block -----
   all_params <- stats::model.matrix(stats::as.formula(paste0("~ .^",
                                                              ncol(qmatrix))),
-                                    qmatrix) |>
-    tibble::as_tibble(.name_repair = model_matrix_name_repair) |>
-    dplyr::select(where(~ sum(.x) > 0)) |>
-    tibble::rowid_to_column(var = "item_id") |>
+                                    qmatrix) %>%
+    tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
+    dplyr::select(where(~ sum(.x) > 0)) %>%
+    tibble::rowid_to_column(var = "item_id") %>%
     tidyr::pivot_longer(cols = -.data$item_id, names_to = "parameter",
-                        values_to = "value") |>
-    dplyr::filter(.data$value == 1) |>
+                        values_to = "value") %>%
+    dplyr::filter(.data$value == 1) %>%
     dplyr::mutate(
       param_level = dplyr::case_when(
         .data$parameter == "intercept" ~ 0,

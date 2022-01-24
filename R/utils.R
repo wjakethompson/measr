@@ -17,15 +17,15 @@
 create_profiles <- function(attributes) {
   attributes <- check_integer(attributes, name = "attributes")
 
-  rep(list(c(0L, 1L)), times = attributes) |>
-    stats::setNames(glue::glue("att{seq_len(attributes)}")) |>
-    expand.grid() |>
-    dplyr::rowwise() |>
-    dplyr::mutate(total = sum(dplyr::c_across(dplyr::everything()))) |>
-    dplyr::select(.data$total, dplyr::everything()) |>
+  rep(list(c(0L, 1L)), times = attributes) %>%
+    stats::setNames(glue::glue("att{seq_len(attributes)}")) %>%
+    expand.grid() %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(total = sum(dplyr::c_across(dplyr::everything()))) %>%
+    dplyr::select(.data$total, dplyr::everything()) %>%
     dplyr::arrange(.data$total,
-                   dplyr::desc(dplyr::across(dplyr::everything()))) |>
-    dplyr::ungroup() |>
-    dplyr::select(-.data$total) |>
+                   dplyr::desc(dplyr::across(dplyr::everything()))) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(-.data$total) %>%
     tibble::as_tibble()
 }
