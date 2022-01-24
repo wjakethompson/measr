@@ -7,11 +7,11 @@ model_matrix_name_repair <- function(x) {
 }
 
 one_down_params <- function(x, item) {
-  all_atts <- strsplit(x, split = "")[[1]]
+  all_atts <- strsplit(x, split = "__")[[1]]
   if (length(all_atts) <= 1) return("")
   att_combos <- combn(all_atts, m = length(all_atts) - 1, simplify = FALSE)
 
   paste("l", item, "_", length(all_atts) - 1,
         sapply(att_combos, paste, collapse = ""), sep = "", collapse = ",")
 }
-one_down_params <- Vectorize(one_down_params)
+one_down_params <- Vectorize(one_down_params, USE.NAMES = FALSE)
