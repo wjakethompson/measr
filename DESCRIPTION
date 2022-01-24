@@ -26,7 +26,8 @@ Imports:
     glue,
     dplyr (>= 1.0.0),
     stringr,
-    tidyr
+    tidyr,
+    magrittr
 Suggests:
     testthat (>= 3.0.0),
     cmdstanr (>= 0.4.0),
