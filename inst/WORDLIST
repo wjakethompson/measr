@@ -18,7 +18,12 @@ dplyr
 eval
 funder
 ggplot
+https
+magrittr
+mc
+measrprior
 rlang
+stan
 tibble
 tunnelled
 tunnelling
