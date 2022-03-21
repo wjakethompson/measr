@@ -42,5 +42,8 @@ jobs:
       - uses: ./.github/workflows/setup-r-dependencies
         with:
           extra-packages: any::rcmdcheck
+          needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true

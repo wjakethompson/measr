@@ -23,6 +23,7 @@ jobs:
       - uses: ./.github/workflows/setup-r-dependencies
         with:
           extra-packages: any::lintr
+          needs: lint
 
       - name: Lint
         run: lintr::lint_package()
