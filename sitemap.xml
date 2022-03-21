@@ -19,12 +19,33 @@
     <loc>https://measr.info/index.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/reference/c.measrprior.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/create_profiles.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/default_lcdm_priors.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/reference/ecpe.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/reference/is.measrprior.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/reference/measr-package.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/measrprior.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/tidyeval.html</loc>
   </url>
 </urlset>
