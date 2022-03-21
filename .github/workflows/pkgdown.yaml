@@ -25,9 +25,9 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
+      - uses: ./.github/workflows/setup-r-dependencies
         with:
-          extra-packages: any::pkgdown, local::., cmdstanr=?ignore
+          extra-packages: any::pkgdown, local::.
           needs: website
 
       - name: Deploy package
