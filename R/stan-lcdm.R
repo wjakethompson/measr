@@ -157,7 +157,9 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
                                is.na(.data$coef_def) ~ .data$class_def),
-      prior_def = glue::glue("{param_name} ~ {prior};")) %>%
+      prior_def = glue::glue("{param_name}",
+                             "{ifelse(param_level >= 2, '_raw', '')} ",
+                             "~ {prior};")) %>%
     dplyr::pull(.data$prior_def)
 
   model_block <- glue::glue(
