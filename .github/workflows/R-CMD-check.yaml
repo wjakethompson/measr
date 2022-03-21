@@ -41,7 +41,7 @@ jobs:
 
       - uses: ./.github/workflows/setup-r-dependencies
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::BH
           needs: check
           dependencies: '"all"'
 
