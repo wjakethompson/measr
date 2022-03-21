@@ -1,6 +1,7 @@
 lcdm_script <- function(qmatrix, prior = NULL) {
   qmatrix <- check_qmatrix(qmatrix, name = "qmatrix")
   qmatrix <- dplyr::rename_with(qmatrix, ~glue::glue("att{1:ncol(qmatrix)}"))
+  prior <- check_prior(prior, name = "prior", allow_null = TRUE)
 
   # data block -----
   data_block <- glue::glue(
@@ -138,12 +139,33 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   )
 
   # model block -----
+  mod_prior <- if (is.null(prior)) {
+    default_lcdm_priors()
+  } else {
+    c(prior, default_lcdm_priors(), replace = TRUE)
+  }
+
+  all_priors <- all_params %>%
+    dplyr::mutate(
+      class = dplyr::case_when(.data$param_level == 0 ~ "intercept",
+                               .data$param_level == 1 ~ "maineffect",
+                               .data$param_level > 1 ~ "interaction")) %>%
+    dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef")) %>%
+    dplyr::rename(coef_def = .data$prior_def) %>%
+    dplyr::left_join(mod_prior, by = c("class")) %>%
+    dplyr::rename(class_def = .data$prior_def) %>%
+    dplyr::mutate(
+      prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
+                               is.na(.data$coef_def) ~ .data$class_def),
+      prior_def = glue::glue("{param_name} ~ {prior};")) %>%
+    dplyr::pull(.data$prior_def)
+
   model_block <- glue::glue(
     "model {{",
     "  real ps[C];",
     "",
     "  ////////////////////////////////// priors",
-    # put priors here
+    "  {glue::glue_collapse(all_priors, sep = \"\n  \")}",
     "",
     "  ////////////////////////////////// likelihood",
     "  for (r in 1:R) {{",

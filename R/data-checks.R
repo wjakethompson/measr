@@ -35,6 +35,16 @@ check_qmatrix <- function(x, name) {
   }
 }
 
+check_prior <- function(x, name, allow_null = FALSE) {
+  if (allow_null & is.null(x)) return(x)
+
+  if (!is.measrprior(x)) {
+    abort_bad_argument(name, must = "be a measrprior object")
+  }
+
+  x
+}
+
 check_logical <- function(x, allow_na = FALSE, name) {
   if (!is.logical(x)) {
     abort_bad_argument(name, must = "be a logical scalar", not = typeof(x))
