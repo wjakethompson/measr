@@ -40,6 +40,7 @@ runs:
           extra_deps <- strsplit("${{ inputs.extra-packages }}", "[[:space:],]+")[[1]]
           dir.create(".github", showWarnings=FALSE)
           Sys.setenv("PKGCACHE_HTTP_VERSION" = "2")
+          pak::repo_add(stan_dev = "https://mc-stan.org/r-packages/")
           pak::lockfile_create(
             c(deps, extra_deps),
             lockfile = ".github/pkg.lock",
