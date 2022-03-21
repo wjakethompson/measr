@@ -41,7 +41,7 @@ jobs:
 
       - uses: ./.github/workflows/setup-r-dependencies
         with:
-          extra-packages: any::rcmdcheck, any::BH, any::RcppEigen
+          extra-packages: any::rcmdcheck, any::BH, any::RcppEigen, any::cpp11
           needs: check
           dependencies: '"all"'
 
