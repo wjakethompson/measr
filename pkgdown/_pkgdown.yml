@@ -57,6 +57,12 @@ reference:
   contents:
   - ecpe_data
   - ecpe_qmatrix
+- title: Priors
+  contents:
+  - measrprior
+  - is.measrprior
+  - c.measrprior
+  - default_lcdm_priors
 - title: Miscellaneous
   contents:
   - create_profiles
