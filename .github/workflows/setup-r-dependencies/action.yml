@@ -1,0 +1,93 @@
+name: 'setup-r-dependencies'
+description: 'Action to setup installation tools and install R dependencies'
+author: 'Jim Hester'
+inputs:
+  cache-version:
+    description: 'The version of the cache, change this from the default (1) to start over with a fresh cache'
+    required: true
+    default: 1
+  extra-packages:
+    description: 'Any extra packages to install outside of the packages listed in the dependencies'
+  needs:
+    description: 'Any extra Config/Needs fields which need to be included when installing dependencies'
+  packages:
+    description: 'Which package(s) to install.'
+    default: 'deps::., any::sessioninfo'
+  pak-version:
+    description: 'Which pak version to use. Possible values are "stable", "rc" and "devel".'
+    default: 'stable'
+  working-directory:
+    description: 'Using the working-directory keyword, you can specify the working directory of where "pkg_deps" command searches for dependencies in the "DESCRIPTION" file.'
+    default: '.'
+  dependencies:
+    description: 'Types of dependencies to install. Must be an R expression in single quotes.'
+    default: '"all"'
+runs:
+  using: "composite"
+  steps:
+      - name: Installing pak querying dependencies
+        id: install
+        run: |
+          ## Installing pak
+          cat("::group::Installing pak\n")
+          cat("::set-output name=os-version::", sessionInfo()$running, "\n", sep = "")
+          cat("::set-output name=r-version::", if (grepl("development", rv <- R.Version()$version.string)) as.character(getRversion()) else rv, "\n", sep = "")
+          install.packages("pak", repos = "https://r-lib.github.io/p/pak/${{ inputs.pak-version }}/")
+          cat("::endgroup::\n")
+          cat("::group::Dependency resolution\n")
+          needs <- sprintf("Config/Needs/%s", strsplit("${{ inputs.needs }}", "[[:space:],]+")[[1]])
+          deps <- strsplit("${{ inputs.packages }}", "[[:space:],]+")[[1]]
+          extra_deps <- strsplit("${{ inputs.extra-packages }}", "[[:space:],]+")[[1]]
+          dir.create(".github", showWarnings=FALSE)
+          Sys.setenv("PKGCACHE_HTTP_VERSION" = "2")
+          pak::lockfile_create(
+            c(deps, extra_deps),
+            lockfile = ".github/pkg.lock",
+            dependencies = c(needs, (${{ inputs.dependencies }}))
+          )
+          cat("::endgroup::\n")
+          cat("::group::Show Lockfile\n")
+          writeLines(readLines(".github/pkg.lock"))
+          cat("::endgroup::\n")
+        shell: Rscript {0}
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: Restore R package cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.R_LIBS_USER }}/*
+            !${{ env.R_LIBS_USER }}/pak
+          key: ${{ format('{0}-{1}-{2}-{3}', steps.install.outputs.os-version, steps.install.outputs.r-version, inputs.cache-version, hashFiles(format('{0}/.github/pkg.lock', inputs.working-directory ))) }}
+          restore-keys: ${{ steps.install.outputs.os-version }}-${{ steps.install.outputs.r-version }}-${{inputs.cache-version }}-
+
+      - name: Install dependencies
+        run: |
+          ## Installing/Updating packages
+          cat("::group::Installing/updating packages\n")
+          Sys.setenv("PKGCACHE_HTTP_VERSION" = "2")
+          pak::repo_add(stan_dev = "https://mc-stan.org/r-packages/")
+          pak::lockfile_install(".github/pkg.lock")
+          cat("::endgroup::\n")
+          cat("::group::Session info\n")
+          if (requireNamespace("sessioninfo", quietly = TRUE)) {
+            if (packageVersion("sessioninfo") >= "1.2.1") {
+              sessioninfo::session_info(pkgs = "installed", include_base = TRUE)
+            } else {
+              options(width = 200)
+              sessioninfo::session_info(rownames(installed.packages()), include_base=TRUE)
+            }
+          } else {
+            sessionInfo()
+          }
+          cat("::endgroup::\n")
+        shell: Rscript {0}
+        working-directory: ${{ inputs.working-directory }}
+
+      - name: Don't use tar 1.30 from Rtools35 to store the cache
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          if command -v /c/Rtools/bin/tar && /c/Rtools/bin/tar --version | grep -q 'tar (GNU tar) 1.30'
+            then echo 'C:/Program Files/Git/usr/bin' >> $GITHUB_PATH
+          fi
