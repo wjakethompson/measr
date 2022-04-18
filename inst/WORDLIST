@@ -1,5 +1,7 @@
 CDMs
 CMD
+CmdStanModel
+DCM
 DCMs
 ECPE
 HDCM
@@ -13,6 +15,7 @@ Psychometrika
 Tatsuoka
 Templin
 WIP
+cmdstanr
 codecov
 dplyr
 eval
@@ -21,8 +24,10 @@ ggplot
 https
 magrittr
 mc
+measrfit
 measrprior
 rlang
+rstan
 stan
 tibble
 tunnelled
