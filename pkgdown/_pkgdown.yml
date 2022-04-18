@@ -57,12 +57,18 @@ reference:
   contents:
   - ecpe_data
   - ecpe_qmatrix
-- title: Priors
+- title: Estimation
+- subtitle: Priors
+  desc: Define prior distributions for the model parameters.
   contents:
   - measrprior
   - is.measrprior
   - c.measrprior
   - default_dcm_priors
+- subtitle: Model fitting
+  desc: Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
+  contents:
+  - measr_dcm
 - title: Miscellaneous
   contents:
   - create_profiles
