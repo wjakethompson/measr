@@ -154,7 +154,7 @@ test_that("class check works", {
 
 test_that("default priors", {
   # lcdm defaults
-  expect_equal(unclass(default_lcdm_priors()),
+  expect_equal(unclass(default_dcm_priors(type = "lcdm")),
                list(class = c("intercept", "maineffect", "interaction"),
                     coef = rep(NA_character_, 3),
                     prior_def = c("normal(0, 15)", "lognormal(0, 1)",
@@ -176,7 +176,8 @@ test_that("priors can be combined", {
   user_priors <- c(prior(normal(-2, 3), class = intercept),
                    prior(lognormal(0, 5), class = maineffect),
                    prior(lognormal(0, 0.2), class = maineffect, coef = l1_12))
-  final_priors <- c(user_priors, default_lcdm_priors(), replace = TRUE)
+  final_priors <- c(user_priors, default_dcm_priors(type = "lcdm"),
+                    replace = TRUE)
   expect_s3_class(user_priors, "measrprior")
   expect_s3_class(final_priors, "measrprior")
   expect_equal(unclass(final_priors),

@@ -140,9 +140,9 @@ lcdm_script <- function(qmatrix, prior = NULL) {
 
   # model block -----
   mod_prior <- if (is.null(prior)) {
-    default_lcdm_priors()
+    default_dcm_priors(type = "lcdm")
   } else {
-    c(prior, default_lcdm_priors(), replace = TRUE)
+    c(prior, default_dcm_priors(type = "lcdm"), replace = TRUE)
   }
 
   all_priors <- all_params %>%

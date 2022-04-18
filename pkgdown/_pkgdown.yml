@@ -62,7 +62,7 @@ reference:
   - measrprior
   - is.measrprior
   - c.measrprior
-  - default_lcdm_priors
+  - default_dcm_priors
 - title: Miscellaneous
   contents:
   - create_profiles

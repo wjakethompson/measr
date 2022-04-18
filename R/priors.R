@@ -82,15 +82,23 @@ prior_string <- function(prior, ...) {
 
 #' Default priors for the loglinear diagnostic classification model
 #'
+#' @inheritParams measr_dcm
+#'
 #' @return A `measrprior` object
 #' @export
 #'
 #' @examples
-#' default_lcdm_priors()
-default_lcdm_priors <- function() {
-  c(prior_string("normal(0, 15)", class = "intercept"),
-    prior_string("lognormal(0, 1)", class = "maineffect"),
-    prior_string("normal(0, 15)", class = "interaction"))
+#' default_dcm_priors(type = "lcdm")
+default_dcm_priors <- function(type = "lcdm") {
+  type <- rlang::arg_match(type, dcm_choices())
+
+  prior <- if (type == "lcdm") {
+    c(prior_string("normal(0, 15)", class = "intercept"),
+      prior_string("lognormal(0, 1)", class = "maineffect"),
+      prior_string("normal(0, 15)", class = "interaction"))
+  }
+
+  return(prior)
 }
 
 
