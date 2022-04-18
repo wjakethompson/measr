@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit-dcm.R
 \name{measr_dcm}
 \alias{measr_dcm}
-\title{Fit Bayesian Diagnostic Classification Models}
+\title{Fit Bayesian diagnostic classification models}
 \usage{
 measr_dcm(
   data,

@@ -1,4 +1,4 @@
-#' Fit Bayesian Diagnostic Classification Models
+#' Fit Bayesian diagnostic classification models
 #'
 #' Something...
 #'
