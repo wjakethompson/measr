@@ -14,6 +14,64 @@ abort_bad_argument <- function(arg, must, not = NULL, extra = NULL) {
                not = not)
 }
 
+check_data <- function(x, name, identifier, missing) {
+  if (!is.null(identifier)) identifier <- enquo(identifier)
+
+  if (!("data.frame" %in% class(x))) {
+    abort_bad_argument(name, must = "be a data frame")
+  }
+
+  if (!all(sapply(dplyr::select(x, -!!identifier), is.numeric))) {
+    abort_bad_argument(name, must = "contain only numeric columns")
+  }
+  x <- dplyr::mutate(x, dplyr::across(!dplyr::all_of(!!identifier), as.integer))
+
+  # move to long format for Stan
+  if (is.null(identifier)) {
+    x <- x %>%
+      tibble::rowid_to_column(var = "resp_id") %>%
+      tidyr::pivot_longer(cols = -.data$resp_id, names_to = "item",
+                          values_to = "score") %>%
+      dplyr::filter(!(.data$score %in% missing)) %>%
+      dplyr::mutate(score = as.integer(.data$score))
+    identifier <- "resp_id"
+    identifier <- enquo(identifier)
+  } else {
+    x <- x %>%
+      tidyr::pivot_longer(cols = -!!identifier, names_to = "item",
+                          values_to = "score") %>%
+      dplyr::filter(!(.data$score %in% missing)) %>%
+      dplyr::mutate(score = as.integer(.data$score))
+  }
+
+  if (!all(x$score %in% c(0L, 1L))) {
+    abort_bad_argument(name,
+                       must = "contain only 0 or 1 for non-missing scores")
+  }
+
+  x <- x %>%
+    dplyr::left_join(
+      tibble::rowid_to_column(x %>%
+                                dplyr::select(dplyr::all_of(!!identifier)) %>%
+                                dplyr::distinct(),
+                              var = "stan_resp_id"),
+      by = rlang::as_name(identifier)) %>%
+    dplyr::left_join(
+      tibble::rowid_to_column(dplyr::distinct(x, .data$item),
+                              var = "stan_item_id"),
+      by = "item") %>%
+    dplyr::select(dplyr::all_of(!!identifier), .data$stan_resp_id,
+                  .data$item, .data$stan_item_id,
+                  .data$score) %>%
+    dplyr::arrange(.data$stan_resp_id, .data$stan_item_id)
+
+  if (!tibble::is_tibble(x)) {
+    tibble::as_tibble(x)
+  } else {
+    x
+  }
+}
+
 check_qmatrix <- function(x, name) {
   if (!("data.frame" %in% class(x))) {
     abort_bad_argument(name, must = "be a data frame")
