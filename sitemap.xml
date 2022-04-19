@@ -25,7 +25,7 @@
     <loc>https://measr.info/reference/create_profiles.html</loc>
   </url>
   <url>
-    <loc>https://measr.info/reference/default_lcdm_priors.html</loc>
+    <loc>https://measr.info/reference/default_dcm_priors.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/ecpe.html</loc>
@@ -38,6 +38,9 @@
   </url>
   <url>
     <loc>https://measr.info/reference/measr-package.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/measr_dcm.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/measrprior.html</loc>
