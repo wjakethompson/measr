@@ -13,6 +13,7 @@ Estimate diagnostic classification models (DCMs; also called cognitive diagnosti
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://measr.info}
   \item \url{https://github.com/wjakethompson/measr}
   \item Report bugs at \url{https://github.com/wjakethompson/measr/issues}
 }

@@ -15,7 +15,7 @@ Description: Estimate diagnostic classification models (DCMs; also called
     'Stan' code for a variety of models, estimate your model, and evaluate how
     well the model fits your data.
 License: MIT + file LICENSE
-URL: https://github.com/wjakethompson/measr
+URL: https://measr.info, https://github.com/wjakethompson/measr
 BugReports: https://github.com/wjakethompson/measr/issues
 Depends:
     R (>= 4.1.0)
