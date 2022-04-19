@@ -25,7 +25,6 @@ Imports:
     rlang (>= 0.4.11),
     glue,
     dplyr (>= 1.0.0),
-    stringr,
     tidyr,
     magrittr
 Suggests:
