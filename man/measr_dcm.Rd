@@ -52,10 +52,9 @@ available at \url{https://mc-stan.org/rstan/} and
 \item For \code{backend = "rstan"}, arguments are passed to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
 or \code{\link[rstan:stanmodel-method-optimizing]{rstan::optimizing()}}.
 \item For \code{backend = "cmdstanr"}, arguments are passed to the
-\href{../../cmdstanr/html/model-method-sample.html}{\verb{$sample()}} or
-\href{../../cmdstanr/html/model-method-optimize.html}{\verb{$optimize()}}
-methods of the \href{../../cmdstanr/html/CmdStanModel.html}{CmdStanModel}
-class.
+\code{\link[cmdstanr:model-method-sample]{$sample()}} or
+\code{\link[cmdstanr:model-method-optimize]{$optimize()}} methods of the
+\link[cmdstanr]{CmdStanModel} class.
 }}
 }
 \value{
