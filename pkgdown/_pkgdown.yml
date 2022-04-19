@@ -39,11 +39,10 @@ authors:
     href: https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546
 
 footer:
-  left:
-    structure: [authors]
-  right:
-    structure: [ies]
-    components:
+  structure:
+    left: developed_by
+    right: [ies]
+  components:
       ies: |
         The research reported here was supported by the Institute of Education
         Science, U.S. Department of Education, through Grant

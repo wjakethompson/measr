@@ -107,6 +107,12 @@ h2[data-toc-skip], #pkgdown-sidebar h2[data-toc-skip] {
 }
 
 
+/* footer ------------------------------------------------------------------- */
+footer .pkgdown-footer-right {
+  flex: 5;
+}
+
+
 /* Format text -------------------------------------------------------------- */
 /* link colors */
 a {
@@ -171,7 +177,6 @@ h4 {
 nav[data-toggle="toc"] .nav > li > a {
   color: var(--toc-link) !important;
   padding-left: 0.5rem;
-  margin-left: -0.5rem;
   border-radius: 1rem;
   border: white solid;
 }
