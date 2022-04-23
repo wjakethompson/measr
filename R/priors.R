@@ -26,7 +26,8 @@
 #' identical(prior1, prior3)
 #' identical(prior2, prior3)
 measrprior <- function(prior,
-                       class = c("intercept", "maineffect", "interaction"),
+                       class = c("intercept", "maineffect", "interaction",
+                                 "slip", "guess"),
                        coef = NA, lb = NA, ub = NA) {
   prior <- check_character(prior, allow_na = FALSE, name = "prior")
   class <- rlang::arg_match(class)
@@ -96,6 +97,9 @@ default_dcm_priors <- function(type = "lcdm") {
     c(prior_string("normal(0, 15)", class = "intercept"),
       prior_string("lognormal(0, 1)", class = "maineffect"),
       prior_string("normal(0, 15)", class = "interaction"))
+  } else if (type %in% c("dina", "dino")) {
+    c(prior_string("beta(5, 25)", class = "slip"),
+      prior_string("beta(5, 25)", class = "guess"))
   }
 
   return(prior)
@@ -148,7 +152,8 @@ validate_measrprior <- function(x) {
                                          "`class` or `prior_def`"))
   }
 
-  if (!all(x$class %in% c("intercept", "maineffect", "interaction"))) {
+  if (!all(x$class %in% c("intercept", "maineffect", "interaction",
+                          "slip", "guess"))) {
     abort_bad_argument("x",
                        must = glue::glue("only include values of ",
                                          "`intercept`, `maineffect`, and ",

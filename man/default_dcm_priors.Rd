@@ -7,7 +7,8 @@
 default_dcm_priors(type = "lcdm")
 }
 \arguments{
-\item{type}{Type of DCM to estimate. Currently only the LCDM is supported.}
+\item{type}{Type of DCM to estimate. Must be one of
+lcdm, dina, or dino)`.}
 }
 \value{
 A \code{measrprior} object

@@ -3,7 +3,7 @@ backend_choices <- function() {
 }
 
 dcm_choices <- function() {
-  c("lcdm")
+  c("lcdm", "dina", "dino")
 }
 
 install_backend <- function(pkg, ...) {
