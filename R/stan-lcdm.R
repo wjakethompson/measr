@@ -18,6 +18,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
       int<lower=1,upper=I> num[R];   // number of rows (items) for respondent R
       int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
       matrix[C,A] Alpha;              // attribute pattern for each class
+      matrix[I,C] Xi;                 // class attribute mastery indicator
     }}"
   )
 
