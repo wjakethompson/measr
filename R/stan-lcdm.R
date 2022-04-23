@@ -16,6 +16,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
       int<lower=0,upper=1> y[N];      // score for observation n
       int<lower=1,upper=N> start[R];  // starting row for respondent R
       int<lower=1,upper=I> num[R];   // number of rows (items) for respondent R
+      int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
       matrix[C,A] Alpha;              // attribute pattern for each class
     }}"
   )
