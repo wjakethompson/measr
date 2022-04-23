@@ -15,7 +15,6 @@ lcdm_script <- function(qmatrix, prior = NULL) {
       int<lower=1,upper=R> rr[N];     // respondent for observation n
       int<lower=0,upper=1> y[N];      // score for observation n
       int<lower=1,upper=N> start[R];  // starting row for respondent R
-      int<lower=1,upper=I> num[R];   // number of rows (items) for respondent R
       int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
       matrix[C,A] Alpha;              // attribute pattern for each class
       matrix[I,C] Xi;                 // class attribute mastery indicator
@@ -154,7 +153,10 @@ lcdm_script <- function(qmatrix, prior = NULL) {
                                .data$param_level > 1 ~ "interaction")) %>%
     dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef")) %>%
     dplyr::rename(coef_def = .data$prior_def) %>%
-    dplyr::left_join(mod_prior, by = c("class")) %>%
+    dplyr::left_join(mod_prior %>%
+                       dplyr::filter(is.na(.data$coef)) %>%
+                       dplyr::select(-.data$coef),
+                     by = c("class")) %>%
     dplyr::rename(class_def = .data$prior_def) %>%
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
