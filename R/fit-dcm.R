@@ -13,7 +13,8 @@
 #' @param qmatrix The Q-matrix. A data frame with 1 row per item and 1 column
 #'   per attribute. All cells should be either 0 (item does not measure the
 #'   attribute) or 1 (item does measure the attribute).
-#' @param type Type of DCM to estimate. Currently only the LCDM is supported.
+#' @param type Type of DCM to estimate. Must be one of
+#'   `r glue::glue_collapse(dcm_choices(), sep = ", ", last = ", or ")`.
 #' @param method Estimation method. Options are `"mcmc"`, which uses Stan's
 #'   sampling method, or `"optim"`, which uses Stan's optimizer.
 #' @param prior A [measrprior][measrprior()] object. If `NULL`, default priors
@@ -35,7 +36,8 @@
 #' @return A measrfit object.
 #' @export
 measr_dcm <- function(data, resp_id = NULL, missing = NA, qmatrix,
-                      type = c("lcdm"), method = c("mcmc", "optim"),
+                      type = c("lcdm", "dina", "dino"),
+                      method = c("mcmc", "optim"),
                       prior = NULL,
                       backend = getOption("measr.backend", "rstan"), ...) {
   clean_data <- check_data(data, name = "data", identifier = resp_id,
