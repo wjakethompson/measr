@@ -129,4 +129,8 @@ measr_dcm <- function(data, resp_id = NULL, missing = NA, qmatrix,
 
   # fit model -----
   mod <- do.call(fit_func, stan_pars)
+  if (backend == "cmdstanr") {
+    mod <- rstan::read_stan_csv(mod$output_files())
+    mod <- fix_cmdstanr_names(mod)
+  }
 }

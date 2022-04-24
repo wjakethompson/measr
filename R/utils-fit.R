@@ -64,3 +64,13 @@ calc_xi <- function(alpha, qmatrix, type) {
   return(xi)
 }
 
+#https://github.com/stan-dev/cmdstanr/issues/447
+fix_cmdstanr_names <- function(obj) {
+  obj@sim$samples <- lapply(obj@sim$samples,
+                            function(x, obj) {
+                              names(x) <- obj@sim$fnames_oi
+                              return(x)
+                            },
+                            obj = obj)
+  return(obj)
+}
