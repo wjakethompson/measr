@@ -41,3 +41,26 @@ install_backend <- function(pkg, ...) {
     }
   }
 }
+
+calc_xi <- function(alpha, qmatrix, type) {
+  xi <- matrix(0, nrow = nrow(qmatrix), ncol = nrow(alpha))
+
+  if (type == "lcdm") {
+    xi <- xi
+  } else if (type == "dina") {
+    for (i in 1:nrow(qmatrix)) {
+      for (c in 1:nrow(alpha)) {
+        xi[i, c] <- prod(alpha[c, ] ^ qmatrix[i, ])
+      }
+    }
+  } else if (type == "dino") {
+    for (i in 1:nrow(qmatrix)) {
+      for (c in 1:nrow(alpha)) {
+        xi[i, c] <- 1 - prod((1 - alpha[c, ]) ^ qmatrix[i, ])
+      }
+    }
+  }
+
+  return(xi)
+}
+
