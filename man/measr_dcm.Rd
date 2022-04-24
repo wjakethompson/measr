@@ -32,7 +32,8 @@ identifiers.}
 per attribute. All cells should be either 0 (item does not measure the
 attribute) or 1 (item does measure the attribute).}
 
-\item{type}{Type of DCM to estimate. Currently only the LCDM is supported.}
+\item{type}{Type of DCM to estimate. Must be one of
+lcdm, dina, or dino)`.}
 
 \item{method}{Estimation method. Options are \code{"mcmc"}, which uses Stan's
 sampling method, or \code{"optim"}, which uses Stan's optimizer.}
