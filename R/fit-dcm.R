@@ -53,5 +53,80 @@ measr_dcm <- function(data, resp_id = NULL, missing = NA, qmatrix,
                          reason = glue::glue("for `backend = \"{backend}\"`"),
                          action = install_backend)
 
+  # create stan data list -----
+  ragged_array <- clean_data %>%
+    tibble::rowid_to_column() %>%
+    dplyr::group_by(stan_resp_id) %>%
+    dplyr::summarize(start = min(.data$rowid),
+                     num = dplyr::n()) %>%
+    dplyr::arrange(.data$stan_resp_id)
 
+  profiles <- create_profiles(ncol(clean_qmatrix))
+  xi <- calc_xi(alpha = profiles, qmatrix = clean_qmatrix, type = type)
+
+  stan_data <- list(
+    I = length(unique(clean_data$stan_item_id)),
+    R = length(unique(clean_data$stan_resp_id)),
+    N = nrow(clean_data),
+    C = 2 ^ ncol(clean_qmatrix),
+    A = ncol(clean_qmatrix),
+    ii = clean_data$stan_item_id,
+    rr = clean_data$stan_resp_id,
+    y = clean_data$score,
+    start = ragged_array$start,
+    num = ragged_array$num,
+    Alpha = profiles,
+    Xi = xi
+  )
+
+  # stan parameters -----
+  ## user defined
+  user_pars <- list(...)
+  user_names <- names(user_pars)
+  if ("control" %in% user_names) {
+    new_control <- utils::modifyList(list(adapt_delta = 0.95),
+                                     user_pars$control)
+    user_pars$control <- new_control
+  } else if (backend == "rstan" & method == "mcmc") {
+    user_pars$control <- list(adapt_delta = 0.95)
+  }
+
+  ## some reasonable defaults
+  if (method == "mcmc") {
+    if (backend == "rstan") {
+      defl_pars <- list(iter = 4000, warmup = 2000, chains = 4,
+                        cores = getOption("mc.cores", 1L))
+    } else if (backend == "cmdstanr") {
+      defl_pars <- list(iter_sampling = 2000, iter_warmup = 2000, chains = 4,
+                        parallel_chains = getOption("mc.cores", 1L),
+                        adapt_delta = 0.95)
+    }
+  } else if (method == "optim") {
+    defl_pars <- list()
+  }
+  stan_pars <- utils::modifyList(defl_pars, user_pars)
+  stan_pars <- c(list(data = stan_data), stan_pars)
+
+  # compile model -----
+  func_name <- rlang::sym(paste0(type, "_script"))
+  script_call <- rlang::call2(func_name,
+                              rlang::expr(qmatrix),
+                              rlang::expr(prior))
+  stan_code <- eval(script_call)
+
+  if (backend == "rstan") {
+    comp_mod <- rstan::stan_model(model_code = stan_code)
+    stan_pars$object <- comp_mod
+    fit_func <- switch(method,
+                       mcmc = rstan::sampling,
+                       optim = rstan::optimizing)
+  } else if (backend == "cmdstanr") {
+    comp_mod <- cmdstanr::cmdstan_model(cmdstanr::write_stan_file(stan_code))
+    fit_func <- switch(method,
+                       mcmc = comp_mod$sample,
+                       optim = comp_mod$optimize)
+  }
+
+  # fit model -----
+  mod <- do.call(fit_func, stan_pars)
 }
