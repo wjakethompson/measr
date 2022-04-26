@@ -1,8 +1,4 @@
 lcdm_script <- function(qmatrix, prior = NULL) {
-  qmatrix <- check_qmatrix(qmatrix, name = "qmatrix")
-  qmatrix <- dplyr::rename_with(qmatrix, ~glue::glue("att{1:ncol(qmatrix)}"))
-  prior <- check_prior(prior, name = "prior", allow_null = TRUE)
-
   # data block -----
   data_block <- glue::glue(
     "data {{
@@ -36,14 +32,14 @@ lcdm_script <- function(qmatrix, prior = NULL) {
         .data$parameter == "intercept" ~ 0,
         !grepl("__", .data$parameter) ~ 1,
         TRUE ~ sapply(gregexpr(pattern = "__", text = .data$parameter),
-                      \(.x) length(attr(.x, "match.length"))) + 1
+                      function(.x) length(attr(.x, "match.length"))) + 1
       ),
       atts = gsub("[^0-9|_]", "", .data$parameter),
       comp_atts = one_down_params(.data$atts, item = .data$item_id),
       num_comp = dplyr::case_when(
         comp_atts == "" ~ 0,
         TRUE ~ sapply(gregexpr(pattern = ",", text = .data$comp_atts),
-                      \(.x) length(attr(.x, "match.length"))) + 1
+                      function(.x) length(attr(.x, "match.length"))) + 1
       ),
       param_name = glue::glue("l{item_id}_{param_level}",
                               "{gsub(\"__\", \"\", atts)}"),
@@ -202,4 +198,6 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     "{model_block}",
     .sep = "\n"
   )
+
+  return(list(stancode = full_script, prior = mod_prior))
 }

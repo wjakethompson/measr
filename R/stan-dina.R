@@ -1,8 +1,4 @@
 dina_script <- function(qmatrix, prior = NULL) {
-  qmatrix <- check_qmatrix(qmatrix, name = "qmatrix")
-  qmatrix <- dplyr::rename_with(qmatrix, ~glue::glue("att{1:ncol(qmatrix)}"))
-  prior <- check_prior(prior, name = "prior", allow_null = TRUE)
-
   # data block -----
   data_block <- glue::glue(
     "data {{
@@ -101,6 +97,8 @@ dina_script <- function(qmatrix, prior = NULL) {
     "{model_block}",
     .sep = "\n"
   )
+
+  return(list(stancode = full_script, prior = mod_prior))
 }
 
 dino_script <- dina_script
