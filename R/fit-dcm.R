@@ -4,15 +4,22 @@
 #'
 #' @param data Response data. A data frame with 1 row per respondent and 1
 #'   column per item.
+#' @param missing An R expression specifying how missing data in `data` is coded
+#'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
+#' @param qmatrix The Q-matrix. A data frame with 1 row per item and 1 column
+#'   per attribute. All cells should be either 0 (item does not measure the
+#'   attribute) or 1 (item does measure the attribute).
 #' @param resp_id Optional. Variable name of a column in `data` that
 #'   contains respondent identifiers. `NULL` (the default) indicates that no
 #'   identifiers are present in the data, and row numbers will be used as
 #'   identifiers.
-#' @param missing An R expression specifying how missing data is coded (e.g.,
-#'   `NA`, `"."`, `-99`, etc.). The default is `NA`.
-#' @param qmatrix The Q-matrix. A data frame with 1 row per item and 1 column
-#'   per attribute. All cells should be either 0 (item does not measure the
-#'   attribute) or 1 (item does measure the attribute).
+#' @param item_id Optional. Variable name of a column in `qmatrix` that contains
+#'   item identifiers. `NULL` (the default) indicates that no identifiers are
+#'   present in the Q-matrix. In this case, the column names of `data`
+#'   (excluding any column specified in `resp_id`) will be used as the item
+#'   identifiers. `NULL` also assumes that the order of the rows in the Q-matrix
+#'   is the same as the order of the columns in `data` (i.e., the item in row 1
+#'   of `qmatrix` is the item in column 1 of `data`, excluding `resp_id`).
 #' @param type Type of DCM to estimate. Must be one of
 #'   `r glue::glue_collapse(dcm_choices(), sep = ", ", last = ", or ")`.
 #' @param method Estimation method. Options are `"mcmc"`, which uses Stan's
@@ -25,6 +32,9 @@
 #'   option (see options). Details on the rstan and cmdstanr packages are
 #'   available at \url{https://mc-stan.org/rstan/} and
 #'   \url{https://mc-stan.org/cmdstanr/}, respectively.
+#' @param return_stanfit Logical. If `backend = "cmdstanr"`, should the fitted
+#'   model be coerced to a [rstan::stanfit-class] object in the . Ignored if
+#'   `backend = "rstan"`.
 #' @param ... Additional arguments passed to Stan.
 #'   * For `backend = "rstan"`, arguments are passed to [rstan::sampling()]
 #'     or [rstan::optimizing()].
@@ -35,20 +45,32 @@
 #'
 #' @return A measrfit object.
 #' @export
-measr_dcm <- function(data, resp_id = NULL, missing = NA, qmatrix,
+measr_dcm <- function(data,
+                      missing = NA,
+                      qmatrix,
+                      resp_id = NULL,
+                      item_id = NULL,
                       type = c("lcdm", "dina", "dino"),
                       method = c("mcmc", "optim"),
                       prior = NULL,
-                      backend = getOption("measr.backend", "rstan"), ...) {
+                      backend = getOption("measr.backend", "rstan"),
+                      return_stanfit = TRUE,
+                      ...) {
   clean_data <- check_data(data, name = "data", identifier = resp_id,
                            missing = missing)
-  qmatrix <- check_qmatrix(qmatrix, name = "qmatrix")
-  clean_qmatrix <- dplyr::rename_with(qmatrix,
-                                      ~glue::glue("att{1:ncol(qmatrix)}"))
+  qmatrix <- check_qmatrix(qmatrix, identifier = item_id,
+                           item_levels = levels(clean_data$item_id),
+                           name = "qmatrix")
+  clean_qmatrix <- qmatrix %>%
+    dplyr::select(-.data$item_id) %>%
+    dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
+  resp_id <- check_character(resp_id, name = "resp_id")
+  item_id <- check_character(item_id, name = "item_id")
   type <- rlang::arg_match(type, dcm_choices())
-  method <- rlang::arg_match(method)
+  method <- rlang::arg_match(method, c("mcmc", "optim"))
   prior <- check_prior(prior, name = "prior", allow_null = TRUE)
   backend <- rlang::arg_match(backend, backend_choices())
+  return_stanfit <- check_logical(return_stanfit, name = "return_stanfit")
   rlang::check_installed(backend,
                          reason = glue::glue("for `backend = \"{backend}\"`"),
                          action = install_backend)
@@ -56,22 +78,22 @@ measr_dcm <- function(data, resp_id = NULL, missing = NA, qmatrix,
   # create stan data list -----
   ragged_array <- clean_data %>%
     tibble::rowid_to_column() %>%
-    dplyr::group_by(stan_resp_id) %>%
+    dplyr::group_by(.data$resp_id) %>%
     dplyr::summarize(start = min(.data$rowid),
                      num = dplyr::n()) %>%
-    dplyr::arrange(.data$stan_resp_id)
+    dplyr::arrange(.data$resp_id)
 
   profiles <- create_profiles(ncol(clean_qmatrix))
   xi <- calc_xi(alpha = profiles, qmatrix = clean_qmatrix, type = type)
 
   stan_data <- list(
-    I = length(unique(clean_data$stan_item_id)),
-    R = length(unique(clean_data$stan_resp_id)),
+    I = length(unique(clean_data$item_id)),
+    R = length(unique(clean_data$resp_id)),
     N = nrow(clean_data),
     C = 2 ^ ncol(clean_qmatrix),
     A = ncol(clean_qmatrix),
-    ii = clean_data$stan_item_id,
-    rr = clean_data$stan_resp_id,
+    ii = as.numeric(clean_data$item_id),
+    rr = as.numeric(clean_data$resp_id),
     y = clean_data$score,
     start = ragged_array$start,
     num = ragged_array$num,
@@ -115,13 +137,18 @@ measr_dcm <- function(data, resp_id = NULL, missing = NA, qmatrix,
   stan_code <- eval(script_call)
 
   if (backend == "rstan") {
-    comp_mod <- rstan::stan_model(model_code = stan_code)
+    comp_mod <- rstan::stan_model(model_code = stan_code$stancode)
     stan_pars$object <- comp_mod
     fit_func <- switch(method,
                        mcmc = rstan::sampling,
                        optim = rstan::optimizing)
   } else if (backend == "cmdstanr") {
-    comp_mod <- cmdstanr::cmdstan_model(cmdstanr::write_stan_file(stan_code))
+    comp_mod <- cmdstanr::cmdstan_model(
+      cmdstanr::write_stan_file(stan_code$stancode),
+      compile = FALSE
+    )
+    comp_mod$format(overwrite_file = TRUE, canonicalize = TRUE, quiet = TRUE)
+    comp_mod <- comp_mod$compile()
     fit_func <- switch(method,
                        mcmc = comp_mod$sample,
                        optim = comp_mod$optimize)
@@ -129,8 +156,37 @@ measr_dcm <- function(data, resp_id = NULL, missing = NA, qmatrix,
 
   # fit model -----
   mod <- do.call(fit_func, stan_pars)
-  if (backend == "cmdstanr") {
+  if (backend == "cmdstanr" & method == "mcmc" & return_stanfit) {
     mod <- rstan::read_stan_csv(mod$output_files())
     mod <- fix_cmdstanr_names(mod)
   }
+
+  # create measrfit object -----
+  algorithm <- if ("stanfit" %in% class(mod)) {
+    mod@stan_args[[1]]$algorithm
+  } else if ("CmdStanFit" %in% class(mod)) {
+    mod$metadata()$algorithm
+  }
+  version_info <- list(measr = utils::packageVersion("measr"),
+                       rstan = utils::packageVersion("rstan"),
+                       stanHeaders = utils::packageVersion("StanHeaders"))
+  if (backend == "cmdstanr") {
+    version_info$cmdstanr <- utils::packageVersion("cmdstanr")
+    version_info$cmdstan <- as.package_version(cmdstanr::cmdstan_version())
+  }
+
+  ret_mod <- list(data = list(data = clean_data, qmatrix = qmatrix),
+                  prior = stan_code$prior,
+                  stancode = stan_code$stancode,
+                  algorithm = algorithm,
+                  backend = backend,
+                  model = mod,
+                  fit = list(),
+                  criteria = list(),
+                  reliability = list(),
+                  file = file,
+                  version = version_info)
 }
+
+
+# TODO: finish s3 class for fitted models; more testing to figure out why DINA isn't converging.
