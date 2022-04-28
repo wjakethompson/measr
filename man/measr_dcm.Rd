@@ -6,13 +6,17 @@
 \usage{
 measr_dcm(
   data,
-  resp_id = NULL,
   missing = NA,
   qmatrix,
-  type = c("lcdm"),
+  resp_id = NULL,
+  item_id = NULL,
+  type = c("lcdm", "dina", "dino"),
   method = c("mcmc", "optim"),
   prior = NULL,
   backend = getOption("measr.backend", "rstan"),
+  return_stanfit = TRUE,
+  file = NULL,
+  file_refit = getOption("measr.file_refit", "never"),
   ...
 )
 }
@@ -20,17 +24,25 @@ measr_dcm(
 \item{data}{Response data. A data frame with 1 row per respondent and 1
 column per item.}
 
+\item{missing}{An R expression specifying how missing data in \code{data} is coded
+(e.g., \code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.}
+
+\item{qmatrix}{The Q-matrix. A data frame with 1 row per item and 1 column
+per attribute. All cells should be either 0 (item does not measure the
+attribute) or 1 (item does measure the attribute).}
+
 \item{resp_id}{Optional. Variable name of a column in \code{data} that
 contains respondent identifiers. \code{NULL} (the default) indicates that no
 identifiers are present in the data, and row numbers will be used as
 identifiers.}
 
-\item{missing}{An R expression specifying how missing data is coded (e.g.,
-\code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.}
-
-\item{qmatrix}{The Q-matrix. A data frame with 1 row per item and 1 column
-per attribute. All cells should be either 0 (item does not measure the
-attribute) or 1 (item does measure the attribute).}
+\item{item_id}{Optional. Variable name of a column in \code{qmatrix} that contains
+item identifiers. \code{NULL} (the default) indicates that no identifiers are
+present in the Q-matrix. In this case, the column names of \code{data}
+(excluding any column specified in \code{resp_id}) will be used as the item
+identifiers. \code{NULL} also assumes that the order of the rows in the Q-matrix
+is the same as the order of the columns in \code{data} (i.e., the item in row 1
+of \code{qmatrix} is the item in column 1 of \code{data}, excluding \code{resp_id}).}
 
 \item{type}{Type of DCM to estimate. Must be one of
 lcdm, dina, or dino)`.}
@@ -42,11 +54,34 @@ sampling method, or \code{"optim"}, which uses Stan's optimizer.}
 are used, as specified by \code{\link[=default_dcm_priors]{default_dcm_priors()}}.}
 
 \item{backend}{Character string naming the package to use as the backend for
-fitting the Stan model. Options are "rstan" (the default) or "cmdstanr".
-Can be set globally for the current R session via the "measr.backend"
-option (see options). Details on the rstan and cmdstanr packages are
-available at \url{https://mc-stan.org/rstan/} and
+fitting the Stan model. Options are \code{"rstan"} (the default) or
+\code{"cmdstanr"}. Can be set globally for the current R session via the
+"measr.backend" option (see \code{\link[=options]{options()}}). Details on the \strong{rstan} and
+\strong{cmdstanr} packages are available at \url{https://mc-stan.org/rstan/} and
 \url{https://mc-stan.org/cmdstanr/}, respectively.}
+
+\item{return_stanfit}{Logical. If \code{backend = "cmdstanr"}, should the fitted
+model be coerced to a \link[rstan:stanfit-class]{rstan::stanfit} object in the . Ignored if
+\code{backend = "rstan"}.}
+
+\item{file}{Either \code{NULL} (the default) or a character string. If a character
+string, the fitted model object is saved as an \code{.rds} object using
+\code{\link[=saveRDS]{saveRDS()}} using the supplied character string. The \code{.rds} extension
+is automatically added. If the specified file already exists, \strong{measr}
+will load the previously saved model. Unless \code{file_refit} is specified, the
+model will not be refit.}
+
+\item{file_refit}{Controls when a saved model is refit. Options are
+\code{"never"}, \code{"always"}, and \code{"on_change"}. Can be set globally for the
+current R session via the "measr.file_refit" option (see \code{\link[=options]{options()}}).
+\itemize{
+\item For \code{"never"} (the default), the fitted model is always loaded if the
+\code{file} exists, and model fitting is skipped.
+\item For \code{"always"}, the model is always refitted, regardless of whether or
+not \code{file} exists.
+\item For \code{"on_change"}, the model will be refit if the \code{data}, \code{prior}, or
+\code{method} specified are different from that in the saved \code{file}.
+}}
 
 \item{...}{Additional arguments passed to Stan.
 \itemize{

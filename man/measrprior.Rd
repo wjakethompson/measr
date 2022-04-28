@@ -9,7 +9,7 @@
 \usage{
 measrprior(
   prior,
-  class = c("intercept", "maineffect", "interaction"),
+  class = c("intercept", "maineffect", "interaction", "slip", "guess"),
   coef = NA,
   lb = NA,
   ub = NA
