@@ -1,4 +1,4 @@
-#' @importFrom tidybayes tidydraws
+#' @importFrom tidybayes tidy_draws
 #' @export
 tidybayes::tidy_draws
 
