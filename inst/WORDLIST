@@ -1,6 +1,5 @@
 CDMs
 CMD
-CmdStanModel
 DCM
 DCMs
 ECPE
@@ -17,11 +16,14 @@ Templin
 WIP
 cmdstanr
 codecov
+dina
+dino
 dplyr
 eval
 funder
 ggplot
 https
+lcdm
 magrittr
 mc
 measrfit

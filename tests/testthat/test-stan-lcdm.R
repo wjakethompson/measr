@@ -2,7 +2,7 @@ test_that("LCDM with ECPE works", {
   lcdm_script <-
     lcdm_script(qmatrix = dplyr::select(ecpe_qmatrix, -.data$item_id))
 
-  stan_mod <- rstan::stan_model(model_code = lcdm_script)
+  stan_mod <- rstan::stan_model(model_code = lcdm_script$stancode)
   expect_s4_class(stan_mod, "stanmodel")
 
   dat <- ecpe_data %>%
@@ -28,7 +28,9 @@ test_that("LCDM with ECPE works", {
                                     1, 1, 0,
                                     1, 0, 1,
                                     0, 1, 1,
-                                    1, 1, 1), ncol = 3, byrow = TRUE))
+                                    1, 1, 1), ncol = 3, byrow = TRUE),
+                   Xi = matrix(rep(1, 224), nrow = length(unique(dat$item)),
+                               ncol = 8L))
 
   mod <- rstan::optimizing(stan_mod, data = stan_dat, seed = 1008)
 })
