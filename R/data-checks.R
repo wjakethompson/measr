@@ -150,6 +150,28 @@ check_prior <- function(x, name, allow_null = FALSE) {
   x
 }
 
+check_file <- function(x, name, create_dir = FALSE, check_file = TRUE,
+                       ext = NULL, allow_null = FALSE) {
+  if (allow_null & is.null(x)) return(x)
+
+  directory <- fs::path_dir(x)
+  if (!fs::dir_exists(directory) & !create_dir) {
+    abort_bad_argument(name, must = "be an existing directory")
+  } else if (!fs::dir_exists(directory) & create_dir) {
+    fs::dir_create(directory)
+  }
+
+  if (!is.null(ext)) {
+    x <- fs::path_ext_set(x, ext = ext)
+  }
+
+  if (check_file & !fs::file_exists(x)) {
+    abort_bad_argument(name, must = "be an existing file")
+  }
+
+  return(x)
+}
+
 check_logical <- function(x, allow_na = FALSE, name) {
   if (!is.logical(x)) {
     abort_bad_argument(name, must = "be a logical scalar", not = typeof(x))

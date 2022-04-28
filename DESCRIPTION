@@ -23,6 +23,7 @@ Imports:
     tibble,
     rstan (>= 2.21.2),
     rlang (>= 0.4.11),
+    fs,
     glue,
     dplyr (>= 1.0.0),
     tidybayes,

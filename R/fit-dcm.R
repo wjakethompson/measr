@@ -27,14 +27,29 @@
 #' @param prior A [measrprior][measrprior()] object. If `NULL`, default priors
 #'   are used, as specified by [default_dcm_priors()].
 #' @param backend Character string naming the package to use as the backend for
-#'   fitting the Stan model. Options are "rstan" (the default) or "cmdstanr".
-#'   Can be set globally for the current R session via the "measr.backend"
-#'   option (see options). Details on the rstan and cmdstanr packages are
-#'   available at \url{https://mc-stan.org/rstan/} and
+#'   fitting the Stan model. Options are `"rstan"` (the default) or
+#'   `"cmdstanr"`. Can be set globally for the current R session via the
+#'   "measr.backend" option (see [options()]). Details on the **rstan** and
+#'   **cmdstanr** packages are available at \url{https://mc-stan.org/rstan/} and
 #'   \url{https://mc-stan.org/cmdstanr/}, respectively.
 #' @param return_stanfit Logical. If `backend = "cmdstanr"`, should the fitted
 #'   model be coerced to a [rstan::stanfit-class] object in the . Ignored if
 #'   `backend = "rstan"`.
+#' @param file Either `NULL` (the default) or a character string. If a character
+#'   string, the fitted model object is saved as an `.rds` object using
+#'   [saveRDS()] using the supplied character string. The `.rds` extension
+#'   is automatically added. If the specified file already exists, **measr**
+#'   will load the previously saved model. Unless `file_refit` is specified, the
+#'   model will not be refit.
+#' @param file_refit Controls when a saved model is refit. Options are
+#'   `"never"`, `"always"`, and `"on_change"`. Can be set globally for the
+#'   current R session via the "measr.file_refit" option (see [options()]).
+#'   * For `"never"` (the default), the fitted model is always loaded if the
+#'     `file` exists, and model fitting is skipped.
+#'   * For `"always"`, the model is always refitted, regardless of whether or
+#'     not `file` exists.
+#'   * For `"on_change"`, the model will be refit if the `data`, `prior`, or
+#'     `method` specified are different from that in the saved `file`.
 #' @param ... Additional arguments passed to Stan.
 #'   * For `backend = "rstan"`, arguments are passed to [rstan::sampling()]
 #'     or [rstan::optimizing()].
@@ -55,6 +70,8 @@ measr_dcm <- function(data,
                       prior = NULL,
                       backend = getOption("measr.backend", "rstan"),
                       return_stanfit = TRUE,
+                      file = NULL,
+                      file_refit = getOption("measr.file_refit", "never"),
                       ...) {
   clean_data <- check_data(data, name = "data", identifier = resp_id,
                            missing = missing)
@@ -71,9 +88,18 @@ measr_dcm <- function(data,
   prior <- check_prior(prior, name = "prior", allow_null = TRUE)
   backend <- rlang::arg_match(backend, backend_choices())
   return_stanfit <- check_logical(return_stanfit, name = "return_stanfit")
+  file <- check_file(file, name = "file", create_dir = FALSE,
+                     check_file = FALSE, ext = "rds", allow_null = TRUE)
+  file_refit <- rlang::arg_match(file_refit, c("never", "always", "on_change"))
   rlang::check_installed(backend,
                          reason = glue::glue("for `backend = \"{backend}\"`"),
                          action = install_backend)
+
+  if (!is.null(file)) {
+    if (fs::file_exists(file) & file_refit == "never") {
+      return(readRDS(file))
+    }
+  }
 
   # create stan data list -----
   ragged_array <- clean_data %>%
@@ -136,6 +162,19 @@ measr_dcm <- function(data,
                               rlang::expr(prior))
   stan_code <- eval(script_call)
 
+  if (!is.null(file)) {
+    if (fs::file_exists(file)) {
+      prev <- readRDS(file)
+    }
+    # if fitted model matches current args and "on_change", return prev fit
+    if (all(identical(prev$data, list(data = clean_data, qmatrix = qmatrix)),
+            identical(prev$prior, stan_code$prior),
+            identical(prev$method, method)) &
+        file_refit == "on_change") {
+      return(prev)
+    }
+  }
+
   if (backend == "rstan") {
     comp_mod <- rstan::stan_model(model_code = stan_code$stancode)
     stan_pars$object <- comp_mod
@@ -178,6 +217,7 @@ measr_dcm <- function(data,
   ret_mod <- list(data = list(data = clean_data, qmatrix = qmatrix),
                   prior = stan_code$prior,
                   stancode = stan_code$stancode,
+                  method = method,
                   algorithm = algorithm,
                   backend = backend,
                   model = mod,
@@ -186,6 +226,13 @@ measr_dcm <- function(data,
                   reliability = list(),
                   file = file,
                   version = version_info)
+
+
+  # save and return object -----
+  if (!is.null(file)) {
+    saveRDS(ret_mod, file = file)
+  }
+  return(ret_mod)
 }
 
 
