@@ -160,6 +160,20 @@ test_that("default priors", {
                     prior_def = c("normal(0, 15)", "lognormal(0, 1)",
                                   "normal(0, 15)")),
                ignore_attr = TRUE)
+
+  # dina defaults
+  expect_equal(unclass(default_dcm_priors(type = "dina")),
+               list(class = c("slip", "guess"),
+                    coef = rep(NA_character_, 2),
+                    prior_def = c("beta(5, 25)", "beta(5, 25)")),
+               ignore_attr = TRUE)
+
+  # dino defaults
+  expect_equal(unclass(default_dcm_priors(type = "dino")),
+               list(class = c("slip", "guess"),
+                    coef = rep(NA_character_, 2),
+                    prior_def = c("beta(5, 25)", "beta(5, 25)")),
+               ignore_attr = TRUE)
 })
 
 test_that("priors can be combined", {

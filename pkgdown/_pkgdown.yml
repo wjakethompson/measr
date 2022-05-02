@@ -68,6 +68,7 @@ reference:
   desc: Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
   contents:
   - measr_dcm
+  - measrfit-class
 - title: Miscellaneous
   contents:
   - create_profiles

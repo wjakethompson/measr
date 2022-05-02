@@ -21,11 +21,17 @@ check_data <- function(x, name, identifier, missing) {
     abort_bad_argument(name, must = "be a data frame")
   }
 
-  if (!all(sapply(dplyr::select(x, -!!identifier), is.numeric))) {
-    abort_bad_argument(name, must = "contain only numeric columns")
-  }
-  x <- dplyr::mutate(x, dplyr::across(!dplyr::all_of(!!identifier), as.integer))
+  # replace missing values with NA
+  x <- x %>%
+    dplyr::mutate(dplyr::across(!dplyr::all_of(!!identifier),
+                                ~dplyr::na_if(.x, missing)),
+                  dplyr::across(!dplyr::all_of(!!identifier), as.character))
 
+  if (!all(sapply(dplyr::select(x, -!!identifier),
+                  function(.x) all(.x %in% c("0", "1", NA_character_))))) {
+    abort_bad_argument(name,
+                       must = "contain only 0 or 1 for non-missing scores")
+  }
 
   item_names <- colnames(x)
   if (!is.null(identifier)) {
@@ -38,7 +44,7 @@ check_data <- function(x, name, identifier, missing) {
       tibble::rowid_to_column(var = "resp_id") %>%
       tidyr::pivot_longer(cols = -.data$resp_id, names_to = "item_id",
                           values_to = "score") %>%
-      dplyr::filter(!(.data$score %in% missing)) %>%
+      dplyr::filter(!is.na(.data$score)) %>%
       dplyr::mutate(score = as.integer(.data$score),
                     resp_id = factor(.data$resp_id),
                     item_id = factor(.data$item_id, levels = item_names))
@@ -47,42 +53,17 @@ check_data <- function(x, name, identifier, missing) {
     x <- x %>%
       tidyr::pivot_longer(cols = -!!identifier, names_to = "item_id",
                           values_to = "score") %>%
-      dplyr::filter(!(.data$score %in% missing)) %>%
+      dplyr::filter(!is.na(.data$score)) %>%
       dplyr::rename(resp_id = !!identifier) %>%
       dplyr::mutate(score = as.integer(.data$score),
                     resp_id = factor(.data$resp_id, levels = resp_names),
                     item_id = factor(.data$item_id, levels = item_names))
   }
 
-  if (!all(x$score %in% c(0L, 1L))) {
-    abort_bad_argument(name,
-                       must = "contain only 0 or 1 for non-missing scores")
-  }
-
-  # x <- x %>%
-  #   dplyr::left_join(
-  #     tibble::rowid_to_column(x %>%
-  #                               dplyr::select(dplyr::all_of(!!identifier)) %>%
-  #                               dplyr::distinct(),
-  #                             var = "stan_resp_id"),
-  #     by = rlang::as_name(identifier)) %>%
-  #   dplyr::left_join(
-  #     tibble::rowid_to_column(dplyr::distinct(x, .data$item_id),
-  #                             var = "stan_item_id"),
-  #     by = "item_id") %>%
-  #   dplyr::select(dplyr::all_of(!!identifier), .data$stan_resp_id,
-  #                 .data$item_id, .data$stan_item_id,
-  #                 .data$score) %>%
-  #   dplyr::arrange(.data$stan_resp_id, .data$stan_item_id)
-
   x <- x %>%
     dplyr::arrange(.data$resp_id, .data$item_id)
 
-  if (!tibble::is_tibble(x)) {
-    tibble::as_tibble(x)
-  } else {
-    x
-  }
+  x
 }
 
 check_qmatrix <- function(x, identifier, item_levels, name) {

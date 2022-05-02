@@ -1,3 +1,89 @@
+test_that("check_data", {
+  dat <- combn(letters, m = 3) %>%
+    as.data.frame() %>%
+    tidyr::pivot_longer(cols = everything()) %>%
+    dplyr::group_by(name) %>%
+    dplyr::summarize(student = paste(value, collapse = "")) %>%
+    dplyr::select(-name) %>%
+    dplyr::mutate(item = 1) %>%
+    tidyr::complete(student, item = 1:20) %>%
+    dplyr::mutate(score = sample(c(0, 1), size = dplyr::n(), replace = TRUE)) %>%
+    tidyr::pivot_wider(names_from = item, values_from = score)
+
+  err <- rlang::catch_cnd(check_data("a", identifier = NULL,
+                                     missing = NA, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "data frame")
+
+  err <- rlang::catch_cnd(check_data(dat, identifier = NULL,
+                                     missing = NA, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "0 or 1 for non-missing scores")
+
+  dat2 <- dplyr::mutate(dat, `3` = sample(1:3, size = dplyr::n(),
+                                          replace = TRUE))
+  err <- rlang::catch_cnd(check_data(dat2, identifier = "student",
+                                     missing = NA, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "only 0 or 1 for non-missing scores")
+
+  dat_check <- dat %>%
+    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") %>%
+    dplyr::mutate(resp_id = factor(student, levels = unique(student)),
+                  item_id = factor(item_id, levels = 1:20),
+                  score = as.integer(score)) %>%
+    dplyr::select(resp_id, item_id, score)
+  expect_equal(check_data(dat, identifier = "student", missing = NA,
+                          name = "x"),
+               dat_check)
+  expect_equal(check_data(as.data.frame(dat), identifier = "student",
+                          missing = NA, name = "x"),
+               dat_check)
+
+  dat_check <- dat_check %>%
+    dplyr::mutate(resp_id = as.integer(resp_id),
+                  resp_id = factor(resp_id, levels = unique(resp_id)))
+  expect_equal(check_data(dplyr::select(dat, -student), identifier = NULL,
+                          missing = NA, name = "x"),
+               dat_check)
+
+  missing_dat <- dat %>%
+    dplyr::mutate(dplyr::across(where(is.double),
+                                ~sample(c(0, 1, NA_real_), size = dplyr::n(),
+                                        replace = TRUE,
+                                        prob = c(.45, .45, 0.1))))
+  check_missing <- missing_dat %>%
+    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") %>%
+    dplyr::mutate(resp_id = factor(student, levels = unique(student)),
+                  item_id = factor(item_id, levels = 1:20),
+                  score = as.integer(score)) %>%
+    dplyr::select(resp_id, item_id, score) %>%
+    dplyr::filter(!is.na(score))
+  expect_equal(check_data(missing_dat, identifier = "student", missing = NA,
+                          name = "x"),
+               check_missing)
+
+  missing_dat <- dat %>%
+    dplyr::mutate(dplyr::across(where(is.double),
+                                ~sample(c(0, 1, "."),
+                                        size = dplyr::n(),
+                                        replace = TRUE,
+                                        prob = c(.45, .45, 0.1))))
+  check_missing <- missing_dat %>%
+    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") %>%
+    dplyr::filter(!is.na(score), score != ".") %>%
+    dplyr::mutate(resp_id = factor(student, levels = unique(student)),
+                  item_id = factor(item_id, levels = 1:20),
+                  score = as.integer(score)) %>%
+    dplyr::select(resp_id, item_id, score)
+  expect_equal(check_data(missing_dat, identifier = "student", missing = ".",
+                          name = "x"),
+               check_missing)
+})
+
 test_that("check qmatrix", {
   err <- rlang::catch_cnd(check_qmatrix("a", identifier = NULL,
                                         item_levels = NA, name = "check1"))
@@ -86,6 +172,48 @@ test_that("check qmatrix", {
   expect_identical(check_qmatrix(check_q, identifier = "item_id",
                                  item_levels = paste0("I_", 1:5),
                                  name = "check1"), check_q)
+})
+
+test_that("check_prior", {
+  err <- rlang::catch_cnd(check_prior(1L, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "be a measrprior")
+
+  err <- rlang::catch_cnd(check_prior(NULL, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "be a measrprior")
+
+  expect_s3_class(check_prior(prior(normal(0, 1)), name = "check1"),
+                  "measrprior")
+  expect_equal(unclass(check_prior(prior(normal(0, 1)), name = "check1")),
+               unclass(data.frame(class = "intercept", coef = NA_character_,
+                                  prior_def = "normal(0, 1)")))
+  expect_equal(check_prior(NULL, name = "check1", allow_null = TRUE), NULL)
+})
+
+test_that("check_file", {
+  temp_file <- fs::file_temp("does-not-exist/fake-file", ext = "rds")
+
+  err <- rlang::catch_cnd(check_file(temp_file, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "be an existing directory")
+
+  err <- rlang::catch_cnd(check_file(temp_file, name = "check1",
+                                     create_dir = TRUE))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "be an existing file")
+
+  fs::file_touch(temp_file)
+
+  expect_equal(check_file(NULL, allow_null = TRUE, name = "check1"), NULL)
+  expect_equal(check_file(temp_file, name = "check1"), temp_file)
+  expect_equal(check_file(temp_file, name = "check1", check_file = FALSE,
+                          ext = "txt"),
+               fs::path_ext_set(temp_file, "txt"))
 })
 
 test_that("check_logical", {
