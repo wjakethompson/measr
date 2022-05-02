@@ -150,7 +150,7 @@ measr_dcm <- function(data,
                         adapt_delta = 0.95)
     }
   } else if (method == "optim") {
-    defl_pars <- list()
+    defl_pars <- list(algorithm = ifelse(backend == "rstan", "LBFGS", "lbfgs"))
   }
   stan_pars <- utils::modifyList(defl_pars, user_pars)
   stan_pars <- c(list(data = stan_data), stan_pars)
@@ -201,14 +201,16 @@ measr_dcm <- function(data,
   }
 
   # create measrfit object -----
-  algorithm <- if ("stanfit" %in% class(mod)) {
+  algorithm <- if (method == "optim") {
+    stan_pars$algorithm
+  } else if ("stanfit" %in% class(mod)) {
     mod@stan_args[[1]]$algorithm
   } else if ("CmdStanFit" %in% class(mod)) {
     mod$metadata()$algorithm
   }
   version_info <- list(measr = utils::packageVersion("measr"),
                        rstan = utils::packageVersion("rstan"),
-                       stanHeaders = utils::packageVersion("StanHeaders"))
+                       StanHeaders = utils::packageVersion("StanHeaders"))
   if (backend == "cmdstanr") {
     version_info$cmdstanr <- utils::packageVersion("cmdstanr")
     version_info$cmdstan <- as.package_version(cmdstanr::cmdstan_version())
@@ -221,12 +223,12 @@ measr_dcm <- function(data,
                   algorithm = algorithm,
                   backend = backend,
                   model = mod,
-                  fit = list(),
+                  model_fit = list(),
                   criteria = list(),
                   reliability = list(),
                   file = file,
                   version = version_info)
-
+  ret_mod <- new_measrdcm(ret_mod)
 
   # save and return object -----
   if (!is.null(file)) {

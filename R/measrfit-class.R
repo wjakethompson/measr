@@ -33,13 +33,12 @@
 NULL
 
 
-
-new_measrfit <- function(model = list()) {
+new_measrfit <- function(model = list(), ..., class = character()) {
   stopifnot(is.list(model))
 
-  structure(model, class = "measrfit")
+  structure(model, ..., class = c(class, "measrfit"))
 }
 
-is_stanmodel <- function(x) {
-  any(class(x) %in% c("stanfit", "CmdStanFit"))
+new_measrdcm <- function(x) {
+  new_measrfit(x, class = "measrdcm")
 }
