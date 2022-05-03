@@ -1,0 +1,2 @@
+exclusions: list("R/priors.R" = 185,
+                 "R/tidybayes-methods.R" = 6)

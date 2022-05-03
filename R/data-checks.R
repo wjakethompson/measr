@@ -87,16 +87,18 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
   } else {
     item_names <- dplyr::pull(x, !!identifier)
     if (!all(item_levels %in% item_names)) {
-      missing_items <- setdiff(item_levels, item_names)
-      abort_bad_argument(name,
-                         must = glue::glue("include all items in `data`.
-                                           Missing items: {missing_items}"))
+      abort_bad_argument(
+        name,
+        must = glue::glue("include all items in `data`.
+                          Missing items: {setdiff(item_levels, item_names)}")
+      )
     }
     if (!all(item_names %in% item_levels)) {
-      extra_items <- setdiff(item_names, item_levels)
-      abort_bad_argument(name,
-                         must = glue::glue("only include items found in `data`.
-                                           Extra items: {extra_items}"))
+      abort_bad_argument(
+        name,
+        must = glue::glue("only include items found in `data`.
+                          Extra items: {setdiff(item_names, item_levels)}")
+      )
     }
     x <- x %>%
       dplyr::rename(item_id = !!identifier) %>%

@@ -7,7 +7,8 @@ test_that("check_data", {
     dplyr::select(-name) %>%
     dplyr::mutate(item = 1) %>%
     tidyr::complete(student, item = 1:20) %>%
-    dplyr::mutate(score = sample(c(0, 1), size = dplyr::n(), replace = TRUE)) %>%
+    dplyr::mutate(score = sample(c(0, 1), size = dplyr::n(),
+                                 replace = TRUE)) %>%
     tidyr::pivot_wider(names_from = item, values_from = score)
 
   err <- rlang::catch_cnd(check_data("a", identifier = NULL,

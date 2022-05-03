@@ -129,21 +129,27 @@ validate_measrprior <- function(x) {
   needed_vars <- c("class", "coef", "prior_def")
 
   if (!all(needed_vars %in% names(col_types))) {
-    mis_var <- needed_vars[!needed_vars %in% names(col_types)]
-
-    abort_bad_argument("x",
-                       must = "contain `class`, `coef`, and `prior_def` fields",
-                       extra = glue::glue("Missing variables: ",
-                                          "{paste(mis_var, collapse = ', ')}"))
+    abort_bad_argument(
+      "x",
+      must = "contain `class`, `coef`, and `prior_def` fields",
+      extra = glue::glue(
+        "Missing variables: ",
+        "{paste(needed_vars[!needed_vars %in% names(col_types)],
+                collapse = ', ')}"
+      )
+    )
   }
 
   if (!all(names(col_types) %in% needed_vars)) {
-    ext_var <- names(col_types)[!names(col_types) %in% needed_vars]
-
-    abort_bad_argument("x",
-                       must = "only contain `class`, `coef`, and `prior_def`",
-                       extra = glue::glue("Extra variables: ",
-                                          "{paste(ext_var, collapse = ', ')}"))
+    abort_bad_argument(
+      "x",
+      must = "only contain `class`, `coef`, and `prior_def`",
+      extra = glue::glue(
+        "Extra variables: ",
+        "{paste(names(col_types)[!names(col_types) %in% needed_vars],
+                collapse = ', ')}"
+      )
+    )
   }
 
   if (any(c(is.na(x$class), is.na(x$prior_def)))) {
