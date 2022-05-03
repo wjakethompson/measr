@@ -43,10 +43,16 @@
     <loc>https://measr.info/reference/measr_dcm.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/reference/measrfit-class.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/reference/measrprior.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/reexports.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/tidyeval.html</loc>

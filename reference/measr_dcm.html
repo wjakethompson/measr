@@ -50,13 +50,17 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">measr_dcm</span><span class="op">(</span>
   <span class="va">data</span>,
-  resp_id <span class="op">=</span> <span class="cn">NULL</span>,
   missing <span class="op">=</span> <span class="cn">NA</span>,
   <span class="va">qmatrix</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lcdm"</span><span class="op">)</span>,
+  resp_id <span class="op">=</span> <span class="cn">NULL</span>,
+  item_id <span class="op">=</span> <span class="cn">NULL</span>,
+  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lcdm"</span>, <span class="st">"dina"</span>, <span class="st">"dino"</span><span class="op">)</span>,
   method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mcmc"</span>, <span class="st">"optim"</span><span class="op">)</span>,
   prior <span class="op">=</span> <span class="cn">NULL</span>,
   backend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"measr.backend"</span>, <span class="st">"rstan"</span><span class="op">)</span>,
+  return_stanfit <span class="op">=</span> <span class="cn">TRUE</span>,
+  file <span class="op">=</span> <span class="cn">NULL</span>,
+  file_refit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"measr.file_refit"</span>, <span class="st">"never"</span><span class="op">)</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -66,20 +70,29 @@
     <dl><dt>data</dt>
 <dd><p>Response data. A data frame with 1 row per respondent and 1
 column per item.</p></dd>
+<dt>missing</dt>
+<dd><p>An R expression specifying how missing data in <code>data</code> is coded
+(e.g., <code>NA</code>, <code>"."</code>, <code>-99</code>, etc.). The default is <code>NA</code>.</p></dd>
+<dt>qmatrix</dt>
+<dd><p>The Q-matrix. A data frame with 1 row per item and 1 column
+per attribute. All cells should be either 0 (item does not measure the
+attribute) or 1 (item does measure the attribute).</p></dd>
 <dt>resp_id</dt>
 <dd><p>Optional. Variable name of a column in <code>data</code> that
 contains respondent identifiers. <code>NULL</code> (the default) indicates that no
 identifiers are present in the data, and row numbers will be used as
 identifiers.</p></dd>
-<dt>missing</dt>
-<dd><p>An R expression specifying how missing data is coded (e.g.,
-<code>NA</code>, <code>"."</code>, <code>-99</code>, etc.). The default is <code>NA</code>.</p></dd>
-<dt>qmatrix</dt>
-<dd><p>The Q-matrix. A data frame with 1 row per item and 1 column
-per attribute. All cells should be either 0 (item does not measure the
-attribute) or 1 (item does measure the attribute).</p></dd>
+<dt>item_id</dt>
+<dd><p>Optional. Variable name of a column in <code>qmatrix</code> that contains
+item identifiers. <code>NULL</code> (the default) indicates that no identifiers are
+present in the Q-matrix. In this case, the column names of <code>data</code>
+(excluding any column specified in <code>resp_id</code>) will be used as the item
+identifiers. <code>NULL</code> also assumes that the order of the rows in the Q-matrix
+is the same as the order of the columns in <code>data</code> (i.e., the item in row 1
+of <code>qmatrix</code> is the item in column 1 of <code>data</code>, excluding <code>resp_id</code>).</p></dd>
 <dt>type</dt>
-<dd><p>Type of DCM to estimate. Currently only the LCDM is supported.</p></dd>
+<dd><p>Type of DCM to estimate. Must be one of
+lcdm, dina, or dino)`.</p></dd>
 <dt>method</dt>
 <dd><p>Estimation method. Options are <code>"mcmc"</code>, which uses Stan's
 sampling method, or <code>"optim"</code>, which uses Stan's optimizer.</p></dd>
@@ -88,11 +101,32 @@ sampling method, or <code>"optim"</code>, which uses Stan's optimizer.</p></dd>
 are used, as specified by <code><a href="default_dcm_priors.html">default_dcm_priors()</a></code>.</p></dd>
 <dt>backend</dt>
 <dd><p>Character string naming the package to use as the backend for
-fitting the Stan model. Options are "rstan" (the default) or "cmdstanr".
-Can be set globally for the current R session via the "measr.backend"
-option (see options). Details on the rstan and cmdstanr packages are
-available at <a href="https://mc-stan.org/rstan/" class="external-link">https://mc-stan.org/rstan/</a> and
+fitting the Stan model. Options are <code>"rstan"</code> (the default) or
+<code>"cmdstanr"</code>. Can be set globally for the current R session via the
+"measr.backend" option (see <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>). Details on the <strong>rstan</strong> and
+<strong>cmdstanr</strong> packages are available at <a href="https://mc-stan.org/rstan/" class="external-link">https://mc-stan.org/rstan/</a> and
 <a href="https://mc-stan.org/cmdstanr/" class="external-link">https://mc-stan.org/cmdstanr/</a>, respectively.</p></dd>
+<dt>return_stanfit</dt>
+<dd><p>Logical. If <code>backend = "cmdstanr"</code>, should the fitted
+model be coerced to a <a href="https://mc-stan.org/rstan/reference/stanfit-class.html" class="external-link">rstan::stanfit</a> object in the . Ignored if
+<code>backend = "rstan"</code>.</p></dd>
+<dt>file</dt>
+<dd><p>Either <code>NULL</code> (the default) or a character string. If a character
+string, the fitted model object is saved as an <code>.rds</code> object using
+<code><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS()</a></code> using the supplied character string. The <code>.rds</code> extension
+is automatically added. If the specified file already exists, <strong>measr</strong>
+will load the previously saved model. Unless <code>file_refit</code> is specified, the
+model will not be refit.</p></dd>
+<dt>file_refit</dt>
+<dd><p>Controls when a saved model is refit. Options are
+<code>"never"</code>, <code>"always"</code>, and <code>"on_change"</code>. Can be set globally for the
+current R session via the "measr.file_refit" option (see <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>).</p><ul><li><p>For <code>"never"</code> (the default), the fitted model is always loaded if the
+<code>file</code> exists, and model fitting is skipped.</p></li>
+<li><p>For <code>"always"</code>, the model is always refitted, regardless of whether or
+not <code>file</code> exists.</p></li>
+<li><p>For <code>"on_change"</code>, the model will be refit if the <code>data</code>, <code>prior</code>, or
+<code>method</code> specified are different from that in the saved <code>file</code>.</p></li>
+</ul></dd>
 <dt>...</dt>
 <dd><p>Additional arguments passed to Stan.</p><ul><li><p>For <code>backend = "rstan"</code>, arguments are passed to <code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html" class="external-link">rstan::sampling()</a></code>
 or <code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-optimizing.html" class="external-link">rstan::optimizing()</a></code>.</p></li>
