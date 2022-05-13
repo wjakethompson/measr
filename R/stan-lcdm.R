@@ -82,7 +82,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   # transformed parameters block -----
   vector_def <- all_params %>%
     dplyr::filter(.data$param_level >= 2) %>%
-    glue::glue_data("vector[{num_comp}] v{item_id}_{param_level} = ",
+    glue::glue_data("vector[{num_comp}] {gsub('l', 'v', param_name)} = ",
                     "[{comp_atts}]';")
   raw_inter <- all_params %>%
     dplyr::filter(.data$param_level >= 2) %>%
@@ -90,7 +90,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   interaction_constrain <- all_params %>%
     dplyr::filter(.data$param_level >= 2) %>%
     glue::glue_data("real {param_name} = exp({param_name}_raw) - ",
-                    "min(v{item_id}_{param_level});")
+                    "min({gsub('l', 'v', param_name)});")
 
   all_profiles <- create_profiles(attributes = ncol(qmatrix))
 
