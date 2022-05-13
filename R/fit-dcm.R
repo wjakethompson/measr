@@ -158,7 +158,7 @@ measr_dcm <- function(data,
   # compile model -----
   func_name <- rlang::sym(paste0(type, "_script"))
   script_call <- rlang::call2(func_name,
-                              rlang::expr(qmatrix),
+                              rlang::expr(clean_qmatrix),
                               rlang::expr(prior))
   stan_code <- eval(script_call)
 
