@@ -165,13 +165,14 @@ measr_dcm <- function(data,
   if (!is.null(file)) {
     if (fs::file_exists(file)) {
       prev <- readRDS(file)
-    }
-    # if fitted model matches current args and "on_change", return prev fit
-    if (all(identical(prev$data, list(data = clean_data, qmatrix = qmatrix)),
-            identical(prev$prior, stan_code$prior),
-            identical(prev$method, method)) &
-        file_refit == "on_change") {
-      return(prev)
+
+      # if fitted model matches current args and "on_change", return prev fit
+      if (all(identical(prev$data, list(data = clean_data, qmatrix = qmatrix)),
+              identical(prev$prior, stan_code$prior),
+              identical(prev$method, method)) &
+          file_refit == "on_change") {
+        return(prev)
+      }
     }
   }
 
