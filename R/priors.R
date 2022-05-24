@@ -4,9 +4,11 @@
 #'
 #' @param prior A character string defining a distribution in **Stan** language.
 #'   A list of all distributions supported by **Stan** can be found in *Stan
-#'   Language Functions Reference* at https://mc-stan.org/users/documentation/.
+#'   Language Functions Reference* at
+#'   \url{https://mc-stan.org/users/documentation/}.
 #' @param class The parameter class. Defaults to `"intercept"`. Must be one of
-#'   `"intercept"`, `"maineffect"`, or `"interaction"`.
+#'   `"intercept"`, `"maineffect"`, `"interaction"` for the LCDM, or one of
+#'   `"slip"` or `"guess"` for DINA or DINO models.
 #' @param coef Name of a specific parameter within the defined class. If not
 #'   defined, the prior is applied to all parameters within the class.
 #' @param lb Lower bound for parameter restriction. Defaults to no restriction.

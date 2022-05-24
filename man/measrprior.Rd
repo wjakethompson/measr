@@ -24,10 +24,12 @@ prior_string(prior, ...)
 \arguments{
 \item{prior}{A character string defining a distribution in \strong{Stan} language.
 A list of all distributions supported by \strong{Stan} can be found in \emph{Stan
-Language Functions Reference} at https://mc-stan.org/users/documentation/.}
+Language Functions Reference} at
+\url{https://mc-stan.org/users/documentation/}.}
 
 \item{class}{The parameter class. Defaults to \code{"intercept"}. Must be one of
-\code{"intercept"}, \code{"maineffect"}, or \code{"interaction"}.}
+\code{"intercept"}, \code{"maineffect"}, \code{"interaction"} for the LCDM, or one of
+\code{"slip"} or \code{"guess"} for DINA or DINO models.}
 
 \item{coef}{Name of a specific parameter within the defined class. If not
 defined, the prior is applied to all parameters within the class.}
