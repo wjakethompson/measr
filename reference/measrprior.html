@@ -68,10 +68,12 @@
     <dl><dt>prior</dt>
 <dd><p>A character string defining a distribution in <strong>Stan</strong> language.
 A list of all distributions supported by <strong>Stan</strong> can be found in <em>Stan
-Language Functions Reference</em> at https://mc-stan.org/users/documentation/.</p></dd>
+Language Functions Reference</em> at
+<a href="https://mc-stan.org/users/documentation/" class="external-link">https://mc-stan.org/users/documentation/</a>.</p></dd>
 <dt>class</dt>
 <dd><p>The parameter class. Defaults to <code>"intercept"</code>. Must be one of
-<code>"intercept"</code>, <code>"maineffect"</code>, or <code>"interaction"</code>.</p></dd>
+<code>"intercept"</code>, <code>"maineffect"</code>, <code>"interaction"</code> for the LCDM, or one of
+<code>"slip"</code> or <code>"guess"</code> for DINA or DINO models.</p></dd>
 <dt>coef</dt>
 <dd><p>Name of a specific parameter within the defined class. If not
 defined, the prior is applied to all parameters within the class.</p></dd>
