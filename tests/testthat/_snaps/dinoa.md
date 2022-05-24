@@ -78,6 +78,36 @@
         guess[19] ~ beta(5, 25);
         slip[20] ~ beta(5, 25);
         guess[20] ~ beta(5, 25);
+        slip[21] ~ beta(5, 25);
+        guess[21] ~ beta(5, 25);
+        slip[22] ~ beta(5, 25);
+        guess[22] ~ beta(5, 25);
+        slip[23] ~ beta(5, 25);
+        guess[23] ~ beta(5, 25);
+        slip[24] ~ beta(5, 25);
+        guess[24] ~ beta(5, 25);
+        slip[25] ~ beta(5, 25);
+        guess[25] ~ beta(5, 25);
+        slip[26] ~ beta(5, 25);
+        guess[26] ~ beta(5, 25);
+        slip[27] ~ beta(5, 25);
+        guess[27] ~ beta(5, 25);
+        slip[28] ~ beta(5, 25);
+        guess[28] ~ beta(5, 25);
+        slip[29] ~ beta(5, 25);
+        guess[29] ~ beta(5, 25);
+        slip[30] ~ beta(5, 25);
+        guess[30] ~ beta(5, 25);
+        slip[31] ~ beta(5, 25);
+        guess[31] ~ beta(5, 25);
+        slip[32] ~ beta(5, 25);
+        guess[32] ~ beta(5, 25);
+        slip[33] ~ beta(5, 25);
+        guess[33] ~ beta(5, 25);
+        slip[34] ~ beta(5, 25);
+        guess[34] ~ beta(5, 25);
+        slip[35] ~ beta(5, 25);
+        guess[35] ~ beta(5, 25);
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
