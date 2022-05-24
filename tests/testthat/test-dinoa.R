@@ -47,6 +47,10 @@ test_that("dina model works", {
 
   comp_cor <- cor(dina_comp$value, dina_comp$true)
   comp_dif <- abs(dina_comp$value - dina_comp$true)
+
+  print(comp_cor)
+  print(max(comp_dif))
+
   expect_true(comp_cor > 0.85)
   expect_true(max(comp_dif) < 0.2)
 
