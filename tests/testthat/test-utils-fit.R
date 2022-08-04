@@ -1,7 +1,6 @@
 test_that("install_backend", {
-  # pkg <- "cmdstanr"
-  # expect_null(install_backend(pkg))
-
+  # example <- "stan-dev/cmdstanr"
+  # expect_equal(install_backend(pkg = "cmdstanr"), example)
 })
 
 # new_dina <- dplyr::slice_sample(dina_data, n=100)

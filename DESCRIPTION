@@ -7,6 +7,11 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "wjakethompson@gmail.com",
            comment = c(ORCID = "0000-0001-7339-0300")),
+    person(given = "Nathan",
+           family = "Jones",
+           role = c("ctb"),
+           email = "jonesnateb@gmail.com",
+           comment = c(ORCID = "0000-0001-6177-7161")),
     person("University of Kansas", role = c("cph")),
     person("Institute of Education Sciences", role = c("fnd"))
     )

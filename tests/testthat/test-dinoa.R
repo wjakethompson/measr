@@ -55,8 +55,6 @@ test_that("dina model works", {
   expect_true(max(comp_dif) < 0.2)
 
   # mcmc model -----
-   #new_dina <- dplyr::slice_sample(dina_data, n=100)
-
    # skip_on_cran()
    # out <- capture.output(
    #   suppressWarnings(suppressMessages(
@@ -66,50 +64,49 @@ test_that("dina model works", {
    #                        cores = 1, chains = 1, warmup = 100, refresh = 0)
    #   ))
    # )
-  dina_mcmc <- readRDS("C:/Users/n883j701/Desktop/GitHub-Repos/measrV1/tests/dina_mcmc.rds")
-
-   expect_s3_class(dina_mcmc, "measrfit")
-   expect_s3_class(dina_mcmc, "measrdcm")
-   expect_equal(names(dina_mcmc),
-                c("data", "prior", "stancode", "method", "algorithm",
-                  "backend", "model", "model_fit", "criteria", "reliability",
-                  "file", "version"))
-   expect_equal(names(dina_mcmc$data), c("data", "qmatrix"))
-   expect_equal(dina_mcmc$data$data,
-                dina_data %>%
-                  tidyr::pivot_longer(-resp_id, names_to = "item_id",
-                                      values_to = "score") %>%
-                  dplyr::mutate(resp_id = factor(resp_id),
-                                item_id = factor(item_id,
-                                                 levels = unique(item_id))))
-   expect_equal(dina_mcmc$data$qmatrix,
-                q_matrix %>%
-                  dplyr::rename(item_id = item) %>%
-                  dplyr::mutate(item_id = factor(item_id,
-                                                 levels = unique(item_id))))
-   expect_equal(dina_mcmc$prior, default_dcm_priors(type = "dina"))
-   expect_snapshot(dina_mcmc$stancode)
-   expect_equal(dina_mcmc$method, "mcmc")
-   expect_equal(dina_mcmc$algorithm, "NUTS")
-   expect_s4_class(dina_mcmc$model, "stanfit")
-   expect_type(dina_mcmc$model_fit, "list")
-   expect_type(dina_mcmc$criteria, "list")
-   expect_type(dina_mcmc$reliability, "list")
-   expect_null(dina_mcmc$file)
-   expect_equal(names(dina_mcmc$version), c("measr", "rstan", "StanHeaders"))
-   expect_equal(dina_mcmc$backend, "rstan") # new
-
-
-   dina_mcmc_comp <- rstan::summary(dina_mcmc$model)$summary %>%
-     tibble::as_tibble(rownames = "param") %>%
-     dplyr::filter(grepl("^Vc|slip|guess", .data$param)) %>%
-     dplyr::mutate(param = gsub("Vc", "nu", .data$param)) %>%
-     dplyr::left_join(true_dinoa, by = "param")
-
-   comp_cor <- cor(dina_mcmc_comp$mean, dina_mcmc_comp$true)
-   comp_dif <- abs(dina_mcmc_comp$mean - dina_mcmc_comp$true)
-   expect_true(comp_cor > 0.85)
-   expect_true(max(comp_dif) < 0.15)
+  #
+  #  expect_s3_class(dina_mcmc, "measrfit")
+  #  expect_s3_class(dina_mcmc, "measrdcm")
+  #  expect_equal(names(dina_mcmc),
+  #               c("data", "prior", "stancode", "method", "algorithm",
+  #                 "backend", "model", "model_fit", "criteria", "reliability",
+  #                 "file", "version"))
+  #  expect_equal(names(dina_mcmc$data), c("data", "qmatrix"))
+  #  expect_equal(dina_mcmc$data$data,
+  #               dina_data %>%
+  #                 tidyr::pivot_longer(-resp_id, names_to = "item_id",
+  #                                     values_to = "score") %>%
+  #                 dplyr::mutate(resp_id = factor(resp_id),
+  #                               item_id = factor(item_id,
+  #                                                levels = unique(item_id))))
+  #  expect_equal(dina_mcmc$data$qmatrix,
+  #               q_matrix %>%
+  #                 dplyr::rename(item_id = item) %>%
+  #                 dplyr::mutate(item_id = factor(item_id,
+  #                                                levels = unique(item_id))))
+  #  expect_equal(dina_mcmc$prior, default_dcm_priors(type = "dina"))
+  #  expect_snapshot(dina_mcmc$stancode)
+  #  expect_equal(dina_mcmc$method, "mcmc")
+  #  expect_equal(dina_mcmc$algorithm, "NUTS")
+  #  expect_s4_class(dina_mcmc$model, "stanfit")
+  #  expect_type(dina_mcmc$model_fit, "list")
+  #  expect_type(dina_mcmc$criteria, "list")
+  #  expect_type(dina_mcmc$reliability, "list")
+  #  expect_null(dina_mcmc$file)
+  #  expect_equal(names(dina_mcmc$version), c("measr", "rstan", "StanHeaders"))
+  #  expect_equal(dina_mcmc$backend, "rstan") # new
+  #
+  #
+  #  dina_mcmc_comp <- rstan::summary(dina_mcmc$model)$summary %>%
+  #    tibble::as_tibble(rownames = "param") %>%
+  #    dplyr::filter(grepl("^Vc|slip|guess", .data$param)) %>%
+  #    dplyr::mutate(param = gsub("Vc", "nu", .data$param)) %>%
+  #    dplyr::left_join(true_dinoa, by = "param")
+  #
+  #  comp_cor <- cor(dina_mcmc_comp$mean, dina_mcmc_comp$true)
+  #  comp_dif <- abs(dina_mcmc_comp$mean - dina_mcmc_comp$true)
+  #  expect_true(comp_cor > 0.85)
+  #  expect_true(max(comp_dif) < 0.15)
  })
 
 
@@ -169,6 +166,12 @@ test_that("dino model works", {
   expect_true(comp_cor > 0.85)
   expect_true(max(comp_dif) < 0.2)
 
+  prior1 <- prior(lognormal(0, 1), class = maineffect)
+  dino <- measr_dcm(data = dino_data, missing = NA, qmatrix = q_matrix,
+                    resp_id = "resp_id", item_id = "item", type = "dino",
+                    method = "optim", seed = 63277, prior = prior1, backend = "cmdstanr")
+
+
   # mcmc model -----
   # skip_on_cran()
   # out <- capture.output(
@@ -179,157 +182,111 @@ test_that("dino model works", {
   #                            cores = 1, chains = 1, warmup = 150, refresh = 0)
   #   ))
   # )
-  dino_mcmc <- readRDS("C:/Users/n883j701/Desktop/GitHub-Repos/measrV1/tests/dino_mcmc.rds")
-
-  expect_s3_class(dino_mcmc, "measrfit")
-  expect_s3_class(dino_mcmc, "measrdcm")
-  expect_equal(names(dino_mcmc),
-               c("data", "prior", "stancode", "method", "algorithm",
-                 "backend", "model", "model_fit", "criteria", "reliability",
-                 "file", "version"))
-  expect_equal(names(dino_mcmc$data), c("data", "qmatrix"))
-  expect_equal(dino_mcmc$data$data,
-               dino_data %>%
-                 tidyr::pivot_longer(-resp_id, names_to = "item_id",
-                                     values_to = "score") %>%
-                 dplyr::mutate(resp_id = factor(resp_id),
-                               item_id = factor(item_id,
-                                                levels = unique(item_id))))
-  expect_equal(dino_mcmc$data$qmatrix,
-               q_matrix %>%
-                 dplyr::rename(item_id = item) %>%
-                 dplyr::mutate(item_id = factor(item_id,
-                                                levels = unique(item_id))))
-  expect_equal(dino_mcmc$prior, default_dcm_priors(type = "dino"))
-  expect_snapshot(dino_mcmc$stancode)
-  expect_equal(dino_mcmc$method, "mcmc")
-  expect_equal(dino_mcmc$algorithm, "NUTS")
-  expect_s4_class(dino_mcmc$model, "stanfit")
-  expect_type(dino_mcmc$model_fit, "list")
-  expect_type(dino_mcmc$criteria, "list")
-  expect_type(dino_mcmc$reliability, "list")
-  expect_null(dino_mcmc$file)
-  expect_equal(names(dino_mcmc$version), c("measr", "rstan", "StanHeaders"))
-
-  dino_mcmc_comp <- rstan::summary(dino_mcmc$model)$summary %>%
-    tibble::as_tibble(rownames = "param") %>%
-    dplyr::filter(grepl("^Vc|slip|guess", .data$param)) %>%
-    dplyr::mutate(param = gsub("Vc", "nu", .data$param)) %>%
-    dplyr::left_join(true_dinoa, by = "param")
-
-  comp_cor <- cor(dino_mcmc_comp$mean, dino_mcmc_comp$true)
-  comp_dif <- abs(dino_mcmc_comp$mean - dino_mcmc_comp$true)
-  expect_true(comp_cor > 0.85)
-  expect_true(max(comp_dif) < 0.15)
-})
-
-
-test_that("lcdm model works", {
-  # optim model -----
-  # out <- capture.output(
-  #   suppressMessages(
-  #     lcdm <- measr_dcm(data = lcdm_data, missing = NA, qmatrix = q_matrix,
-  #                       resp_id = "resp_id", item_id = "item", type = "lcdm",
-  #                       method = "optim", seed = 63277)
-  #   )
-  # )
   #
-  # expect_s3_class(lcdm, "measrfit")
-  # expect_s3_class(lcdm, "measrdcm")
-  # expect_equal(names(lcdm),
+  # expect_s3_class(dino_mcmc, "measrfit")
+  # expect_s3_class(dino_mcmc, "measrdcm")
+  # expect_equal(names(dino_mcmc),
   #              c("data", "prior", "stancode", "method", "algorithm",
   #                "backend", "model", "model_fit", "criteria", "reliability",
   #                "file", "version"))
-  # expect_equal(names(lcdm$data), c("data", "qmatrix"))
-  # expect_equal(lcdm$data$data,
-  #              lcdm_data %>%
+  # expect_equal(names(dino_mcmc$data), c("data", "qmatrix"))
+  # expect_equal(dino_mcmc$data$data,
+  #              dino_data %>%
   #                tidyr::pivot_longer(-resp_id, names_to = "item_id",
   #                                    values_to = "score") %>%
   #                dplyr::mutate(resp_id = factor(resp_id),
   #                              item_id = factor(item_id,
   #                                               levels = unique(item_id))))
-  # expect_equal(lcdm$data$qmatrix,
+  # expect_equal(dino_mcmc$data$qmatrix,
   #              q_matrix %>%
   #                dplyr::rename(item_id = item) %>%
   #                dplyr::mutate(item_id = factor(item_id,
   #                                               levels = unique(item_id))))
-  # expect_equal(lcdm$prior, default_dcm_priors(type = "lcdm"))
-  # expect_snapshot(lcdm$stancode)
-  # expect_equal(lcdm$method, "optim")
-  # expect_equal(lcdm$algorithm, "LBFGS")
-  # expect_type(lcdm$model, "list")
-  # expect_equal(names(lcdm$model),
-  #              c("par", "value", "return_code", "theta_tilde"))
-  # expect_type(lcdm$model_fit, "list")
-  # expect_type(lcdm$criteria, "list")
-  # expect_type(lcdm$reliability, "list")
-  # expect_null(lcdm$file)
-  # expect_equal(names(lcdm$version), c("measr", "rstan", "StanHeaders"))
+  # expect_equal(dino_mcmc$prior, default_dcm_priors(type = "dino"))
+  # expect_snapshot(dino_mcmc$stancode)
+  # expect_equal(dino_mcmc$method, "mcmc")
+  # expect_equal(dino_mcmc$algorithm, "NUTS")
+  # expect_s4_class(dino_mcmc$model, "stanfit")
+  # expect_type(dino_mcmc$model_fit, "list")
+  # expect_type(dino_mcmc$criteria, "list")
+  # expect_type(dino_mcmc$reliability, "list")
+  # expect_null(dino_mcmc$file)
+  # expect_equal(names(dino_mcmc$version), c("measr", "rstan", "StanHeaders"))
   #
-  # lcdm_comp <- tibble::enframe(lcdm$model$par) %>%
-  #   dplyr::filter(grepl("^Vc|slip|guess", .data$name)) %>%
-  #   dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
-  #   dplyr::left_join(true_dinoa, by = c("name" = "param"))
-  #
-  # comp_cor <- cor(lcdm_comp$value, lcdm_comp$true)
-  # comp_dif <- abs(lcdm_comp$value - lcdm_comp$true)
-  #
-  # print(comp_cor)
-  # print(max(comp_dif))
-  #
-  # expect_true(comp_cor > 0.85)
-  # expect_true(max(comp_dif) < 0.2)
-
-  # mcmc model -----
-  # skip_on_cran()
-  # out <- capture.output(
-  #   suppressWarnings(suppressMessages(
-  #     lcdm_mcmc <- measr_dcm(data = lcdm_data, missing = NA, qmatrix = q_matrix,
-  #                            resp_id = "resp_id", item_id = "item",
-  #                            type = "lcdm", method = "mcmc", iter = 300,
-  #                            cores = 1, chains = 1, warmup = 150, refresh = 0)
-  #   ))
-  # )
-  #
-  # expect_s3_class(lcdm_mcmc, "measrfit")
-  # expect_s3_class(lcdm_mcmc, "measrdcm")
-  # expect_equal(names(lcdm_mcmc),
-  #              c("data", "prior", "stancode", "method", "algorithm",
-  #                "backend", "model", "model_fit", "criteria", "reliability",
-  #                "file", "version"))
-  # expect_equal(names(lcdm_mcmc$data), c("data", "qmatrix"))
-  # expect_equal(lcdm_mcmc$data$data,
-  #              lcdm_data %>%
-  #                tidyr::pivot_longer(-resp_id, names_to = "item_id",
-  #                                    values_to = "score") %>%
-  #                dplyr::mutate(resp_id = factor(resp_id),
-  #                              item_id = factor(item_id,
-  #                                               levels = unique(item_id))))
-  # expect_equal(lcdm_mcmc$data$qmatrix,
-  #              q_matrix %>%
-  #                dplyr::rename(item_id = item) %>%
-  #                dplyr::mutate(item_id = factor(item_id,
-  #                                               levels = unique(item_id))))
-  # expect_equal(lcdm_mcmc$prior, default_dcm_priors(type = "lcdm"))
-  # expect_snapshot(lcdm_mcmc$stancode)
-  # expect_equal(lcdm_mcmc$method, "mcmc")
-  # expect_equal(lcdm_mcmc$algorithm, "NUTS")
-  # expect_s4_class(lcdm_mcmc$model, "stanfit")
-  # expect_type(lcdm_mcmc$model_fit, "list")
-  # expect_type(lcdm_mcmc$criteria, "list")
-  # expect_type(lcdm_mcmc$reliability, "list")
-  # expect_null(lcdm_mcmc$file)
-  # expect_equal(names(lcdm_mcmc$version), c("measr", "rstan", "StanHeaders"))
-  #
-  # lcdm_mcmc_comp <- rstan::summary(lcdm_mcmc$model)$summary %>%
+  # dino_mcmc_comp <- rstan::summary(dino_mcmc$model)$summary %>%
   #   tibble::as_tibble(rownames = "param") %>%
   #   dplyr::filter(grepl("^Vc|slip|guess", .data$param)) %>%
   #   dplyr::mutate(param = gsub("Vc", "nu", .data$param)) %>%
   #   dplyr::left_join(true_dinoa, by = "param")
   #
-  # comp_cor <- cor(lcdm_mcmc_comp$mean, lcdm_mcmc_comp$true)
-  # comp_dif <- abs(lcdm_mcmc_comp$mean - lcdm_mcmc_comp$true)
+  # comp_cor <- cor(dino_mcmc_comp$mean, dino_mcmc_comp$true)
+  # comp_dif <- abs(dino_mcmc_comp$mean - dino_mcmc_comp$true)
   # expect_true(comp_cor > 0.85)
   # expect_true(max(comp_dif) < 0.15)
+})
+
+
+test_that("lcdm model works", {
+  # optim model -----
+  out <- capture.output(
+    suppressMessages(
+      lcdm <- measr_dcm(data = ecpe_data, missing = NA, qmatrix = ecpe_qmatrix,
+                        resp_id = "resp_id", item_id = "item_id", type = "lcdm",
+                        method = "optim", seed = 63277)
+    )
+  )
+
+  expect_s3_class(lcdm, "measrfit")
+  expect_s3_class(lcdm, "measrdcm")
+  expect_equal(names(lcdm),
+               c("data", "prior", "stancode", "method", "algorithm",
+                 "backend", "model", "model_fit", "criteria", "reliability",
+                 "file", "version"))
+  expect_equal(names(lcdm$data), c("data", "qmatrix"))
+  expect_equal(lcdm$data$data,
+               ecpe_data %>%
+                 tidyr::pivot_longer(-resp_id, names_to = "item_id",
+                                     values_to = "score") %>%
+                 dplyr::mutate(resp_id = factor(resp_id),
+                               item_id = factor(item_id,
+                                                levels = unique(item_id))))
+  expect_equal(lcdm$data$qmatrix,
+               ecpe_qmatrix %>%
+                 dplyr::mutate(item_id = factor(item_id,
+                                                levels = unique(item_id))))
+  expect_equal(lcdm$prior, default_dcm_priors(type = "lcdm"))
+  expect_snapshot(lcdm$stancode)
+  expect_equal(lcdm$method, "optim")
+  expect_equal(lcdm$algorithm, "LBFGS")
+  expect_type(lcdm$model, "list")
+  expect_equal(names(lcdm$model),
+               c("par", "value", "return_code", "theta_tilde"))
+  expect_type(lcdm$model_fit, "list")
+  expect_type(lcdm$criteria, "list")
+  expect_type(lcdm$reliability, "list")
+  expect_null(lcdm$file)
+  expect_equal(names(lcdm$version), c("measr", "rstan", "StanHeaders"))
+
+  lcdm_comp <- tibble::enframe(lcdm$model$par) %>%
+    dplyr::filter(grepl("^Vc|slip|guess", .data$name)) %>%
+    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
+    dplyr::left_join(true_dinoa, by = c("name" = "param"))
+
+  comp_cor <- cor(lcdm_comp$value, ecpe_mplus$model$pxi)
+  comp_dif <- abs(lcdm_comp$value - ecpe_mplus$model$pxi)
+
+  print(comp_cor)
+  print(max(comp_dif))
+
+  expect_true(comp_cor > 0.85)
+  expect_true(max(comp_dif) < 0.2)
+
+
+  prior1 <- prior(lognormal(0, 1), class = maineffect)
+  lcdm1 <- measr_dcm(data = ecpe_data, missing = NA, qmatrix = ecpe_qmatrix,
+                    resp_id = "resp_id", item_id = "item_id", type = "lcdm",
+                    method = "optim", seed = 63277, prior = prior1)
+  expect_equal(lcdm1$prior, c(prior1, default_dcm_priors(type = "lcdm"), replace = TRUE))
+
 })
 
