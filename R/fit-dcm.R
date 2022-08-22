@@ -143,7 +143,8 @@ measr_dcm <- function(data,
   if (method == "mcmc") {
     if (backend == "rstan") {
       defl_pars <- list(iter = 4000, warmup = 2000, chains = 4,
-                        cores = getOption("mc.cores", 1L))
+                        cores = getOption("mc.cores", 1L),
+                        include = FALSE, pars = "pi")
     } else if (backend == "cmdstanr") {
       defl_pars <- list(iter_sampling = 2000, iter_warmup = 2000, chains = 4,
                         parallel_chains = getOption("mc.cores", 1L),
