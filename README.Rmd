@@ -35,7 +35,13 @@ The API is likely to change as development progresses until the package is offic
 
 ## Installation
 
-You can install the development version of measr from [GitHub](https://github.com/wjakethompson/measr) with:
+You can install the released version of {measr} from [CRAN](https://cran.r-project.org/) with:
+
+```r
+install.packages("measr")
+```
+
+To install the development version of {measr} from [GitHub](https://github.com/wjakethompson/measr) use:
 
 ``` r
 # install.packages("remotes")
