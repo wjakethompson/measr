@@ -238,6 +238,3 @@ measr_dcm <- function(data,
   }
   return(ret_mod)
 }
-
-
-# TODO: finish s3 class for fitted models; more testing to figure out why DINA isn't converging.
