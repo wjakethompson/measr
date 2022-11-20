@@ -15,3 +15,24 @@ one_down_params <- function(x, item) {
         sapply(att_combos, paste, collapse = ""), sep = "", collapse = ",")
 }
 one_down_params <- Vectorize(one_down_params, USE.NAMES = FALSE)
+
+
+define_interactions <- function(param_level, param_info) {
+  vector_def <- param_info %>%
+    glue::glue_data("vector[{num_comp}] {gsub('l', 'v', param_name)} = ",
+                    "[{comp_atts}]';")
+  interaction_constrain <- param_info %>%
+    glue::glue_data("real {param_name} = exp({param_name}_raw) - ",
+                    "min({gsub('l', 'v', param_name)});")
+
+  trans_par_code <- glue::glue(
+    "  ////////////////////////////////// {param_level}-way interactions",
+    "  {glue::glue_collapse(vector_def, sep = \"\n  \")}",
+    "",
+    "  ////////////////////////////////// constrain {param_level}-way",
+    "  {glue::glue_collapse(interaction_constrain, sep = \"\n  \")}",
+    .sep = "\n", .trim = FALSE
+  )
+
+  return(trans_par_code)
+}

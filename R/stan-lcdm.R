@@ -80,17 +80,19 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   )
 
   # transformed parameters block -----
-  vector_def <- all_params %>%
+  trans_param_defs <- all_params %>%
+    tidyr::nest(param_info = -.data$param_level) %>%
     dplyr::filter(.data$param_level >= 2) %>%
-    glue::glue_data("vector[{num_comp}] {gsub('l', 'v', param_name)} = ",
-                    "[{comp_atts}]';")
+    dplyr::arrange(.data$param_level) %>%
+    dplyr::mutate(trans_pars = purrr::map2( .data$param_level, .data$param_info,
+                                            define_interactions)) %>%
+    tidyr::unnest(.data$trans_pars) %>%
+    glue::glue_data("{trans_pars}") %>%
+    glue::glue_collapse(sep = "\n\n")
+
   raw_inter <- all_params %>%
     dplyr::filter(.data$param_level >= 2) %>%
     glue::glue_data("{param_name}_raw")
-  interaction_constrain <- all_params %>%
-    dplyr::filter(.data$param_level >= 2) %>%
-    glue::glue_data("real {param_name} = exp({param_name}_raw) - ",
-                    "min({gsub('l', 'v', param_name)});")
 
   all_profiles <- create_profiles(attributes = ncol(qmatrix))
 
@@ -121,14 +123,10 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     "  vector[C] log_Vc = log(Vc);",
     "  matrix[I,C] pi;",
     "",
-    "  ////////////////////////////////// vectors of interaction components",
-    "  {glue::glue_collapse(vector_def, sep = \"\n  \")}",
+    "{glue::glue_collapse(trans_param_defs, sep = \"\n  \")}",
     "",
     "  {glue::glue(\"real interaction_raw[{length(raw_inter)}] = \",
                    \"{{{glue::glue_collapse(raw_inter, sep = ',')}\")}}};",
-    "",
-    "  ////////////////////////////////// adjust to constrain interactions",
-    "  {glue::glue_collapse(interaction_constrain, sep = \"\n  \")}",
     "",
     "  ////////////////////////////////// probability of correct response",
     "  {glue::glue_collapse(pi_def, sep = \"\n  \")}",
