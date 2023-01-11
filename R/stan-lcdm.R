@@ -24,7 +24,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
     dplyr::select(where(~ sum(.x) > 0)) %>%
     tibble::rowid_to_column(var = "item_id") %>%
-    tidyr::pivot_longer(cols = -.data$item_id, names_to = "parameter",
+    tidyr::pivot_longer(cols = -"item_id", names_to = "parameter",
                         values_to = "value") %>%
     dplyr::filter(.data$value == 1) %>%
     dplyr::mutate(
@@ -102,14 +102,15 @@ lcdm_script <- function(qmatrix, prior = NULL) {
                         all_profiles) %>%
     tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
     tibble::rowid_to_column(var = "profile_id") %>%
-    tidyr::pivot_longer(-.data$profile_id, names_to = "parameter",
+    tidyr::pivot_longer(-"profile_id", names_to = "parameter",
                         values_to = "valid_for_profile")
 
   pi_def <- tidyr::expand_grid(item_id = unique(all_params$item_id),
                                profile_id = seq_len(nrow(all_profiles))) %>%
-    dplyr::left_join(dplyr::select(all_params, .data$item_id, .data$parameter,
-                                   .data$param_name),
-                     by = "item_id") %>%
+    dplyr::left_join(dplyr::select(all_params, "item_id", "parameter",
+                                   "param_name"),
+                     by = "item_id",
+                     multiple = "all") %>%
     dplyr::left_join(profile_params, by = c("profile_id", "parameter")) %>%
     dplyr::filter(.data$valid_for_profile == 1) %>%
     dplyr::group_by(.data$item_id, .data$profile_id) %>%
@@ -146,19 +147,19 @@ lcdm_script <- function(qmatrix, prior = NULL) {
                                .data$param_level == 1 ~ "maineffect",
                                .data$param_level > 1 ~ "interaction")) %>%
     dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef")) %>%
-    dplyr::rename(coef_def = .data$prior_def) %>%
+    dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
                        dplyr::filter(is.na(.data$coef)) %>%
-                       dplyr::select(-.data$coef),
+                       dplyr::select(-"coef"),
                      by = c("class")) %>%
-    dplyr::rename(class_def = .data$prior_def) %>%
+    dplyr::rename(class_def = "prior_def") %>%
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
                                is.na(.data$coef_def) ~ .data$class_def),
       prior_def = glue::glue("{param_name}",
                              "{ifelse(param_level >= 2, '_raw', '')} ",
                              "~ {prior};")) %>%
-    dplyr::pull(.data$prior_def)
+    dplyr::pull("prior_def")
 
   model_block <- glue::glue(
     "model {{",

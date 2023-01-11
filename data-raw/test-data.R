@@ -1,4 +1,5 @@
-# example data derived from: https://mc-stan.org/documentation/case-studies/dina_independent.html#stan_nostructure
+# example data derived from: https://mc-stan.org/documentation/case-studies/
+# dina_independent.html#stan_nostructure
 
 library(tidyverse)
 library(measr)
@@ -59,8 +60,24 @@ true_dinoa <- dinao_params %>%
               mutate(param = paste0("nu[", parm1, "]")) %>%
               select(param, true = prob))
 
-## lcdm
+## lcdm - estimated ecpe in Mplus
+library(fitsim)
+library(MplusAutomation)
 
+lcdm <- readModels(here("data-raw", "mplus", "lcdm.out"))
+
+class_params <- lcdm$class_counts$modelEstimated %>%
+  as_tibble() %>%
+  select(parameter = class, true = proportion) %>%
+  mutate(parameter = paste0("nu[", parameter, "]"))
+
+item_params <- lcdm$parameters$unstandardized %>%
+  as_tibble() %>%
+  filter(paramHeader == "New.Additional.Parameters") %>%
+  select(parameter = param, true = est) %>%
+  mutate(parameter = str_to_lower(parameter))
+
+true_lcdm <- bind_rows(item_params, class_params)
 
 
 # generate data ----------------------------------------------------------------
@@ -146,5 +163,5 @@ ggplot(param_compare, aes(x = true, y = mean_dino)) +
 
 
 # save data --------------------------------------------------------------------
-use_data(q_matrix, true_dinoa, true_profiles, dina_data, dino_data,
+use_data(q_matrix, true_dinoa, true_profiles, dina_data, dino_data, true_lcdm,
          internal = TRUE, overwrite = TRUE)

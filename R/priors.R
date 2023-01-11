@@ -52,7 +52,7 @@ measrprior <- function(prior,
       prior_def = glue::glue("{prior}{bounds}"),
       prior_def = as.character(.data$prior_def)
     ) %>%
-    dplyr::select(.data$class, .data$coef, .data$prior_def)
+    dplyr::select("class", "coef", "prior_def")
 
   validate_measrprior(new_measrprior(prior_spec))
 }

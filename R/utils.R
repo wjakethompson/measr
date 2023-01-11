@@ -22,10 +22,10 @@ create_profiles <- function(attributes) {
     expand.grid() %>%
     dplyr::rowwise() %>%
     dplyr::mutate(total = sum(dplyr::c_across(dplyr::everything()))) %>%
-    dplyr::select(.data$total, dplyr::everything()) %>%
+    dplyr::select("total", dplyr::everything()) %>%
     dplyr::arrange(.data$total,
                    dplyr::desc(dplyr::across(dplyr::everything()))) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data$total) %>%
+    dplyr::select(-"total") %>%
     tibble::as_tibble()
 }

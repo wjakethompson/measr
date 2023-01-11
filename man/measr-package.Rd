@@ -6,7 +6,7 @@
 \alias{measr-package}
 \title{measr: Bayesian Psychometric Measurement Using 'Stan'}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
 Estimate diagnostic classification models (DCMs; also called cognitive diagnostic models [CDMs]) with 'Stan'. Automatically generate 'Stan' code for a variety of models, estimate your model, and evaluate how well the model fits your data.
 }
@@ -24,6 +24,7 @@ Useful links:
 
 Other contributors:
 \itemize{
+  \item Nathan Jones \email{jonesnateb@gmail.com} (\href{https://orcid.org/0000-0001-6177-7161}{ORCID}) [contributor]
   \item University of Kansas [copyright holder]
   \item Institute of Education Sciences [funder]
 }

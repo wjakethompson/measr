@@ -45,7 +45,7 @@ is the same as the order of the columns in \code{data} (i.e., the item in row 1
 of \code{qmatrix} is the item in column 1 of \code{data}, excluding \code{resp_id}).}
 
 \item{type}{Type of DCM to estimate. Must be one of
-lcdm, dina, or dino)`.}
+lcdm, dina, or dino.}
 
 \item{method}{Estimation method. Options are \code{"mcmc"}, which uses Stan's
 sampling method, or \code{"optim"}, which uses Stan's optimizer.}

@@ -48,16 +48,16 @@ Create prior definitions for classes of parameters, or specific parameters.
 }
 \section{Functions}{
 \itemize{
-\item \code{prior}: Alias of \code{measrprior()} which allows arguments to be
+\item \code{prior()}: Alias of \code{measrprior()} which allows arguments to be
 specified as expressions without quotation marks.
 
-\item \code{prior_}: Alias of \code{measrprior()} which allows arguments to be
+\item \code{prior_()}: Alias of \code{measrprior()} which allows arguments to be
 specified as one-sided formulas or wrapped in \code{\link[base:substitute]{base::quote()}}.
 
-\item \code{prior_string}: Alias of \code{measrprior()} which allows arguments to be
+\item \code{prior_string()}: Alias of \code{measrprior()} which allows arguments to be
 specified as character strings.
-}}
 
+}}
 \examples{
 # Use alias functions to define priors without quotes, as formulas,
 # or as character strings.
