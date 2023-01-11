@@ -106,7 +106,7 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
       dplyr::arrange(.data$item_id)
   }
 
-  if (!all(sapply(dplyr::select(x, -.data$item_id), is.numeric))) {
+  if (!all(sapply(dplyr::select(x, -"item_id"), is.numeric))) {
     abort_bad_argument(name, must = "contain only numeric columns")
   }
   x <- dplyr::mutate(x, dplyr::across(-.data$item_id, as.integer))
