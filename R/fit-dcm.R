@@ -96,7 +96,7 @@ measr_dcm <- function(data,
                          action = install_backend)
 
   if (!is.null(file)) {
-    if (fs::file_exists(file) & file_refit == "never") {
+    if (fs::file_exists(file) && file_refit == "never") {
       return(readRDS(file))
     }
   }
@@ -135,7 +135,7 @@ measr_dcm <- function(data,
     new_control <- utils::modifyList(list(adapt_delta = 0.95),
                                      user_pars$control)
     user_pars$control <- new_control
-  } else if (backend == "rstan" & method == "mcmc") {
+  } else if (backend == "rstan" && method == "mcmc") {
     user_pars$control <- list(adapt_delta = 0.95)
   }
 
@@ -169,7 +169,7 @@ measr_dcm <- function(data,
       # if fitted model matches current args and "on_change", return prev fit
       if (all(identical(prev$data, list(data = clean_data, qmatrix = qmatrix)),
               identical(prev$prior, stan_code$prior),
-              identical(prev$method, method)) &
+              identical(prev$method, method)) &&
           file_refit == "on_change") {
         return(prev)
       }
@@ -196,7 +196,7 @@ measr_dcm <- function(data,
 
   # fit model -----
   mod <- do.call(fit_func, stan_pars)
-  if (backend == "cmdstanr" & method == "mcmc" & return_stanfit) {
+  if (backend == "cmdstanr" && method == "mcmc" && return_stanfit) {
     mod <- rstan::read_stan_csv(mod$output_files())
     mod <- fix_cmdstanr_names(mod)
   }
@@ -237,6 +237,3 @@ measr_dcm <- function(data,
   }
   return(ret_mod)
 }
-
-
-# TODO: finish s3 class for fitted models; more testing to figure out why DINA isn't converging.

@@ -1,4 +1,5 @@
-# example data derived from: https://mc-stan.org/documentation/case-studies/dina_independent.html#stan_nostructure
+# example data derived from: https://mc-stan.org/documentation/case-studies/
+# dina_independent.html#stan_nostructure
 
 library(tidyverse)
 library(measr)

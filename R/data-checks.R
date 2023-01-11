@@ -124,7 +124,7 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
 }
 
 check_prior <- function(x, name, allow_null = FALSE) {
-  if (allow_null & is.null(x)) return(x)
+  if (allow_null && is.null(x)) return(x)
 
   if (!is.measrprior(x)) {
     abort_bad_argument(name, must = "be a measrprior object")
@@ -135,12 +135,12 @@ check_prior <- function(x, name, allow_null = FALSE) {
 
 check_file <- function(x, name, create_dir = FALSE, check_file = TRUE,
                        ext = NULL, allow_null = FALSE) {
-  if (allow_null & is.null(x)) return(x)
+  if (allow_null && is.null(x)) return(x)
 
   directory <- fs::path_dir(x)
-  if (!fs::dir_exists(directory) & !create_dir) {
+  if (!fs::dir_exists(directory) && !create_dir) {
     abort_bad_argument(name, must = "be an existing directory")
-  } else if (!fs::dir_exists(directory) & create_dir) {
+  } else if (!fs::dir_exists(directory) && create_dir) {
     fs::dir_create(directory)
   }
 
@@ -148,7 +148,7 @@ check_file <- function(x, name, create_dir = FALSE, check_file = TRUE,
     x <- fs::path_ext_set(x, ext = ext)
   }
 
-  if (check_file & !fs::file_exists(x)) {
+  if (check_file && !fs::file_exists(x)) {
     abort_bad_argument(name, must = "be an existing file")
   }
 
@@ -164,7 +164,7 @@ check_logical <- function(x, allow_na = FALSE, name) {
     abort_bad_argument(name, must = "be of length 1", not = length(x))
   }
 
-  if (is.na(x) & !allow_na) {
+  if (is.na(x) && !allow_na) {
     abort_bad_argument(name, must = "be non-missing")
   }
 
@@ -220,7 +220,7 @@ check_character <- function(x, allow_na = FALSE, name) {
     abort_bad_argument(name, must = "be of length 1", not = length(x))
   }
 
-  if (is.na(x) & !allow_na) {
+  if (is.na(x) && !allow_na) {
     abort_bad_argument(name, must = "be non-missing")
   }
 
