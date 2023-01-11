@@ -79,7 +79,7 @@ measr_dcm <- function(data,
                            item_levels = levels(clean_data$item_id),
                            name = "qmatrix")
   clean_qmatrix <- qmatrix %>%
-    dplyr::select(-.data$item_id) %>%
+    dplyr::select(-"item_id") %>%
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
   resp_id <- check_character(resp_id, name = "resp_id")
   item_id <- check_character(item_id, name = "item_id")

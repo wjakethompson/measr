@@ -42,7 +42,7 @@ check_data <- function(x, name, identifier, missing) {
   if (is.null(identifier)) {
     x <- x %>%
       tibble::rowid_to_column(var = "resp_id") %>%
-      tidyr::pivot_longer(cols = -.data$resp_id, names_to = "item_id",
+      tidyr::pivot_longer(cols = -"resp_id", names_to = "item_id",
                           values_to = "score") %>%
       dplyr::filter(!is.na(.data$score)) %>%
       dplyr::mutate(score = as.integer(.data$score),
@@ -109,9 +109,9 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
   if (!all(sapply(dplyr::select(x, -"item_id"), is.numeric))) {
     abort_bad_argument(name, must = "contain only numeric columns")
   }
-  x <- dplyr::mutate(x, dplyr::across(-.data$item_id, as.integer))
+  x <- dplyr::mutate(x, dplyr::across(-"item_id", as.integer))
 
-  if (!all(sapply(dplyr::select(x, -.data$item_id),
+  if (!all(sapply(dplyr::select(x, -"item_id"),
                   function(.x) all(.x %in% c(0L, 1L))))) {
     abort_bad_argument(name, must = "contain only 0 or 1 in attribute columns")
   }
