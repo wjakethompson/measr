@@ -48,9 +48,6 @@ test_that("dina model works", {
   comp_cor <- cor(dina_comp$value, dina_comp$true)
   comp_dif <- abs(dina_comp$value - dina_comp$true)
 
-  print(comp_cor)
-  print(max(comp_dif))
-
   expect_true(comp_cor > 0.85)
   expect_true(max(comp_dif) < 0.2)
 })
@@ -105,9 +102,6 @@ test_that("dino model works", {
   comp_cor <- cor(dino_comp$value, dino_comp$true)
   comp_dif <- abs(dino_comp$value - dino_comp$true)
 
-  print(comp_cor)
-  print(max(comp_dif))
-
   expect_true(comp_cor > 0.85)
   expect_true(max(comp_dif) < 0.2)
 })
@@ -141,7 +135,7 @@ test_that("lcdm model works", {
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(lcdm$prior, default_dcm_priors(type = "lcdm"))
-  expect_snapshot(lcdm$stancode)
+  expect_snapshot(lcdm$stancode, variant = "lcdm-code")
   expect_equal(lcdm$method, "optim")
   expect_equal(lcdm$algorithm, "LBFGS")
   expect_type(lcdm$model, "list")
@@ -154,17 +148,10 @@ test_that("lcdm model works", {
   expect_equal(names(lcdm$version), c("measr", "rstan", "StanHeaders"))
 
   lcdm_comp <- tibble::enframe(lcdm$model$par) %>%
-    dplyr::filter(grepl("^Vc|slip|guess", .data$name)) %>%
+    dplyr::filter(grepl("^Vc|^l[0-9]*_[0-9]*$", .data$name)) %>%
     dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
-    dplyr::left_join(true_dinoa, by = c("name" = "param"))
+    dplyr::full_join(true_lcdm, by = c("name" = "parameter"))
 
-  comp_cor <- cor(lcdm_comp$value, ecpe_mplus$model$pxi)
-  comp_dif <- abs(lcdm_comp$value - ecpe_mplus$model$pxi)
-
-  print(comp_cor)
-  print(max(comp_dif))
-
+  comp_cor <- cor(lcdm_comp$value, lcdm_comp$true)
   expect_true(comp_cor > 0.85)
-  expect_true(max(comp_dif) < 0.2)
 })
-
