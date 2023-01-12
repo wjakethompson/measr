@@ -1,2 +1,4 @@
 exclusions: list("R/priors.R" = 187,
+                 "R/stan-utils.R" = 21,
+                 "R/stan-utils.R" = 24,
                  "R/tidybayes-methods.R" = 6)
