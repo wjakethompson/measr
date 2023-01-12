@@ -81,12 +81,12 @@ lcdm_script <- function(qmatrix, prior = NULL) {
 
   # transformed parameters block -----
   trans_param_defs <- all_params %>%
-    tidyr::nest(param_info = -.data$param_level) %>%
+    tidyr::nest(param_info = -"param_level") %>%
     dplyr::filter(.data$param_level >= 2) %>%
     dplyr::arrange(.data$param_level) %>%
     dplyr::mutate(trans_pars = purrr::map2(.data$param_level, .data$param_info,
                                            define_interactions)) %>%
-    tidyr::unnest(.data$trans_pars) %>%
+    tidyr::unnest("trans_pars") %>%
     glue::glue_data("{trans_pars}") %>%
     glue::glue_collapse(sep = "\n\n")
 
