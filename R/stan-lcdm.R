@@ -84,8 +84,8 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     tidyr::nest(param_info = -"param_level") %>%
     dplyr::filter(.data$param_level >= 2) %>%
     dplyr::arrange(.data$param_level) %>%
-    dplyr::mutate(trans_pars = purrr::map2(.data$param_level, .data$param_info,
-                                           define_interactions)) %>%
+    dplyr::mutate(trans_pars = mapply(FUN = define_interactions,
+                                      .data$param_level, .data$param_info)) %>%
     tidyr::unnest("trans_pars") %>%
     glue::glue_data("{trans_pars}") %>%
     glue::glue_collapse(sep = "\n\n")
