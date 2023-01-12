@@ -104,7 +104,7 @@
         vector[C] log_Vc = log(Vc);
         matrix[I,C] pi;
       
-        ////////////////////////////////// vectors of interaction components
+        ////////////////////////////////// 2-way interactions
         vector[2] v1_212 = [l1_11,l1_12]';
         vector[2] v3_213 = [l3_11,l3_13]';
         vector[2] v7_213 = [l7_11,l7_13]';
@@ -115,9 +115,7 @@
         vector[2] v20_213 = [l20_11,l20_13]';
         vector[2] v21_213 = [l21_11,l21_13]';
       
-        real interaction_raw[9] = {l1_212_raw,l3_213_raw,l7_213_raw,l11_213_raw,l12_213_raw,l16_213_raw,l17_223_raw,l20_213_raw,l21_213_raw};
-      
-        ////////////////////////////////// adjust to constrain interactions
+        ////////////////////////////////// constrain 2-way
         real l1_212 = exp(l1_212_raw) - min(v1_212);
         real l3_213 = exp(l3_213_raw) - min(v3_213);
         real l7_213 = exp(l7_213_raw) - min(v7_213);
@@ -127,6 +125,8 @@
         real l17_223 = exp(l17_223_raw) - min(v17_223);
         real l20_213 = exp(l20_213_raw) - min(v20_213);
         real l21_213 = exp(l21_213_raw) - min(v21_213);
+      
+        real interaction_raw[9] = {l1_212_raw,l3_213_raw,l7_213_raw,l11_213_raw,l12_213_raw,l16_213_raw,l17_223_raw,l20_213_raw,l21_213_raw};
       
         ////////////////////////////////// probability of correct response
         pi[1,1] = inv_logit(l1_0);
