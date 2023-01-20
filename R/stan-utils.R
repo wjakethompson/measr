@@ -10,7 +10,7 @@ create_stan_data <- function(dat, qmat, type) {
   xi <- calc_xi(alpha = profiles, qmatrix = qmat, type = type)
 
   stan_data <- list(
-    I = length(unique(dat$item_id)),
+    I = nrow(qmat),
     R = length(unique(dat$resp_id)),
     N = nrow(dat),
     C = 2 ^ ncol(qmat),
