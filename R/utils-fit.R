@@ -64,7 +64,31 @@ calc_xi <- function(alpha, qmatrix, type) {
   return(xi)
 }
 
-#https://github.com/stan-dev/cmdstanr/issues/447
+check_file_exists <- function(file, refit, dat, qmat, code, method) {
+  if (!is.null(file)) {
+    if (fs::file_exists(file) && refit == "never") {
+      return(list(return = TRUE, obj = readRDS(file)))
+    } else if (fs::file_exists(file)) {
+      prev <- readRDS(file)
+
+      # if fitted model matches current args and "on_change", return prev fit
+      if (all(identical(prev$data, list(data = dat, qmatrix = qmat)),
+              identical(prev$prior, code$prior),
+              identical(prev$method, method)) &&
+          refit == "on_change") {
+        return(list(return = TRUE, obj = prev))
+      } else {
+        return(list(return = FALSE))
+      }
+    } else {
+      return(list(return = FALSE))
+    }
+  } else {
+    return(list(return = FALSE))
+  }
+}
+
+# https://github.com/stan-dev/cmdstanr/issues/447
 fix_cmdstanr_names <- function(obj) {
   obj@sim$samples <- lapply(obj@sim$samples,
                             function(x, obj) {

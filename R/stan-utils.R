@@ -1,3 +1,84 @@
+create_stan_data <- function(dat, qmat, type) {
+  ragged_array <- dat %>%
+    tibble::rowid_to_column() %>%
+    dplyr::group_by(.data$resp_id) %>%
+    dplyr::summarize(start = min(.data$rowid),
+                     num = dplyr::n()) %>%
+    dplyr::arrange(.data$resp_id)
+
+  profiles <- create_profiles(ncol(qmat))
+  xi <- calc_xi(alpha = profiles, qmatrix = qmat, type = type)
+
+  stan_data <- list(
+    I = length(unique(dat$item_id)),
+    R = length(unique(dat$resp_id)),
+    N = nrow(dat),
+    C = 2 ^ ncol(qmat),
+    A = ncol(qmat),
+    ii = as.numeric(dat$item_id),
+    rr = as.numeric(dat$resp_id),
+    y = dat$score,
+    start = ragged_array$start,
+    num = ragged_array$num,
+    Alpha = profiles,
+    Xi = xi
+  )
+
+  return(stan_data)
+}
+
+create_stan_params <- function(backend, method, ...) {
+  ## user defined
+  user_pars <- list(...)
+  user_names <- names(user_pars)
+  if ("control" %in% user_names) {
+    new_control <- utils::modifyList(list(adapt_delta = 0.95),
+                                     user_pars$control)
+    user_pars$control <- new_control
+  } else if (backend == "rstan" && method == "mcmc") {
+    user_pars$control <- list(adapt_delta = 0.95)
+  }
+
+  ## some reasonable defaults
+  if (method == "mcmc") {
+    if (backend == "rstan") {
+      defl_pars <- list(iter = 4000, warmup = 2000, chains = 4,
+                        cores = getOption("mc.cores", 1L),
+                        include = FALSE, pars = "pi")
+    } else if (backend == "cmdstanr") {
+      defl_pars <- list(iter_sampling = 2000, iter_warmup = 2000, chains = 4,
+                        parallel_chains = getOption("mc.cores", 1L),
+                        adapt_delta = 0.95)
+    }
+  } else if (method == "optim") {
+    defl_pars <- list(algorithm = ifelse(backend == "rstan", "LBFGS", "lbfgs"))
+  }
+  stan_pars <- utils::modifyList(defl_pars, user_pars)
+
+  return(stan_pars)
+}
+
+create_stan_function <- function(backend, method, code, pars) {
+  if (backend == "rstan") {
+    comp_mod <- rstan::stan_model(model_code = code$stancode)
+    pars$object <- comp_mod
+    fit_func <- switch(method,
+                       mcmc = rstan::sampling,
+                       optim = rstan::optimizing)
+  } else if (backend == "cmdstanr") {
+    comp_mod <- cmdstanr::cmdstan_model(
+      cmdstanr::write_stan_file(code$stancode),
+      compile = FALSE
+    )
+    comp_mod$format(overwrite_file = TRUE, canonicalize = TRUE, quiet = TRUE)
+    comp_mod <- comp_mod$compile()
+    fit_func <- switch(method,
+                       mcmc = comp_mod$sample,
+                       optim = comp_mod$optimize)
+  }
+  return(list(func = fit_func, pars = pars))
+}
+
 model_matrix_name_repair <- function(x) {
   x <- gsub("\\(|\\)", "", x)
   x <- gsub(":", "__", x)

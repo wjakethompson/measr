@@ -95,65 +95,10 @@ measr_dcm <- function(data,
                          reason = glue::glue("for `backend = \"{backend}\"`"),
                          action = install_backend)
 
-  if (!is.null(file)) {
-    if (fs::file_exists(file) && file_refit == "never") {
-      return(readRDS(file))
-    }
-  }
-
-  # create stan data list -----
-  ragged_array <- clean_data %>%
-    tibble::rowid_to_column() %>%
-    dplyr::group_by(.data$resp_id) %>%
-    dplyr::summarize(start = min(.data$rowid),
-                     num = dplyr::n()) %>%
-    dplyr::arrange(.data$resp_id)
-
-  profiles <- create_profiles(ncol(clean_qmatrix))
-  xi <- calc_xi(alpha = profiles, qmatrix = clean_qmatrix, type = type)
-
-  stan_data <- list(
-    I = length(unique(clean_data$item_id)),
-    R = length(unique(clean_data$resp_id)),
-    N = nrow(clean_data),
-    C = 2 ^ ncol(clean_qmatrix),
-    A = ncol(clean_qmatrix),
-    ii = as.numeric(clean_data$item_id),
-    rr = as.numeric(clean_data$resp_id),
-    y = clean_data$score,
-    start = ragged_array$start,
-    num = ragged_array$num,
-    Alpha = profiles,
-    Xi = xi
-  )
-
-  # stan parameters -----
-  ## user defined
-  user_pars <- list(...)
-  user_names <- names(user_pars)
-  if ("control" %in% user_names) {
-    new_control <- utils::modifyList(list(adapt_delta = 0.95),
-                                     user_pars$control)
-    user_pars$control <- new_control
-  } else if (backend == "rstan" && method == "mcmc") {
-    user_pars$control <- list(adapt_delta = 0.95)
-  }
-
-  ## some reasonable defaults
-  if (method == "mcmc") {
-    if (backend == "rstan") {
-      defl_pars <- list(iter = 4000, warmup = 2000, chains = 4,
-                        cores = getOption("mc.cores", 1L),
-                        include = FALSE, pars = "pi")
-    } else if (backend == "cmdstanr") {
-      defl_pars <- list(iter_sampling = 2000, iter_warmup = 2000, chains = 4,
-                        parallel_chains = getOption("mc.cores", 1L),
-                        adapt_delta = 0.95)
-    }
-  } else if (method == "optim") {
-    defl_pars <- list(algorithm = ifelse(backend == "rstan", "LBFGS", "lbfgs"))
-  }
-  stan_pars <- utils::modifyList(defl_pars, user_pars)
+  # create stan infrastructure -----
+  stan_data <- create_stan_data(dat = clean_data, qmat = clean_qmatrix,
+                                type = type)
+  stan_pars <- create_stan_params(backend = backend, method = method, ...)
   stan_pars <- c(list(data = stan_data), stan_pars)
 
   # compile model -----
@@ -163,40 +108,15 @@ measr_dcm <- function(data,
                               rlang::expr(prior))
   stan_code <- eval(script_call)
 
-  if (!is.null(file)) {
-    if (fs::file_exists(file)) {
-      prev <- readRDS(file)
-
-      # if fitted model matches current args and "on_change", return prev fit
-      if (all(identical(prev$data, list(data = clean_data, qmatrix = qmatrix)),
-              identical(prev$prior, stan_code$prior),
-              identical(prev$method, method)) &&
-          file_refit == "on_change") {
-        return(prev)
-      }
-    }
-  }
-
-  if (backend == "rstan") {
-    comp_mod <- rstan::stan_model(model_code = stan_code$stancode)
-    stan_pars$object <- comp_mod
-    fit_func <- switch(method,
-                       mcmc = rstan::sampling,
-                       optim = rstan::optimizing)
-  } else if (backend == "cmdstanr") {
-    comp_mod <- cmdstanr::cmdstan_model(
-      cmdstanr::write_stan_file(stan_code$stancode),
-      compile = FALSE
-    )
-    comp_mod$format(overwrite_file = TRUE, canonicalize = TRUE, quiet = TRUE)
-    comp_mod <- comp_mod$compile()
-    fit_func <- switch(method,
-                       mcmc = comp_mod$sample,
-                       optim = comp_mod$optimize)
-  }
+  # check for existing file -----
+  check <- check_file_exists(file = file, refit = file_refit, dat = clean_data,
+                             qmat = qmatrix, code = stan_code, method = method)
+  if (check$return) return(check$obj)
 
   # fit model -----
-  mod <- do.call(fit_func, stan_pars)
+  stan_mod <- create_stan_function(backend = backend, method = method,
+                                   code = stan_code, pars = stan_pars)
+  mod <- do.call(stan_mod$func, stan_mod$pars)
   if (backend == "cmdstanr" && method == "mcmc" && return_stanfit) {
     mod <- rstan::read_stan_csv(mod$output_files())
     mod <- fix_cmdstanr_names(mod)
