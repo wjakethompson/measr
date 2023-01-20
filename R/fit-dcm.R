@@ -139,6 +139,7 @@ measr_dcm <- function(data,
   }
 
   ret_mod <- list(data = list(data = clean_data, qmatrix = qmatrix),
+                  type = type,
                   prior = stan_code$prior,
                   stancode = stan_code$stancode,
                   method = method,

@@ -15,6 +15,8 @@ relevant information.
 \describe{
 \item{\code{data}}{The data and Q-matrix used to estimate the model.}
 
+\item{\code{type}}{The type of DCM that was estimated.}
+
 \item{\code{prior}}{A \link[=measrprior]{measrprior} object containing information on the
 priors used in the model.}
 

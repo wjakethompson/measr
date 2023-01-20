@@ -11,7 +11,7 @@ test_that("dina model works", {
   expect_s3_class(dina, "measrfit")
   expect_s3_class(dina, "measrdcm")
   expect_equal(names(dina),
-               c("data", "prior", "stancode", "method", "algorithm",
+               c("data", "type", "prior", "stancode", "method", "algorithm",
                  "backend", "model", "model_fit", "criteria", "reliability",
                  "file", "version"))
   expect_equal(names(dina$data), c("data", "qmatrix"))
@@ -27,6 +27,7 @@ test_that("dina model works", {
                  dplyr::rename(item_id = item) %>%
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
+  expect_equal(dina$type, "dina")
   expect_equal(dina$prior, default_dcm_priors(type = "dina"))
   expect_snapshot(dina$stancode, variant = "dina-code")
   expect_equal(dina$method, "optim")
@@ -65,7 +66,7 @@ test_that("dino model works", {
   expect_s3_class(dino, "measrfit")
   expect_s3_class(dino, "measrdcm")
   expect_equal(names(dino),
-               c("data", "prior", "stancode", "method", "algorithm",
+               c("data", "type", "prior", "stancode", "method", "algorithm",
                  "backend", "model", "model_fit", "criteria", "reliability",
                  "file", "version"))
   expect_equal(names(dino$data), c("data", "qmatrix"))
@@ -81,6 +82,7 @@ test_that("dino model works", {
                  dplyr::rename(item_id = item) %>%
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
+  expect_equal(dino$type, "dino")
   expect_equal(dino$prior, default_dcm_priors(type = "dino"))
   expect_snapshot(dino$stancode, variant = "dino-code")
   expect_equal(dino$method, "optim")
@@ -119,7 +121,7 @@ test_that("lcdm model works", {
   expect_s3_class(lcdm, "measrfit")
   expect_s3_class(lcdm, "measrdcm")
   expect_equal(names(lcdm),
-               c("data", "prior", "stancode", "method", "algorithm",
+               c("data", "type", "prior", "stancode", "method", "algorithm",
                  "backend", "model", "model_fit", "criteria", "reliability",
                  "file", "version"))
   expect_equal(names(lcdm$data), c("data", "qmatrix"))
@@ -134,6 +136,7 @@ test_that("lcdm model works", {
                ecpe_qmatrix %>%
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
+  expect_equal(lcdm$type, "lcdm")
   expect_equal(lcdm$prior, default_dcm_priors(type = "lcdm"))
   expect_snapshot(lcdm$stancode, variant = "lcdm-code")
   expect_equal(lcdm$method, "optim")
