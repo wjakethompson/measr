@@ -14,6 +14,41 @@ abort_bad_argument <- function(arg, must, not = NULL, extra = NULL) {
                not = not)
 }
 
+check_model <- function(x, required_class, name) {
+  if (!(all(required_class %in% class(x)) & (typeof(x) == "list"))) {
+    abort_bad_argument(name,
+                       must = glue::glue("be an object with class ",
+                                         "{paste(required_class,
+                                         collapse = ',')}"))
+  }
+
+  x
+}
+
+check_newdata <- function(x, name, identifier, model, missing) {
+  x <- check_data(x, name = name, identifier = identifier,
+                  missing = missing)
+
+  if (!all(levels(x$item_id) %in% levels(model$data$data$item_id))) {
+    good_items <- levels(model$data$data$item_id)
+    bad_items <- levels(x$item_id)[!(levels(x$item_id) %in% good_items)]
+    msg <- paste0("New items found in `newdata`: ",
+                  paste(bad_items, collapse = " "))
+    rlang::abort("error_bad_argument",
+                 message = msg,
+                 arg = name)
+  }
+
+  # ensure that factor levels match in original and new data so item parameters
+  # are pulled correctly
+  x <- x %>%
+    dplyr::mutate(
+      item_id = as.character(.data$item_id),
+      item_id = factor(item_id, levels = levels(model$data$data$item_id)))
+
+  x
+}
+
 check_data <- function(x, name, identifier, missing) {
   if (!is.null(identifier)) identifier <- enquo(identifier)
 
