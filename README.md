@@ -12,7 +12,7 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 status](https://www.r-pkg.org/badges/version/measr)](https://CRAN.R-project.org/package=measr)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
-[![R-CMD-check](https://github.com/wjakethompson/measr/workflows/R-CMD-check/badge.svg)](https://github.com/wjakethompson/measr/actions)
+[![R-CMD-check](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/wjakethompson/measr/branch/main/graph/badge.svg?token=TECvfoOYHh)](https://codecov.io/gh/wjakethompson/measr)
 [![Netlify
 Status](https://api.netlify.com/api/v1/badges/b82caf01-0611-4f8b-bbca-5b89b5a80791/deploy-status)](https://app.netlify.com/sites/measr/deploys)
@@ -32,8 +32,15 @@ officially released to [CRAN](https://cran.r-project.org/).
 
 ## Installation
 
-You can install the development version of measr from
-[GitHub](https://github.com/wjakethompson/measr) with:
+You can install the released version of {measr} from
+[CRAN](https://cran.r-project.org/) with:
+
+``` r
+install.packages("measr")
+```
+
+To install the development version of {measr} from
+[GitHub](https://github.com/wjakethompson/measr) use:
 
 ``` r
 # install.packages("remotes")
