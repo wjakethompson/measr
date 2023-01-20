@@ -48,8 +48,8 @@ test_that("dina model works", {
   comp_cor <- cor(dina_comp$value, dina_comp$true)
   comp_dif <- abs(dina_comp$value - dina_comp$true)
 
-  expect_true(comp_cor > 0.85)
-  expect_true(max(comp_dif) < 0.2)
+  expect_gte(comp_cor, 0.85)
+  expect_lte(max(comp_dif), 0.2)
 })
 
 test_that("dino model works", {
@@ -102,8 +102,8 @@ test_that("dino model works", {
   comp_cor <- cor(dino_comp$value, dino_comp$true)
   comp_dif <- abs(dino_comp$value - dino_comp$true)
 
-  expect_true(comp_cor > 0.85)
-  expect_true(max(comp_dif) < 0.2)
+  expect_gte(comp_cor, 0.85)
+  expect_lte(max(comp_dif), 0.2)
 })
 
 test_that("lcdm model works", {
@@ -153,5 +153,5 @@ test_that("lcdm model works", {
     dplyr::full_join(true_lcdm, by = c("name" = "parameter"))
 
   comp_cor <- cor(lcdm_comp$value, lcdm_comp$true)
-  expect_true(comp_cor > 0.85)
+  expect_gte(comp_cor, 0.85)
 })
