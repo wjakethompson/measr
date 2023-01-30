@@ -110,7 +110,10 @@ test_that("lcdm model works for ecpe", {
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(rstn_ecpe_lcdm$type, "lcdm")
-  expect_equal(rstn_ecpe_lcdm$prior, default_dcm_priors(type = "lcdm"))
+  expect_equal(rstn_ecpe_lcdm$prior,
+               c(prior(uniform(-15, 15), class = "intercept"),
+                 prior(uniform(0, 15), class = "maineffect"),
+                 prior(uniform(-15, 15), class = "interaction")))
   expect_snapshot(rstn_ecpe_lcdm$stancode, variant = "lcdm-ecpe-code")
   expect_equal(rstn_ecpe_lcdm$method, "optim")
   expect_equal(rstn_ecpe_lcdm$algorithm, "LBFGS")
