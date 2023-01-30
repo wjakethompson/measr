@@ -98,7 +98,7 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
     dplyr::mutate(resp_id = .data$orig_resp) %>%
     dplyr::select(-"orig_resp") %>%
-    dplyr::rename(!!model$data$resp_id := .data$resp_id)
+    dplyr::rename(!!model$data$resp_id := "resp_id")
 
   attr_probs <- attr_probs %>%
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw",
@@ -107,7 +107,7 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     dplyr::left_join(attr_lookup, by = c("name" = "att_id")) %>%
     dplyr::mutate(resp_id = .data$orig_resp) %>%
     dplyr::select(-"orig_resp") %>%
-    dplyr::rename(!!model$data$resp_id := .data$resp_id) %>%
+    dplyr::rename(!!model$data$resp_id := "resp_id") %>%
     dplyr::select(".chain", ".iteration", ".draw", !!model$data$resp_id,
                   "real_names", "value") %>%
     tidyr::pivot_wider(names_from = "real_names", values_from = "value")
