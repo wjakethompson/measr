@@ -138,7 +138,11 @@ measr_dcm <- function(data,
     version_info$cmdstan <- as.package_version(cmdstanr::cmdstan_version())
   }
 
-  ret_mod <- list(data = list(data = clean_data, qmatrix = qmatrix),
+  if (is.null(resp_id)) resp_id <- "resp_id"
+  if (is.null(item_id)) item_id <- "item_id"
+
+  ret_mod <- list(data = list(data = clean_data, qmatrix = qmatrix,
+                              resp_id = resp_id, item_id = item_id),
                   type = type,
                   prior = stan_code$prior,
                   stancode = stan_code$stancode,
