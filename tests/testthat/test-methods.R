@@ -42,3 +42,25 @@ test_that("mdm probabilities are accurate", {
     unname()
   expect_equal(measr_attr, mdm_lldcm$eap, tolerance = 0.01)
 })
+
+test_that("ecpe probabilities are accurate", {
+  ecpe_preds <- predict(rstn_ecpe_lcdm, newdata = ecpe_data,
+                        resp_id = "resp_id", summary = TRUE)
+
+  measr_class <- ecpe_preds$class_probabilities %>%
+    dplyr::select("resp_id", "class", "mean") %>%
+    tidyr::pivot_wider(names_from = "class", values_from = "mean") %>%
+    dplyr::select(-"resp_id") %>%
+    as.matrix() %>%
+    unname()
+  expect_equal(measr_class, ecpe_lldcm$posterior[, c(1, 5, 3, 2, 7, 6, 4, 8)],
+               tolerance = 0.1)
+
+  measr_attr <- ecpe_preds$attribute_probabilities %>%
+    dplyr::select("resp_id", "attribute", "mean") %>%
+    tidyr::pivot_wider(names_from = "attribute", values_from = "mean") %>%
+    dplyr::select(-"resp_id") %>%
+    as.matrix() %>%
+    unname()
+  expect_equal(measr_attr, ecpe_lldcm$eap, tolerance = 0.1)
+})
