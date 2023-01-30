@@ -1,31 +1,50 @@
 #' Posterior Draws of Respondent Mastery
 #'
-#' Calculate posterior draws of respondent mastery. Optionally retain all
+#' Calculate posterior draws of respondent proficiency. Optionally retain all
 #' posterior draws or return only summaries of the distribution for each
 #' respondent.
 #'
 #' @param object An object of class `measrdcm`. Generated from [measr_dcm()].
 #' @param newdata Optional new data. If not provided, the data used to estimate
-#'   the model is scored. If provided, must have columns `resp_id`, `item_id`,
-#'   and `score`.
+#'   the model is scored. If provided, `newdata` should be a data frame with 1
+#'   row per respondent and 1 column per item. All items that appear in
+#'   `newdata` should appear in the data used to estimate `object`.
+#' @param resp_id Optional. Variable name of a column in `newdata` that
+#'   contains respondent identifiers. `NULL` (the default) indicates that no
+#'   identifiers are present in the data, and row numbers will be used as
+#'   identifiers. If `newdata` is not specified and the data used to estimate
+#'   the model is scored, the `resp_id` is taken from the original data.
+#' @param missing An R expression specifying how missing data in `data` is coded
+#'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
 #' @param summary Should summary statistics be returned instead of the raw
-#'   values? Default is `TRUE`.
+#'   posterior draws? Default is `TRUE`.
 #' @param probs The percentiles to be computed by the `[stats::quantile()]`
 #'   function. Only used if `summary` is `TRUE`.
 #' @param ... Unused.
 #'
-#' @return A tibble. If summary is `FALSE`, a tibble with number of rows equal
-#'   to the number of draws in `model` and 5 columns: `.chain`, `.iteration`,
-#'   `.draw`, `resp_id`, and `master_prob`. If summary is `TRUE`, a tibble with
-#'   number of rows equal to the number of respondents, and columns of
-#'   `resp_id`, `mean`, and one column for every value specified in `probs`.
+#' @return A list with two elements: `class_probabilities` and
+#'   `attribute_probabilities`.
+#'
+#'   If summary is `FALSE`, each element is a tibble with the number of rows
+#'   equal to the number of draws in `object` with columns: `.chain`,
+#'   `.iteration`, `.draw`, the respondent identifier, and one column of
+#'   probabilities for each of the possible classes.
+#'
+#'   If summary is `TRUE`, each element is a tibble with one row per respondent
+#'   and class or attribute, and columns of the respondent identifier, `class`
+#'   or `attribute`, `mean`, and one column for every value specfieid in
+#'   `probs`.
 #' @export
-predict.measrdcm <- function(object, newdata = NULL, identifier, missing = NA,
-                             summary = TRUE, probs = c(0.025, 0.975), ...)  {
+predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
+                             missing = NA, summary = TRUE,
+                             probs = c(0.025, 0.975), ...)  {
   model <- check_model(object, required_class = "measrdcm", name = "object")
 
+  summary <- check_logical(summary, allow_na = FALSE, name = "summary")
+  probs <- check_double(probs, lb = 0, ub = 1, inclusive = TRUE, name = "probs")
   if (!is.null(newdata)) {
-    score_data <- check_newdata(newdata, identifier = identifier, model = model,
+    resp_id <- check_character(resp_id, name = "resp_id", allow_null = TRUE)
+    score_data <- check_newdata(newdata, identifier = resp_id, model = model,
                                 missing = missing, name = "newdata")
   } else {
     score_data <- model$data$data
@@ -36,80 +55,70 @@ predict.measrdcm <- function(object, newdata = NULL, identifier, missing = NA,
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
   stan_data <- create_stan_data(dat = score_data, qmat = clean_qmatrix,
                                 type = model$type)
+  stan_draws <- if (model$method == "mcmc") {
+    get_mcmc_draws(model)
+  } else if (model$method == "optim") {
+    get_optim_draws(model)
+  }
+
+  stan_pars <- create_stan_gqs_params(backend = model$backend,
+                                      draws = stan_draws)
+  stan_pars$data <- stan_data
 
   # compile model -----
-  func_name <- rlang::sym(paste0(model$type, "_script"))
-  script_call <- rlang::call2(func_name,
-                              rlang::expr(clean_qmatrix),
-                              prior = NULL,
-                              gqs = TRUE)
-  stan_code <- eval(script_call)
-  comp_mod <- rstan::stan_model(model_code = stan_code$stancode)
+  stan_mod <- create_stan_function(backend = model$backend,
+                                   method = "gqs",
+                                   code = gqs_script(),
+                                   pars = stan_pars,
+                                   silent = 2)
+  out <- capture.output(gqs_model <- do.call(stan_mod$func, stan_mod$pars))
 
-  if (model$method == "mcmc") {
+  # get mastery information -----
+  class_probs <- extract_class_probs(model = gqs_model,
+                                     attr = ncol(clean_qmatrix))
+  attr_probs <- extract_attr_probs(model = gqs_model, qmat = clean_qmatrix)
 
-  } else if (model$method == "optim") {
-    draws <- get_optim_draws(model)
-    gqs_mod <- rstan::gqs(comp_mod, data = stan_data, draws = draws)
-    mod_chains <- 1L
-    mod_iters <- 1L
-  }
-
-  if ("bayes_dlmlca" %in% class(model)) {
-    prc_model <- rstan::gqs(stan_model, data = prc_data,
-                            draws = as.matrix(model$model))
-    mod_chains <- length(model$model@sim$samples)
-    mod_iters <- model$model@stan_args[[1]][["iter"]] -
-      model$model@stan_args[[1]][["warmup"]]
-  } else if (model$backend == "cmdstanr" & "optim_dlmlca" %in% class(model)) {
-    prc_model <- rstan::gqs(stan_model, data = prc_data,
-                            draws = as.matrix(model$model$draws()))
-    mod_chains <- 1L
-    mod_iters <- 1L
-  } else if (model$backend == "rstan" & "optim_dlmlca" %in% class(model)) {
-    prc_model <- rstan::gqs(stan_model, data = prc_data,
-                            draws = t(as.matrix(model$model$par)))
-    mod_chains <- 1L
-    mod_iters <- 1L
-  }
-
-  mastery <- as.data.frame(prc_model) %>%
-    tibble::as_tibble() %>%
-    dplyr::select(dplyr::matches("prob_resp_class")) %>%
-    tibble::add_column(.chain = rep(1:mod_chains, each = mod_iters),
-                       .iteration = rep(1:mod_iters, times = mod_chains),
-                       .draw = 1:(mod_chains * mod_iters),
-                       .before = 1) %>%
-    tidybayes::spread_draws((!!sym("prob_resp_class"))[!!!syms(c("j",
-                                                                 "c"))]) %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(.data$c == 2L) %>%
-    dplyr::select(.data$.chain, .data$.iteration, .data$.draw,
-                  resp_id = .data$j, master_prob = .data$prob_resp_class)
-
+  # rename to match original data - START HERE -----
   if (!is.null(newdata)) {
-    mastery <- mastery %>%
-      dplyr::left_join(new_resp, by = c("resp_id" = "stan_resp")) %>%
-      dplyr::mutate(resp_id = .data$orig_resp) %>%
-      dplyr::select(-.data$orig_resp)
+    resp_lookup <- score_data %>%
+      dplyr::rename(orig_resp = "resp_id") %>%
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+      dplyr::distinct(.data$orig_resp, .data$resp_id)
   } else {
-    mastery <- mastery %>%
-      dplyr::left_join(model$data_lookup$resp_lookup,
-                       by = c("resp_id" = "stan_resp")) %>%
-      dplyr::mutate(resp_id = .data$orig_resp) %>%
-      dplyr::select(-.data$orig_resp)
+    resp_lookup <- model$data$data %>%
+      dplyr::rename(orig_resp = "resp_id") %>%
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+      dplyr::distinct(.data$orig_resp, .data$resp_id)
   }
+  attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
+    dplyr::filter(.data$real_names != "item_id") %>%
+    dplyr::mutate(att_id = paste0("att", 1:dplyr::n()))
 
-  if (!summary) return(mastery)
+  class_probs <- class_probs %>%
+    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
+    dplyr::mutate(resp_id = .data$orig_resp) %>%
+    dplyr::select(-"orig_resp") %>%
+    dplyr::rename(!!model$data$resp_id := .data$resp_id)
 
-  mastery <- mastery %>%
-    dplyr::group_by(.data$resp_id) %>%
-    dplyr::summarize(mean = mean(.data$master_prob),
-                     bounds = list(tibble::enframe(
-                       stats::quantile(.data$master_prob, probs = probs)
-                     ))) %>%
-    tidyr::unnest(.data$bounds) %>%
-    tidyr::pivot_wider(names_from = .data$name, values_from = .data$value)
+  attr_probs <- attr_probs %>%
+    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw",
+                                  "resp_id")) %>%
+    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
+    dplyr::left_join(attr_lookup, by = c("name" = "att_id")) %>%
+    dplyr::mutate(resp_id = .data$orig_resp) %>%
+    dplyr::select(-"orig_resp") %>%
+    dplyr::rename(!!model$data$resp_id := .data$resp_id) %>%
+    dplyr::select(".chain", ".iteration", ".draw", !!model$data$resp_id,
+                  "real_names", "value") %>%
+    tidyr::pivot_wider(names_from = "real_names", values_from = "value")
 
-  return(mastery)
+  ret_list <- list(class_probabilities = class_probs,
+                   attribute_probabilities = attr_probs)
+
+  if (!summary) return(ret_list)
+
+  summary_list <- lapply(ret_list, summarize_probs, probs = probs,
+                         id = model$data$resp_id)
+
+  return(summary_list)
 }
