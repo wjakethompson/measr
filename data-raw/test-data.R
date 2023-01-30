@@ -123,7 +123,6 @@ dino_data <- stu_xi_dino %>%
   pivot_wider(names_from = item, values_from = score)
 
 # example lcdmr data files -----------------------------------------------------
-# remotes::install_github("atlas-aai/lldcm")
 library(lldcm)
 
 ecpe_mod <- list(item1 = ~a1 * a2,
@@ -159,10 +158,10 @@ mdm_mod <- list(item1 = ~a1,
                 item3 = ~a1,
                 item4 = ~a1)
 ecpe_lldcm <- lldcm(as.matrix(ecpe_data[, -1]), 3, ecpe_mod, maxit = 1000)
-ecpe_reli <- reliab(ecpe_lldcm)
+ecpe_lldcm_reli <- reliab(ecpe_lldcm)
 
 mdm_lldcm <- lldcm(as.matrix(mdm_data[, -1]), 1, mdm_mod, maxit = 1000)
-mdm_reli <- reliab(mdm_lldcm)
+mdm_lldcm_reli <- reliab(mdm_lldcm)
 
 # confirm that we can recover parameters using known stan script ---------------
 dina_stan <- list(I = num_item, J = num_resp, K = num_attr, C = 2 ^ num_attr,
@@ -205,5 +204,5 @@ ggplot(param_compare, aes(x = true, y = mean_dino)) +
 
 # save data --------------------------------------------------------------------
 use_data(q_matrix, true_dinoa, true_profiles, dina_data, dino_data, true_lcdm,
-         ecpe_lldcm, ecpe_reli, mdm_lldcm, mdm_reli,
+         ecpe_lldcm, ecpe_lldcm_reli, mdm_lldcm, mdm_lldcm_reli,
          internal = TRUE, overwrite = TRUE)
