@@ -73,6 +73,8 @@ measr_dcm <- function(data,
                       file = NULL,
                       file_refit = getOption("measr.file_refit", "never"),
                       ...) {
+  resp_id <- check_character(resp_id, name = "resp_id", allow_null = TRUE)
+  item_id <- check_character(item_id, name = "item_id", allow_null = TRUE)
   clean_data <- check_data(data, name = "data", identifier = resp_id,
                            missing = missing)
   qmatrix <- check_qmatrix(qmatrix, identifier = item_id,
@@ -81,8 +83,6 @@ measr_dcm <- function(data,
   clean_qmatrix <- qmatrix %>%
     dplyr::select(-"item_id") %>%
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
-  resp_id <- check_character(resp_id, name = "resp_id")
-  item_id <- check_character(item_id, name = "item_id")
   type <- rlang::arg_match(type, dcm_choices())
   method <- rlang::arg_match(method, c("mcmc", "optim"))
   prior <- check_prior(prior, name = "prior", allow_null = TRUE)
