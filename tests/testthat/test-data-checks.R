@@ -331,6 +331,12 @@ test_that("check_double", {
 })
 
 test_that("check_character", {
+  err <- rlang::catch_cnd(check_character(NULL, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "character scalar")
+  expect_equal(err$not, "NULL")
+
   err <- rlang::catch_cnd(check_character(1L, name = "check1"))
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -348,6 +354,8 @@ test_that("check_character", {
   expect_equal(err$arg, "check1")
   expect_match(err$message, "non-missing")
 
+  expect_equal(check_character(NULL, allow_null = TRUE, name = "check1"),
+               NULL)
   expect_equal(check_character("intercept", name = "check1"), "intercept")
   expect_equal(check_character(NA, allow_na = TRUE, name = "check1"),
                NA_character_)
