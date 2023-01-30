@@ -1,4 +1,4 @@
-lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
+lcdm_script <- function(qmatrix, prior = NULL) {
   # data block -----
   data_block <- glue::glue(
     "data {{
@@ -19,7 +19,8 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
 
   # parameters block -----
   all_params <- stats::model.matrix(stats::as.formula(paste0("~ .^",
-                                                             ncol(qmatrix))),
+                                                             max(ncol(qmatrix),
+                                                                 2L))),
                                     qmatrix) %>%
     tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
     dplyr::select(where(~ sum(.x) > 0)) %>%
@@ -64,6 +65,18 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
     dplyr::filter(.data$param_level >= 2) %>%
     dplyr::pull(.data$param_def)
 
+  interaction_stan <- if (length(interactions) > 0) {
+    glue::glue(
+      "",
+      "",
+      "  ////////////////////////////////// item interactions",
+      "  {glue::glue_collapse(interactions, sep = \"\n  \")}",
+      .sep = "\n", .trim = FALSE
+    )
+  } else {
+    ""
+  }
+
   parameters_block <- glue::glue(
     "parameters {{",
     "  simplex[C] Vc;                  // base rates of class membership",
@@ -72,10 +85,7 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
     "  {glue::glue_collapse(intercepts, sep = \"\n  \")}",
     "",
     "  ////////////////////////////////// item main effects",
-    "  {glue::glue_collapse(main_effects, sep = \"\n  \")}",
-    "",
-    "  ////////////////////////////////// item interactions",
-    "  {glue::glue_collapse(interactions, sep = \"\n  \")}",
+    "  {glue::glue_collapse(main_effects, sep = \"\n  \")}{interaction_stan}",
     "}}", .sep = "\n"
   )
 
@@ -94,11 +104,26 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
     dplyr::filter(.data$param_level >= 2) %>%
     glue::glue_data("{param_name}_raw")
 
+  trans_interaction_stan <- if (length(raw_inter) > 0) {
+    glue::glue(
+      "",
+      "{glue::glue_collapse(trans_param_defs, sep = \"\n  \")}",
+      "",
+      "  {glue::glue(\"real interaction_raw[{length(raw_inter)}] = \",
+                   \"{{{glue::glue_collapse(raw_inter, sep = ',')}\")}}};",
+      "",
+      .sep = "\n", .trim = FALSE
+    )
+  } else {
+    ""
+  }
+
   all_profiles <- create_profiles(attributes = ncol(qmatrix))
 
   profile_params <-
     stats::model.matrix(stats::as.formula(paste0("~ .^",
-                                                 ncol(all_profiles))),
+                                                 max(ncol(all_profiles),
+                                                     2L))),
                         all_profiles) %>%
     tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
     tibble::rowid_to_column(var = "profile_id") %>%
@@ -123,12 +148,7 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
     "transformed parameters {{",
     "  vector[C] log_Vc = log(Vc);",
     "  matrix[I,C] pi;",
-    "",
-    "{glue::glue_collapse(trans_param_defs, sep = \"\n  \")}",
-    "",
-    "  {glue::glue(\"real interaction_raw[{length(raw_inter)}] = \",
-                   \"{{{glue::glue_collapse(raw_inter, sep = ',')}\")}}};",
-    "",
+    "  {trans_interaction_stan}",
     "  ////////////////////////////////// probability of correct response",
     "  {glue::glue_collapse(pi_def, sep = \"\n  \")}",
     "}}", .sep = "\n"
@@ -161,6 +181,20 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
                              "~ {prior};")) %>%
     dplyr::pull("prior_def")
 
+  jacobian_stan <- if (length(raw_inter) > 0) {
+    glue::glue(
+      "",
+      "",
+      "  ////////////////////////////////// jacobian adjustment for constraints",
+      "  for (i in 1:{length(raw_inter)}) {{",
+      "    target += interaction_raw[i];",
+      "  }}",
+      .sep = "\n", .trim = FALSE
+    )
+  } else {
+    ""
+  }
+
   model_block <- glue::glue(
     "model {{",
     "  real ps[C];",
@@ -180,44 +214,7 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
     "      ps[c] = log_Vc[c] + sum(log_items);",
     "    }}",
     "    target += log_sum_exp(ps);",
-    "  }}",
-    "",
-    "  ////////////////////////////////// jacobian adjustment for constraints",
-    "  for (i in 1:{length(raw_inter)}) {{",
-    "    target += interaction_raw[i];",
-    "  }}",
-    "}}", .sep = "\n"
-  )
-
-  # generated quantities block -----
-  gqs_block <- glue::glue(
-    "generated quantities {{",
-    "  matrix[R,C] prob_resp_class;   // post prob of respondent R in class C",
-    "  matrix[R,A] prob_resp_attr;    // post prob of respondent R master A",
-    "",
-    "  for (r in 1:R) {{",
-    "    row_vector[C] prob_joint;",
-    "    for (c in 1:C) {{",
-    "      real log_items[num[r]];",
-    "      for (m in 1:num[r]) {{",
-    "        int i = ii[start[r] + m - 1];",
-    "        log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +",
-    "                       (1 - y[start[r] + m - 1]) * log(1 - pi[i,c]);",
-    "      }}",
-    "      prob_joint[c] = Vc[c] * exp(sum(log_items));",
-    "    }}",
-    "    prob_resp_class[r] = prob_joint / sum(prob_joint);",
-    "  }}",
-    "",
-    "  for (r in 1:R) {{",
-    "    for (a in 1:A) {{",
-    "      row_vector[C] prob_attr_class;",
-    "      for (c in 1:C) {{",
-    "        prob_attr_class[c] = prob_resp_class[r,c] * Alpha[c,a];",
-    "      }}",
-    "      prob_resp_attr[r,a] = sum(prob_attr_class);",
-    "    }}",
-    "  }}",
+    "  }}{jacobian_stan}",
     "}}", .sep = "\n"
   )
 
@@ -226,7 +223,7 @@ lcdm_script <- function(qmatrix, prior = NULL, gqs = FALSE) {
     "{data_block}",
     "{parameters_block}",
     "{transformed_parameters_block}",
-    "{ifelse(gqs, gqs_block, model_block)}",
+    "{model_block}",
     .sep = "\n"
   )
 
