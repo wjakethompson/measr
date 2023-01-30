@@ -115,11 +115,19 @@ summarize_probs <- function(x, probs, id) {
   x %>%
     dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
     tidyr::pivot_longer(cols = -!!id, names_to = type, values_to = "prob") %>%
-    dplyr::reframe(prob_summary(prob, probs = probs, na_rm = TRUE),
-                   .by = c(!!id, !!type))
+    dplyr::summarize(mean = mean(prob, na.rm = TRUE),
+                     bounds = list(
+                       tibble::as_tibble_row(
+                         stats::quantile(prob, probs = probs, na.rm = TRUE)
+                       )
+                     ),
+                     .by = c(!!id, !!type)) %>%
+    tidyr::unnest("bounds")
+
 }
 
 prob_summary <- function(x, probs, na_rm) {
+  x <- x$prob
   tibble::tibble(mean = mean(x, na.rm = na_rm),
                  bounds = list(
                    tibble::enframe(stats::quantile(x, probs = probs,
