@@ -242,7 +242,47 @@ check_integer <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE, name) {
   x
 }
 
-check_character <- function(x, allow_na = FALSE, name) {
+check_double <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE, name) {
+  if (inclusive) {
+    check_lb <- function(.x, .y) x < .y
+    check_ub <- function(.x, .y) x > .y
+  } else if (!inclusive) {
+    check_lb <- function(.x, .y) x <= .y
+    check_ub <- function(.x, .y) x >= .y
+  }
+
+  if (!is.numeric(x)) {
+    abort_bad_argument(name, must = "be a numeric scalar", not = typeof(x))
+  }
+
+  if (length(x) != 1) {
+    abort_bad_argument(name, must = "be of length 1", not = length(x))
+  }
+
+  if (is.na(x)) {
+    abort_bad_argument(name, must = "be non-missing")
+  }
+
+  if (check_lb(x, lb) || check_ub(x, ub)) {
+    msg <- if (is.infinite(lb)) {
+      glue::glue("be less than {ub}")
+    } else if (is.infinite(ub)) {
+      glue::glue("be greater than {lb}")
+    } else {
+      glue::glue("be between {lb} and {ub}")
+    }
+    abort_bad_argument(name, must = msg)
+  }
+
+  x
+}
+check_double <- Vectorize(check_double)
+
+check_character <- function(x, allow_null = FALSE, allow_na = FALSE, name) {
+  if (is.null(x) && allow_null) {
+    return(x)
+  }
+
   if (any(is.na(x))) {
     x[is.na(x)] <- NA_character_
   }
