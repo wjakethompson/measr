@@ -29,3 +29,49 @@ create_profiles <- function(attributes) {
     dplyr::select(-"total") %>%
     tibble::as_tibble()
 }
+
+
+#' Evaluate an expression without printing output or messages
+#'
+#' @param expr expression to be evaluated
+#' @param type type of output to be suppressed (see ?sink)
+#' @param try wrap evaluation of expr in 'try' and
+#'   not suppress outputs if evaluation fails?
+#' @param silent actually evaluate silently?
+#'
+#' @noRd
+eval_silent <- function(expr, type = "output", try = FALSE,
+                        silent = TRUE, ...) {
+  try <- as_one_logical(try)
+  silent <- as_one_logical(silent)
+  type <- match.arg(type, c("output", "message"))
+  expr <- substitute(expr)
+  envir <- parent.frame()
+  if (silent) {
+    if (try && type == "message") {
+      try_out <- try(utils::capture.output(
+        out <- eval(expr, envir), type = type, ...
+      ))
+      if (is(try_out, "try-error")) {
+        # try again without suppressing error messages
+        out <- eval(expr, envir)
+      }
+    } else {
+      utils::capture.output(out <- eval(expr, envir), type = type, ...)
+    }
+  } else {
+    out <- eval(expr, envir)
+  }
+  out
+}
+
+# coerce 'x' to a single logical value
+as_one_logical <- function(x, allow_na = FALSE) {
+  s <- substitute(x)
+  x <- as.logical(x)
+  if (length(x) != 1L || anyNA(x) && !allow_na) {
+    s <- deparse0(s, max_char = 100L)
+    stop2("Cannot coerce '", s, "' to a single logical value.")
+  }
+  x
+}
