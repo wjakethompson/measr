@@ -1,3 +1,26 @@
+test_that("check_model", {
+  err <- rlang::catch_cnd(check_model("a", "measrdcm", name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "object with class measrdcm")
+
+  err <- rlang::catch_cnd(check_model(3, "new_class", name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "object with class new_class")
+
+  test_obj <- c(3, 4, 5)
+  class(test_obj) <- "newclass"
+  err <- rlang::catch_cnd(check_model(test_obj, "newclass", name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "object with class newclass")
+
+  test_obj <- list(3, 4, 5, c(6, 7, 8))
+  class(test_obj) <- "newclass"
+  expect_equal(check_model(test_obj, "newclass", name = "check1"), test_obj)
+})
+
 test_that("check_data", {
   dat <- combn(letters, m = 3) %>%
     as.data.frame() %>%
