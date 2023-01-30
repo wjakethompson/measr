@@ -122,6 +122,47 @@ dino_data <- stu_xi_dino %>%
   select(resp_id, item, score) %>%
   pivot_wider(names_from = item, values_from = score)
 
+# example lcdmr data files -----------------------------------------------------
+# remotes::install_github("atlas-aai/lldcm")
+library(lldcm)
+
+ecpe_mod <- list(item1 = ~a1 * a2,
+                 item2 = ~a2,
+                 item3 = ~a1 * a3,
+                 item4 = ~a3,
+                 item5 = ~a3,
+                 item6 = ~a3,
+                 item7 = ~a1 * a3,
+                 item8 = ~a2,
+                 item9 = ~a3,
+                 item10 = ~a1,
+                 item11 = ~a1 * a3,
+                 item12 = ~a1 * a3,
+                 item13 = ~a1,
+                 item14 = ~a1,
+                 item15 = ~a3,
+                 item16 = ~a1 * a3,
+                 item17 = ~a2 * a3,
+                 item18 = ~a3,
+                 item19 = ~a3,
+                 item20 = ~a1 * a3,
+                 item21 = ~a1 * a3,
+                 item22 = ~a3,
+                 item23 = ~a2,
+                 item24 = ~a2,
+                 item25 = ~a1,
+                 item26 = ~a3,
+                 item27 = ~a1,
+                 item28 = ~a3)
+mdm_mod <- list(item1 = ~a1,
+                item2 = ~a1,
+                item3 = ~a1,
+                item4 = ~a1)
+ecpe_lldcm <- lldcm(as.matrix(ecpe_data[, -1]), 3, ecpe_mod, maxit = 1000)
+ecpe_reli <- reliab(ecpe_lldcm)
+
+mdm_lldcm <- lldcm(as.matrix(mdm_data[, -1]), 1, mdm_mod, maxit = 1000)
+mdm_reli <- reliab(mdm_lldcm)
 
 # confirm that we can recover parameters using known stan script ---------------
 dina_stan <- list(I = num_item, J = num_resp, K = num_attr, C = 2 ^ num_attr,
@@ -164,4 +205,5 @@ ggplot(param_compare, aes(x = true, y = mean_dino)) +
 
 # save data --------------------------------------------------------------------
 use_data(q_matrix, true_dinoa, true_profiles, dina_data, dino_data, true_lcdm,
+         ecpe_lldcm, ecpe_reli, mdm_lldcm, mdm_reli,
          internal = TRUE, overwrite = TRUE)
