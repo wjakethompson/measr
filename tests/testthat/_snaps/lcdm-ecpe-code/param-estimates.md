@@ -1,7 +1,7 @@
-# lcdm model works
+# lcdm model works for ecpe
 
     Code
-      lcdm$stancode
+      rstn_ecpe_lcdm$stancode
     Output
       data {
         int<lower=1> I;                 // number of items
@@ -103,7 +103,7 @@
       transformed parameters {
         vector[C] log_Vc = log(Vc);
         matrix[I,C] pi;
-      
+        
         ////////////////////////////////// 2-way interactions
         vector[2] v1_212 = [l1_11,l1_12]';
         vector[2] v3_213 = [l3_11,l3_13]';
