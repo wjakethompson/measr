@@ -5,7 +5,8 @@ test_that("dina model works", {
                c("data", "type", "prior", "stancode", "method", "algorithm",
                  "backend", "model", "model_fit", "criteria", "reliability",
                  "file", "version"))
-  expect_equal(names(rstn_dina$data), c("data", "qmatrix", "resp_id", "item_id"))
+  expect_equal(names(rstn_dina$data),
+               c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_dina$data$data,
                dina_data %>%
                  tidyr::pivot_longer(-resp_id, names_to = "item_id",
@@ -30,7 +31,8 @@ test_that("dina model works", {
   expect_type(rstn_dina$criteria, "list")
   expect_type(rstn_dina$reliability, "list")
   expect_null(rstn_dina$file)
-  expect_equal(names(rstn_dina$version), c("measr", "rstan", "StanHeaders"))
+  expect_equal(names(rstn_dina$version),
+               c("R", "measr", "rstan", "StanHeaders"))
 
   dina_comp <- tibble::enframe(rstn_dina$model$par) %>%
     dplyr::filter(grepl("^Vc|slip|guess", .data$name)) %>%
@@ -51,7 +53,8 @@ test_that("dino model works", {
                c("data", "type", "prior", "stancode", "method", "algorithm",
                  "backend", "model", "model_fit", "criteria", "reliability",
                  "file", "version"))
-  expect_equal(names(rstn_dino$data), c("data", "qmatrix", "resp_id", "item_id"))
+  expect_equal(names(rstn_dino$data),
+               c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_dino$data$data,
                dino_data %>%
                  tidyr::pivot_longer(-resp_id, names_to = "item_id",
@@ -76,7 +79,8 @@ test_that("dino model works", {
   expect_type(rstn_dino$criteria, "list")
   expect_type(rstn_dino$reliability, "list")
   expect_null(rstn_dino$file)
-  expect_equal(names(rstn_dino$version), c("measr", "rstan", "StanHeaders"))
+  expect_equal(names(rstn_dino$version),
+               c("R", "measr", "rstan", "StanHeaders"))
 
   dino_comp <- tibble::enframe(rstn_dino$model$par) %>%
     dplyr::filter(grepl("^Vc|slip|guess", .data$name)) %>%
@@ -97,7 +101,8 @@ test_that("lcdm model works for ecpe", {
                c("data", "type", "prior", "stancode", "method", "algorithm",
                  "backend", "model", "model_fit", "criteria", "reliability",
                  "file", "version"))
-  expect_equal(names(rstn_ecpe_lcdm$data), c("data", "qmatrix", "resp_id", "item_id"))
+  expect_equal(names(rstn_ecpe_lcdm$data),
+               c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_ecpe_lcdm$data$data,
                ecpe_data %>%
                  tidyr::pivot_longer(-resp_id, names_to = "item_id",
@@ -124,7 +129,8 @@ test_that("lcdm model works for ecpe", {
   expect_type(rstn_ecpe_lcdm$criteria, "list")
   expect_type(rstn_ecpe_lcdm$reliability, "list")
   expect_null(rstn_ecpe_lcdm$file)
-  expect_equal(names(rstn_ecpe_lcdm$version), c("measr", "rstan", "StanHeaders"))
+  expect_equal(names(rstn_ecpe_lcdm$version),
+               c("R", "measr", "rstan", "StanHeaders"))
 
   expect_equal(rstn_ecpe_lcdm$model$value, ecpe_lldcm$logLik, tolerance = 0.01)
 
@@ -146,12 +152,14 @@ test_that("lcdm model works for mdm", {
                c("data", "type", "prior", "stancode", "method", "algorithm",
                  "backend", "model", "model_fit", "criteria", "reliability",
                  "file", "version"))
-  expect_equal(names(rstn_mdm_lcdm$data), c("data", "qmatrix", "resp_id", "item_id"))
+  expect_equal(names(rstn_mdm_lcdm$data),
+               c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_mdm_lcdm$data$data,
                mdm_data %>%
                  tidyr::pivot_longer(-respondent, names_to = "item_id",
                                      values_to = "score") %>%
-                 dplyr::mutate(resp_id = factor(respondent, levels = resp_names),
+                 dplyr::mutate(resp_id = factor(respondent,
+                                                levels = resp_names),
                                item_id = factor(item_id,
                                                 levels = unique(item_id))) %>%
                  dplyr::select("resp_id", "item_id", "score"))
@@ -175,7 +183,8 @@ test_that("lcdm model works for mdm", {
   expect_type(rstn_mdm_lcdm$criteria, "list")
   expect_type(rstn_mdm_lcdm$reliability, "list")
   expect_null(rstn_mdm_lcdm$file)
-  expect_equal(names(rstn_mdm_lcdm$version), c("measr", "rstan", "StanHeaders"))
+  expect_equal(names(rstn_mdm_lcdm$version),
+               c("R", "measr", "rstan", "StanHeaders"))
 
   expect_equal(rstn_mdm_lcdm$model$value, mdm_lldcm$logLik, tolerance = 0.001)
 

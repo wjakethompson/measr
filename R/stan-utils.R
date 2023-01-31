@@ -63,6 +63,8 @@ create_stan_gqs_params <- function(backend, draws) {
   } else if (backend == "cmdstanr") {
     list(fitted_params = draws)
   }
+
+  return(stan_pars)
 }
 
 # canonicalize Stan model file in accordance with the current Stan version

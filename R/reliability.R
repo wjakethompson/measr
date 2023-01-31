@@ -127,27 +127,34 @@ reliability.measrdcm <- function(model) {
   res_map_acc <- list(tibble::enframe(acc, name = "attribute", value = "acc"),
                       tibble::enframe(lambda_a, name = "attribute",
                                       value = "lambda_a"),
-                      tibble::enframe(kappa_a, name = "attribute", value = "kappa_a"),
+                      tibble::enframe(kappa_a, name = "attribute",
+                                      value = "kappa_a"),
                       tibble::enframe(youden_a, name = "attribute",
                                       value = "youden_a"),
-                      tibble::enframe(tetra_a, name = "attribute", value = "tetra_a"),
+                      tibble::enframe(tetra_a, name = "attribute",
+                                      value = "tetra_a"),
                       tibble::enframe(tp_a, name = "attribute", value = "tp_a"),
-                      tibble::enframe(tn_a, name = "attribute", value = "tn_a")) %>%
+                      tibble::enframe(tn_a, name = "attribute",
+                                      value = "tn_a")) %>%
     purrr::reduce(dplyr::full_join, by = "attribute") %>%
     tibble::remove_rownames()
 
   gammak <- purrr::set_names(obj$gamma, att_names)
   pc_prime <- purrr::set_names(pc_prime, att_names)
-  res_map_con <- list(tibble::enframe(consist, name = "attribute", value = "consist"),
+  res_map_con <- list(tibble::enframe(consist, name = "attribute",
+                                      value = "consist"),
                       tibble::enframe(lambda_c, name = "attribute",
                                       value = "lambda_c"),
-                      tibble::enframe(kappa_c, name = "attribute", value = "kappa_c"),
+                      tibble::enframe(kappa_c, name = "attribute",
+                                      value = "kappa_c"),
                       tibble::enframe(youden_c, name = "attribute",
                                       value = "youden_c"),
-                      tibble::enframe(tetra_c, name = "attribute", value = "tetra_c"),
+                      tibble::enframe(tetra_c, name = "attribute",
+                                      value = "tetra_c"),
                       tibble::enframe(tp_c, name = "attribute", value = "tp_c"),
                       tibble::enframe(tn_c, name = "attribute", value = "tn_c"),
-                      tibble::enframe(gammak, name = "attribute", value = "gammak"),
+                      tibble::enframe(gammak, name = "attribute",
+                                      value = "gammak"),
                       tibble::enframe(pc_prime, name = "attribute",
                                       value = "pc_prime")) %>%
     purrr::reduce(dplyr::full_join, by = "attribute") %>%

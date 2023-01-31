@@ -104,7 +104,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::filter(.data$param_level >= 2) %>%
     glue::glue_data("{param_name}_raw")
 
-  trans_interaction_stan <- if (length(raw_inter) > 0) {
+  trans_interaction_stan <- if (length(trans_param_defs) > 0) {
     glue::glue(
       "",
       "{glue::glue_collapse(trans_param_defs, sep = \"\n  \")}",
@@ -185,7 +185,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     glue::glue(
       "",
       "",
-      "  ////////////////////////////////// jacobian adjustment for constraints",
+      "  ////////////////////////////////// jacobian constraint adjustments",
       "  for (i in 1:{length(raw_inter)}) {{",
       "    target += interaction_raw[i];",
       "  }}",

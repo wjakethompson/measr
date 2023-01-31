@@ -71,7 +71,9 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
                                    code = gqs_script(),
                                    pars = stan_pars,
                                    silent = 2)
-  out <- capture.output(gqs_model <- do.call(stan_mod$func, stan_mod$pars))
+  out <- capture.output( #nolint
+    gqs_model <- do.call(stan_mod$func, stan_mod$pars)
+  )
 
   # get mastery information -----
   class_probs <- extract_class_probs(model = gqs_model,
@@ -92,7 +94,7 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
   }
   attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
     dplyr::filter(.data$real_names != "item_id") %>%
-    dplyr::mutate(att_id = paste0("att", 1:dplyr::n()))
+    dplyr::mutate(att_id = paste0("att", seq_len(dplyr::n())))
 
   class_probs <- class_probs %>%
     dplyr::left_join(resp_lookup, by = c("resp_id")) %>%

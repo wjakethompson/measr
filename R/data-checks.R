@@ -15,7 +15,7 @@ abort_bad_argument <- function(arg, must, not = NULL, extra = NULL) {
 }
 
 check_model <- function(x, required_class, name) {
-  if (!(all(required_class %in% class(x)) & (typeof(x) == "list"))) {
+  if (!(all(required_class %in% class(x)) && (typeof(x) == "list"))) {
     abort_bad_argument(name,
                        must = glue::glue("be an object with class ",
                                          "{paste(required_class,
@@ -44,7 +44,8 @@ check_newdata <- function(x, name, identifier, model, missing) {
   x <- x %>%
     dplyr::mutate(
       item_id = as.character(.data$item_id),
-      item_id = factor(item_id, levels = levels(model$data$data$item_id)))
+      item_id = factor(item_id, levels = levels(model$data$data$item_id))
+    )
 
   x
 }

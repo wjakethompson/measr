@@ -38,7 +38,7 @@ fix_simplex <- function(draws, stanfit, method) {
   # ensure valid simplex (we love floating point rounding)
   simplex <- grep("^Vc", colnames(draws))
 
-  if (stanfit & method == "mcmc") {
+  if (stanfit && method == "mcmc") {
     draws[, simplex] <- draws[, simplex] /
       apply(as.matrix(draws[, simplex]), 1, sum)
   } else if (stanfit) {
@@ -68,7 +68,7 @@ extract_class_probs <- function(model, attr) {
                   dplyr::matches("prob_resp_class")) %>%
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
     tidyr::separate_wider_regex(
-      name,
+      cols = "name",
       patterns = c("prob_resp_class\\[", r = "\\d+", ",", c = "\\d+", "\\]")
     ) %>%
     dplyr::mutate(resp_id = as.integer(.data$r),
@@ -92,7 +92,7 @@ extract_attr_probs <- function(model, qmat) {
                   dplyr::matches("prob_resp_attr")) %>%
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
     tidyr::separate_wider_regex(
-      name,
+      cols = "name",
       patterns = c("prob_resp_attr\\[", r = "\\d+", ",", a = "\\d+", "\\]")
     ) %>%
     dplyr::mutate(resp_id = as.integer(.data$r),
@@ -115,10 +115,11 @@ summarize_probs <- function(x, probs, id) {
   x %>%
     dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
     tidyr::pivot_longer(cols = -!!id, names_to = type, values_to = "prob") %>%
-    dplyr::summarize(mean = mean(prob, na.rm = TRUE),
+    dplyr::summarize(mean = mean(.data$prob, na.rm = TRUE),
                      bounds = list(
                        tibble::as_tibble_row(
-                         stats::quantile(prob, probs = probs, na.rm = TRUE)
+                         stats::quantile(.data$prob, probs = probs,
+                                         na.rm = TRUE)
                        )
                      ),
                      .by = c(!!id, !!type)) %>%
