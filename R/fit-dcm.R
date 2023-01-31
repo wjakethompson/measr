@@ -123,20 +123,8 @@ measr_dcm <- function(data,
   }
 
   # create measrfit object -----
-  algorithm <- if (method == "optim") {
-    stan_pars$algorithm
-  } else if ("stanfit" %in% class(mod)) {
-    mod@stan_args[[1]]$algorithm
-  } else if ("CmdStanFit" %in% class(mod)) {
-    mod$metadata()$algorithm
-  }
-  version_info <- list(measr = utils::packageVersion("measr"),
-                       rstan = utils::packageVersion("rstan"),
-                       StanHeaders = utils::packageVersion("StanHeaders"))
-  if (backend == "cmdstanr") {
-    version_info$cmdstanr <- utils::packageVersion("cmdstanr")
-    version_info$cmdstan <- as.package_version(cmdstanr::cmdstan_version())
-  }
+  algorithm <- extract_algorithm(model = mod, pars = stan_pars, method = method)
+  version_info <- get_version_info(cmdstanr = backend == "cmdstanr")
 
   if (is.null(resp_id)) resp_id <- "resp_id"
   if (is.null(item_id)) item_id <- "item_id"

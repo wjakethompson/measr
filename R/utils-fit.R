@@ -88,6 +88,31 @@ check_file_exists <- function(file, refit, dat, qmat, code, method) {
   }
 }
 
+extract_algorithm <- function(model, pars, method) {
+  algorithm <- if (method == "optim") {
+    pars$algorithm
+  } else if ("stanfit" %in% class(model)) {
+    model@stan_args[[1]]$algorithm
+  } else if ("CmdStanFit" %in% class(model)) {
+    model$metadata()$algorithm
+  }
+
+  return(algorithm)
+}
+
+get_version_info <- function(cmdstanr) {
+  version_info <- list(R = base::getRversion(),
+                       measr = utils::packageVersion("measr"),
+                       rstan = utils::packageVersion("rstan"),
+                       StanHeaders = utils::packageVersion("StanHeaders"))
+  if (cmdstanr) {
+    version_info$cmdstanr <- utils::packageVersion("cmdstanr")
+    version_info$cmdstan <- as.package_version(cmdstanr::cmdstan_version())
+  }
+
+  return(version_info)
+}
+
 # https://github.com/stan-dev/cmdstanr/issues/447
 fix_cmdstanr_names <- function(obj) {
   obj@sim$samples <- lapply(obj@sim$samples,
