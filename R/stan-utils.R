@@ -10,7 +10,7 @@ create_stan_data <- function(dat, qmat, type) {
   xi <- calc_xi(alpha = profiles, qmatrix = qmat, type = type)
 
   stan_data <- list(
-    I = length(unique(dat$item_id)),
+    I = nrow(qmat),
     R = length(unique(dat$resp_id)),
     N = nrow(dat),
     C = 2 ^ ncol(qmat),
@@ -43,8 +43,7 @@ create_stan_params <- function(backend, method, ...) {
   if (method == "mcmc") {
     if (backend == "rstan") {
       defl_pars <- list(iter = 4000, warmup = 2000, chains = 4,
-                        cores = getOption("mc.cores", 1L),
-                        include = FALSE, pars = "pi")
+                        cores = getOption("mc.cores", 1L))
     } else if (backend == "cmdstanr") {
       defl_pars <- list(iter_sampling = 2000, iter_warmup = 2000, chains = 4,
                         parallel_chains = getOption("mc.cores", 1L),
@@ -58,23 +57,59 @@ create_stan_params <- function(backend, method, ...) {
   return(stan_pars)
 }
 
-create_stan_function <- function(backend, method, code, pars) {
+create_stan_gqs_params <- function(backend, draws) {
+  stan_pars <- if (backend == "rstan") {
+    list(draws = draws)
+  } else if (backend == "cmdstanr") {
+    list(fitted_params = draws)
+  }
+
+  return(stan_pars)
+}
+
+# canonicalize Stan model file in accordance with the current Stan version
+canonicalize_cmdstan <- function(stan_file, overwrite_file = TRUE) {
+  cmdstan_mod <- cmdstanr::cmdstan_model(stan_file, compile = FALSE)
+  out <- utils::capture.output(
+    cmdstan_mod$format(
+      canonicalize = list("deprecations", "braces", "parentheses"),
+      overwrite_file = overwrite_file, backup = FALSE
+    )
+  )
+  paste0(out, collapse = "\n")
+}
+
+create_stan_function <- function(backend, method, code, pars, silent = 1) {
   if (backend == "rstan") {
-    comp_mod <- rstan::stan_model(model_code = code$stancode)
+    comp_mod <- eval_silent(
+      rstan::stan_model(model_code = code$stancode),
+      type = "message", try = TRUE, silent = silent >= 2
+    )
     pars$object <- comp_mod
     fit_func <- switch(method,
                        mcmc = rstan::sampling,
-                       optim = rstan::optimizing)
+                       optim = rstan::optimizing,
+                       gqs = rstan::gqs)
   } else if (backend == "cmdstanr") {
     comp_mod <- cmdstanr::cmdstan_model(
       cmdstanr::write_stan_file(code$stancode),
       compile = FALSE
     )
-    comp_mod$format(overwrite_file = TRUE, canonicalize = TRUE, quiet = TRUE)
-    comp_mod <- comp_mod$compile()
+    if (cmdstanr::cmdstan_version() >= "2.29.0") {
+      comp_mod$format(
+        canonicalize = list("deprecations", "braces", "parentheses"),
+        overwrite_file = TRUE, quiet = TRUE, backup = FALSE
+      )
+    }
+    comp_mod <- eval_silent(
+      comp_mod$compile(quiet = TRUE),
+      type = "message", try = TRUE, silent = silent >= 2
+    )
+
     fit_func <- switch(method,
                        mcmc = comp_mod$sample,
-                       optim = comp_mod$optimize)
+                       optim = comp_mod$optimize,
+                       gqs = comp_mod$generate_quantities)
   }
   return(list(func = fit_func, pars = pars))
 }

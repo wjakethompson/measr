@@ -9,6 +9,7 @@
 #' @docType class
 #'
 #' @slot data The data and Q-matrix used to estimate the model.
+#' @slot type The type of DCM that was estimated.
 #' @slot prior A [measrprior][measrprior()] object containing information on the
 #'   priors used in the model.
 #' @slot stancode The model code in **Stan** language.

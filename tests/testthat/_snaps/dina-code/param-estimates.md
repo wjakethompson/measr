@@ -1,7 +1,7 @@
 # dina model works
 
     Code
-      dina$stancode
+      rstn_dina$stancode
     Output
       data {
         int<lower=1> I;                 // number of items

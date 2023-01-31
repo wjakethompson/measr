@@ -73,6 +73,8 @@ measr_dcm <- function(data,
                       file = NULL,
                       file_refit = getOption("measr.file_refit", "never"),
                       ...) {
+  resp_id <- check_character(resp_id, name = "resp_id", allow_null = TRUE)
+  item_id <- check_character(item_id, name = "item_id", allow_null = TRUE)
   clean_data <- check_data(data, name = "data", identifier = resp_id,
                            missing = missing)
   qmatrix <- check_qmatrix(qmatrix, identifier = item_id,
@@ -81,8 +83,6 @@ measr_dcm <- function(data,
   clean_qmatrix <- qmatrix %>%
     dplyr::select(-"item_id") %>%
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
-  resp_id <- check_character(resp_id, name = "resp_id")
-  item_id <- check_character(item_id, name = "item_id")
   type <- rlang::arg_match(type, dcm_choices())
   method <- rlang::arg_match(method, c("mcmc", "optim"))
   prior <- check_prior(prior, name = "prior", allow_null = TRUE)
@@ -123,22 +123,15 @@ measr_dcm <- function(data,
   }
 
   # create measrfit object -----
-  algorithm <- if (method == "optim") {
-    stan_pars$algorithm
-  } else if ("stanfit" %in% class(mod)) {
-    mod@stan_args[[1]]$algorithm
-  } else if ("CmdStanFit" %in% class(mod)) {
-    mod$metadata()$algorithm
-  }
-  version_info <- list(measr = utils::packageVersion("measr"),
-                       rstan = utils::packageVersion("rstan"),
-                       StanHeaders = utils::packageVersion("StanHeaders"))
-  if (backend == "cmdstanr") {
-    version_info$cmdstanr <- utils::packageVersion("cmdstanr")
-    version_info$cmdstan <- as.package_version(cmdstanr::cmdstan_version())
-  }
+  algorithm <- extract_algorithm(model = mod, pars = stan_pars, method = method)
+  version_info <- get_version_info(cmdstanr = backend == "cmdstanr")
 
-  ret_mod <- list(data = list(data = clean_data, qmatrix = qmatrix),
+  if (is.null(resp_id)) resp_id <- "resp_id"
+  if (is.null(item_id)) item_id <- "item_id"
+
+  ret_mod <- list(data = list(data = clean_data, qmatrix = qmatrix,
+                              resp_id = resp_id, item_id = item_id),
+                  type = type,
                   prior = stan_code$prior,
                   stancode = stan_code$stancode,
                   method = method,

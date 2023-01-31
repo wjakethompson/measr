@@ -56,7 +56,9 @@ reference:
   contents:
   - ecpe_data
   - ecpe_qmatrix
-- title: Estimation
+  - mdm_data
+  - mdm_qmatrix
+- title: Model estimation
 - subtitle: Priors
   desc: Define prior distributions for the model parameters.
   contents:
@@ -69,6 +71,17 @@ reference:
   contents:
   - measr_dcm
   - measrfit-class
+- title: Model evaluation
+- subtitle: Reliability
+  desc: |
+    Estimate the pattern- or attribute-level classification accuracy and
+    consistency.
+  contents:
+  - reliability
+- title: Model applications
+  desc: View and apply an estimated model to new data.
+  contents:
+  - predict.measrdcm
 - title: Miscellaneous
   contents:
   - create_profiles

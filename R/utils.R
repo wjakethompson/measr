@@ -29,3 +29,38 @@ create_profiles <- function(attributes) {
     dplyr::select(-"total") %>%
     tibble::as_tibble()
 }
+
+
+#' Evaluate an expression without printing output or messages
+#'
+#' @param expr expression to be evaluated
+#' @param type type of output to be suppressed (see ?sink)
+#' @param try wrap evaluation of expr in 'try' and
+#'   not suppress outputs if evaluation fails?
+#' @param silent actually evaluate silently?
+#'
+#' @noRd
+eval_silent <- function(expr, type = "output", try = FALSE,
+                        silent = TRUE, ...) {
+  try <- check_logical(try, name = "try")
+  silent <- check_logical(silent, name = "silent")
+  type <- match.arg(type, c("output", "message"))
+  expr <- substitute(expr)
+  envir <- parent.frame()
+  if (silent) {
+    if (try && type == "message") {
+      try_out <- try(utils::capture.output(
+        out <- eval(expr, envir), type = type, ...
+      ))
+      if (methods::is(try_out, "try-error")) {
+        # try again without suppressing error messages
+        out <- eval(expr, envir)
+      }
+    } else {
+      utils::capture.output(out <- eval(expr, envir), type = type, ...)
+    }
+  } else {
+    out <- eval(expr, envir)
+  }
+  out
+}

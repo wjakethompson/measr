@@ -1,7 +1,7 @@
 # dino model works
 
     Code
-      dino$stancode
+      rstn_dino$stancode
     Output
       data {
         int<lower=1> I;                 // number of items

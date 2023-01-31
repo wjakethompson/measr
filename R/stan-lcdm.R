@@ -19,7 +19,8 @@ lcdm_script <- function(qmatrix, prior = NULL) {
 
   # parameters block -----
   all_params <- stats::model.matrix(stats::as.formula(paste0("~ .^",
-                                                             ncol(qmatrix))),
+                                                             max(ncol(qmatrix),
+                                                                 2L))),
                                     qmatrix) %>%
     tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
     dplyr::select(where(~ sum(.x) > 0)) %>%
@@ -64,6 +65,18 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::filter(.data$param_level >= 2) %>%
     dplyr::pull(.data$param_def)
 
+  interaction_stan <- if (length(interactions) > 0) {
+    glue::glue(
+      "",
+      "",
+      "  ////////////////////////////////// item interactions",
+      "  {glue::glue_collapse(interactions, sep = \"\n  \")}",
+      .sep = "\n", .trim = FALSE
+    )
+  } else {
+    ""
+  }
+
   parameters_block <- glue::glue(
     "parameters {{",
     "  simplex[C] Vc;                  // base rates of class membership",
@@ -72,10 +85,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     "  {glue::glue_collapse(intercepts, sep = \"\n  \")}",
     "",
     "  ////////////////////////////////// item main effects",
-    "  {glue::glue_collapse(main_effects, sep = \"\n  \")}",
-    "",
-    "  ////////////////////////////////// item interactions",
-    "  {glue::glue_collapse(interactions, sep = \"\n  \")}",
+    "  {glue::glue_collapse(main_effects, sep = \"\n  \")}{interaction_stan}",
     "}}", .sep = "\n"
   )
 
@@ -94,11 +104,26 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::filter(.data$param_level >= 2) %>%
     glue::glue_data("{param_name}_raw")
 
+  trans_interaction_stan <- if (length(trans_param_defs) > 0) {
+    glue::glue(
+      "",
+      "{glue::glue_collapse(trans_param_defs, sep = \"\n  \")}",
+      "",
+      "  {glue::glue(\"real interaction_raw[{length(raw_inter)}] = \",
+                   \"{{{glue::glue_collapse(raw_inter, sep = ',')}\")}}};",
+      "",
+      .sep = "\n", .trim = FALSE
+    )
+  } else {
+    ""
+  }
+
   all_profiles <- create_profiles(attributes = ncol(qmatrix))
 
   profile_params <-
     stats::model.matrix(stats::as.formula(paste0("~ .^",
-                                                 ncol(all_profiles))),
+                                                 max(ncol(all_profiles),
+                                                     2L))),
                         all_profiles) %>%
     tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
     tibble::rowid_to_column(var = "profile_id") %>%
@@ -123,12 +148,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     "transformed parameters {{",
     "  vector[C] log_Vc = log(Vc);",
     "  matrix[I,C] pi;",
-    "",
-    "{glue::glue_collapse(trans_param_defs, sep = \"\n  \")}",
-    "",
-    "  {glue::glue(\"real interaction_raw[{length(raw_inter)}] = \",
-                   \"{{{glue::glue_collapse(raw_inter, sep = ',')}\")}}};",
-    "",
+    "  {trans_interaction_stan}",
     "  ////////////////////////////////// probability of correct response",
     "  {glue::glue_collapse(pi_def, sep = \"\n  \")}",
     "}}", .sep = "\n"
@@ -161,6 +181,20 @@ lcdm_script <- function(qmatrix, prior = NULL) {
                              "~ {prior};")) %>%
     dplyr::pull("prior_def")
 
+  jacobian_stan <- if (length(raw_inter) > 0) {
+    glue::glue(
+      "",
+      "",
+      "  ////////////////////////////////// jacobian constraint adjustments",
+      "  for (i in 1:{length(raw_inter)}) {{",
+      "    target += interaction_raw[i];",
+      "  }}",
+      .sep = "\n", .trim = FALSE
+    )
+  } else {
+    ""
+  }
+
   model_block <- glue::glue(
     "model {{",
     "  real ps[C];",
@@ -180,12 +214,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     "      ps[c] = log_Vc[c] + sum(log_items);",
     "    }}",
     "    target += log_sum_exp(ps);",
-    "  }}",
-    "",
-    "  ////////////////////////////////// jacobian adjustment for constraints",
-    "  for (i in 1:{length(raw_inter)}) {{",
-    "    target += interaction_raw[i];",
-    "  }}",
+    "  }}{jacobian_stan}",
     "}}", .sep = "\n"
   )
 

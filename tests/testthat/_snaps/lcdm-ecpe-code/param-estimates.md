@@ -1,7 +1,7 @@
-# lcdm model works
+# lcdm model works for ecpe
 
     Code
-      lcdm$stancode
+      rstn_ecpe_lcdm$stancode
     Output
       data {
         int<lower=1> I;                 // number of items
@@ -103,7 +103,7 @@
       transformed parameters {
         vector[C] log_Vc = log(Vc);
         matrix[I,C] pi;
-      
+        
         ////////////////////////////////// 2-way interactions
         vector[2] v1_212 = [l1_11,l1_12]';
         vector[2] v3_213 = [l3_11,l3_13]';
@@ -358,80 +358,80 @@
         real ps[C];
       
         ////////////////////////////////// priors
-        l1_0 ~ normal(0, 15);
-        l1_11 ~ lognormal(0, 1);
-        l1_12 ~ lognormal(0, 1);
-        l1_212_raw ~ normal(0, 15);
-        l2_0 ~ normal(0, 15);
-        l2_12 ~ lognormal(0, 1);
-        l3_0 ~ normal(0, 15);
-        l3_11 ~ lognormal(0, 1);
-        l3_13 ~ lognormal(0, 1);
-        l3_213_raw ~ normal(0, 15);
-        l4_0 ~ normal(0, 15);
-        l4_13 ~ lognormal(0, 1);
-        l5_0 ~ normal(0, 15);
-        l5_13 ~ lognormal(0, 1);
-        l6_0 ~ normal(0, 15);
-        l6_13 ~ lognormal(0, 1);
-        l7_0 ~ normal(0, 15);
-        l7_11 ~ lognormal(0, 1);
-        l7_13 ~ lognormal(0, 1);
-        l7_213_raw ~ normal(0, 15);
-        l8_0 ~ normal(0, 15);
-        l8_12 ~ lognormal(0, 1);
-        l9_0 ~ normal(0, 15);
-        l9_13 ~ lognormal(0, 1);
-        l10_0 ~ normal(0, 15);
-        l10_11 ~ lognormal(0, 1);
-        l11_0 ~ normal(0, 15);
-        l11_11 ~ lognormal(0, 1);
-        l11_13 ~ lognormal(0, 1);
-        l11_213_raw ~ normal(0, 15);
-        l12_0 ~ normal(0, 15);
-        l12_11 ~ lognormal(0, 1);
-        l12_13 ~ lognormal(0, 1);
-        l12_213_raw ~ normal(0, 15);
-        l13_0 ~ normal(0, 15);
-        l13_11 ~ lognormal(0, 1);
-        l14_0 ~ normal(0, 15);
-        l14_11 ~ lognormal(0, 1);
-        l15_0 ~ normal(0, 15);
-        l15_13 ~ lognormal(0, 1);
-        l16_0 ~ normal(0, 15);
-        l16_11 ~ lognormal(0, 1);
-        l16_13 ~ lognormal(0, 1);
-        l16_213_raw ~ normal(0, 15);
-        l17_0 ~ normal(0, 15);
-        l17_12 ~ lognormal(0, 1);
-        l17_13 ~ lognormal(0, 1);
-        l17_223_raw ~ normal(0, 15);
-        l18_0 ~ normal(0, 15);
-        l18_13 ~ lognormal(0, 1);
-        l19_0 ~ normal(0, 15);
-        l19_13 ~ lognormal(0, 1);
-        l20_0 ~ normal(0, 15);
-        l20_11 ~ lognormal(0, 1);
-        l20_13 ~ lognormal(0, 1);
-        l20_213_raw ~ normal(0, 15);
-        l21_0 ~ normal(0, 15);
-        l21_11 ~ lognormal(0, 1);
-        l21_13 ~ lognormal(0, 1);
-        l21_213_raw ~ normal(0, 15);
-        l22_0 ~ normal(0, 15);
-        l22_13 ~ lognormal(0, 1);
-        l23_0 ~ normal(0, 15);
-        l23_12 ~ lognormal(0, 1);
-        l24_0 ~ normal(0, 15);
-        l24_12 ~ lognormal(0, 1);
-        l25_0 ~ normal(0, 15);
-        l25_11 ~ lognormal(0, 1);
-        l26_0 ~ normal(0, 15);
-        l26_13 ~ lognormal(0, 1);
-        l27_0 ~ normal(0, 15);
-        l27_11 ~ lognormal(0, 1);
-        l28_0 ~ normal(0, 15);
-        l28_13 ~ lognormal(0, 1);
+        l1_0 ~ uniform(-15, 15);
+        l1_11 ~ uniform(0, 15);
+        l1_12 ~ uniform(0, 15);
+        l1_212_raw ~ uniform(-15, 15);
+        l2_0 ~ uniform(-15, 15);
+        l2_12 ~ uniform(0, 15);
+        l3_0 ~ uniform(-15, 15);
+        l3_11 ~ uniform(0, 15);
+        l3_13 ~ uniform(0, 15);
+        l3_213_raw ~ uniform(-15, 15);
+        l4_0 ~ uniform(-15, 15);
+        l4_13 ~ uniform(0, 15);
+        l5_0 ~ uniform(-15, 15);
+        l5_13 ~ uniform(0, 15);
+        l6_0 ~ uniform(-15, 15);
+        l6_13 ~ uniform(0, 15);
+        l7_0 ~ uniform(-15, 15);
+        l7_11 ~ uniform(0, 15);
+        l7_13 ~ uniform(0, 15);
+        l7_213_raw ~ uniform(-15, 15);
+        l8_0 ~ uniform(-15, 15);
+        l8_12 ~ uniform(0, 15);
+        l9_0 ~ uniform(-15, 15);
+        l9_13 ~ uniform(0, 15);
+        l10_0 ~ uniform(-15, 15);
+        l10_11 ~ uniform(0, 15);
+        l11_0 ~ uniform(-15, 15);
+        l11_11 ~ uniform(0, 15);
+        l11_13 ~ uniform(0, 15);
+        l11_213_raw ~ uniform(-15, 15);
+        l12_0 ~ uniform(-15, 15);
+        l12_11 ~ uniform(0, 15);
+        l12_13 ~ uniform(0, 15);
+        l12_213_raw ~ uniform(-15, 15);
+        l13_0 ~ uniform(-15, 15);
+        l13_11 ~ uniform(0, 15);
+        l14_0 ~ uniform(-15, 15);
+        l14_11 ~ uniform(0, 15);
+        l15_0 ~ uniform(-15, 15);
+        l15_13 ~ uniform(0, 15);
+        l16_0 ~ uniform(-15, 15);
+        l16_11 ~ uniform(0, 15);
+        l16_13 ~ uniform(0, 15);
+        l16_213_raw ~ uniform(-15, 15);
+        l17_0 ~ uniform(-15, 15);
+        l17_12 ~ uniform(0, 15);
+        l17_13 ~ uniform(0, 15);
+        l17_223_raw ~ uniform(-15, 15);
+        l18_0 ~ uniform(-15, 15);
+        l18_13 ~ uniform(0, 15);
+        l19_0 ~ uniform(-15, 15);
+        l19_13 ~ uniform(0, 15);
+        l20_0 ~ uniform(-15, 15);
+        l20_11 ~ uniform(0, 15);
+        l20_13 ~ uniform(0, 15);
+        l20_213_raw ~ uniform(-15, 15);
+        l21_0 ~ uniform(-15, 15);
+        l21_11 ~ uniform(0, 15);
+        l21_13 ~ uniform(0, 15);
+        l21_213_raw ~ uniform(-15, 15);
+        l22_0 ~ uniform(-15, 15);
+        l22_13 ~ uniform(0, 15);
+        l23_0 ~ uniform(-15, 15);
+        l23_12 ~ uniform(0, 15);
+        l24_0 ~ uniform(-15, 15);
+        l24_12 ~ uniform(0, 15);
+        l25_0 ~ uniform(-15, 15);
+        l25_11 ~ uniform(0, 15);
+        l26_0 ~ uniform(-15, 15);
+        l26_13 ~ uniform(0, 15);
+        l27_0 ~ uniform(-15, 15);
+        l27_11 ~ uniform(0, 15);
+        l28_0 ~ uniform(-15, 15);
+        l28_13 ~ uniform(0, 15);
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
@@ -447,7 +447,7 @@
           target += log_sum_exp(ps);
         }
       
-        ////////////////////////////////// jacobian adjustment for constraints
+        ////////////////////////////////// jacobian constraint adjustments
         for (i in 1:9) {
           target += interaction_raw[i];
         }
