@@ -52,7 +52,7 @@ eval_silent <- function(expr, type = "output", try = FALSE,
       try_out <- try(utils::capture.output(
         out <- eval(expr, envir), type = type, ...
       ))
-      if (is(try_out, "try-error")) {
+      if (methods::is(try_out, "try-error")) {
         # try again without suppressing error messages
         out <- eval(expr, envir)
       }

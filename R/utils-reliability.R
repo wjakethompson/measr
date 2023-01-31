@@ -155,7 +155,7 @@ reli_list <- function(model) {
     as.vector()
   class_att <- double(n_class * n_att)
 
-  probs <- lapply(predict(model, summary = FALSE),
+  probs <- lapply(stats::predict(model, summary = FALSE),
                   clean_predicted_probs, resp_id = model$data$resp_id)
   class_probs <- probs$class_probabilities
   attr_probs <- probs$attribute_probabilities
