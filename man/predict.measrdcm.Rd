@@ -2,7 +2,7 @@
 % Please edit documentation in R/methods.R
 \name{predict.measrdcm}
 \alias{predict.measrdcm}
-\title{Posterior Draws of Respondent Mastery}
+\title{Posterior draws of respondent proficiency}
 \usage{
 \method{predict}{measrdcm}(
   object,

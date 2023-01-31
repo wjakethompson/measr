@@ -1,4 +1,4 @@
-#' Posterior Draws of Respondent Mastery
+#' Posterior draws of respondent proficiency
 #'
 #' Calculate posterior draws of respondent proficiency. Optionally retain all
 #' posterior draws or return only summaries of the distribution for each
