@@ -1,3 +1,7 @@
+#' Estimate the reliability of psychometric models
+#'
+#' @param model The estimated model to be evaluated.
+#'
 #' @export
 reliability <- function(model) {
   UseMethod("reliability")
@@ -5,20 +9,18 @@ reliability <- function(model) {
 
 #' Estimate the reliability of a diagnostic classification model
 #'
-#' Estimate the reliability of an estimated diagnostic classification model at
-#' the pattern or attribute level. Pattern-level reliability represents the
+#' For diagnostic classification models, reliability can be estimated at the
+#' pattern or attribute level. Pattern-level reliability represents the
 #' classification consistency and accuracy of placing students into an overall
 #' mastery profile. Rather than an overall profile, attributes can also be
 #' scored individually. In this case, classification consistency and accuracy
 #' should be evaluated for each individual attribute, rather than the overall
-#' profile. This is referred to as the *modal a posteriori* (MAP) reliability.
+#' profile. This is referred to as the *maximum a posteriori* (MAP) reliability.
 #' Finally, it may be desirable to report results as the probability of
 #' proficiency or mastery on each attribute instead of a proficient/not
 #' proficient classification. In this case, the reliability of the posterior
-#' probability should be reported. THis is the *expected a poteriori* (EAP)
+#' probability should be reported. This is the *expected a posteriori* (EAP)
 #' reliability.
-#'
-#' @param model A DCM estimated by [measr_dcm()].
 #'
 #' @details The pattern-level reliability (`pattern_reliability`) statistics are
 #' described in Cui et al. (2012). Attribute-level classification reliability
@@ -27,7 +29,7 @@ reliability <- function(model) {
 #' the mastery or proficiency probabilities; `eap_reliability`) are described in
 #' Johnson & Sinharay (2019).
 #'
-#' @returns A list with 3 elements:
+#' @returns For class `measrdcm`, a list with 3 elements:
 #'   * `pattern_reliability`: The pattern-level accuracy (`p_a`) and consistency
 #'     (`p_c`) described by Cui et al. (2012).
 #'   * `map_reliability`: A list with 2 elements: `accuracy` and `consistency`,
@@ -49,6 +51,8 @@ reliability <- function(model) {
 #'   models. *Journal of Educational and Behavioral Statistics, 45*(1), 5-31.
 #'   \url{https://doi.org/10.3102/1076998619864550}
 #'
+#' @describeIn reliability Reliability measures for diagnostic classification
+#'   models.
 #' @export
 reliability.measrdcm <- function(model) {
   # coerce model into a list of values required for reliability

@@ -77,7 +77,7 @@ reference:
     Estimate the pattern- or attribute-level classification accuracy and
     consistency.
   contents:
-  - reliability.measrdcm
+  - reliability
 - title: Model applications
   desc: View and apply an estimated model to new data.
   contents:
