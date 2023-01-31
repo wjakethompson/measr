@@ -186,7 +186,7 @@ reli_list <- function(model) {
   strc <- if (model$backend == "rstan" && model$method == "optim") {
     model$model$par %>%
       tibble::enframe() %>%
-      dplyr::filter(stringr::str_detect(.data$name, "^Vc")) %>%
+      dplyr::filter(grepl("^Vc", .data$name)) %>%
       dplyr::pull(.data$value)
   } else {
     posterior::as_draws_df(model$model) %>%
