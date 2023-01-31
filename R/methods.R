@@ -32,7 +32,7 @@
 #'
 #'   If summary is `TRUE`, each element is a tibble with one row per respondent
 #'   and class or attribute, and columns of the respondent identifier, `class`
-#'   or `attribute`, `mean`, and one column for every value specfieid in
+#'   or `attribute`, `mean`, and one column for every value specified in
 #'   `probs`.
 #' @export
 predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,

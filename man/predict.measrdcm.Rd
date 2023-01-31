@@ -50,7 +50,7 @@ probabilities for each of the possible classes.
 
 If summary is \code{TRUE}, each element is a tibble with one row per respondent
 and class or attribute, and columns of the respondent identifier, \code{class}
-or \code{attribute}, \code{mean}, and one column for every value specfieid in
+or \code{attribute}, \code{mean}, and one column for every value specified in
 \code{probs}.
 }
 \description{
