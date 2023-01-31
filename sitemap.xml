@@ -37,6 +37,9 @@
     <loc>https://measr.info/reference/is.measrprior.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/reference/mdm.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/reference/measr-package.html</loc>
   </url>
   <url>
@@ -52,7 +55,13 @@
     <loc>https://measr.info/reference/pipe.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/reference/predict.measrdcm.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/reference/reexports.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/reliability.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/tidyeval.html</loc>
