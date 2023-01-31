@@ -447,7 +447,7 @@
           target += log_sum_exp(ps);
         }
       
-        ////////////////////////////////// jacobian adjustment for constraints
+        ////////////////////////////////// jacobian constraint adjustments
         for (i in 1:9) {
           target += interaction_raw[i];
         }
