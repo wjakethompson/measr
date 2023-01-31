@@ -8,66 +8,124 @@ clean_predicted_probs <- function(x, resp_id) {
     dplyr::select(-!!resp_id)
 }
 
-create_reli_list <- function(N, K, M, A, pAhatA, attr_probs, class_probs,
-                             ahat, amean, pAx, pxi, att_names) {
-  ### Accuracy and Consistency -----
-  acc <- double(4 * K)
-  consist <- double(4 * K)
-  gamma <- double(K)
-  prev <- double(K)
+create_reli_prev <- function(n_att, n_class, profile_vec, strc) {
+  prev <- double(n_att)
 
-  for (i in (seq_len(M) - 1)) {
-    for (k in (seq_len(K) - 1)) {
-      if (A[(i + k * M) + 1] == 1) {
-        prev[k + 1] <- prev[k + 1] + pxi[i + 1]
+  for (i in (seq_len(n_class) - 1)) {
+    for (k in (seq_len(n_att) - 1)) {
+      if (profile_vec[(i + k * n_class) + 1] == 1) {
+        prev[k + 1] <- prev[k + 1] + strc[i + 1]
       }
     }
   }
 
-  for (i in (seq_len(N) - 1)) {
-    for (k in (seq_len(K) - 1)) {
-      acc[(k * 4 + ahat[(i + k * N) + 1]) + 1] <-
-        acc[(k * 4 + ahat[(i + k * N) + 1]) + 1] + (1 - amean[(i + k * N) + 1])
-      acc[(k * 4 + 2 + ahat[(i + k * N) + 1]) + 1] <-
-        acc[(k * 4 + 2 + ahat[(i + k * N) + 1]) + 1] + (amean[(i + k * N) + 1])
-      gamma[k + 1] <- gamma[k + 1] +
-        (amean[(i + k * N) + 1] * amean[(i + k * N) + 1] +
-           (1 - amean[(i + k * N) + 1]) * (1 - amean[(i + k * N) + 1]))
+  return(prev)
+}
 
-      for (m in (seq_len(M) - 1)) {
-        if (ahat[(i + k * N) + 1] == 1) {
-          pAhatA[(m + k * M) + 1] <- pAhatA[(m + k * M) + 1] +
-            pAx[(m + i * M) + 1]
+create_reli_acc <- function(n_att, n_resp, binary_att, prob_att) {
+  acc <- double(4 * n_att)
+
+  for (i in (seq_len(n_resp) - 1)) {
+    for (k in (seq_len(n_att) - 1)) {
+      acc[(k * 4 + binary_att[(i + k * n_resp) + 1]) + 1] <-
+        acc[(k * 4 + binary_att[(i + k * n_resp) + 1]) + 1] +
+        (1 - prob_att[(i + k * n_resp) + 1])
+      acc[(k * 4 + 2 + binary_att[(i + k * n_resp) + 1]) + 1] <-
+        acc[(k * 4 + 2 + binary_att[(i + k * n_resp) + 1]) + 1] +
+        (prob_att[(i + k * n_resp) + 1])
+    }
+  }
+
+  return(acc)
+}
+
+create_reli_gamma <- function(n_att, n_resp, prob_att) {
+  gamma <- double(n_att)
+
+  for (i in (seq_len(n_resp) - 1)) {
+    for (k in (seq_len(n_att) - 1)) {
+      gamma[k + 1] <- gamma[k + 1] +
+        (prob_att[(i + k * n_resp) + 1] * prob_att[(i + k * n_resp) + 1] +
+           (1 - prob_att[(i + k * n_resp) + 1]) *
+           (1 - prob_att[(i + k * n_resp) + 1]))
+    }
+  }
+
+  for (k in (seq_len(n_att) - 1)) {
+    gamma[k + 1] <- gamma[k + 1] / (n_resp)
+  }
+
+  return(gamma)
+}
+
+create_reli_class_att <- function(class_att, n_resp, n_att, n_class,
+                                  binary_att, prob_class) {
+  for (i in (seq_len(n_resp) - 1)) {
+    for (k in (seq_len(n_att) - 1)) {
+      for (m in (seq_len(n_class) - 1)) {
+        if (binary_att[(i + k * n_resp) + 1] == 1) {
+          class_att[(m + k * n_class) + 1] <- class_att[(m + k * n_class) + 1] +
+            prob_class[(m + i * n_class) + 1]
         }
       }
     }
   }
-  new_acc <- array(acc, c(2, 2, K),
-                   dimnames = list(c("ahat.0", "ahat.1"),
-                                   c("a.0", "a.1"),
-                                   att_names))
 
-  for (k in (seq_len(K) - 1)) {
-    gamma[k + 1] <- gamma[k + 1] / (N)
-  }
-  for (m in (seq_len(M) - 1)) {
-    for (k  in (seq_len(K) - 1)) {
-      pAhatA[(m + k * M) + 1] <- pAhatA[(m + k * M) + 1] /
-        ((N + 0.0) * pxi[m + 1])
+  return(class_att)
+}
+
+create_reli_consist <- function(n_att, n_resp, n_class, binary_att, class_att,
+                                prob_class, strc) {
+  consist <- double(4 * n_att)
+
+  class_att <- create_reli_class_att(class_att = class_att, n_resp = n_resp,
+                                     n_att = n_att, n_class = n_class,
+                                     binary_att = binary_att,
+                                     prob_class = prob_class)
+
+  for (m in (seq_len(n_class) - 1)) {
+    for (k  in (seq_len(n_att) - 1)) {
+      class_att[(m + k * n_class) + 1] <- class_att[(m + k * n_class) + 1] /
+        ((n_resp + 0.0) * strc[m + 1])
       consist[(4 * k) + 1] <- consist[(4 * k) + 1] +
-        ((1.0 - pAhatA[(m + k * M) + 1]) * (1.0 - pAhatA[(m + k * M) + 1]) *
-           pxi[m + 1])
+        ((1.0 - class_att[(m + k * n_class) + 1]) *
+           (1.0 - class_att[(m + k * n_class) + 1]) * strc[m + 1])
       consist[(4 * k + 1) + 1] <- consist[(4 * k + 1) + 1] +
-        ((1.0 - pAhatA[(m + k * M) + 1]) * (pAhatA[(m + k * M) + 1]) *
-           pxi[m + 1])
+        ((1.0 - class_att[(m + k * n_class) + 1]) *
+           (class_att[(m + k * n_class) + 1]) * strc[m + 1])
       consist[(4 * k + 2) + 1] <- consist[(4 * k + 1) + 1]
       consist[(4 * k + 3) + 1] <- consist[(4 * k + 3) + 1] +
-        ((pAhatA[(m + k * M) + 1]) * (pAhatA[(m + k * M) + 1]) * pxi[m + 1])
+        ((class_att[(m + k * n_class) + 1]) *
+           (class_att[(m + k * n_class) + 1]) * strc[m + 1])
     }
   }
-  new_consist <- array(consist, c(2, 2, K),
-                       dimnames = list(c("ahat1.0", "ahat1.1"),
-                                       c("ahat2.0", "ahat2.1"),
+
+  return(consist)
+}
+
+create_reli_list <- function(n_resp, n_att, n_class, profile_vec, class_att,
+                             attr_probs, class_probs, binary_att, prob_att,
+                             prob_class, strc, att_names) {
+  prev <- create_reli_prev(n_att = n_att, n_class = n_class,
+                           profile_vec = profile_vec, strc = strc)
+
+  acc <- create_reli_acc(n_att = n_att, n_resp = n_resp,
+                         binary_att = binary_att, prob_att = prob_att)
+  new_acc <- array(acc, c(2, 2, n_att),
+                   dimnames = list(c("att_pred_0", "att_pred_1"),
+                                   c("att_true_0", "att_true_1"),
+                                   att_names))
+
+  gamma <- create_reli_gamma(n_att = n_att, n_resp = n_resp,
+                             prob_att = prob_att)
+
+  consist <- create_reli_consist(n_att = n_att, n_resp = n_resp,
+                                 n_class = n_class, binary_att = binary_att,
+                                 class_att = class_att, prob_class = prob_class,
+                                 strc = strc)
+  new_consist <- array(consist, c(2, 2, n_att),
+                       dimnames = list(c("att_pred_1_0", "att_pred_1_1"),
+                                       c("att_pred_2_0", "att_pred_2_1"),
                                        att_names))
 
   ### Final List -----
@@ -82,20 +140,20 @@ create_reli_list <- function(N, K, M, A, pAhatA, attr_probs, class_probs,
     consist = new_consist,
     gamma = gamma,
     prev = prev,
-    pxi = pxi
+    strc = strc
   )
   return(ret_list)
 }
 
 reli_list <- function(model) {
-  N <- dplyr::n_distinct(model$data$data$resp_id)
-  K <- ncol(model$data$qmatrix) - 1L
-  M  <- 2 ^ K
-  A <- create_profiles(K) %>%
+  n_resp <- dplyr::n_distinct(model$data$data$resp_id)
+  n_att <- ncol(model$data$qmatrix) - 1L
+  n_class  <- 2 ^ n_att
+  profile_vec <- create_profiles(n_att) %>%
     as.matrix() %>%
     t() %>%
     as.vector()
-  pAhatA <- double(M * K)
+  class_att <- double(n_class * n_att)
 
   probs <- lapply(predict(model, summary = FALSE),
                   clean_predicted_probs, resp_id = model$data$resp_id)
@@ -103,7 +161,7 @@ reli_list <- function(model) {
   attr_probs <- probs$attribute_probabilities
 
   # map estimates
-  ahat <- attr_probs %>%
+  binary_att <- attr_probs %>%
     dplyr::mutate(dplyr::across(dplyr::everything(),
                                 ~dplyr::case_when(.x >= 0.5 ~ 1L,
                                                   TRUE ~ 0L))) %>%
@@ -112,20 +170,20 @@ reli_list <- function(model) {
     as.vector()
 
   # eap estimates
-  amean <- attr_probs %>%
+  prob_att <- attr_probs %>%
     as.matrix() %>%
     unname() %>%
     as.vector()
 
   # class probs
-  pAx <- class_probs %>%
+  prob_class <- class_probs %>%
     as.matrix() %>%
     unname() %>%
     t() %>%
     as.vector()
 
   # structural parameters
-  pxi <- if (model$backend == "rstan" && model$method == "optim") {
+  strc <- if (model$backend == "rstan" && model$method == "optim") {
     model$model$par %>%
       tibble::enframe() %>%
       dplyr::filter(stringr::str_detect(.data$name, "^Vc")) %>%
@@ -143,9 +201,11 @@ reli_list <- function(model) {
     dplyr::select(-"item_id") %>%
     colnames()
 
-  res <- create_reli_list(N = N, K = K, M = M, A = A, pAhatA = pAhatA,
+  res <- create_reli_list(n_resp = n_resp, n_att = n_att, n_class = n_class,
+                          profile_vec = profile_vec, class_att = class_att,
                           attr_probs = attr_probs, class_probs = class_probs,
-                          ahat = ahat, amean = amean, pAx = pAx, pxi = pxi,
+                          binary_att = binary_att, prob_att = prob_att,
+                          prob_class = prob_class, strc = strc,
                           att_names = att_names)
 
   return(res)

@@ -117,10 +117,10 @@ reliability.measrdcm <- function(model) {
     if (dim(out) == 1) out <- as.array(c(out, `2` = 0))
     return(out)
   }),
-  2, obj$pxi, "/") ^ 2, 2, sum)
-  pc <- sum(p_prime * obj$pxi)
-  pc1 <- p_prime %*% (obj$pxi * all_a) / p
-  pc0 <- p_prime %*% (obj$pxi * (1 - all_a)) / (1 - p)
+  2, obj$strc, "/") ^ 2, 2, sum)
+  pc <- sum(p_prime * obj$strc)
+  pc1 <- p_prime %*% (obj$strc * all_a) / p
+  pc0 <- p_prime %*% (obj$strc * (1 - all_a)) / (1 - p)
   pc_prime <- as.vector(pc1 * pc1 * p + pc0 * pc0 * (1 - p))
   pa <- mean(apply(obj$posterior, 1, max))
 
@@ -172,7 +172,7 @@ reliability.measrdcm <- function(model) {
     prior <- mean(v)
     prior_info <- prior * log(prior) + (1 - prior) * log(1 - prior)
     rho_i <- 1 - exp(-2 * (post_info - prior_info))
-    pf_num <- sum(apply(v * obj$posterior, 2, mean) ^ 2 / obj$pxi) - prior ^ 2
+    pf_num <- sum(apply(v * obj$posterior, 2, mean) ^ 2 / obj$strc) - prior ^ 2
     pf_den <- mean(v * v) - prior ^ 2
     rho_pf <- pf_num / pf_den
     c(rho_pf, rho_bs, rho_i, rho_tb)

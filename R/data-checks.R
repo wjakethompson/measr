@@ -44,7 +44,7 @@ check_newdata <- function(x, name, identifier, model, missing) {
   x <- x %>%
     dplyr::mutate(
       item_id = as.character(.data$item_id),
-      item_id = factor(item_id, levels = levels(model$data$data$item_id))
+      item_id = factor(.data$item_id, levels = levels(model$data$data$item_id))
     )
 
   x
