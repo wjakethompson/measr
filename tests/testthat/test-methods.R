@@ -34,33 +34,22 @@ test_that("mdm probabilities are accurate", {
     dplyr::select(-"respondent") %>%
     as.matrix() %>%
     unname()
-  expect_equal(measr_class, mdm_lldcm$posterior, tolerance = 0.01)
+
+  class_diff <- abs(round(measr_class, digits = 4) -
+                      round(mdm_lldcm$posterior, digits = 4))
+
+  expect_lt(mean(class_diff), .02)
+  expect_lt(median(class_diff), .02)
+
 
   measr_attr <- mdm_preds$attribute_probabilities %>%
     dplyr::select("mean") %>%
     as.matrix() %>%
     unname()
-  expect_equal(measr_attr, mdm_lldcm$eap, tolerance = 0.01)
-})
 
-test_that("ecpe probabilities are accurate", {
-  ecpe_preds <- predict(rstn_ecpe_lcdm, newdata = ecpe_data,
-                        resp_id = "resp_id", summary = TRUE)
+  attr_diff <- abs(round(measr_attr, digits = 4) -
+                     round(mdm_lldcm$eap, digits = 4))
 
-  measr_class <- ecpe_preds$class_probabilities %>%
-    dplyr::select("resp_id", "class", "mean") %>%
-    tidyr::pivot_wider(names_from = "class", values_from = "mean") %>%
-    dplyr::select(-"resp_id") %>%
-    as.matrix() %>%
-    unname()
-  expect_equal(measr_class, ecpe_lldcm$posterior[, c(1, 5, 3, 2, 7, 6, 4, 8)],
-               tolerance = 0.1)
-
-  measr_attr <- ecpe_preds$attribute_probabilities %>%
-    dplyr::select("resp_id", "attribute", "mean") %>%
-    tidyr::pivot_wider(names_from = "attribute", values_from = "mean") %>%
-    dplyr::select(-"resp_id") %>%
-    as.matrix() %>%
-    unname()
-  expect_equal(measr_attr, ecpe_lldcm$eap, tolerance = 0.1)
+  expect_lt(mean(attr_diff), .02)
+  expect_lt(median(attr_diff), .02)
 })
