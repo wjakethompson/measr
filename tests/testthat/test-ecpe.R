@@ -5,7 +5,7 @@ out <- capture.output(
     rstn_ecpe_lcdm <- measr_dcm(
       data = ecpe_data, missing = NA, qmatrix = ecpe_qmatrix,
       resp_id = "resp_id", item_id = "item_id", type = "lcdm",
-      method = "optim", seed = 63277, backend = "rstan",
+      method = "optim", seed = 63277, backend = "cmdstanr",
       prior = c(prior(uniform(-15, 15), class = "intercept"),
                 prior(uniform(0, 15), class = "maineffect"),
                 prior(uniform(-15, 15), class = "interaction")))
@@ -39,20 +39,21 @@ test_that("lcdm model works for ecpe", {
                  prior(uniform(-15, 15), class = "interaction")))
   expect_snapshot(rstn_ecpe_lcdm$stancode, variant = "lcdm-ecpe-code")
   expect_equal(rstn_ecpe_lcdm$method, "optim")
-  expect_equal(rstn_ecpe_lcdm$algorithm, "LBFGS")
-  expect_type(rstn_ecpe_lcdm$model, "list")
-  expect_equal(names(rstn_ecpe_lcdm$model),
-               c("par", "value", "return_code", "theta_tilde"))
+  expect_equal(tolower(rstn_ecpe_lcdm$algorithm), "lbfgs")
+  expect_type(rstn_ecpe_lcdm$model, "environment")
+  # expect_equal(names(rstn_ecpe_lcdm$model),
+  #              c("par", "value", "return_code", "theta_tilde"))
+  expect_equal(class(rstn_ecpe_lcdm$model), c("CmdStanMLE", "CmdStanFit", "R6"))
   expect_type(rstn_ecpe_lcdm$model_fit, "list")
   expect_type(rstn_ecpe_lcdm$criteria, "list")
   expect_type(rstn_ecpe_lcdm$reliability, "list")
   expect_null(rstn_ecpe_lcdm$file)
   expect_equal(names(rstn_ecpe_lcdm$version),
-               c("R", "measr", "rstan", "StanHeaders"))
+               c("R", "measr", "rstan", "StanHeaders", "cmdstanr", "cmdstan"))
 
-  expect_equal(rstn_ecpe_lcdm$model$value, ecpe_lldcm$logLik, tolerance = 0.01)
+  expect_equal(rstn_ecpe_lcdm$model$lp(), ecpe_lldcm$logLik, tolerance = 0.01)
 
-  lcdm_comp <- tibble::enframe(rstn_ecpe_lcdm$model$par) %>%
+  lcdm_comp <- tibble::enframe(rstn_ecpe_lcdm$model$mle()) %>%
     dplyr::filter(grepl("^Vc|^l[0-9]*_[0-9]*$", .data$name)) %>%
     dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
     dplyr::full_join(true_lcdm, by = c("name" = "parameter"))
