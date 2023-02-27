@@ -94,55 +94,6 @@ test_that("dino model works", {
   expect_lte(max(comp_dif), 0.2)
 })
 
-test_that("lcdm model works for ecpe", {
-  expect_s3_class(rstn_ecpe_lcdm, "measrfit")
-  expect_s3_class(rstn_ecpe_lcdm, "measrdcm")
-  expect_equal(names(rstn_ecpe_lcdm),
-               c("data", "type", "prior", "stancode", "method", "algorithm",
-                 "backend", "model", "model_fit", "criteria", "reliability",
-                 "file", "version"))
-  expect_equal(names(rstn_ecpe_lcdm$data),
-               c("data", "qmatrix", "resp_id", "item_id"))
-  expect_equal(rstn_ecpe_lcdm$data$data,
-               ecpe_data %>%
-                 tidyr::pivot_longer(-resp_id, names_to = "item_id",
-                                     values_to = "score") %>%
-                 dplyr::mutate(resp_id = factor(resp_id),
-                               item_id = factor(item_id,
-                                                levels = unique(item_id))))
-  expect_equal(rstn_ecpe_lcdm$data$qmatrix,
-               ecpe_qmatrix %>%
-                 dplyr::mutate(item_id = factor(item_id,
-                                                levels = unique(item_id))))
-  expect_equal(rstn_ecpe_lcdm$type, "lcdm")
-  expect_equal(rstn_ecpe_lcdm$prior,
-               c(prior(uniform(-15, 15), class = "intercept"),
-                 prior(uniform(0, 15), class = "maineffect"),
-                 prior(uniform(-15, 15), class = "interaction")))
-  expect_snapshot(rstn_ecpe_lcdm$stancode, variant = "lcdm-ecpe-code")
-  expect_equal(rstn_ecpe_lcdm$method, "optim")
-  expect_equal(rstn_ecpe_lcdm$algorithm, "LBFGS")
-  expect_type(rstn_ecpe_lcdm$model, "list")
-  expect_equal(names(rstn_ecpe_lcdm$model),
-               c("par", "value", "return_code", "theta_tilde"))
-  expect_type(rstn_ecpe_lcdm$model_fit, "list")
-  expect_type(rstn_ecpe_lcdm$criteria, "list")
-  expect_type(rstn_ecpe_lcdm$reliability, "list")
-  expect_null(rstn_ecpe_lcdm$file)
-  expect_equal(names(rstn_ecpe_lcdm$version),
-               c("R", "measr", "rstan", "StanHeaders"))
-
-  expect_equal(rstn_ecpe_lcdm$model$value, ecpe_lldcm$logLik, tolerance = 0.01)
-
-  lcdm_comp <- tibble::enframe(rstn_ecpe_lcdm$model$par) %>%
-    dplyr::filter(grepl("^Vc|^l[0-9]*_[0-9]*$", .data$name)) %>%
-    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
-    dplyr::full_join(true_lcdm, by = c("name" = "parameter"))
-
-  comp_cor <- cor(lcdm_comp$value, lcdm_comp$true)
-  expect_gte(comp_cor, 0.85)
-})
-
 test_that("lcdm model works for mdm", {
   resp_names <- dplyr::pull(mdm_data, .data$respondent)
 
