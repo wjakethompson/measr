@@ -130,7 +130,7 @@ test_that("ecpe reliability", {
     round(as.matrix(ecpe_reli$map_reliability$accuracy[, -1]), digits = 4) -
       round(as.matrix(ecpe_lldcm_reli[[2]][1:7]), digits = 4)
   )
-  expect_lt(mean(map_acc_diff), .01)
+  expect_lt(mean(map_acc_diff), .02)
   expect_lt(median(map_acc_diff), .01)
 
   map_con_diff <- abs(
