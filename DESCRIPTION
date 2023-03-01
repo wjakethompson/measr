@@ -22,6 +22,7 @@ Imports:
     dplyr (>= 1.1.0),
     fs,
     glue,
+    loo,
     magrittr,
     methods,
     posterior,
