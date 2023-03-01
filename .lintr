@@ -1,5 +1,3 @@
 linters: linters_with_defaults()
-exclusions: list(
-    "R/priors.R" = 187
-  )
+exclusions: list()
 encoding: "UTF-8"

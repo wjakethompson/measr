@@ -184,7 +184,7 @@ validate_measrprior <- function(x) {
 #'
 #' prior2 <- 3
 #' is.measrprior(prior2)
-is.measrprior <- function(x) {
+is.measrprior <- function(x) { #nolint
   inherits(x, "measrprior")
 }
 
