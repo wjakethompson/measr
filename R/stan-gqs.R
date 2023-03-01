@@ -67,3 +67,70 @@ gqs_script <- function() {
 
   return(list(stancode = full_script))
 }
+
+loglik_script <- function() {
+  # data block -----
+  data_block <- glue::glue(
+    "data {{
+      int<lower=1> I;                 // number of items
+      int<lower=1> R;                 // number of respondents
+      int<lower=1> N;                 // number of observations
+      int<lower=1> C;                 // number of classes
+      int<lower=1> A;                 // number of attributes
+      int<lower=1,upper=I> ii[N];     // item for observation n
+      int<lower=1,upper=R> rr[N];     // respondent for observation n
+      int<lower=0,upper=1> y[N];      // score for observation n
+      int<lower=1,upper=N> start[R];  // starting row for respondent R
+      int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
+      matrix[C,A] Alpha;              // attribute pattern for each class
+      matrix[I,C] Xi;                 // class attribute mastery indicator
+    }}"
+  )
+
+  # parameters block -----
+  parameters_block <- glue::glue(
+    "parameters {{
+      simplex[C] Vc;
+      matrix[I,C] pi;
+    }}"
+  )
+
+  # transformed parameters block -----
+  transformed_parameters_block <- glue::glue(
+    "transformed parameters {{",
+    "  vector[C] log_Vc = log(Vc);",
+    "}}"
+  )
+
+  # generated quantities block -----
+  gqs_block <- glue::glue(
+    "generated quantities {{",
+    "  vector[R] log_lik;",
+    "",
+    "  for (r in 1:R) {{",
+    "    row_vector[C] prob_joint;",
+    "    for (c in 1:C) {{",
+    "      real log_items[num[r]];",
+    "      for (m in 1:num[r]) {{",
+    "        int i = ii[start[r] + m - 1];",
+    "        log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +",
+    "                       (1 - y[start[r] + m - 1]) * log(1 - pi[i,c]);",
+    "      }}",
+    "      prob_joint[c] = log_Vc[c] + sum(log_items);",
+    "    }}",
+    "    log_lik[r] = log_sum_exp(prob_joint);",
+    "  }}",
+    "}}", .sep = "\n"
+  )
+
+  # combine blocks -----
+  full_script <- glue::glue(
+    "{data_block}",
+    "{parameters_block}",
+    "{transformed_parameters_block}",
+    "{gqs_block}",
+    .sep = "\n"
+  )
+
+  return(list(stancode = full_script))
+}
