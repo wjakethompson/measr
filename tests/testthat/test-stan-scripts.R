@@ -19,6 +19,10 @@ test_that("stan generated quantities script works", {
   expect_snapshot(gqs_script())
 })
 
+test_that("stan log_lik script works", {
+  expect_snapshot(loglik_script())
+})
+
 test_that("lcdm script works", {
   expect_snapshot(lcdm_script(ecpe_q))
   expect_snapshot(lcdm_script(mdm_q))
