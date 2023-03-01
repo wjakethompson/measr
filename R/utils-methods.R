@@ -1,18 +1,15 @@
 get_mcmc_draws <- function(x) {
   draw_matrix <- if (x$backend == "cmdstanr") {
     if ("stanfit" %in% class(x$model)) {
-      posterior::as_draws_array(as.array(x$model, pars = c("Vc", "pi")))
+      posterior::as_draws_array(as.array(x$model, pars = c("log_Vc", "pi")))
     } else {
-      x$model$draws(variables = c("Vc", "pi"), format = "draws_array")
+      x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
     }
   } else if (x$backend == "rstan") {
-    as.matrix(x$model, pars = c("Vc", "pi"))
+    as.matrix(x$model, pars = c("log_Vc", "pi"))
   }
 
-  final_matrix <- fix_simplex(draw_matrix,
-                              backend = x$backend,
-                              method = x$method)
-  return(final_matrix)
+  return(draw_matrix)
 }
 
 get_optim_draws <- function(x) {
@@ -23,7 +20,7 @@ get_optim_draws <- function(x) {
   }
 
   all_vars <- colnames(draw_matrix)
-  keep_vars <- all_vars[c(grep("^Vc", all_vars), # structural parameters
+  keep_vars <- all_vars[c(grep("^log_Vc", all_vars),
                           grep("^pi", all_vars))]
 
   final_matrix <- draw_matrix[, keep_vars]
@@ -32,40 +29,7 @@ get_optim_draws <- function(x) {
     final_matrix <- t(as.matrix(final_matrix))
   }
 
-  final_matrix <- fix_simplex(final_matrix,
-                              backend = x$backend,
-                              method = x$method)
   return(final_matrix)
-}
-
-# ensure valid simplex (we love floating point rounding)
-fix_simplex <- function(draws, backend, method) {
-  if (method == "optim") {
-    if (backend == "rstan") {
-      simplex <- grep("^Vc", colnames(draws))
-      draws[, simplex] <- draws[, simplex] /
-        apply(t(as.matrix(draws[, simplex])), 1, sum)
-    } else if (backend == "cmdstanr") {
-      simplex <- grep("^Vc", colnames(draws))
-      draws[, simplex] <- draws[, simplex] /
-        apply(as.matrix(draws[, simplex]), 1, sum)
-    }
-  } else if (method == "mcmc") {
-    if (backend == "rstan") {
-      simplex <- grep("^Vc", colnames(draws))
-      draws[, simplex] <- draws[, simplex] /
-        apply(as.matrix(draws[, simplex]), 1, sum)
-    } else if (backend == "cmdstanr") {
-      simplex <- grep("^Vc", dimnames(draws)$variable)
-      sum_matrix <- apply(draws[, , simplex], c(1, 2), sum)
-      for (i in simplex) {
-        draws[, , i] <- matrix(draws[, , i], ncol = dim(draws)[2]) /
-          sum_matrix
-      }
-    }
-  }
-
-  return(draws)
 }
 
 extract_class_probs <- function(model, attr) {

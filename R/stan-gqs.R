@@ -20,7 +20,7 @@ gqs_script <- function() {
   # parameters block -----
   parameters_block <- glue::glue(
     "parameters {{
-      simplex[C] Vc;
+      vector[C] log_Vc;
       matrix[I,C] pi;
     }}"
   )
@@ -40,9 +40,9 @@ gqs_script <- function() {
     "        log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +",
     "                       (1 - y[start[r] + m - 1]) * log(1 - pi[i,c]);",
     "      }}",
-    "      prob_joint[c] = Vc[c] * exp(sum(log_items));",
+    "      prob_joint[c] = log_Vc[c] + sum(log_items);",
     "    }}",
-    "    prob_resp_class[r] = prob_joint / sum(prob_joint);",
+    "    prob_resp_class[r] = exp(prob_joint) / exp(log_sum_exp(prob_joint));",
     "  }}",
     "",
     "  for (r in 1:R) {{",
@@ -90,16 +90,9 @@ loglik_script <- function() {
   # parameters block -----
   parameters_block <- glue::glue(
     "parameters {{
-      simplex[C] Vc;
+      vector[C] log_Vc;
       matrix[I,C] pi;
     }}"
-  )
-
-  # transformed parameters block -----
-  transformed_parameters_block <- glue::glue(
-    "transformed parameters {{",
-    "  vector[C] log_Vc = log(Vc);",
-    "}}"
   )
 
   # generated quantities block -----
@@ -127,7 +120,6 @@ loglik_script <- function() {
   full_script <- glue::glue(
     "{data_block}",
     "{parameters_block}",
-    "{transformed_parameters_block}",
     "{gqs_block}",
     .sep = "\n"
   )
