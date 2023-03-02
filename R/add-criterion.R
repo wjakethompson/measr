@@ -44,7 +44,7 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
   criterion <- rlang::arg_match(criterion, values = c("loo", "waic"),
                                 multiple = TRUE)
   overwrite <- check_logical(overwrite, name = "overwrite")
-  force_save <- check_logical(force_save, name = "force_save")
+  save <- check_logical(save, name = "force_save")
 
   # determine which criteria to estimate
   existing_criteria <- names(model$criteria)
