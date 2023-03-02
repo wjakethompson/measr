@@ -6,20 +6,25 @@ loo::loo
 #' @export
 loo::waic
 
+#' @importFrom loo loo_compare
+#' @export
+loo::loo_compare
+
 #' Efficient approximate leave-one-out cross-validation (LOO)
 #'
-#' A [loo::loo()] method that is customized for `measrdcm` object. This is a
+#' A [loo::loo()] method that is customized for `measrfit` objects. This is a
 #' simple wrapper around [loo::loo.array()]. See the **loo** package
 #' [vignettes](https://mc-stan.org/loo/articles/) for details.
 #'
 #' @inheritParams loo::loo
+#' @param x A [measrfit] object.
 #' @param ... Additional arguments passed to [loo::loo.array()].
 #'
 #' @return The object returned by [loo::loo.array()].
 #'
 #' @export
-loo.measrdcm <- function(x, ..., r_eff = NA) { #nolint
-  model <- check_model(x, required_class = "measrdcm", name = "x")
+loo.measrfit <- function(x, ..., r_eff = NA) { #nolint
+  model <- check_model(x, required_class = "measrfit", name = "x")
 
   if (model$method != "mcmc") {
     rlang::abort("error_bad_method",
@@ -34,18 +39,18 @@ loo.measrdcm <- function(x, ..., r_eff = NA) { #nolint
 
 #' Widely applicable information criterion (WAIC)
 #'
-#' A [loo::waic()] method that is customized for `measrdcm` object. This is a
+#' A [loo::waic()] method that is customized for `measrfit` objects. This is a
 #' simple wrapper around [loo::waic.array()]. See the **loo** package
 #' [vignettes](https://mc-stan.org/loo/articles/) for details.
 #'
-#' @inheritParams loo::waic
+#' @param x A [measrfit] object.
 #' @param ... Additional arguments passed to [loo::waic.array()].
 #'
 #' @return The object returned by [loo::waic.array()].
 #'
 #' @export
-waic.measrdcm <- function(x, ...) { #nolint
-  model <- check_model(x, required_class = "measrdcm", name = "x")
+waic.measrfit <- function(x, ...) { #nolint
+  model <- check_model(x, required_class = "measrfit", name = "x")
 
   if (model$method != "mcmc") {
     rlang::abort("error_bad_method",

@@ -1,4 +1,9 @@
 prep_loglik_array <- function(model) {
+  UseMethod("prep_loglik_array")
+}
+
+#' @export
+prep_loglik_array.measrdcm <- function(model) {
   score_data <- model$data$data
   clean_qmatrix <- model$data$qmatrix %>%
     dplyr::select(-"item_id") %>%
