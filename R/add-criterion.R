@@ -47,28 +47,27 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
   save <- check_logical(save, name = "force_save")
 
   # determine which criteria to estimate
-  existing_criteria <- names(model$criteria)
-  loo_possible <- !("loo" %in% existing_criteria) ||
-    (("loo" %in% existing_criteria) & overwrite)
-  waic_possible <- !("waic" %in% existing_criteria) ||
-    (("waic" %in% existing_criteria) & overwrite)
+  new_criteria <- setdiff(criterion, names(model$criteria))
+  redo_criteria <- if (overwrite) {
+    intersect(criterion, names(model$criteria))
+  } else {
+    NULL
+  }
+  all_criteria <- c(new_criteria, redo_criteria)
 
-  run_loo <- loo_possible & ("loo" %in% criterion)
-  run_waic <- waic_possible & ("waic" %in% criterion)
-
-  if (run_loo || run_waic) {
+  if (length(all_criteria) > 0) {
     log_lik_array <- prep_loglik_array(model)
   }
 
-  if (run_loo) {
+  if ("loo" %in% all_criteria) {
     model$criteria$loo <- loo(log_lik_array, r_eff = r_eff)
   }
-  if (run_waic) {
+  if ("waic" %in% all_criteria) {
     model$criteria$waic <- waic(log_lik_array)
   }
 
   # re-save model object (if applicable)
-  if (!is.null(model$file) && (run_loo || run_waic) && save) {
+  if (!is.null(model$file) && length(all_criteria) > 0 && save) {
     saveRDS(model, file = model$file)
   }
 
