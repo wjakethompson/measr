@@ -56,7 +56,7 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
   run_loo <- loo_possible & ("loo" %in% criterion)
   run_waic <- waic_possible & ("waic" %in% criterion)
 
-  if (run_loo | run_waic) {
+  if (run_loo || run_waic) {
     log_lik_array <- prep_loglik_array(model)
   }
 
@@ -68,7 +68,7 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
   }
 
   # re-save model object (if applicable)
-  if (!is.null(model$file) & (run_loo || run_waic) & save) {
+  if (!is.null(model$file) && (run_loo || run_waic) && save) {
     saveRDS(model, file = model$file)
   }
 
