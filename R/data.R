@@ -23,7 +23,7 @@
 #'
 #' @references Buck, G., & Tatsuoka, K. K. (1998). Application of the rule-space
 #'   procedure to language testing: Examining attributes of a free response
-#'   listening test. *Language Testing, 15*(2) 119-157.
+#'   listening test. *Language Testing, 15*(2), 119-157.
 #'   \url{https://doi.org/10.1177/026553229801500201}
 #' @references Henson, R., & Templin, J. (2007, April). *Large-scale language
 #'   assessment using cognitive diagnosis models.* Paper presented at the Annual
