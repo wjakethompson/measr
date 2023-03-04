@@ -10,11 +10,7 @@ prep_loglik_array.measrdcm <- function(model) {
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
   stan_data <- create_stan_data(dat = score_data, qmat = clean_qmatrix,
                                 type = model$type)
-  stan_draws <- if (model$method == "mcmc") {
-    get_mcmc_draws(model)
-  } else if (model$method == "optim") {
-    get_optim_draws(model)
-  }
+  stan_draws <- get_mcmc_draws(model)
 
   stan_pars <- create_stan_gqs_params(backend = model$backend,
                                       draws = stan_draws)
