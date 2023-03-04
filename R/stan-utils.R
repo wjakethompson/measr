@@ -134,10 +134,10 @@ one_down_params <- Vectorize(one_down_params, USE.NAMES = FALSE)
 
 
 define_interactions <- function(param_level, param_info) {
-  vector_def <- param_info %>% # nolint
+  vector_def <- param_info %>% #nolint
     glue::glue_data("vector[{num_comp}] {gsub('l', 'v', param_name)} = ",
                     "[{comp_atts}]';")
-  interaction_constrain <- param_info %>% # nolint
+  interaction_constrain <- param_info %>% #nolint
     glue::glue_data("real {param_name} = exp({param_name}_raw) - ",
                     "min({gsub('l', 'v', param_name)});")
 
