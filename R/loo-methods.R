@@ -73,13 +73,17 @@ waic.measrfit <- function(x, ...) { #nolint
 #' @param ... Additional objects of class [measrfit].
 #' @param criterion The name of the criterion to be extracted from the
 #'   [measrfit] object for comparison.
-#' @param model_names
+#' @param model_names Names given to each provided model in the comparison
+#'   output. If `NULL` (the default), the names will be parsed from the names of
+#'   the objects passed for comparison.
 #'
 #' @return The object returned by [loo::loo_compare()].
 #'
 #' @export
 loo_compare.measrfit <- function(x, ..., criterion = c("loo", "waic"),
                                  model_names = NULL) {
+  obj_nms <- list_names(x, ...)
+
   x <- check_model(x, required_class = "measrfit", name = "x")
   ext_models <- list(...)
   ext_models <- lapply(ext_models, check_model, required_class = "measrfit",
@@ -92,7 +96,7 @@ loo_compare.measrfit <- function(x, ..., criterion = c("loo", "waic"),
                         USE.NAMES = FALSE)
 
   if (length(model_names) == 0) {
-    model_names <- vapply(all_models, \(x) x$type, character(1))
+    model_names <- obj_nms
   } else if (length(model_names) != length(all_models)) {
     abort_bad_argument(arg = "model_names",
                        must = glue::glue("be of length {length(all_models)}, ",

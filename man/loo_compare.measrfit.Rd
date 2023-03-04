@@ -14,7 +14,9 @@
 \item{criterion}{The name of the criterion to be extracted from the
 \link{measrfit} object for comparison.}
 
-\item{model_names}{}
+\item{model_names}{Names given to each provided model in the comparison
+output. If \code{NULL} (the default), the names will be parsed from the names of
+the objects passed for comparison.}
 }
 \value{
 The object returned by \code{\link[loo:loo_compare]{loo::loo_compare()}}.

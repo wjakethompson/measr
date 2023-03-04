@@ -106,7 +106,7 @@ test_that("model comparisons work", {
 
   loo_comp <- loo_compare(lcdm_compare, dina_compare, criterion = "loo")
   expect_s3_class(loo_comp, "compare.loo")
-  expect_equal(rownames(loo_comp), c("lcdm", "dina"))
+  expect_equal(rownames(loo_comp), c("lcdm_compare", "dina_compare"))
   expect_equal(colnames(loo_comp),
                c("elpd_diff", "se_diff", "elpd_loo", "se_elpd_loo",
                  "p_loo", "se_p_loo", "looic", "se_looic"))

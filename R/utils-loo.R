@@ -34,3 +34,15 @@ prep_loglik_array.measrdcm <- function(model) {
 
   return(log_lik_array)
 }
+
+list_names <- function(x, ...) {
+  names <- substitute(list(x, ...), env = parent.frame())[-1]
+  names <- unlist(lapply(names, paste_deparse), recursive = TRUE,
+                  use.names = TRUE)
+
+  return(names)
+}
+
+paste_deparse <- function(x) {
+  paste(deparse(x), sep = "", collapse = "")
+}
