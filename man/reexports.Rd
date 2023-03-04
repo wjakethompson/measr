@@ -6,7 +6,7 @@
 \alias{loo}
 \alias{waic}
 \alias{loo_compare}
-\alias{tidy_draws}
+\alias{as_draws}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -16,6 +16,6 @@ below to see their documentation.
 \describe{
   \item{loo}{\code{\link[loo]{loo}}, \code{\link[loo]{loo_compare}}, \code{\link[loo]{waic}}}
 
-  \item{tidybayes}{\code{\link[tidybayes]{tidy_draws}}}
+  \item{posterior}{\code{\link[posterior:draws]{as_draws}}}
 }}
 
