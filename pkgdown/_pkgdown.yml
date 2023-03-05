@@ -78,6 +78,14 @@ reference:
     consistency.
   contents:
   - reliability
+- subtitle: Model Comparisons
+  desc: |
+    Assess the relative fit of two competing models.
+  contents:
+  - add_criterion
+  - loo_compare.measrfit
+  - loo.measrfit
+  - waic.measrfit
 - title: Model applications
   desc: View and apply an estimated model to new data.
   contents:

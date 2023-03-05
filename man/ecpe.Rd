@@ -52,7 +52,7 @@ For more details, see Buck & Tatsuoka (1998) and Henson & Templin (2007).
 \references{
 Buck, G., & Tatsuoka, K. K. (1998). Application of the rule-space
 procedure to language testing: Examining attributes of a free response
-listening test. \emph{Language Testing, 15}(2) 119-157.
+listening test. \emph{Language Testing, 15}(2), 119-157.
 \url{https://doi.org/10.1177/026553229801500201}
 
 Henson, R., & Templin, J. (2007, April). \emph{Large-scale language

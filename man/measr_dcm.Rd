@@ -94,7 +94,7 @@ or \code{\link[rstan:stanmodel-method-optimizing]{rstan::optimizing()}}.
 }}
 }
 \value{
-A measrfit object.
+A \link{measrfit} object.
 }
 \description{
 Something...

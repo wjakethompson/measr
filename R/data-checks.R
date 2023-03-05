@@ -14,12 +14,17 @@ abort_bad_argument <- function(arg, must, not = NULL, extra = NULL) {
                not = not)
 }
 
-check_model <- function(x, required_class, name) {
+check_model <- function(x, required_class, name, list = FALSE) {
   if (!(all(required_class %in% class(x)) && (typeof(x) == "list"))) {
-    abort_bad_argument(name,
-                       must = glue::glue("be an object with class ",
-                                         "{paste(required_class,
-                                         collapse = ',')}"))
+    must <- if (list) {
+      glue::glue("only contain objects with class ",
+                 "{paste(required_class, collapse = ',')}")
+    } else {
+      glue::glue("be an object with class ",
+                 "{paste(required_class, collapse = ',')}")
+    }
+
+    abort_bad_argument(name, must = must)
   }
 
   x

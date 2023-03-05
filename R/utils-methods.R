@@ -1,15 +1,15 @@
 get_mcmc_draws <- function(x) {
-  draw_matrix <- if (x$backend == "rstan" || "stanfit" %in% class(x$model)) {
-    as.matrix(x$model, pars = c("Vc", "pi"))
-  } else if (x$backend == "cmdstanr") {
-    x$model$draws(variables = c("Vc", "pi"), format = "draws_matrix")
+  draw_matrix <- if (x$backend == "cmdstanr") {
+    if ("stanfit" %in% class(x$model)) {
+      posterior::as_draws_array(as.array(x$model, pars = c("log_Vc", "pi")))
+    } else {
+      x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
+    }
+  } else if (x$backend == "rstan") {
+    as.matrix(x$model, pars = c("log_Vc", "pi"))
   }
 
-  final_matrix <- fix_simplex(draw_matrix,
-                              stanfit = x$backend == "rstan" ||
-                                "stanfit" %in% class(x$model),
-                              method = x$method)
-  return(final_matrix)
+  return(draw_matrix)
 }
 
 get_optim_draws <- function(x) {
@@ -20,7 +20,7 @@ get_optim_draws <- function(x) {
   }
 
   all_vars <- colnames(draw_matrix)
-  keep_vars <- all_vars[c(grep("^Vc", all_vars), # structural parameters
+  keep_vars <- all_vars[c(grep("^log_Vc", all_vars),
                           grep("^pi", all_vars))]
 
   final_matrix <- draw_matrix[, keep_vars]
@@ -29,27 +29,7 @@ get_optim_draws <- function(x) {
     final_matrix <- t(as.matrix(final_matrix))
   }
 
-  final_matrix <- fix_simplex(final_matrix, stanfit = x$backend == "rstan",
-                              method = x$method)
   return(final_matrix)
-}
-
-fix_simplex <- function(draws, stanfit, method) {
-  # ensure valid simplex (we love floating point rounding)
-  simplex <- grep("^Vc", colnames(draws))
-
-  if (stanfit && method == "mcmc") {
-    draws[, simplex] <- draws[, simplex] /
-      apply(as.matrix(draws[, simplex]), 1, sum)
-  } else if (stanfit) {
-    draws[, simplex] <- draws[, simplex] /
-      apply(t(as.matrix(draws[, simplex])), 1, sum)
-  } else {
-    draws[, simplex] <- draws[, simplex] /
-      apply(as.matrix(draws[, simplex]), 1, sum)
-  }
-
-  return(draws)
 }
 
 extract_class_probs <- function(model, attr) {

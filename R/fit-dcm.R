@@ -58,7 +58,7 @@
 #'     \code{\link[cmdstanr:model-method-optimize]{$optimize()}} methods of the
 #'     \link[cmdstanr]{CmdStanModel} class.
 #'
-#' @return A measrfit object.
+#' @return A [measrfit] object.
 #' @export
 measr_dcm <- function(data,
                       missing = NA,
