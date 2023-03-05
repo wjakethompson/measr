@@ -5,7 +5,7 @@ out <- capture.output(
     cmds_mdm_lcdm <- measr_dcm(
       data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
       resp_id = "respondent", item_id = "item", type = "lcdm",
-      method = "mcmc", backend = "cmdstanr",
+      method = "mcmc", seed = 63277, backend = "cmdstanr",
       iter_sampling = 500, iter_warmup = 1000, chains = 2,
       parallel_chains = 2, return_stanfit = FALSE,
       prior = c(prior(uniform(-15, 15), class = "intercept"),
@@ -19,7 +19,7 @@ out <- capture.output(
     cmds_mdm_dina <- measr_dcm(
       data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
       resp_id = "respondent", item_id = "item", type = "dina",
-      method = "mcmc", backend = "cmdstanr",
+      method = "mcmc", seed = 63277, backend = "cmdstanr",
       iter_sampling = 500, iter_warmup = 1000, chains = 2,
       parallel_chains = 2, return_stanfit = FALSE,
       prior = c(prior(beta(5, 17), class = "slip"),
