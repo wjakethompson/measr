@@ -19,6 +19,9 @@
     <loc>https://measr.info/index.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/reference/add_criterion.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/reference/c.measrprior.html</loc>
   </url>
   <url>
@@ -35,6 +38,12 @@
   </url>
   <url>
     <loc>https://measr.info/reference/is.measrprior.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/loo.measrfit.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/loo_compare.measrfit.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/mdm.html</loc>
@@ -65,5 +74,8 @@
   </url>
   <url>
     <loc>https://measr.info/reference/tidyeval.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/waic.measrfit.html</loc>
   </url>
 </urlset>
