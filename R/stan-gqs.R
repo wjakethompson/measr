@@ -1,4 +1,4 @@
-gqs_script <- function() {
+gqs_script <- function(full_data = FALSE) {
   # data block -----
   data_block <- glue::glue(
     "data {{
@@ -26,11 +26,22 @@ gqs_script <- function() {
   )
 
   # generated quantities block -----
+  y_rep <- glue::glue(
+    "  for (r in 1:R) {{",
+    "    vector[C] r_probs = exp(log_Vc) / exp(log_sum_exp(log_Vc));",
+    "    r_class[r] = categorical_rng(r_probs);",
+    "    for (m in 1:num[r]) {{",
+    "      int i = ii[start[r] + m - 1];",
+    "      y_rep[start[r] + m - 1] = bernoulli_rng(pi[i, r_class[r]]);",
+    "    }}",
+    "  }}", .sep = "\n", .trim = FALSE
+  )
+
   gqs_block <- glue::glue(
     "generated quantities {{",
     "  matrix[R,C] prob_resp_class;   // post prob of respondent R in class C",
     "  matrix[R,A] prob_resp_attr;    // post prob of respondent R master A",
-    "",
+    "  {ifelse(full_data, \"int y_rep[N];\n  int r_class[R];\n\", \"\")}",
     "  for (r in 1:R) {{",
     "    row_vector[C] prob_joint;",
     "    for (c in 1:C) {{",
@@ -53,7 +64,7 @@ gqs_script <- function() {
     "      }}",
     "      prob_resp_attr[r,a] = sum(prob_attr_class);",
     "    }}",
-    "  }}",
+    "  }} {ifelse(full_data, paste0(\"\n\n\", y_rep), \"\")}",
     "}}", .sep = "\n"
   )
 
