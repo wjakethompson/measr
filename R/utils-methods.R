@@ -1,4 +1,4 @@
-get_mcmc_draws <- function(x) {
+get_mcmc_draws <- function(x, ndraws = NULL) {
   draw_matrix <- if (x$backend == "cmdstanr") {
     if ("stanfit" %in% class(x$model)) {
       posterior::as_draws_array(as.array(x$model, pars = c("log_Vc", "pi")))
@@ -6,7 +6,15 @@ get_mcmc_draws <- function(x) {
       x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
     }
   } else if (x$backend == "rstan") {
-    as.matrix(x$model, pars = c("log_Vc", "pi"))
+    posterior::as_draws_array(x$model) %>%
+      posterior::subset_draws(variable = c("log_Vc", "pi"))
+  }
+
+  if (!is.null(ndraws)) {
+    keep_draws <- sample(posterior::draw_ids(draw_matrix), size = ndraws,
+                         replace = FALSE)
+    draw_matrix <- posterior::subset_draws(posterior::merge_chains(draw_matrix),
+                                           draw = keep_draws)
   }
 
   return(draw_matrix)

@@ -59,7 +59,7 @@ create_stan_params <- function(backend, method, ...) {
 
 create_stan_gqs_params <- function(backend, draws) {
   stan_pars <- if (backend == "rstan") {
-    list(draws = draws)
+    list(draws = posterior::as_draws_matrix(draws))
   } else if (backend == "cmdstanr") {
     list(fitted_params = draws)
   }
