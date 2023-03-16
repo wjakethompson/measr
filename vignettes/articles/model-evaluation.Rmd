@@ -1,0 +1,67 @@
+---
+title: "Model Evaluation"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(mc.cores = 4)
+```
+
+```{r setup}
+library(measr)
+library(here)
+```
+
+```{r, eval = FALSE}
+ecpe <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                  resp_id = "resp_id", item_id = "item_id", type = "lcdm",
+                  method = "mcmc", backend = "cmdstanr", parallel_chains = 4,
+                  iter_warmup = 1000, iter_sampling = 500,
+                  file = here("vignettes", "articles", "fits", "ecpe-lcdm"))
+```
+
+```{r, eval = FALSE}
+library(cmdstanr)
+library(posterior)
+library(tidyverse)
+
+comp_mod <- cmdstan_model("~/Desktop/test-stan.stan", compile = FALSE)
+comp_mod$format(canonicalize = list("deprecations", "braces", "parentheses"),
+                overwrite_file = TRUE, quiet = FALSE, backup = FALSE)
+comp_mod <- comp_mod$compile(cpp_options = list(stan_threads = TRUE))
+
+
+# mod <- cmdstanr::cmdstan_model(stan_file = "~/Desktop/test-stan.stan",
+#                                cpp_options = list(stan_threads = TRUE))
+
+stan_data <- readRDS("~/Desktop/stan-data.rds")
+ecpe_lcdm <- comp_mod$sample(data = stan_data,
+                        iter_sampling = 500, iter_warmup = 1500,
+                        chains = 4, parallel_chains = 4,
+                        threads_per_chain = 2,
+                        adapt_delta = 0.95, max_treedepth = 15)
+
+
+all_draws <- as_draws(ecpe_lcdm)
+
+lcdm_comp <- subset_draws(all_draws, variable = "^Vc|^l[0-9]*_[0-9]*$", regex = TRUE) |> 
+  as_draws_df() |> 
+  as_tibble() |> 
+  pivot_longer(cols = -c(.chain, .iteration, .draw)) |> 
+  summarize(value = mean(value), .by = name) |> 
+  mutate(name = gsub("Vc", "nu", .data$name)) |> 
+  full_join(true_lcdm, by = c("name" = "parameter"))
+
+  lcdm_comp <- tibble::enframe(rstn_ecpe_lcdm$model$mle()) %>%
+    dplyr::filter(grepl("^Vc|^l[0-9]*_[0-9]*$", .data$name)) %>%
+    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
+    dplyr::full_join(true_lcdm, by = c("name" = "parameter"))
+
+  comp_cor <- cor(lcdm_comp$value, lcdm_comp$true)
+  expect_gte(comp_cor, 0.85)
+```
+
