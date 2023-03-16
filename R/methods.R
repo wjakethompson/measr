@@ -80,7 +80,6 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
                                      attr = ncol(clean_qmatrix))
   attr_probs <- extract_attr_probs(model = gqs_model, qmat = clean_qmatrix)
 
-  # rename to match original data - START HERE -----
   if (!is.null(newdata)) {
     resp_lookup <- score_data %>%
       dplyr::rename(orig_resp = "resp_id") %>%
