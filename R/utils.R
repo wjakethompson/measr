@@ -30,6 +30,49 @@ create_profiles <- function(attributes) {
     tibble::as_tibble()
 }
 
+get_parameters <- function(qmatrix, item_id = NULL,
+                           type = c("lcdm", "dina", "dino")) {
+  item_id <- check_character(item_id, name = "item_id", allow_null = TRUE)
+  qmatrix <- check_qmatrix(qmatrix, identifier = item_id, item_levels = NULL,
+                           name = "qmatrix")
+  qmatrix <- qmatrix %>%
+    dplyr::select(-"item_id") %>%
+    dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"),
+                       .cols = -dplyr::starts_with("item_id"))
+  type <- rlang::arg_match(type, dcm_choices())
+
+  all_params <- if (type %in% c("dina", "dino")) {
+    tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
+                       parameter = c("slip", "guess")) %>%
+      dplyr::mutate(
+        param_name = glue::glue("{.data$parameter}[{.data$item_id}]")
+      )
+  } else if (type == "lcdm") {
+    stats::model.matrix(stats::as.formula(paste0("~ .^", max(ncol(qmatrix), 2L))),
+                        qmatrix) %>%
+      tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
+      dplyr::select(where(~ sum(.x) > 0)) %>%
+      tibble::rowid_to_column(var = "item_id") %>%
+      tidyr::pivot_longer(cols = -"item_id", names_to = "parameter",
+                          values_to = "value") %>%
+      dplyr::filter(.data$value == 1) %>%
+      dplyr::mutate(
+        param_level = dplyr::case_when(
+          .data$parameter == "intercept" ~ 0,
+          !grepl("__", .data$parameter) ~ 1,
+          TRUE ~ sapply(gregexpr(pattern = "__", text = .data$parameter),
+                        function(.x) length(attr(.x, "match.length"))) + 1
+        ),
+        atts = gsub("[^0-9|_]", "", .data$parameter),
+        param_name = glue::glue("l{item_id}_{param_level}",
+                                "{gsub(\"__\", \"\", atts)}")
+      ) %>%
+      dplyr::select("item_id", "parameter", "param_name")
+  }
+
+  return(all_params)
+}
+
 
 #' Evaluate an expression without printing output or messages
 #'
