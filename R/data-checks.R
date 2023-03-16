@@ -114,18 +114,18 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
     abort_bad_argument(name, must = "be a data frame")
   }
 
-  if (nrow(x) != length(item_levels)) {
+  if (nrow(x) != length(item_levels) && !is.null(item_levels)) {
     abort_bad_argument(name, must = glue::glue("have the same number of rows ",
                                                "as columns of items in `data`"))
   }
 
   #check that item ids match item levels
-  if (is.null(identifier)) {
+  if (is.null(identifier) && !is.null(item_levels)) {
     x <- x %>%
       dplyr::mutate(item_id = item_levels,
                     item_id = factor(.data$item_id, levels = item_levels),
                     .before = 1)
-  } else {
+  } else if (!is.null(item_levels)) {
     item_names <- dplyr::pull(x, !!identifier)
     if (!all(item_levels %in% item_names)) {
       abort_bad_argument(
@@ -138,12 +138,24 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
       abort_bad_argument(
         name,
         must = glue::glue("only include items found in `data`.
-                          Extra items: {setdiff(item_names, item_levels)}")
+                          Extra items: {paste(setdiff(item_names, item_levels),
+                                                  collapse = ', ')}")
       )
     }
     x <- x %>%
       dplyr::rename(item_id = !!identifier) %>%
       dplyr::mutate(item_id = factor(.data$item_id, levels = item_levels)) %>%
+      dplyr::arrange(.data$item_id)
+  } else if (is.null(identifier) && is.null(item_levels)) {
+    x <- x %>%
+      dplyr::mutate(item_id = 1:dplyr::n(),
+                    item_id = factor(.data$item_id, levels = .data$item_id),
+                    .before = 1) %>%
+      dplyr::arrange(.data$item_id)
+  } else if (!is.null(identifier) && is.null(item_levels)){
+    x <- x %>%
+      dplyr::rename(item_id = !!identifier) %>%
+      dplyr::mutate(item_id = factor(.data$item_id, levels = .data$item_id)) %>%
       dplyr::arrange(.data$item_id)
   }
 
@@ -212,7 +224,10 @@ check_logical <- function(x, allow_na = FALSE, name) {
   x
 }
 
-check_integer <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE, name) {
+check_integer <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE,
+                          allow_null = FALSE, name) {
+  if (is.null(x) && allow_null) return(x)
+
   if (inclusive) {
     check_lb <- lb
     check_ub <- ub
