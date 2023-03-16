@@ -33,7 +33,7 @@
 #'   **cmdstanr** packages are available at \url{https://mc-stan.org/rstan/} and
 #'   \url{https://mc-stan.org/cmdstanr/}, respectively.
 #' @param return_stanfit Logical. If `backend = "cmdstanr"`, should the fitted
-#'   model be coerced to a [rstan::stanfit-class] object in the . Ignored if
+#'   model be coerced to a [rstan::stanfit-class] object? Ignored if
 #'   `backend = "rstan"`.
 #' @param file Either `NULL` (the default) or a character string. If a character
 #'   string, the fitted model object is saved as an `.rds` object using
@@ -69,7 +69,7 @@ measr_dcm <- function(data,
                       method = c("mcmc", "optim"),
                       prior = NULL,
                       backend = getOption("measr.backend", "rstan"),
-                      return_stanfit = TRUE,
+                      return_stanfit = FALSE,
                       file = NULL,
                       file_refit = getOption("measr.file_refit", "never"),
                       ...) {
