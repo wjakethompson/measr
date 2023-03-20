@@ -13,7 +13,6 @@ options(mc.cores = 4)
 
 ```{r setup}
 library(measr)
-library(here)
 ```
 
 ```{r, eval = FALSE}
