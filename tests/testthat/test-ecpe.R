@@ -147,3 +147,15 @@ test_that("ecpe reliability", {
   expect_lt(mean(eap_diff), .01)
   expect_lt(median(eap_diff), .01)
 })
+
+test_that("m2 calculation is correct", {
+  m2 <- fit_m2(rstn_ecpe_lcdm)
+
+  expect_equal(m2$m2, 507.0756, tolerance = 0.1)
+  expect_equal(m2$df, 325)
+  expect_equal(m2$pval, 0, tolerance = 0.1)
+  expect_equal(m2$rmsea, 0.0138, tolerance = 0.1)
+  expect_equal(m2$ci_lower, 0.0115, tolerance = 0.1)
+  expect_equal(m2$ci_upper, 0.0161, tolerance = 0.1)
+  expect_equal(m2$srmsr, 0.0316, tolerance = 0.1)
+})
