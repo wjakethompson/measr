@@ -1,3 +1,4 @@
+#' @export
 fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                      return_draws = 0,
                      model_fit = c("raw_score"),
@@ -9,8 +10,12 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
   probs <- check_double(probs, lb = 0, ub = 1, inclusive = TRUE, name = "probs")
   return_draws <- check_double(return_draws, lb = 0, ub = 1, inclusive = TRUE,
                                name = "return_draws")
-  model_fit <- rlang::arg_match(model_fit, multiple = TRUE)
-  item_fit <- rlang::arg_match(item_fit, multiple = TRUE)
+  model_fit <- if (!is.null(model_fit)) {
+    rlang::arg_match(model_fit, multiple = TRUE)
+  }
+  item_fit <- if (!is.null(item_fit)) {
+    rlang::arg_match(item_fit, multiple = TRUE)
+  }
 
   clean_qmatrix <- model$data$qmatrix %>%
     dplyr::select(-"item_id") %>%
@@ -45,32 +50,42 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
       patterns = c("y_rep\\[", obs = "\\d+", "\\]")) %>%
     dplyr::mutate(obs = as.integer(.data$obs)) %>%
     dplyr::left_join(model$data$data %>%
-                       dplyr::mutate(obs = 1:dplyr::n(),
+                       dplyr::mutate(obs = seq_len(dplyr::n()),
                                      resp = as.integer(.data$resp_id),
                                      item = as.integer(.data$item_id)) %>%
                        dplyr::select("obs", "resp", "item"),
                      by = "obs")
 
   # calculate raw score distribution
-  if (!is.null(model_fit)) {
-    model_level_fit <- ppmc_model_fit(model = model,
-                                      post_data = data_posterior,
-                                      probs = probs,
-                                      return_draws = return_draws,
-                                      type = model_fit)
+  model_level_fit <- if (!is.null(model_fit)) {
+    ppmc_model_fit(model = model,
+                   post_data = data_posterior,
+                   probs = probs,
+                   return_draws = return_draws,
+                   type = model_fit)
+  } else {
+    NULL
   }
 
-  if (!is.null(item_fit)) {
+  item_level_fit <- if (!is.null(item_fit)) {
     resp_prob <- extract_class_probs(model = gqs_model,
                                      attr = ncol(clean_qmatrix))
 
-    item_level_fit <- ppmc_item_fit(model = model,
-                                    post_data = data_posterior,
-                                    attr = ncol(clean_qmatrix),
-                                    resp_prob = resp_prob, probs = probs,
-                                    return_draws = return_draws,
-                                    type = item_fit)
+    ppmc_item_fit(model = model,
+                  post_data = data_posterior,
+                  attr = ncol(clean_qmatrix),
+                  resp_prob = resp_prob, probs = probs,
+                  return_draws = return_draws,
+                  type = item_fit)
+  } else {
+    NULL
   }
+
+  ret_list <- list(model_fit = model_level_fit,
+                   item_fit = item_level_fit)
+  ret_list[sapply(ret_list, is.null)] <- NULL
+
+  return(ret_list)
 }
 
 
@@ -90,14 +105,15 @@ ppmc_model_fit <- function(model, post_data, probs, return_draws, type) {
 
 ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
   raw_score_post <- post_data %>%
-    dplyr::summarize(raw_score = sum(value), .by = c("resp", ".draw")) %>%
+    dplyr::summarize(raw_score = sum(.data$value), .by = c("resp", ".draw")) %>%
     dplyr::count(.data$.draw, .data$raw_score) %>%
     tidyr::complete(.data$.draw, raw_score = 0:nrow(model$data$qmatrix),
                     fill = list(n = 0L))
 
   exp_raw_scores <- raw_score_post %>%
     dplyr::summarize(exp_resp = mean(.data$n), .by = "raw_score") %>%
-    dplyr::mutate(exp_resp = sapply(.data$exp_resp, function(.x) max(.x, 0.0001)))
+    dplyr::mutate(exp_resp = sapply(.data$exp_resp,
+                                    function(.x) max(.x, 0.0001)))
 
   chisq_ppmc <- raw_score_post %>%
     dplyr::left_join(exp_raw_scores, by = c("raw_score")) %>%
@@ -106,13 +122,13 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
 
   chisq_obs <- model$data$data %>%
     dplyr::summarize(raw_score = sum(.data$score), .by = "resp_id") %>%
-    dplyr::count(raw_score) %>%
+    dplyr::count(.data$raw_score) %>%
     tidyr::complete(raw_score = 0:nrow(model$data$qmatrix),
                     fill = list(n = 0L)) %>%
     dplyr::left_join(exp_raw_scores, by = "raw_score") %>%
     dplyr::mutate(piece = ((.data$n - .data$exp_resp) ^ 2) / .data$exp_resp) %>%
     dplyr::summarize(chisq = sum(.data$piece)) %>%
-    dplyr::pull(chisq)
+    dplyr::pull("chisq")
 
   raw_score_res <- tibble::tibble(obs_chisq = chisq_obs,
                                   ppmc_mean = mean(chisq_ppmc$chisq),
@@ -173,7 +189,7 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, probs,
   obs_class <- resp_prob %>%
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw", "resp_id"),
                         names_to = "class_label", values_to = "prob") %>%
-    dplyr::mutate(max_class = prob == max(prob),
+    dplyr::mutate(max_class = .data$prob == max(.data$prob),
                   .by = c(".draw", "resp_id")) %>%
     dplyr::filter(.data$max_class) %>%
     dplyr::group_by(.data$.draw, .data$resp_id) %>%
@@ -193,7 +209,7 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, probs,
 
   cond_pval_res <- tidybayes::spread_draws(
     model,
-    (!!rlang::sym("pi"))[!!rlang::sym("i"),!!rlang::sym("c")],
+    (!!rlang::sym("pi"))[!!rlang::sym("i"),!!rlang::sym("c")], #nolint
     ndraws = dplyr::n_distinct(resp_prob$.draw)
   ) %>%
     dplyr::ungroup() %>%
@@ -249,7 +265,7 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
   or_res <- post_data %>%
     tidyr::nest(dat = c("obs", "value", "resp", "item")) %>%
     dplyr::mutate(
-      dat = lapply(dat,
+      dat = lapply(.data$dat,
                    function(x) {
                      x %>%
                        dplyr::select(-"obs") %>%
@@ -257,7 +273,7 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
                                           values_from = "value") %>%
                        dplyr::select(-"resp")
                    }),
-      dat = lapply(dat, pw_or)
+      dat = lapply(.data$dat, pw_or)
     ) %>%
     tidyr::unnest("dat") %>%
     tidyr::nest(samples = -c("item_1", "item_2")) %>%
@@ -283,11 +299,11 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
     or_res <- or_res %>%
       dplyr::relocate("samples", .before = "ppp") %>%
       dplyr::mutate(
-        samples = lapply(samples,
+        samples = lapply(.data$samples,
                          function(x) {
                            x %>%
                              dplyr::slice_sample(prop = return_draws) %>%
-                             dplyr::pull(or)
+                             dplyr::pull("or")
                          }))
   } else {
     or_res <- dplyr::select(or_res, -"samples")
@@ -298,7 +314,6 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
 
 pw_or <- function(dat) {
   dat <- as.matrix(dat)
-  n <- nrow(dat)
   p <- ncol(dat)
   ind <- t(combn(p, 2))
   nind <- nrow(ind)
