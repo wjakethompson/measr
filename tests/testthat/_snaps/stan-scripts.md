@@ -25,7 +25,7 @@
       generated quantities {
         matrix[R,C] prob_resp_class;   // post prob of respondent R in class C
         matrix[R,A] prob_resp_attr;    // post prob of respondent R master A
-      
+        
         for (r in 1:R) {
           row_vector[C] prob_joint;
           for (c in 1:C) {
@@ -48,7 +48,7 @@
             }
             prob_resp_attr[r,a] = sum(prob_attr_class);
           }
-        }
+        } 
       }
       
 
