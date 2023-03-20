@@ -22,7 +22,51 @@ dcm2::fit_m2
 #'   diagnostic classification models.
 #' @export
 fit_m2.measrdcm <- function(model, ci = 0.9) {
+  model <- check_model(model, required_class = "measrdcm", name = "model")
+  ci <- check_double(ci, lb = 0, ub = 1, inclusive = FALSE, name = "ci")
 
+  item_order <- levels(model$data$data$item_id)
+  dat <- model$data$data %>%
+    tidyr::pivot_wider(names_from = "item_id", values_from = "score") %>%
+    dplyr::select(-"resp_id", !!!item_order) %>%
+    as.matrix() %>%
+    unname()
+
+  q <- model$data$qmatrix %>%
+    dplyr::select(-"item_id")
+
+  draws <- if (model$method == "mcmc") {
+    get_mcmc_draws(model)
+  } else if (model$method == "optim") {
+    get_optim_draws(model)
+  }
+
+  strc <- posterior::subset_draws(draws, variable = "log_Vc") %>%
+    posterior::as_draws_df() %>%
+    dplyr::summarize(dplyr::across(dplyr::everything(), mean)) %>%
+    dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
+    tidyr::pivot_longer(cols = dplyr::everything()) %>%
+    dplyr::mutate(value = exp(.data$value),
+                  value = .data$value / sum(.data$value)) %>%
+    dplyr::pull("value")
+
+  pi <- posterior::subset_draws(draws, variable = "pi") %>%
+    posterior::as_draws_df() %>%
+    tibble::as_tibble() %>%
+    dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
+    dplyr::summarize(dplyr::across(dplyr::everything(), mean)) %>%
+    tidyr::pivot_longer(cols = dplyr::everything()) %>%
+    tidyr::separate_wider_regex(cols = "name",
+                                patterns = c("pi\\[", item = "[0-9]*",
+                                             ",", class = "[0-9]*", "\\]")) %>%
+    tidyr::pivot_wider(names_from = "class", values_from = "value") %>%
+    dplyr::select(-"item") %>%
+    as.matrix() %>%
+    unname()
+
+  m2 <- dcm2::calc_m2(data = dat, struc_params = strc, pi_matrix = pi,
+                      qmatrix = q, ci = ci, link = "logit",
+                      model_type = toupper(model$type))
+
+  return(m2)
 }
-
-
