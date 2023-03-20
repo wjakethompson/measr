@@ -146,6 +146,9 @@ test_that("ecpe reliability", {
   )
   expect_lt(mean(eap_diff), .01)
   expect_lt(median(eap_diff), .01)
+
+  reli_mod <- add_reliability(rstn_ecpe_lcdm)
+  expect_equal(reli_mod$reliability, ecpe_reli)
 })
 
 test_that("m2 calculation is correct", {
@@ -158,4 +161,17 @@ test_that("m2 calculation is correct", {
   expect_equal(m2$ci_lower, 0.0115, tolerance = 0.1)
   expect_equal(m2$ci_upper, 0.0161, tolerance = 0.1)
   expect_equal(m2$srmsr, 0.0316, tolerance = 0.1)
+
+  m2_mod <- add_fit(rstn_ecpe_lcdm, method = "m2")
+  expect_equal(m2_mod$model_fit$m2, m2)
+})
+
+test_that("mcmc requirements error", {
+  err <- rlang::catch_cnd(add_fit(rstn_ecpe_lcdm, method = "ppmc"))
+  expect_s3_class(err, "error_bad_method")
+  expect_match(err$message, "`method = \"mcmc\"`")
+
+  err <- rlang::catch_cnd(add_criterion(rstn_ecpe_lcdm))
+  expect_s3_class(err, "error_bad_method")
+  expect_match(err$message, "`method = \"mcmc\"`")
 })

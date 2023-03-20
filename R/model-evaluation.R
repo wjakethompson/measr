@@ -132,6 +132,8 @@ add_reliability <- function(x, overwrite = FALSE, save = TRUE) {
   if (!is.null(model$file) && save) {
     saveRDS(model, file = model$file)
   }
+
+  return(model)
 }
 
 #' @export
@@ -159,7 +161,7 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   if (run_m2) {
     model$model_fit$m2 <- fit_m2(model, ci = ci)
   }
-  model <- add_ppmc(model)
+  model <- add_ppmc(model, run_ppmc)
 
   # re-save model object (if applicable)
   if (!is.null(model$file) && (run_m2 || run_ppmc$run) && save) {

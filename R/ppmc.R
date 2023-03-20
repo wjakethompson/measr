@@ -248,7 +248,14 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, probs,
 
   cond_pval_res <- cond_pval_res %>%
     dplyr::select(-"cond_pval") %>%
-    dplyr::rename(item_id = "i", class_id = "c")
+    dplyr::rename(item_id = "i", class_id = "c") %>%
+    dplyr::left_join(all_profiles, by = "class_id") %>%
+    dplyr::left_join(model$data$qmatrix %>%
+                       dplyr::select(item = "item_id") %>%
+                       dplyr::mutate(item_id = as.integer(.data$item)),
+                     by = "item_id") %>%
+    dplyr::select(-"item_id", -"class_id") %>%
+    dplyr::relocate("item", "class", .before = 1)
 
   return(cond_pval_res)
 }
@@ -308,6 +315,19 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
   } else {
     or_res <- dplyr::select(or_res, -"samples")
   }
+
+  or_res <- or_res %>%
+    dplyr::left_join(model$data$qmatrix %>%
+                       dplyr::select(item = "item_id") %>%
+                       dplyr::mutate(item_id = as.integer(.data$item)),
+                     by = c("item_1" = "item_id")) %>%
+    dplyr::left_join(model$data$qmatrix %>%
+                       dplyr::select(item = "item_id") %>%
+                       dplyr::mutate(item_id = as.integer(.data$item)),
+                     by = c("item_2" = "item_id")) %>%
+    dplyr::select(-"item_1", -"item_2") %>%
+    dplyr::rename(item_1 = "item.x", item_2 = "item.y") %>%
+    dplyr::relocate("item_1", "item_2", .before = 1)
 
   return(or_res)
 }

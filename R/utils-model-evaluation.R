@@ -41,7 +41,14 @@ add_ppmc <- function(model, run_ppmc) {
     new_ppmc <- do.call(fit_ppmc, run_ppmc$args)
 
     if ("ppmc" %in% names(model$model_fit)) {
-      model$model_fit$ppmc <- modifyList(model$model_fit$ppmc, new_ppmc)
+      types <- names(new_ppmc)
+      for (type in seq_along(types)) {
+        sub_types <- names(new_ppmc[[type]])
+        for (sub_type in seq_along(sub_types)) {
+          model$model_fit$ppmc[[types[type]]][[sub_types[sub_type]]] <-
+            new_ppmc[[types[type]]][[sub_types[sub_type]]]
+        }
+      }
     } else {
       model$model_fit$ppmc <- new_ppmc
     }

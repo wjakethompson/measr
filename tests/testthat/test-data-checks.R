@@ -147,8 +147,10 @@ test_that("check_newdata", {
                                    levels = unique(test_dat$resp_id))) %>%
     tidyr::pivot_longer(cols = -"resp_id", names_to = "item_id",
                         values_to = "score") %>%
-    dplyr::mutate(item_id = factor(.data$item_id,
-                                   levels = levels(model$data$data$item_id))) %>%
+    dplyr::mutate(
+      item_id = factor(.data$item_id,
+                       levels = levels(model$data$data$item_id))
+      ) %>%
     dplyr::arrange(.data$resp_id, .data$item_id)
   new_data <- check_newdata(test_dat, name = "check1", identifier = "resp_id",
                             model = model, missing = NA)
