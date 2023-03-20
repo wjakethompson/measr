@@ -70,11 +70,14 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
   item_level_fit <- if (!is.null(item_fit)) {
     resp_prob <- extract_class_probs(model = gqs_model,
                                      attr = ncol(clean_qmatrix))
+    pi_draws <- posterior::subset_draws(stan_draws, variable = "pi")
 
     ppmc_item_fit(model = model,
                   post_data = data_posterior,
                   attr = ncol(clean_qmatrix),
-                  resp_prob = resp_prob, probs = probs,
+                  resp_prob = resp_prob,
+                  pi_draws = pi_draws,
+                  probs = probs,
                   return_draws = return_draws,
                   type = item_fit)
   } else {
@@ -154,11 +157,12 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
   return(raw_score_res)
 }
 
-ppmc_item_fit <- function(model, post_data, attr, resp_prob, probs,
+ppmc_item_fit <- function(model, post_data, attr, resp_prob, pi_draws, probs,
                           return_draws, type) {
   cond_prob <- if ("conditional_prob" %in% type) {
     ppmc_conditional_probs(model = model, attr = attr, resp_prob = resp_prob,
-                           probs = probs, return_draws = return_draws)
+                           pi_draws = pi_draws, probs = probs,
+                           return_draws = return_draws)
   } else {
     NULL
   }
@@ -175,7 +179,7 @@ ppmc_item_fit <- function(model, post_data, attr, resp_prob, probs,
   return(item_res)
 }
 
-ppmc_conditional_probs <- function(model, attr, resp_prob, probs,
+ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
                                    return_draws) {
   all_profiles <- create_profiles(attributes = attr) %>%
     tibble::rowid_to_column(var = "class_id") %>%
@@ -206,13 +210,16 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, probs,
                      .by = c("item_id", "class")) %>%
     dplyr::arrange(.data$item_id, .data$class)
 
-
-  cond_pval_res <- tidybayes::spread_draws(
-    model,
-    (!!rlang::sym("pi"))[!!rlang::sym("i"),!!rlang::sym("c")], #nolint
-    ndraws = dplyr::n_distinct(resp_prob$.draw)
-  ) %>%
-    dplyr::ungroup() %>%
+  cond_pval_res <- pi_draws %>%
+    posterior::as_draws_df() %>%
+    tibble::as_tibble() %>%
+    tidyr::pivot_longer(-c(".chain", ".iteration", ".draw"),
+                        names_to = c("i", "c"), values_to = "pi",
+                        names_pattern = "pi\\[([0-9]*),([0-9]*)\\]",
+                        names_transform = list(
+                          i = ~as.integer(.x),
+                          c = ~as.integer(.x)
+                        )) %>%
     dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
     tidyr::nest(cond_pval = "pi") %>%
     dplyr::left_join(obs_cond_pval, by = c("i" = "item_id",
@@ -335,7 +342,7 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
 pw_or <- function(dat) {
   dat <- as.matrix(dat)
   p <- ncol(dat)
-  ind <- t(combn(p, 2))
+  ind <- t(utils::combn(p, 2))
   nind <- nrow(ind)
   or <- numeric(nind)
 

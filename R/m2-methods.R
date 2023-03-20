@@ -9,6 +9,10 @@ dcm2::fit_m2
 #' \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic is calculated as
 #' described by Hansen et al. (2016) and Liu et al. (2016).
 #'
+#' @inheritParams dcm2::fit_m2
+#'
+#' @return A data frame created by [dcm2::fit_m2()].
+#'
 #' @references Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
 #'   Limited-information goodness-of-fit testing of diagnostic classification
 #'   item response models. *British Journal of Mathematical and Statistical
@@ -21,7 +25,7 @@ dcm2::fit_m2
 #' @describeIn fit_m2 \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} for
 #'   diagnostic classification models.
 #' @export
-fit_m2.measrdcm <- function(model, ci = 0.9) {
+fit_m2.measrdcm <- function(model, ci = 0.9, ...) {
   model <- check_model(model, required_class = "measrdcm", name = "model")
   ci <- check_double(ci, lb = 0, ub = 1, inclusive = FALSE, name = "ci")
 

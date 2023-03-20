@@ -21,8 +21,8 @@ existing_ppmc_check <- function(model, method, dots, overwrite) {
                        new = dots, old = existing_criteria)
     names(new_dots) <- names(dots)
 
-    new_dots <- modifyList(list(model_fit = NULL, item_fit = NULL),
-                           new_dots)
+    new_dots <- utils::modifyList(list(model_fit = NULL, item_fit = NULL),
+                                  new_dots)
 
     new_dots$model <- model
     list(run = TRUE, args = new_dots)

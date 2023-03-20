@@ -37,7 +37,7 @@ test_that("check_model", {
 })
 
 test_that("check_data", {
-  dat <- combn(letters, m = 3) %>%
+  dat <- utils::combn(letters, m = 3) %>%
     as.data.frame() %>%
     tidyr::pivot_longer(cols = everything()) %>%
     dplyr::group_by(name) %>%
