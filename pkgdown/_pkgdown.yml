@@ -78,14 +78,25 @@ reference:
     consistency.
   contents:
   - reliability
-- subtitle: Model Comparisons
+- subtitle: Model fit
+  desc: |
+    Evaluate the fit of the estimated model to the observed data.
+  contents:
+  - fit_m2.measrdcm
+  - fit_ppmc
+- subtitle: Model comparisons
   desc: |
     Assess the relative fit of two competing models.
   contents:
-  - add_criterion
   - loo_compare.measrfit
   - loo.measrfit
   - waic.measrfit
+- subtitle: Add evaluations to model objects
+  desc: |
+    Add reliability, model fit, and model comparison information to an estimated
+    model object.
+  contents:
+  - model_evaluation
 - title: Model applications
   desc: View and apply an estimated model to new data.
   contents:
