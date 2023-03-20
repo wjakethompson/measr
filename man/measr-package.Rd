@@ -25,6 +25,7 @@ Useful links:
 Other contributors:
 \itemize{
   \item Nathan Jones \email{jonesnateb@gmail.com} (\href{https://orcid.org/0000-0001-6177-7161}{ORCID}) [contributor]
+  \item Matthew Johnson (Provided code adapted for reliability.measrdcm) [copyright holder]
   \item University of Kansas [copyright holder]
   \item Institute of Education Sciences [funder]
 }

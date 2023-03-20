@@ -7,7 +7,7 @@ Authors@R: c(
     person("Nathan", "Jones", , "jonesnateb@gmail.com", role = "ctb",
            comment = c(ORCID = "0000-0001-6177-7161")),
     person("Matthew", "Johnson", , , role = "cph",
-           comment = "Provided code adapated for reliability.measrdcm"),
+           comment = "Provided code adapted for reliability.measrdcm"),
     person("University of Kansas", role = "cph"),
     person("Institute of Education Sciences", role = "fnd")
   )

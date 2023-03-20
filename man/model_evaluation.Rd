@@ -82,8 +82,10 @@ depending on which criteria are specified, to calculate the leave-one-out
 to \code{...} are passed to \code{\link[loo:loo]{loo::loo.array()}} or \code{\link[loo:waic]{loo::waic.array()}}.
 
 For \code{add_reliability()}, reliability information is added to the
-\verb{$reliability} element of the fitted model. This function wraps
-\code{\link[=reliability]{reliability()}}.
+\verb{$reliability} element of the fitted model. Pattern level reliability is
+described by Cui et al. (2012). Classification reliability and posterior
+probability reliability are described by Johnson & Sinharay (2018, 2020),
+respectively. This function wraps \code{\link[=reliability]{reliability()}}.
 
 For \code{add_fit()}, model and item fit information are added to the \verb{$model_fit}
 element of the fitted model. This function wraps \code{\link[=fit_m2]{fit_m2()}} and/or
@@ -99,7 +101,7 @@ cmds_mdm_dina <- measr_dcm(
   iter = 1500, warmup = 1000, chains = 2,
   cores = 2, return_stanfit = FALSE,
   prior = c(prior(beta(5, 17), class = "slip"),
-            prior(beta(5, 17), class = "guess")))
+            prior(beta(5, 17), class = "guess"))
 )
 
 cmds_mdm_dina <- add_criterion(cmds_mdm_dina, criterion = "loo")
@@ -108,6 +110,21 @@ cmds_mdm_dina <- add_fit(cmd_mdm_dina, method = "m2")
 \dontshow{\}) # examplesIf}
 }
 \references{
+Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
+classification consistency and accuracy for cognitive diagnostic
+assessment. \emph{Journal of Educational Measurement, 49}(1), 19-38.
+\url{https://doi.org/10.1111/j.1745-3984.2011.00158.x}
+
+Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
+assess attribute-level classification accuracy and consistency for
+cognitive diagnostic assessments. \emph{Journal of Educational Measurement,
+55}(4), 635-664. \url{https://doi.org/10.1111/jedm.12196}
+
+Johnson, M. S., & Sinharay, S. (2020). The reliability of the
+posterior probability of skill attainment in diagnostic classification
+models. \emph{Journal of Educational and Behavioral Statistics, 45}(1), 5-31.
+\url{https://doi.org/10.3102/1076998619864550}
+
 Vehtari, A., Gelman, A., & Gabry, J. (2017). Practical Bayesian
 model evaluation using leave-one-out cross-validation and WAIC.
 \emph{Statistics and Computing, 27}(5), 1413-1432.

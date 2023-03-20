@@ -5,7 +5,17 @@
 \title{Estimate the \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic for
 diagnostic classification models}
 \usage{
-\method{fit_m2}{measrdcm}(model, ci = 0.9)
+\method{fit_m2}{measrdcm}(model, ci = 0.9, ...)
+}
+\arguments{
+\item{model}{An estimated diagnostic classification model.}
+
+\item{ci}{The confidence interval for the RMSEA.}
+
+\item{...}{Unused, for extensibility.}
+}
+\value{
+A data frame created by \code{\link[dcm2:fit_m2]{dcm2::fit_m2()}}.
 }
 \description{
 For diagnostic classification models, the
