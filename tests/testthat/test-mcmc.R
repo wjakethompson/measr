@@ -47,6 +47,18 @@ test_that("as_draws works", {
   expect_s3_class(draws_r, "draws_rvars")
 })
 
+test_that("get_mcmc_draws works as expected", {
+  test_draws <- get_mcmc_draws(cmds_mdm_lcdm)
+  expect_equal(posterior::ndraws(test_draws), 1000)
+  expect_equal(posterior::nvariables(test_draws), 10)
+  expect_s3_class(test_draws, "draws_array")
+
+  test_draws <- get_mcmc_draws(cmds_mdm_dina, ndraws = 750)
+  expect_equal(posterior::ndraws(test_draws), 750)
+  expect_equal(posterior::nvariables(test_draws), 10)
+  expect_s3_class(test_draws, "draws_array")
+})
+
 test_that("log_lik is calculated correctly", {
   log_lik <- prep_loglik_array(cmds_mdm_lcdm)
 
@@ -118,4 +130,19 @@ test_that("model comparisons work", {
   expect_equal(colnames(waic_comp),
                c("elpd_diff", "se_diff", "elpd_waic", "se_elpd_waic",
                  "p_waic", "se_p_waic", "waic", "se_waic"))
+})
+
+test_that("m2 works", {
+  m2 <- fit_m2(cmds_mdm_lcdm, ci = 0.9)
+  expect_equal(m2$m2, 0.0168, tolerance = 0.1)
+  expect_equal(m2$df, 1)
+  expect_equal(m2$pval, 0.8968, tolerance = 0.1)
+  expect_equal(m2$rmsea, 0, tolerance = 0.1)
+  expect_equal(m2$ci_lower, 0, tolerance = 0.1)
+  expect_equal(m2$ci_upper, 0.1013, tolerance = 0.1)
+  expect_equal(m2$srmsr, 0.0375, tolerance = 0.1)
+})
+
+test_that("ppmc works", {
+
 })
