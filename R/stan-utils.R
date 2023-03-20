@@ -67,18 +67,6 @@ create_stan_gqs_params <- function(backend, draws) {
   return(stan_pars)
 }
 
-# canonicalize Stan model file in accordance with the current Stan version
-canonicalize_cmdstan <- function(stan_file, overwrite_file = TRUE) {
-  cmdstan_mod <- cmdstanr::cmdstan_model(stan_file, compile = FALSE)
-  out <- utils::capture.output(
-    cmdstan_mod$format(
-      canonicalize = list("deprecations", "braces", "parentheses"),
-      overwrite_file = overwrite_file, backup = FALSE
-    )
-  )
-  paste0(out, collapse = "\n")
-}
-
 create_stan_function <- function(backend, method, code, pars, silent = 1) {
   if (backend == "rstan") {
     comp_mod <- eval_silent(
