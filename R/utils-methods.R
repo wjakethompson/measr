@@ -22,20 +22,13 @@ get_mcmc_draws <- function(x, ndraws = NULL) {
 
 get_optim_draws <- function(x) {
   draw_matrix <- if (x$backend == "rstan") {
-    t(as.matrix(x$model$par))
+    posterior::as_draws_array(t(as.matrix(x$model$par)))
   } else if (x$backend == "cmdstanr") {
-    as.matrix(x$model$draws())
+    posterior::as_draws_array(x$model$draws())
   }
 
-  all_vars <- colnames(draw_matrix)
-  keep_vars <- all_vars[c(grep("^log_Vc", all_vars),
-                          grep("^pi", all_vars))]
-
-  final_matrix <- draw_matrix[, keep_vars]
-
-  if (x$backend == "rstan") {
-    final_matrix <- t(as.matrix(final_matrix))
-  }
+  final_matrix <- posterior::subset_draws(draw_matrix,
+                                          variable = c("log_Vc", "pi"))
 
   return(final_matrix)
 }
@@ -113,16 +106,4 @@ summarize_probs <- function(x, probs, id) {
                      .by = c(!!id, !!type)) %>%
     tidyr::unnest("bounds")
 
-}
-
-prob_summary <- function(x, probs, na_rm) {
-  x <- x$prob
-  tibble::tibble(mean = mean(x, na.rm = na_rm),
-                 bounds = list(
-                   tibble::enframe(stats::quantile(x, probs = probs,
-                                                   na.rm = na_rm)) %>%
-                     tidyr::pivot_wider(names_from = "name",
-                                        values_from = "value")
-                 )) %>%
-    tidyr::unnest("bounds")
 }
