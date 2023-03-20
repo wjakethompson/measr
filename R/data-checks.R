@@ -1,10 +1,14 @@
-abort_bad_argument <- function(arg, must, not = NULL, extra = NULL) {
+abort_bad_argument <- function(arg, must, not = NULL, extra = NULL,
+                               custom = NULL) {
   msg <- glue::glue("`{arg}` must {must}")
   if (!is.null(not)) {
     msg <- glue::glue("{msg}; not {not}")
   }
   if (!is.null(extra)) {
     msg <- glue::glue("{msg}", "{extra}", .sep = "\n")
+  }
+  if (!is.null(custom)) {
+    msg <- custom
   }
 
   rlang::abort("error_bad_argument",
@@ -39,9 +43,7 @@ check_newdata <- function(x, name, identifier, model, missing) {
     bad_items <- levels(x$item_id)[!(levels(x$item_id) %in% good_items)]
     msg <- paste0("New items found in `newdata`: ",
                   paste(bad_items, collapse = " "))
-    rlang::abort("error_bad_argument",
-                 message = msg,
-                 arg = name)
+    abort_bad_argument(name, must = NULL, custom = msg)
   }
 
   # ensure that factor levels match in original and new data so item parameters
@@ -50,7 +52,8 @@ check_newdata <- function(x, name, identifier, model, missing) {
     dplyr::mutate(
       item_id = as.character(.data$item_id),
       item_id = factor(.data$item_id, levels = levels(model$data$data$item_id))
-    )
+    ) %>%
+    dplyr::arrange(.data$resp_id, .data$item_id)
 
   x
 }
@@ -120,6 +123,26 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
   }
 
   #check that item ids match item levels
+  x <- check_item_levels(x, identifier, item_levels, name)
+
+  if (!all(sapply(dplyr::select(x, -"item_id"), is.numeric))) {
+    abort_bad_argument(name, must = "contain only numeric columns")
+  }
+  x <- dplyr::mutate(x, dplyr::across(-"item_id", as.integer))
+
+  if (!all(sapply(dplyr::select(x, -"item_id"),
+                  function(.x) all(.x %in% c(0L, 1L))))) {
+    abort_bad_argument(name, must = "contain only 0 or 1 in attribute columns")
+  }
+
+  if (!tibble::is_tibble(x)) {
+    tibble::as_tibble(x)
+  } else {
+    x
+  }
+}
+
+check_item_levels <- function(x, identifier, item_levels, name) {
   if (is.null(identifier) && !is.null(item_levels)) {
     x <- x %>%
       dplyr::mutate(item_id = item_levels,
@@ -148,32 +171,18 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
       dplyr::arrange(.data$item_id)
   } else if (is.null(identifier) && is.null(item_levels)) {
     x <- x %>%
-      dplyr::mutate(item_id = 1:dplyr::n(),
+      dplyr::mutate(item_id = seq_len(dplyr::n()),
                     item_id = factor(.data$item_id, levels = .data$item_id),
                     .before = 1) %>%
       dplyr::arrange(.data$item_id)
-  } else if (!is.null(identifier) && is.null(item_levels)){
+  } else if (!is.null(identifier) && is.null(item_levels)) {
     x <- x %>%
       dplyr::rename(item_id = !!identifier) %>%
       dplyr::mutate(item_id = factor(.data$item_id, levels = .data$item_id)) %>%
       dplyr::arrange(.data$item_id)
   }
 
-  if (!all(sapply(dplyr::select(x, -"item_id"), is.numeric))) {
-    abort_bad_argument(name, must = "contain only numeric columns")
-  }
-  x <- dplyr::mutate(x, dplyr::across(-"item_id", as.integer))
-
-  if (!all(sapply(dplyr::select(x, -"item_id"),
-                  function(.x) all(.x %in% c(0L, 1L))))) {
-    abort_bad_argument(name, must = "contain only 0 or 1 in attribute columns")
-  }
-
-  if (!tibble::is_tibble(x)) {
-    tibble::as_tibble(x)
-  } else {
-    x
-  }
+  return(x)
 }
 
 check_prior <- function(x, name, allow_null = FALSE) {
