@@ -88,9 +88,12 @@ probability reliability are described by Johnson & Sinharay (2018, 2020),
 respectively. This function wraps \code{\link[=reliability]{reliability()}}.
 
 For \code{add_fit()}, model and item fit information are added to the \verb{$model_fit}
-element of the fitted model. This function wraps \code{\link[=fit_m2]{fit_m2()}} and/or
-\code{\link[=fit_ppmc]{fit_ppmc()}}, depending on which methods are specified. Additional arguments
-supplied to \code{...} are passed to \code{\link[=fit_ppmc]{fit_ppmc()}}.
+element of the fitted model. This function wraps \code{\link[=fit_m2]{fit_m2()}} to calculate the
+\ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2006;
+Liu et al., 2016) and/or \code{\link[=fit_ppmc]{fit_ppmc()}} to calculate posterior predictive model
+checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
+Thompson, 2019), depending on which methods are specified. Additional
+arguments supplied to \code{...} are passed to \code{\link[=fit_ppmc]{fit_ppmc()}}.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -115,6 +118,11 @@ classification consistency and accuracy for cognitive diagnostic
 assessment. \emph{Journal of Educational Measurement, 49}(1), 19-38.
 \url{https://doi.org/10.1111/j.1745-3984.2011.00158.x}
 
+Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
+Limited-information goodness-of-fit testing of diagnostic classification
+item response models. \emph{British Journal of Mathematical and Statistical
+Psychology, 69}(3), 225-252. \url{https://doi.org/10.1111/bmsp.12074}
+
 Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
 assess attribute-level classification accuracy and consistency for
 cognitive diagnostic assessments. \emph{Journal of Educational Measurement,
@@ -124,6 +132,30 @@ Johnson, M. S., & Sinharay, S. (2020). The reliability of the
 posterior probability of skill attainment in diagnostic classification
 models. \emph{Journal of Educational and Behavioral Statistics, 45}(1), 5-31.
 \url{https://doi.org/10.3102/1076998619864550}
+
+Liu, Y., Tian, W., & Xin, T. (2016). An application of
+\ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic to evaluate the fit
+of cognitive diagnostic models. \emph{Journal of Educational and Behavioral
+Statistics, 41}(1), 3-26. \url{https://doi.org/10.3102/1076998615621293}
+
+Park, J. Y., Johnson, M. S., Lee, Y-S. (2015). Posterior
+predictive model checks for cognitive diagnostic models. \emph{International
+Journal of Quantitative Research in Education, 2}(3-4), 244-264.
+\url{https://doi.org/10.1504/IJQRE.2015.071738}
+
+Sinharay, S., & Almond, R. G. (2007). Assessing fit of cognitive
+diagnostic models. \emph{Educational and Psychological Measurement, 67}(2),
+239-257. \url{https://doi.org/10.1177/0013164406292025}
+
+Sinharay, S., Johnson, M. S., & Stern, H. S. (2006). Posterior
+predictive assessment of item response theory models. \emph{Applied
+Psychological Measurement, 30}(4), 298-321.
+\url{https://doi.org/10.1177/0146621605285517}
+
+Thompson, W. J. (2019). \emph{Bayesian psychometrics for diagnostic
+assessments: A proof of concept} (Research Report No. 19-01). University
+of Kansas; Accessible Teaching, Learning, and Assessment Systems.
+\url{https://doi.org/10.35542/osf.io/jzqs8}
 
 Vehtari, A., Gelman, A., & Gabry, J. (2017). Practical Bayesian
 model evaluation using leave-one-out cross-validation and WAIC.

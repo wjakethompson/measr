@@ -33,17 +33,57 @@
 #' to `...` are passed to [loo::loo.array()] or [loo::waic.array()].
 #'
 #' For `add_reliability()`, reliability information is added to the
-#' `$reliability` element of the fitted model. This function wraps
-#' [reliability()].
+#' `$reliability` element of the fitted model. Pattern level reliability is
+#' described by Cui et al. (2012). Classification reliability and posterior
+#' probability reliability are described by Johnson & Sinharay (2018, 2020),
+#' respectively. This function wraps [reliability()].
 #'
 #' For `add_fit()`, model and item fit information are added to the `$model_fit`
-#' element of the fitted model. This function wraps [fit_m2()] and/or
-#' [fit_ppmc()], depending on which methods are specified. Additional arguments
-#' supplied to `...` are passed to [fit_ppmc()].
+#' element of the fitted model. This function wraps [fit_m2()] to calculate the
+#' \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2006;
+#' Liu et al., 2016) and/or [fit_ppmc()] to calculate posterior predictive model
+#' checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
+#' Thompson, 2019), depending on which methods are specified. Additional
+#' arguments supplied to `...` are passed to [fit_ppmc()].
 #'
 #' @return A modified [measrfit] object with the `criteria` slot populated with
 #'   the specified criteria.
 #'
+#' @references Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
+#'   classification consistency and accuracy for cognitive diagnostic
+#'   assessment. *Journal of Educational Measurement, 49*(1), 19-38.
+#'   \url{https://doi.org/10.1111/j.1745-3984.2011.00158.x}
+#' @references Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
+#'   Limited-information goodness-of-fit testing of diagnostic classification
+#'   item response models. *British Journal of Mathematical and Statistical
+#'   Psychology, 69*(3), 225-252. \url{https://doi.org/10.1111/bmsp.12074}
+#' @references Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
+#'   assess attribute-level classification accuracy and consistency for
+#'   cognitive diagnostic assessments. *Journal of Educational Measurement,
+#'   55*(4), 635-664. \url{https://doi.org/10.1111/jedm.12196}
+#' @references Johnson, M. S., & Sinharay, S. (2020). The reliability of the
+#'   posterior probability of skill attainment in diagnostic classification
+#'   models. *Journal of Educational and Behavioral Statistics, 45*(1), 5-31.
+#'   \url{https://doi.org/10.3102/1076998619864550}
+#' @references Liu, Y., Tian, W., & Xin, T. (2016). An application of
+#'   \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic to evaluate the fit
+#'   of cognitive diagnostic models. *Journal of Educational and Behavioral
+#'   Statistics, 41*(1), 3-26. \url{https://doi.org/10.3102/1076998615621293}
+#' @references Park, J. Y., Johnson, M. S., Lee, Y-S. (2015). Posterior
+#'   predictive model checks for cognitive diagnostic models. *International
+#'   Journal of Quantitative Research in Education, 2*(3-4), 244-264.
+#'   \url{https://doi.org/10.1504/IJQRE.2015.071738}
+#' @references Sinharay, S., & Almond, R. G. (2007). Assessing fit of cognitive
+#'   diagnostic models. *Educational and Psychological Measurement, 67*(2),
+#'   239-257. \url{https://doi.org/10.1177/0013164406292025}
+#' @references Sinharay, S., Johnson, M. S., & Stern, H. S. (2006). Posterior
+#'   predictive assessment of item response theory models. *Applied
+#'   Psychological Measurement, 30*(4), 298-321.
+#'   \url{https://doi.org/10.1177/0146621605285517}
+#' @references Thompson, W. J. (2019). *Bayesian psychometrics for diagnostic
+#'   assessments: A proof of concept* (Research Report No. 19-01). University
+#'   of Kansas; Accessible Teaching, Learning, and Assessment Systems.
+#'   \url{https://doi.org/10.35542/osf.io/jzqs8}
 #' @references Vehtari, A., Gelman, A., & Gabry, J. (2017). Practical Bayesian
 #'   model evaluation using leave-one-out cross-validation and WAIC.
 #'   *Statistics and Computing, 27*(5), 1413-1432.
@@ -62,7 +102,7 @@
 #'   iter = 1500, warmup = 1000, chains = 2,
 #'   cores = 2, return_stanfit = FALSE,
 #'   prior = c(prior(beta(5, 17), class = "slip"),
-#'             prior(beta(5, 17), class = "guess")))
+#'             prior(beta(5, 17), class = "guess"))
 #' )
 #'
 #' cmds_mdm_dina <- add_criterion(cmds_mdm_dina, criterion = "loo")
