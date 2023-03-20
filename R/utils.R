@@ -48,7 +48,8 @@ get_parameters <- function(qmatrix, item_id = NULL,
         param_name = glue::glue("{.data$parameter}[{.data$item_id}]")
       )
   } else if (type == "lcdm") {
-    stats::model.matrix(stats::as.formula(paste0("~ .^", max(ncol(qmatrix), 2L))),
+    stats::model.matrix(stats::as.formula(paste0("~ .^",
+                                                 max(ncol(qmatrix), 2L))),
                         qmatrix) %>%
       tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
       dplyr::select(where(~ sum(.x) > 0)) %>%
