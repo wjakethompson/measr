@@ -16,9 +16,24 @@ test_that("check_model", {
   expect_equal(err$arg, "check1")
   expect_match(err$message, "object with class newclass")
 
+  test_obj <- list(list(1, 2, 3), list(4, 5, 6))
+  class(test_obj[[1]]) <- "newclass"
+  err <- rlang::catch_cnd(check_model(test_obj, "newclass", name = "check1",
+                                      list = TRUE))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "only contain objects with class newclass")
+
   test_obj <- list(3, 4, 5, c(6, 7, 8))
   class(test_obj) <- "newclass"
   expect_equal(check_model(test_obj, "newclass", name = "check1"), test_obj)
+
+  test_obj <- list(list(1, 2, 3), list(4, 5, 6))
+  class(test_obj[[1]]) <- "newclass"
+  class(test_obj[[2]]) <- "newclass"
+  expect_equal(lapply(test_obj, check_model, required_class = "newclass",
+                      name = "check1", list = TRUE),
+               test_obj)
 })
 
 test_that("check_data", {
@@ -106,6 +121,39 @@ test_that("check_data", {
   expect_equal(check_data(missing_dat, identifier = "student", missing = ".",
                           name = "x"),
                check_missing)
+})
+
+test_that("check_newdata", {
+  model <- list(data = list(data = data.frame(item_id = paste0("Item_", 1:10))))
+  model$data$data$item_id <- factor(model$data$data$item_id,
+                                    levels = model$data$data$item_id)
+
+  test_dat <- data.frame(resp_id = sample(mdm_data$respondent, size = 10),
+                         Item_1 = sample(0:1, size = 10, replace = TRUE),
+                         Item_0 = sample(0:1, size = 10, replace = TRUE),
+                         Item_3 = sample(0:1, size = 10, replace = TRUE),
+                         Item_5 = sample(0:1, size = 10, replace = TRUE))
+  expect_error(check_newdata(test_dat, name = "check1", identifier = "resp_id",
+                             model = model, missing = NA),
+               regexp = "New items found in `newdata`: Item_0")
+
+  test_dat <- data.frame(resp_id = sample(mdm_data$respondent, size = 10),
+                         Item_1 = sample(0:1, size = 10, replace = TRUE),
+                         Item_9 = sample(0:1, size = 10, replace = TRUE),
+                         Item_3 = sample(0:1, size = 10, replace = TRUE),
+                         Item_5 = sample(0:1, size = 10, replace = TRUE))
+  check_dat <- test_dat %>%
+    dplyr::mutate(resp_id = factor(.data$resp_id,
+                                   levels = unique(test_dat$resp_id))) %>%
+    tidyr::pivot_longer(cols = -"resp_id", names_to = "item_id",
+                        values_to = "score") %>%
+    dplyr::mutate(item_id = factor(.data$item_id,
+                                   levels = levels(model$data$data$item_id))) %>%
+    dplyr::arrange(.data$resp_id, .data$item_id)
+  new_data <- check_newdata(test_dat, name = "check1", identifier = "resp_id",
+                            model = model, missing = NA)
+  expect_equal(levels(new_data$item_id), levels(model$data$data$item_id))
+  expect_identical(new_data, check_dat)
 })
 
 test_that("check qmatrix", {
@@ -309,6 +357,11 @@ test_that("check_integer", {
   expect_equal(err$arg, "check1")
   expect_match(err$message, "non-missing")
 
+  err <- rlang::catch_cnd(check_integer(NULL, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "numeric scalar")
+
   err <- rlang::catch_cnd(check_integer(-1, lb = 0L, name = "check1"))
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -334,6 +387,7 @@ test_that("check_integer", {
   expect_equal(check_integer(5L, name = "check1"), 5L)
   expect_equal(check_integer(0, lb = 0, inclusive = TRUE, name = "check1"), 0L)
   expect_equal(check_integer(6, lb = 0, name = "check1"), 6L)
+  expect_equal(check_integer(NULL, name = "check1", allow_null = TRUE), NULL)
 })
 
 test_that("check_double", {
