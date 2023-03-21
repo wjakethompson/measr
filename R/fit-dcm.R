@@ -1,7 +1,7 @@
 #' Fit Bayesian diagnostic classification models
 #'
-#' Estimate a diagnostic classification model (DCM; also known as cognitive
-#' diagnostic model [CDM]) using 'Stan'. Models can be estimated using Stan's
+#' Estimate diagnostic classification models (DCMs; also known as cognitive
+#' diagnostic models) using 'Stan'. Models can be estimated using Stan's
 #' optimizer, or full Markov chain Monte Carlo (MCMC).
 #'
 #' @param data Response data. A data frame with 1 row per respondent and 1

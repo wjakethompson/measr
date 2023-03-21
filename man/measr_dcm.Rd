@@ -97,8 +97,8 @@ or \code{\link[rstan:stanmodel-method-optimizing]{rstan::optimizing()}}.
 A \link{measrfit} object.
 }
 \description{
-Estimate a diagnostic classification model (DCM; also known as cognitive
-diagnostic model \link{CDM}) using 'Stan'. Models can be estimated using Stan's
+Estimate diagnostic classification models (DCMs; also known as cognitive
+diagnostic models) using 'Stan'. Models can be estimated using Stan's
 optimizer, or full Markov chain Monte Carlo (MCMC).
 }
 \examples{
