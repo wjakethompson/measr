@@ -98,13 +98,11 @@
 #' cmds_mdm_dina <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "dina",
-#'   method = "mcmc", seed = 63277, backend = "rstan",
-#'   iter = 350, warmup = 250, chains = 1,
+#'   method = "optim", seed = 63277, backend = "rstan",
 #'   prior = c(prior(beta(5, 17), class = "slip"),
 #'             prior(beta(5, 17), class = "guess"))
 #' )
 #'
-#' cmds_mdm_dina <- add_criterion(cmds_mdm_dina, criterion = "loo")
 #' cmds_mdm_dina <- add_reliability(cmd_mdm_dina)
 #' cmds_mdm_dina <- add_fit(cmd_mdm_dina, method = "m2")
 NULL
