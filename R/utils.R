@@ -74,7 +74,6 @@ get_parameters <- function(qmatrix, item_id = NULL,
   return(all_params)
 }
 
-
 #' Evaluate an expression without printing output or messages
 #'
 #' @param expr expression to be evaluated
@@ -107,4 +106,16 @@ eval_silent <- function(expr, type = "output", try = FALSE,
     out <- eval(expr, envir)
   }
   out
+}
+
+#' Determine if code is executed interactively or in pkgdown
+#'
+#' Used for determining examples that shouldn't be run on CRAN, but can be run
+#' for the pkgdown website.
+#'
+#' @export
+#' @examples
+#' measr_examples()
+measr_examples <- function() {
+  interactive() || identical(Sys.getenv("IN_PKGDOWN"), "true")
 }
