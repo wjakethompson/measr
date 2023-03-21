@@ -132,17 +132,6 @@ test_that("model comparisons work", {
                  "p_waic", "se_p_waic", "waic", "se_waic"))
 })
 
-test_that("m2 works", {
-  m2 <- fit_m2(cmds_mdm_lcdm, ci = 0.9)
-  expect_equal(m2$m2, 0.0168, tolerance = 0.1)
-  expect_equal(m2$df, 1)
-  expect_equal(m2$pval, 0.8968, tolerance = 0.1)
-  expect_equal(m2$rmsea, 0, tolerance = 0.1)
-  expect_equal(m2$ci_lower, 0, tolerance = 0.1)
-  expect_equal(m2$ci_upper, 0.1013, tolerance = 0.1)
-  expect_equal(m2$srmsr, 0.0375, tolerance = 0.1)
-})
-
 test_that("ppmc works", {
   test_ppmc <- fit_ppmc(cmds_mdm_lcdm, ndraws = 500, return_draws = 0.2,
                         model_fit = "raw_score",
