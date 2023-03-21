@@ -83,11 +83,11 @@ prior_string <- function(prior, ...) {
   measrprior(prior, ...)
 }
 
-#' Default priors for the loglinear diagnostic classification model
+#' Default priors for diagnostic classification models
 #'
 #' @inheritParams measr_dcm
 #'
-#' @return A `measrprior` object
+#' @return A `measrprior` object.
 #' @export
 #'
 #' @examples

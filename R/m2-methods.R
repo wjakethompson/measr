@@ -25,6 +25,14 @@ dcm2::fit_m2
 #' @describeIn fit_m2 \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} for
 #'   diagnostic classification models.
 #' @export
+#' @examples
+#' rstn_mdm_lcdm <- measr_dcm(
+#'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+#'   resp_id = "respondent", item_id = "item", type = "lcdm",
+#'   method = "optim", seed = 63277, backend = "rstan"
+#' )
+#'
+#' fit_m2(rstn_mdm_lcdm)
 fit_m2.measrdcm <- function(model, ci = 0.9, ...) {
   model <- check_model(model, required_class = "measrdcm", name = "model")
   ci <- check_double(ci, lb = 0, ub = 1, inclusive = FALSE, name = "ci")

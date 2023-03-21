@@ -94,7 +94,7 @@
 #'   \url{http://jmlr.org/papers/v11/watanabe10a.html}
 #'
 #' @name model_evaluation
-#' @examplesIf interactive()
+#' @examplesIf measr_examples()
 #' cmds_mdm_dina <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "dina",

@@ -90,18 +90,19 @@
 #'   \url{https://doi.org/10.35542/osf.io/jzqs8}
 #'
 #' @export
-#' @examplesIf interactive()
+#' @examplesIf measr_examples()
 #' cmds_mdm_dina <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "dina",
 #'   method = "mcmc", seed = 63277, backend = "rstan",
-#'   iter = 1500, warmup = 1000, chains = 2,
-#'   cores = 2, return_stanfit = FALSE,
+#'   iter = 1200, warmup = 1000, chains = 2,
 #'   prior = c(prior(beta(5, 17), class = "slip"),
 #'             prior(beta(5, 17), class = "guess"))
 #' )
 #'
-#' fit_ppmc(cmds_mdm_dina, item_fit = "conditional_prob")
+#' fit_ppmc(cmds_mdm_dina,
+#'          model_fit = "raw_score",
+#'          item_fit = "conditional_prob")
 fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                      return_draws = 0,
                      model_fit = c("raw_score"),

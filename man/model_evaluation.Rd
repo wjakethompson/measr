@@ -96,7 +96,7 @@ Thompson, 2019), depending on which methods are specified. Additional
 arguments supplied to \code{...} are passed to \code{\link[=fit_ppmc]{fit_ppmc()}}.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 cmds_mdm_dina <- measr_dcm(
   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
   resp_id = "respondent", item_id = "item", type = "dina",

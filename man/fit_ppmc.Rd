@@ -95,18 +95,19 @@ respondent in each class provides a correct response (\code{item_fit = "conditio
 et al. (2006).
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 cmds_mdm_dina <- measr_dcm(
   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
   resp_id = "respondent", item_id = "item", type = "dina",
   method = "mcmc", seed = 63277, backend = "rstan",
-  iter = 1500, warmup = 1000, chains = 2,
-  cores = 2, return_stanfit = FALSE,
+  iter = 1200, warmup = 1000, chains = 2,
   prior = c(prior(beta(5, 17), class = "slip"),
             prior(beta(5, 17), class = "guess"))
 )
 
-fit_ppmc(cmds_mdm_dina, item_fit = "conditional_prob")
+fit_ppmc(cmds_mdm_dina,
+         model_fit = "raw_score",
+         item_fit = "conditional_prob")
 \dontshow{\}) # examplesIf}
 }
 \references{

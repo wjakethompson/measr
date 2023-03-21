@@ -2,7 +2,7 @@
 % Please edit documentation in R/priors.R
 \name{default_dcm_priors}
 \alias{default_dcm_priors}
-\title{Default priors for the loglinear diagnostic classification model}
+\title{Default priors for diagnostic classification models}
 \usage{
 default_dcm_priors(type = "lcdm")
 }
@@ -11,10 +11,10 @@ default_dcm_priors(type = "lcdm")
 lcdm, dina, or dino.}
 }
 \value{
-A \code{measrprior} object
+A \code{measrprior} object.
 }
 \description{
-Default priors for the loglinear diagnostic classification model
+Default priors for diagnostic classification models
 }
 \examples{
 default_dcm_priors(type = "lcdm")

@@ -1,6 +1,8 @@
 #' Fit Bayesian diagnostic classification models
 #'
-#' Something...
+#' Estimate a diagnostic classification model (DCM; also known as cognitive
+#' diagnostic model [CDM]) using 'Stan'. Models can be estimated using Stan's
+#' optimizer, or full Markov chain Monte Carlo (MCMC).
 #'
 #' @param data Response data. A data frame with 1 row per respondent and 1
 #'   column per item.
@@ -60,6 +62,12 @@
 #'
 #' @return A [measrfit] object.
 #' @export
+#' @examples
+#' rstn_mdm_lcdm <- measr_dcm(
+#'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+#'   resp_id = "respondent", item_id = "item", type = "lcdm",
+#'   method = "optim", seed = 63277, backend = "rstan"
+#' )
 measr_dcm <- function(data,
                       missing = NA,
                       qmatrix,

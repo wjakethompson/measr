@@ -28,6 +28,15 @@ described by Hansen et al. (2016) and Liu et al. (2016).
 diagnostic classification models.
 
 }}
+\examples{
+rstn_mdm_lcdm <- measr_dcm(
+  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+  resp_id = "respondent", item_id = "item", type = "lcdm",
+  method = "optim", seed = 63277, backend = "rstan"
+)
+
+fit_m2(rstn_mdm_lcdm)
+}
 \references{
 Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
 Limited-information goodness-of-fit testing of diagnostic classification

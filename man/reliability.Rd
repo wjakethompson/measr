@@ -52,6 +52,15 @@ Johnson & Sinharay (2019).
 models.
 
 }}
+\examples{
+rstn_mdm_lcdm <- measr_dcm(
+  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+  resp_id = "respondent", item_id = "item", type = "lcdm",
+  method = "optim", seed = 63277, backend = "rstan"
+)
+
+reliability(rstn_mdm_lcdm)
+}
 \references{
 Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
 classification consistency and accuracy for cognitive diagnostic

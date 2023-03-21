@@ -97,5 +97,14 @@ or \code{\link[rstan:stanmodel-method-optimizing]{rstan::optimizing()}}.
 A \link{measrfit} object.
 }
 \description{
-Something...
+Estimate a diagnostic classification model (DCM; also known as cognitive
+diagnostic model \link{CDM}) using 'Stan'. Models can be estimated using Stan's
+optimizer, or full Markov chain Monte Carlo (MCMC).
+}
+\examples{
+rstn_mdm_lcdm <- measr_dcm(
+  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+  resp_id = "respondent", item_id = "item", type = "lcdm",
+  method = "optim", seed = 63277, backend = "rstan"
+)
 }
