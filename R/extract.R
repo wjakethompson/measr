@@ -47,7 +47,7 @@ measr_extract.measrdcm <- function(model, ..., what) {
       params <- get_parameters(dplyr::select(model$data$qmatrix, -"item_id"),
                                type = model$type) %>%
         dplyr::left_join(items, by = "item_id") %>%
-        dplyr::select("item", everything(), -"item_id")
+        dplyr::select("item", dplyr::everything(), -"item_id")
       draws <- as_draws(model) %>%
         posterior::subset_draws(variable = dplyr::pull(params, "coef")) %>%
         posterior::as_draws_rvars() %>%
@@ -79,4 +79,6 @@ measr_extract.measrdcm <- function(model, ..., what) {
     },
     rlang::abort(message = glue::glue("Cannot extract element `{what}`"))
   )
+
+  return(out)
 }
