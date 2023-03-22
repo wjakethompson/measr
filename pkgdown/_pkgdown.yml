@@ -99,8 +99,9 @@ reference:
 - contents:
   - model_evaluation
 - title: Model applications
-  desc: View and apply an estimated model to new data.
+  desc: View and use an estimated model.
 - contents:
+  - measr_extract
   - predict.measrdcm
 - title: Miscellaneous
 - contents:
