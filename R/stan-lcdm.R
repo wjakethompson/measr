@@ -19,7 +19,11 @@ lcdm_script <- function(qmatrix, prior = NULL) {
 
   # parameters block -----
   all_params <- get_parameters(qmatrix = qmatrix, item_id = NULL,
-                               type = "lcdm") %>%
+                               rename_att = TRUE, type = "lcdm") %>%
+    dplyr::mutate(parameter = dplyr::case_when(is.na(.data$attributes) ~
+                                                 "intercept",
+                                               TRUE ~ .data$attributes)) %>%
+    dplyr::select("item_id", "parameter", param_name = "coef") %>%
     dplyr::mutate(
       param_level = dplyr::case_when(
         .data$parameter == "intercept" ~ 0,

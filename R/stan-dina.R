@@ -50,19 +50,18 @@ dina_script <- function(qmatrix, prior = NULL) {
   }
 
   all_priors <- get_parameters(qmatrix = qmatrix, item_id = NULL,
-                               type = "dina") %>%
-    dplyr::left_join(mod_prior, by = c("parameter" = "class",
-                                       "param_name" = "coef")) %>%
+                               rename_att = TRUE, type = "dina") %>%
+    dplyr::left_join(mod_prior, by = c("class", "coef")) %>%
     dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
                        dplyr::filter(is.na(.data$coef)) %>%
                        dplyr::select(-"coef"),
-                     by = c("parameter" = "class")) %>%
+                     by = c("class")) %>%
     dplyr::rename(class_def = "prior_def") %>%
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
                                is.na(.data$coef_def) ~ .data$class_def),
-      prior_def = glue::glue("{param_name} ~ {prior};")) %>%
+      prior_def = glue::glue("{coef} ~ {prior};")) %>%
     dplyr::pull("prior_def")
 
   model_block <- glue::glue(

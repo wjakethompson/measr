@@ -30,22 +30,25 @@ create_profiles <- function(attributes) {
     tibble::as_tibble()
 }
 
-get_parameters <- function(qmatrix, item_id = NULL,
+get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
                            type = c("lcdm", "dina", "dino")) {
   item_id <- check_character(item_id, name = "item_id", allow_null = TRUE)
   qmatrix <- check_qmatrix(qmatrix, identifier = item_id, item_levels = NULL,
                            name = "qmatrix")
+  att_names <- colnames(qmatrix)[which(!(colnames(qmatrix) == "item_id"))]
+
   qmatrix <- qmatrix %>%
     dplyr::select(-"item_id") %>%
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"),
-                       .cols = -dplyr::starts_with("item_id"))
+                       .cols = dplyr::everything())
+
   type <- rlang::arg_match(type, dcm_choices())
 
   all_params <- if (type %in% c("dina", "dino")) {
     tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
-                       parameter = c("slip", "guess")) %>%
+                       class = c("slip", "guess")) %>%
       dplyr::mutate(
-        param_name = glue::glue("{.data$parameter}[{.data$item_id}]")
+        coef = glue::glue("{.data$class}[{.data$item_id}]")
       )
   } else if (type == "lcdm") {
     stats::model.matrix(stats::as.formula(paste0("~ .^",
@@ -65,10 +68,24 @@ get_parameters <- function(qmatrix, item_id = NULL,
                         function(.x) length(attr(.x, "match.length"))) + 1
         ),
         atts = gsub("[^0-9|_]", "", .data$parameter),
-        param_name = glue::glue("l{item_id}_{param_level}",
-                                "{gsub(\"__\", \"\", atts)}")
+        coef = glue::glue("l{item_id}_{param_level}",
+                          "{gsub(\"__\", \"\", atts)}"),
+        class = dplyr::case_when(.data$param_level == 0 ~ "intercept",
+                                 .data$param_level == 1 ~ "maineffect",
+                                 .data$param_level >= 2 ~ "interaction"),
+        attributes = dplyr::case_when(.data$param_level == 0 ~ NA_character_,
+                                      .data$param_level >= 1 ~ .data$parameter)
       ) %>%
-      dplyr::select("item_id", "parameter", "param_name")
+      dplyr::select("item_id", "class", "attributes", "coef")
+  }
+
+  if (!rename_att && ("attributes" %in% colnames(all_params))) {
+    for (i in seq_along(att_names)) {
+      all_params <- dplyr::mutate(all_params,
+                                  attributes = gsub(paste0("att", i),
+                                                    att_names[i],
+                                                    .data$attributes))
+    }
   }
 
   return(all_params)
