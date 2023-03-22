@@ -25,7 +25,7 @@ dcm2::fit_m2
 #' @describeIn fit_m2 \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} for
 #'   diagnostic classification models.
 #' @export
-#' @examples
+#' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "lcdm",

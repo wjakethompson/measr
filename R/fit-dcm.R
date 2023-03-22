@@ -59,7 +59,7 @@
 #'
 #' @return A [measrfit] object.
 #' @export
-#' @examples
+#' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "lcdm",

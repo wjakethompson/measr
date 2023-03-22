@@ -29,6 +29,7 @@ diagnostic classification models.
 
 }}
 \examples{
+\dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 rstn_mdm_lcdm <- measr_dcm(
   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
   resp_id = "respondent", item_id = "item", type = "lcdm",
@@ -36,6 +37,7 @@ rstn_mdm_lcdm <- measr_dcm(
 )
 
 fit_m2(rstn_mdm_lcdm)
+\dontshow{\}) # examplesIf}
 }
 \references{
 Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
