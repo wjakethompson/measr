@@ -1,0 +1,253 @@
+---
+title: "Estimating diagnostic classification models"
+author: "W. Jake Thompson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: bib/references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Estimating diagnostic classification models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(wjake)
+library(showtext)
+
+set_theme(base_family = "Open Sans",
+          plot_margin = ggplot2::margin(10, 10, 10, 10))
+
+font_add_google("Open Sans")
+showtext_auto()
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7.2916667,
+  fig.align = "center",
+  out.width = "90%"
+)
+
+options(mc.cores = 4,
+        tidyverse.quiet = TRUE)
+```
+
+In this article, we will walk you through the steps for estimating diagnostic classification models (DCMs; also known as cognitive diagnostic models [CDMs]) using measr.
+We start with the data to analyze, understand how to specify a DCM to estimate, and learn how to customize the model estimation process (e.g., prior distributions).
+
+To use the code in this article, you will need to install and load the measr package.
+
+```{r}
+library(measr)
+```
+
+## Examination for the Certificate of Proficiency in English Data
+
+To demonstrate how {measr} works, we will examine data from the grammar section of the Examination for the Certificate of Proficiency in English (ECPE).
+This section of the ECPE consists of 28 item multiple-choice items that together measure three attributes: morphosyntactic rules, cohesive rules, and lexical rules.
+In total, data is available for 2,922 respondents.
+This data set has been widely studied in the DCM literature [e.g., @chen2018; @liu2019; @hdcm].
+Additionally, parameter estimates from other software (Mplus) are readily available from @templin2013a, so we can compare the parameter estimates from measr to estimates derived from other software.
+
+The ECPE data is included within the measr package.
+For additional information on these data, see `?ecpe_data`.
+
+```{r}
+ecpe_data
+
+ecpe_qmatrix
+```
+
+## Specifying a DCM for Estimation
+
+In measr, DCMs are specified and estimated using the `measr_dcm()` function.
+We'll start by estimating a loglinear cognitive diagnostic model (LCDM).
+The LCDM is a general DCM that subsumes many other DCM subtypes [@lcdm].
+
+First, we specify the data (`data`) and the Q-matrix (`qmatrix`) that should be used to estimate the model.
+Note that these are the only required arguments to the `measr_dcm()` function.
+If not other arguments are provided, sensible defaults (described below) will take care of the rest of the specification and estimation.
+Next, we can specify which columns, if any, in our `data` and `qmatrix` contain respondent identifiers and item identifiers in, respectively.
+If one or more of these variables are not present in the data, these arguments can be omitted, and measr will assign identifiers based on the row number (i.e., row 1 in `qmatrix` becomes item 1).
+We can then specify the type of DCM we want to estimate.
+The current options are `"lcdm"` (the default) `"dina"`, and `"dino"` (see [Estimating Other DCM Sub-Types](#subtype) below).
+
+You also have the option to choose which estimation engine to use, via the `"backend"` argument.
+The default backend is `backend = "rstan"`, which will use the [rstan](https://mc-stan.org/rstan/) package to estimate the model.
+Alternatively, you can use the [cmdstanr](https://mc-stan.org/cmdstanr/) package to estimate the model by specifying `backend = "cmdstanr"`.
+The cmdstanr package works by using a local installation of Stan to estimate the models, rather than the version that is pre-compiled in rstan.
+Once a backend has been chosen, we can supply additional arguments to those specific estimating functions.
+In the example below, I specify 500 warm-up iterations per chain, 500 post-warm-up iterations per chain, and 4 cores to run the chains in parallel.
+The full set up options available for rstan and cmdstanr can be found by looking at the help pages for `rstan::sampling()` and `` cmdstanr::`model-method-sample` ``, respectively.
+
+Finally, because estimating these models can be time intensive, you can specify a `file`.
+If a file is specified, an R object of the fitted model will be automatically saved to the specified file.
+If the specified `file` already exists, then the fitted model will be read back into R, eliminating the need to re-estimate the model.
+
+```{r}
+ecpe <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                  resp_id = "resp_id", item_id = "item_id", type = "lcdm",
+                  method = "mcmc", backend = "cmdstanr",
+                  chains = 4, iter_warmup = 1000, iter_sampling = 500,
+                  parallel_chains = 4,
+                  file = "fits/ecpe-lcdm")
+```
+
+### Examining Parameter Estimates
+
+Now that we've estimated a model, let's compare our parameter estimates to those reported for the ECPE data by @templin2013a.
+We can start be looking at our estimates using `measr_extract()`.
+This function extracts different aspects of a model estimated with measr.
+Here, the `estimate` column reports estimated value for each parameter and a measure of the associated error (i.e., the standard deviation of the posterior distribution).
+For example, item E1 has four parameters, as it measures two attributes:
+
+1. An intercept, which represents the log-odds of providing a correct response for a respondent who is proficient in neither of the attributes this item measures (i.e., morphosyntactic rules and cohesive rules).
+2. A main effect for morphosyntactic rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+3. A main effect for cohesive rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+4. An interaction between morphosyntactic and cohesive rules, which is the change in the log-odds for a respondent who is proficient in both attributes.
+
+```{r}
+item_parameters <- measr_extract(ecpe, what = "item_param")
+item_parameters
+```
+
+We can compare these estimates to those that @templin2013a reported when using different software to estimate the same model.
+In the figure below, most parameters fall on or very close to the dashed line, which represents perfect agreement.
+
+```{r lcdm-param-compare, echo = FALSE}
+#| fig.asp: 0.618
+#| fig.alt: >
+#|   Figure shows a strong correlation between item parameters, with only a few
+#|   discrepancies off of the line of perfect agreement.
+
+library(tidyverse)
+library(glue)
+
+ecpe_templin <- read_csv("data/mplus-estimates-templin.csv",
+                         col_types = cols(.default = col_double()))
+
+param_compare <- item_parameters %>%
+  full_join(ecpe_templin %>%
+              pivot_longer(-item) %>%
+              mutate(param = glue("l{item}_{name}")) %>%
+              select(param, mplus_est = value) %>%
+              drop_na(everything()),
+            by = c("coef" = "param")) %>%
+  mutate(measr_est = map_dbl(estimate, mean),
+         type = case_when(str_detect(coef, "_0") ~ "Intercept",
+                          str_detect(coef, "_1") ~ "Main Effect",
+                          str_detect(coef, "_2") ~ "Interaction"),
+         type = factor(type, levels = c("Intercept", "Main Effect",
+                                        "Interaction")))
+
+msr_colors <- c("#8ECAE6", "#023047", "#D7263D")
+
+param_compare %>%
+  ggplot(aes(x = measr_est, y = mplus_est)) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  geom_point(aes(color = type, shape = type), size = 3) +
+  scale_color_manual(values = msr_colors) +
+  labs(x = "measr", y = "Templin et al. (2013)",
+       color = "Parameter Type", shape = "Parameter Type")
+```
+
+There are some parameters that deviate from the line of perfect agreement, but these are expected.
+For example, take item E7, which measures morphosyntactic and lexical rules.
+Both measr and @templin2013a report values of approximately -0.09 for the intercept and 0.92 for the main effect of lexical rules.
+For the main effect of morphosyntactic rules, measr estimated a value of 1.56, compared to a value of 2.86 reported by @templin2013a, a difference of -1.3.
+Similarly, the interaction term estimated by measr is 0.38, compared to a value of -0.95 reported by @templin2013a, a difference of 1.33. This indicates that the log-odds of providing a correct response for an individual who has mastered both attributes is approximately the same, regardless of software.
+That is, for measr, we get a log-odds of $-0.9 + 1.56 + 0.92 + 0.38 = 1.96$, and from @templin2013a, we get a log-odds of $-0.9, + 2.86 + 0.92 - 0.95 = 1.93$.
+This is true for all of the differences in the figure.
+There is a change to the main effect for morphosyntactic rules and corresponding change to the interaction term that "cancels out" the difference.
+
+So why is this happening? Let's look at the proportion of respondents in each class.
+There are very few respondents who are proficient in morphosyntactic rules without also being proficient in the other attributes (classes 2, 5, and 6; less than 4% of all respondents).
+Therefore, there is less information for estimating the morphosyntactic main effects, which for items that measure multiple attributes, represent the increase in log-odds for proficiency in morphosyntactic rules *conditional on not being proficient* on the other attribute.
+
+```{r}
+measr_extract(ecpe, "strc_param")
+```
+
+This means that the prior will have more influence on these parameters.
+Note in the above figure that the main effect estimates that are off the diagonal are less extreme when using measr.
+For example, the triangle at the top right is a main effect that is nearly 3 as reported by @templin2013a, but is just over 1.5 when using with measr.
+Thus, there is a regularizing effect, where the prior is pulling in extreme values, which is an intended outcome 
+Prior distributions for measr are discussed more in the following section.
+
+## Customizing the Model Estimation Process
+
+### Prior Distributions
+
+In the code to estimate the LCDM above, no prior distributions were specified.
+By default, measr uses the following prior distributions for the LCDM:
+
+```{r lcdm-prior}
+default_dcm_priors(type = "lcdm")
+```
+
+As you can see, main effect parameters get a `lognormal(0, 1)` prior by default.
+Different prior distributions can be specified with the `prior()` function.
+For example, we can specify a `normal(0, 10)` prior for the main effects with:
+
+```{r normal-prior}
+prior(normal(0, 10), class = "maineffect")
+```
+
+By default, the prior is applied to all parameters in the class (i.e., all main effects).
+However, we can also apply a prior to a specific parameter.
+For example, here we specify a $\chi^2$ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 (morphosyntactic rules) on item 7.
+To see all parameters (including `class` and `coef`) that can be specified, we can use `get_parameters()`.
+
+```{r multi-prior}
+c(prior(chi_square(2), class = "maineffect"),
+  prior(exponential(2), class = "maineffect", coef = "l7_11"))
+
+get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
+```
+
+Any distribution that is supported by the *Stan* language can be used as a prior.
+A list of all distributions is available in the *Stan* documentation, and are linked to from the `prior()` help page.
+
+Priors can be defined before estimating the function, or created at the same time the model is estimated.
+For example, both of the following are equivalent.
+Here we set the prior for main effects to be a truncated normal distribution with a lower bound of 0.
+This is done because the main effects in the LCDM are constrained to be positive to ensure monotonicity in the model.
+Additionally note that I've set `method = "optim"`.
+This means that we will estimate the model using *Stan's* optimizer, rather than using full Markov Chain Monte Carlo.
+Note that the prior still influences the model when using `method = "optim"`, just as they do when using `method = "mcmc"` (the default).
+
+```{r new-prior}
+new_prior <- prior(normal(0, 15), class = "maineffect", lb = 0)
+new_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                      resp_id = "resp_id", item_id = "item_id",
+                      type = "lcdm", backend = "cmdstanr",
+                      method = "optim",
+                      prior = new_prior,
+                      file = "fits/ecpe-optim-lcdm")
+
+new_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                      resp_id = "resp_id", item_id = "item_id",
+                      type = "lcdm", backend = "cmdstanr",
+                      method = "optim",
+                      prior = c(prior(normal(0, 15), class = "maineffect",
+                                      lb = 0)),
+                      file = "fits/ecpe-optim-lcdm")
+```
+
+The priors used to estimate the model are saved in the returned model object, so we can always go back and see which priors were used if we are unsure.
+We can see that for the `new_lcdm` model, our specified normal prior was used for the main effects, but the default priors were still applied to the parameters for which we did not explicitly state a prior distribution.
+
+```{r recover-prior}
+measr_extract(new_lcdm, "prior")
+```
+
+### Other DCM Sub-Types {#subtype}
+
+Although a primary motivation for measr is to provide researchers with software that makes the LCDM readily accessible, a few other popular DCM subtypes are also supported.
+For example, we can estimate the deterministic inputs, noisy "and" gate [DINA, @junker2001] or the deterministic inputs, noisy "or" gate [DINO, @templin2006] models by specifying a different `type` in the `measr_dcm()` function.
+
+Future development work will continue to add functionality for more DCM subtypes.
+If there is a specific subtype you are interested in, or would like to see supported, please open an issues on the [GitHub repository](https://github.com/wjakethompson/measr/issues).
+
+## References
