@@ -24,7 +24,7 @@ Depends:
     R (>= 4.1.0)
 Imports:
     dcm2,
-    dplyr (>= 1.1.0),
+    dplyr (>= 1.1.1),
     fs,
     glue,
     loo,
