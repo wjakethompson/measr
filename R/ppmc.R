@@ -141,7 +141,7 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
   all_draws <- posterior::as_draws_array(gqs_model)
 
   # organize ppmc data
-  data_posterior <- posterior::subset_draws(all_draws, variable = "y_rep") %>%
+  post_data <- posterior::subset_draws(all_draws, variable = "y_rep") %>%
     posterior::as_draws_df() %>%
     tibble::as_tibble() %>%
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
@@ -154,12 +154,12 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                                      resp = as.integer(.data$resp_id),
                                      item = as.integer(.data$item_id)) %>%
                        dplyr::select("obs", "resp", "item"),
-                     by = "obs")
+                     by = "obs", relationship = "many-to-one")
 
   # calculate raw score distribution
   model_level_fit <- if (!is.null(model_fit)) {
     ppmc_model_fit(model = model,
-                   post_data = data_posterior,
+                   post_data = post_data,
                    probs = probs,
                    return_draws = return_draws,
                    type = model_fit)
@@ -173,7 +173,7 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
     pi_draws <- posterior::subset_draws(stan_draws, variable = "pi")
 
     ppmc_item_fit(model = model,
-                  post_data = data_posterior,
+                  post_data = post_data,
                   attr = ncol(clean_qmatrix),
                   resp_prob = resp_prob,
                   pi_draws = pi_draws,
@@ -219,7 +219,8 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
                                     function(.x) max(.x, 0.0001)))
 
   chisq_ppmc <- raw_score_post %>%
-    dplyr::left_join(exp_raw_scores, by = c("raw_score")) %>%
+    dplyr::left_join(exp_raw_scores, by = c("raw_score"),
+                     relationship = "many-to-one") %>%
     dplyr::mutate(piece = ((.data$n - .data$exp_resp) ^ 2) / .data$exp_resp) %>%
     dplyr::summarize(chisq = sum(.data$piece), .by = ".draw")
 
@@ -228,7 +229,8 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
     dplyr::count(.data$raw_score) %>%
     tidyr::complete(raw_score = 0:nrow(model$data$qmatrix),
                     fill = list(n = 0L)) %>%
-    dplyr::left_join(exp_raw_scores, by = "raw_score") %>%
+    dplyr::left_join(exp_raw_scores, by = "raw_score",
+                     relationship = "one-to-one") %>%
     dplyr::mutate(piece = ((.data$n - .data$exp_resp) ^ 2) / .data$exp_resp) %>%
     dplyr::summarize(chisq = sum(.data$piece)) %>%
     dplyr::pull("chisq")
@@ -299,13 +301,15 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
     dplyr::group_by(.data$.draw, .data$resp_id) %>%
     dplyr::slice_sample(n = 1) %>%
     dplyr::ungroup() %>%
-    dplyr::left_join(all_profiles, by = c("class_label" = "class")) %>%
+    dplyr::left_join(all_profiles, by = c("class_label" = "class"),
+                     relationship = "many-to-one") %>%
     dplyr::select(".draw", "resp_id", class = "class_id")
 
   obs_cond_pval <- model$data$data %>%
     dplyr::mutate(resp_id = as.integer(.data$resp_id),
                   item_id = as.integer(.data$item_id)) %>%
-    dplyr::left_join(obs_class, by = "resp_id", multiple = "all") %>%
+    dplyr::left_join(obs_class, by = "resp_id",
+                     relationship = "many-to-many") %>%
     dplyr::summarize(obs_cond_pval = mean(.data$score),
                      .by = c("item_id", "class")) %>%
     dplyr::arrange(.data$item_id, .data$class)
@@ -324,7 +328,8 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
     tidyr::nest(cond_pval = "pi") %>%
     dplyr::arrange(.data$i, .data$c) %>%
     dplyr::left_join(obs_cond_pval, by = c("i" = "item_id",
-                                           "c" = "class")) %>%
+                                           "c" = "class"),
+                     relationship = "one-to-one") %>%
     dplyr::mutate(ppmc_mean = vapply(.data$cond_pval, function(.x) mean(.x$pi),
                                      double(1)),
                   bounds = lapply(.data$cond_pval,
@@ -357,11 +362,12 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
   cond_pval_res <- cond_pval_res %>%
     dplyr::select(-"cond_pval") %>%
     dplyr::rename(item_id = "i", class_id = "c") %>%
-    dplyr::left_join(all_profiles, by = "class_id") %>%
+    dplyr::left_join(all_profiles, by = "class_id",
+                     relationship = "many-to-one") %>%
     dplyr::left_join(model$data$qmatrix %>%
                        dplyr::select(item = "item_id") %>%
                        dplyr::mutate(item_id = as.integer(.data$item)),
-                     by = "item_id") %>%
+                     by = "item_id", relationship = "many-to-one") %>%
     dplyr::select(-"item_id", -"class_id") %>%
     dplyr::relocate("item", "class", .before = 1)
 
@@ -392,7 +398,8 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
     ) %>%
     tidyr::unnest("dat") %>%
     tidyr::nest(samples = -c("item_1", "item_2")) %>%
-    dplyr::left_join(obs_or, by = c("item_1", "item_2")) %>%
+    dplyr::left_join(obs_or, by = c("item_1", "item_2"),
+                     relationship = "one-to-one") %>%
     dplyr::mutate(ppmc_mean = vapply(.data$samples, function(.x) mean(.x$or),
                                      double(1)),
                   bounds = lapply(.data$samples,
@@ -428,11 +435,13 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
     dplyr::left_join(model$data$qmatrix %>%
                        dplyr::select(item = "item_id") %>%
                        dplyr::mutate(item_id = as.integer(.data$item)),
-                     by = c("item_1" = "item_id")) %>%
+                     by = c("item_1" = "item_id"),
+                     relationship = "many-to-one") %>%
     dplyr::left_join(model$data$qmatrix %>%
                        dplyr::select(item = "item_id") %>%
                        dplyr::mutate(item_id = as.integer(.data$item)),
-                     by = c("item_2" = "item_id")) %>%
+                     by = c("item_2" = "item_id"),
+                     relationship = "many-to-one") %>%
     dplyr::select(-"item_1", -"item_2") %>%
     dplyr::rename(item_1 = "item.x", item_2 = "item.y") %>%
     dplyr::relocate("item_1", "item_2", .before = 1)

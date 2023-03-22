@@ -131,8 +131,9 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::left_join(dplyr::select(all_params, "item_id", "parameter",
                                    "param_name"),
                      by = "item_id",
-                     multiple = "all") %>%
-    dplyr::left_join(profile_params, by = c("profile_id", "parameter")) %>%
+                     multiple = "all", relationship = "many-to-many") %>%
+    dplyr::left_join(profile_params, by = c("profile_id", "parameter"),
+                     relationship = "many-to-one") %>%
     dplyr::filter(.data$valid_for_profile == 1) %>%
     dplyr::group_by(.data$item_id, .data$profile_id) %>%
     dplyr::summarize(all_params = paste(unique(.data$param_name),
@@ -163,12 +164,12 @@ lcdm_script <- function(qmatrix, prior = NULL) {
                                .data$param_level == 1 ~ "maineffect",
                                .data$param_level > 1 ~ "interaction")) %>%
     dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef"),
-                     multiple = "all") %>%
+                     relationship = "one-to-one") %>%
     dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
                        dplyr::filter(is.na(.data$coef)) %>%
                        dplyr::select(-"coef"),
-                     by = c("class"), multiple = "all") %>%
+                     by = c("class"), relationship = "many-to-one") %>%
     dplyr::rename(class_def = "prior_def") %>%
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
