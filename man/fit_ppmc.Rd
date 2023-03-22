@@ -100,9 +100,7 @@ cmds_mdm_dina <- measr_dcm(
   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
   resp_id = "respondent", item_id = "item", type = "dina",
   method = "mcmc", seed = 63277, backend = "rstan",
-  iter = 300, warmup = 200, chains = 1,
-  prior = c(prior(beta(5, 17), class = "slip"),
-            prior(beta(5, 17), class = "guess"))
+  iter = 100, warmup = 50, chains = 1
 )
 
 fit_ppmc(cmds_mdm_dina, model_fit = "raw_score", item_fit = NULL)
