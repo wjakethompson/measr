@@ -46,10 +46,9 @@ Suggests:
     roxygen2,
     spelling,
     testthat (>= 3.0.0)
-Remotes:
-    atlas-aai/dcm2
 Additional_repositories: https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
+Config/Needs/website: wjakethompson/wjake, showtext
 Encoding: UTF-8
 Language: en-US
 LazyData: true
