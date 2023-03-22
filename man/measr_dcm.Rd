@@ -14,7 +14,6 @@ measr_dcm(
   method = c("mcmc", "optim"),
   prior = NULL,
   backend = getOption("measr.backend", "rstan"),
-  return_stanfit = FALSE,
   file = NULL,
   file_refit = getOption("measr.file_refit", "never"),
   ...
@@ -59,10 +58,6 @@ fitting the Stan model. Options are \code{"rstan"} (the default) or
 "measr.backend" option (see \code{\link[=options]{options()}}). Details on the \strong{rstan} and
 \strong{cmdstanr} packages are available at \url{https://mc-stan.org/rstan/} and
 \url{https://mc-stan.org/cmdstanr/}, respectively.}
-
-\item{return_stanfit}{Logical. If \code{backend = "cmdstanr"}, should the fitted
-model be coerced to a \link[rstan:stanfit-class]{rstan::stanfit} object? Ignored if
-\code{backend = "rstan"}.}
 
 \item{file}{Either \code{NULL} (the default) or a character string. If a character
 string, the fitted model object is saved as an \code{.rds} object using

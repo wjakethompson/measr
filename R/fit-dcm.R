@@ -34,9 +34,6 @@
 #'   "measr.backend" option (see [options()]). Details on the **rstan** and
 #'   **cmdstanr** packages are available at \url{https://mc-stan.org/rstan/} and
 #'   \url{https://mc-stan.org/cmdstanr/}, respectively.
-#' @param return_stanfit Logical. If `backend = "cmdstanr"`, should the fitted
-#'   model be coerced to a [rstan::stanfit-class] object? Ignored if
-#'   `backend = "rstan"`.
 #' @param file Either `NULL` (the default) or a character string. If a character
 #'   string, the fitted model object is saved as an `.rds` object using
 #'   [saveRDS()] using the supplied character string. The `.rds` extension
@@ -77,7 +74,6 @@ measr_dcm <- function(data,
                       method = c("mcmc", "optim"),
                       prior = NULL,
                       backend = getOption("measr.backend", "rstan"),
-                      return_stanfit = FALSE,
                       file = NULL,
                       file_refit = getOption("measr.file_refit", "never"),
                       ...) {
@@ -95,7 +91,6 @@ measr_dcm <- function(data,
   method <- rlang::arg_match(method, c("mcmc", "optim"))
   prior <- check_prior(prior, name = "prior", allow_null = TRUE)
   backend <- rlang::arg_match(backend, backend_choices())
-  return_stanfit <- check_logical(return_stanfit, name = "return_stanfit")
   file <- check_file(file, name = "file", create_dir = FALSE,
                      check_file = FALSE, ext = "rds", allow_null = TRUE)
   file_refit <- rlang::arg_match(file_refit, c("never", "always", "on_change"))
@@ -125,10 +120,6 @@ measr_dcm <- function(data,
   stan_mod <- create_stan_function(backend = backend, method = method,
                                    code = stan_code, pars = stan_pars)
   mod <- do.call(stan_mod$func, stan_mod$pars)
-  if (backend == "cmdstanr" && method == "mcmc" && return_stanfit) {
-    mod <- rstan::read_stan_csv(mod$output_files())
-    mod <- fix_cmdstanr_names(mod)
-  }
 
   # create measrfit object -----
   algorithm <- extract_algorithm(model = mod, pars = stan_pars, method = method)
@@ -155,6 +146,12 @@ measr_dcm <- function(data,
 
   # save and return object -----
   if (!is.null(file)) {
+    if (backend == "cmdstanr") {
+      ret_mod$model$save_output_files(
+        dir = fs::path_dir(file),
+        basename = fs::path_file(fs::path_ext_remove(file))
+      )
+    }
     saveRDS(ret_mod, file = file)
   }
   return(ret_mod)

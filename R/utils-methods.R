@@ -1,10 +1,6 @@
 get_mcmc_draws <- function(x, ndraws = NULL) {
   draw_matrix <- if (x$backend == "cmdstanr") {
-    if ("stanfit" %in% class(x$model)) {
-      posterior::as_draws_array(as.array(x$model, pars = c("log_Vc", "pi")))
-    } else {
-      x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
-    }
+    x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
   } else if (x$backend == "rstan") {
     posterior::as_draws_array(x$model) %>%
       posterior::subset_draws(variable = c("log_Vc", "pi"))

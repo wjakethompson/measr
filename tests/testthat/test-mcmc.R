@@ -7,7 +7,7 @@ out <- capture.output(
       resp_id = "respondent", item_id = "item", type = "lcdm",
       method = "mcmc", seed = 63277, backend = "cmdstanr",
       iter_sampling = 500, iter_warmup = 1000, chains = 2,
-      parallel_chains = 2, return_stanfit = FALSE,
+      parallel_chains = 2,
       prior = c(prior(uniform(-15, 15), class = "intercept"),
                 prior(uniform(0, 15), class = "maineffect"),
                 prior(uniform(-15, 15), class = "interaction")))
@@ -21,7 +21,7 @@ out <- capture.output(
       resp_id = "respondent", item_id = "item", type = "dina",
       method = "mcmc", seed = 63277, backend = "rstan",
       iter = 1500, warmup = 1000, chains = 2,
-      cores = 2, return_stanfit = FALSE,
+      cores = 2,
       prior = c(prior(beta(5, 17), class = "slip"),
                 prior(beta(5, 17), class = "guess")))
   )
