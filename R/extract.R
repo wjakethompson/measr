@@ -21,6 +21,7 @@ measr_extract <- function(model, ...) {
 #'   * `strc_param`: The estimated structural parameters. This is base rate of
 #'     membership in each class. This shows the class pattern and the estimated
 #'     proportion of respondents in each class.
+#'   * `prior`: The priors used when estimating the model.
 #'
 #' @return The extracted information. The specific structure will vary depending
 #'   on what is being extracted, but usually the returned object is a
@@ -37,7 +38,7 @@ measr_extract <- function(model, ...) {
 #' )
 #'
 #' extract(rstn_mdm_lcdm, "strc_param")
-measr_extract.measrdcm <- function(model, ..., what) {
+measr_extract.measrdcm <- function(model, what, ...) {
   out <- switch(
     what,
     item_param = {
@@ -77,6 +78,7 @@ measr_extract.measrdcm <- function(model, ..., what) {
         dplyr::left_join(profiles, by = "class_id") %>%
         dplyr::select("class", "estimate")
     },
+    prior = model$prior,
     rlang::abort(message = glue::glue("Cannot extract element `{what}`"))
   )
 

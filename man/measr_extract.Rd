@@ -7,7 +7,7 @@
 \usage{
 measr_extract(model, ...)
 
-\method{measr_extract}{measrdcm}(model, ..., what)
+\method{measr_extract}{measrdcm}(model, what, ...)
 }
 \arguments{
 \item{model}{The estimated to extract information from.}
@@ -36,6 +36,7 @@ parameter, the class of the parameter, and the estimated value.
 \item \code{strc_param}: The estimated structural parameters. This is base rate of
 membership in each class. This shows the class pattern and the estimated
 proportion of respondents in each class.
+\item \code{prior}: The priors used when estimating the model.
 }
 }
 \section{Methods (by class)}{
