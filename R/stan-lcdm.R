@@ -162,12 +162,13 @@ lcdm_script <- function(qmatrix, prior = NULL) {
       class = dplyr::case_when(.data$param_level == 0 ~ "intercept",
                                .data$param_level == 1 ~ "maineffect",
                                .data$param_level > 1 ~ "interaction")) %>%
-    dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef")) %>%
+    dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef"),
+                     multiple = "all") %>%
     dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
                        dplyr::filter(is.na(.data$coef)) %>%
                        dplyr::select(-"coef"),
-                     by = c("class")) %>%
+                     by = c("class"), multiple = "all") %>%
     dplyr::rename(class_def = "prior_def") %>%
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
