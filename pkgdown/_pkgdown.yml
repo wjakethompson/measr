@@ -66,6 +66,7 @@ reference:
   - is.measrprior
   - c.measrprior
   - default_dcm_priors
+  - get_parameters
 - subtitle: Model fitting
   desc: Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
 - contents:
