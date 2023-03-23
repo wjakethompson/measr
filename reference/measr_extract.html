@@ -20,7 +20,10 @@ Extract components of an estimated diagnostic classification model"><meta proper
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/measr.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
@@ -91,10 +94,21 @@ on what is being extracted, but usually the returned object is a
     <p>For diagnostic classification models, we can extract the following
 information:</p><ul><li><p><code>item_param</code>: The estimated item parameters. This shows the name of the
 parameter, the class of the parameter, and the estimated value.</p></li>
-<li><p><code>strc_param</code>: The estimated structural parameters. This is base rate of
-membership in each class. This shows the class pattern and the estimated
-proportion of respondents in each class.</p></li>
+<li><p><code>strc_param</code>: The estimated structural parameters. This is the base rate
+of membership in each class. This shows the class pattern and the
+estimated proportion of respondents in each class.</p></li>
 <li><p><code>prior</code>: The priors used when estimating the model.</p></li>
+<li><p><code>classes</code>: The possible classes or profile patterns. This will show the
+class label (i.e., the pattern of proficiency) and the attributes
+included in each class.</p></li>
+<li><p><code>class_prob</code>: The probability that each respondent belongs to class
+(i.e., has the given pattern of proficiency).</p></li>
+<li><p><code>attribute_prob</code>: The proficiency probability for each respondent and
+attribute.</p></li>
+<li><p><code>classification_accuracy</code>: The classification accuracy and consistency
+for each attribute, using the metrics described by Johnson &amp; Sinharay
+(2018). Reliability information must first be added to the model using
+<code><a href="model_evaluation.html">add_reliability()</a></code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="methods-by-class-">Methods (by class)<a class="anchor" aria-label="anchor" href="#methods-by-class-"></a></h2>
@@ -102,6 +116,13 @@ proportion of respondents in each class.</p></li>
 <ul><li><p><code>measr_extract(measrdcm)</code>: Extract components of an estimated diagnostic
 classification model.</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Johnson, M. S., &amp; Sinharay, S. (2018). Measures of agreement to
+assess attribute-level classification accuracy and consistency for
+cognitive diagnostic assessments. <em>Journal of Educational Measurement,
+55</em>(4), 635-664. <a href="https://doi.org/10.1111/jedm.12196" class="external-link">doi:10.1111/jedm.12196</a></p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
