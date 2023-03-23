@@ -69,7 +69,7 @@ create_stan_gqs_params <- function(backend, draws) {
 
 create_stan_function <- function(backend, method, code, pars, silent = 1) {
   if (backend == "rstan") {
-    out <- capture.output(
+    out <- capture.output( #nolint
       comp_mod <- eval_silent(
         rstan::stan_model(model_code = code$stancode),
         type = "message", try = TRUE, silent = silent >= 2
