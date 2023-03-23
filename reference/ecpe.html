@@ -33,6 +33,12 @@ hierarchical diagnostic classification model (HDCM), respectively."><meta proper
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+  </div>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -80,10 +86,10 @@ response data with 2,922 rows and 29 variables.</p><ul><li><p><code>resp_id</cod
 which skills are measured by each ECPE item. This section of the ECPE
 contains 28 items measuring 3 skills. The <code>ecpe_qmatrix</code> correspondingly is
 made up of 28 rows and 4 variables.</p><ul><li><p><code>item_id</code>: Item identifier, corresponds to <code>E1</code>-<code>E28</code> in <code>ecpe_data</code></p></li>
-<li><p><code>skill1</code>-<code>skill3</code>: Dichotomous indicator for whether or not the skill is
-measured by each item. A value of <code>1</code> indicates the skill is measured by
-the item and a value of <code>0</code> indicates the skill is not measured by the
-item.</p></li>
+<li><p><code>morphosyntactic</code>, <code>cohesive</code>, and <code>lexical</code>: Dichotomous indicator for
+whether or not the skill is measured by each item. A value of <code>1</code> indicates
+the skill is measured by the item and a value of <code>0</code> indicates the skill is
+not measured by the item.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

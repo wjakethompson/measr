@@ -25,6 +25,12 @@ relevant information."><meta property="og:image" content="https://measr.info/ref
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+  </div>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -88,8 +94,9 @@ priors used in the model.</p></dd>
 
 <dt><code>model</code></dt>
 <dd><p>The fitted Stan model. This will object of class
-<a href="https://mc-stan.org/rstan/reference/stanfit-class.html" class="external-link">rstan::stanfit</a> unless <code>backend == "cmdstanr"</code> and
-<code>return_stanfit = FALSE</code> was specified when fitting the model.</p></dd>
+<a href="https://mc-stan.org/rstan/reference/stanfit-class.html" class="external-link">rstan::stanfit</a> if <code>backend = "rstan"</code> and
+<a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">cmdstanr::CmdStanMCMC</a> if <code>backend = "cmdstanr"</code> was specified when
+fitting the model.</p></dd>
 
 
 <dt><code>model_fit</code></dt>

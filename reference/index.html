@@ -21,6 +21,12 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+  </div>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -97,7 +103,12 @@
           
           <code><a href="default_dcm_priors.html">default_dcm_priors()</a></code> 
         </dt>
-        <dd>Default priors for the loglinear diagnostic classification model</dd>
+        <dd>Default priors for diagnostic classification models</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_parameters.html">get_parameters()</a></code> 
+        </dt>
+        <dd>Get a list of possible parameters</dd>
       </dl></div><div class="section level2">
       
       <h3 id="model-fitting">Model fitting<a class="anchor" aria-label="anchor" href="#model-fitting"></a></h3>
@@ -143,8 +154,8 @@
         <dd>Estimate the reliability of psychometric models</dd>
       </dl></div><div class="section level2">
       
-      <h3 id="model-comparisons">Model Comparisons<a class="anchor" aria-label="anchor" href="#model-comparisons"></a></h3>
-      <p class="section-desc"></p><p>Assess the relative fit of two competing models.</p>
+      <h3 id="model-fit">Model fit<a class="anchor" aria-label="anchor" href="#model-fit"></a></h3>
+      <p class="section-desc"></p><p>Evaluate the fit of the estimated model to the observed data.</p>
 
       
     </div><div id="" class="section level2">
@@ -154,10 +165,32 @@
 
       <dl><dt>
           
-          <code><a href="add_criterion.html">add_criterion()</a></code> 
+          <code><a href="https://rdrr.io/pkg/dcm2/man/fit_m2.html" class="external-link">fit_m2()</a></code> 
         </dt>
-        <dd>Add relative model fit criteria to model objects</dd>
+        <dd>Model Fit M2 Calculations (from dcm2)</dd>
       </dl><dl><dt>
+          
+          <code><a href="fit_m2.html">fit_m2(<i>&lt;measrdcm&gt;</i>)</a></code> 
+        </dt>
+        <dd>Estimate the M<sub>2</sub> fit statistic for
+diagnostic classification models</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fit_ppmc.html">fit_ppmc()</a></code> 
+        </dt>
+        <dd>Posterior predictive model checks for assessing model fit</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="model-comparisons">Model comparisons<a class="anchor" aria-label="anchor" href="#model-comparisons"></a></h3>
+      <p class="section-desc"></p><p>Assess the relative fit of two competing models.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="loo_compare.measrfit.html">loo_compare(<i>&lt;measrfit&gt;</i>)</a></code> 
         </dt>
@@ -173,9 +206,9 @@
         </dt>
         <dd>Widely applicable information criterion (WAIC)</dd>
       </dl></div><div class="section level2">
-      <h2 id="model-applications">Model applications<a class="anchor" aria-label="anchor" href="#model-applications"></a></h2>
       
-      <p class="section-desc"></p><p>View and apply an estimated model to new data.</p>
+      <h3 id="add-evaluations-to-model-objects">Add evaluations to model objects<a class="anchor" aria-label="anchor" href="#add-evaluations-to-model-objects"></a></h3>
+      <p class="section-desc"></p><p>Add reliability, model fit, and model comparison information to an estimated model object.</p>
 
       
     </div><div id="" class="section level2">
@@ -184,6 +217,27 @@
       
 
       <dl><dt>
+          
+          <code><a href="model_evaluation.html">add_criterion()</a></code> <code><a href="model_evaluation.html">add_reliability()</a></code> <code><a href="model_evaluation.html">add_fit()</a></code> 
+        </dt>
+        <dd>Add model evaluation metrics model objects</dd>
+      </dl></div><div class="section level2">
+      <h2 id="model-applications">Model applications<a class="anchor" aria-label="anchor" href="#model-applications"></a></h2>
+      
+      <p class="section-desc"></p><p>View and use an estimated model.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="measr_extract.html">measr_extract()</a></code> 
+        </dt>
+        <dd>Extract components of a <code>measrfit</code> object.</dd>
+      </dl><dl><dt>
           
           <code><a href="predict.measrdcm.html">predict(<i>&lt;measrdcm&gt;</i>)</a></code> 
         </dt>
@@ -204,6 +258,16 @@
           <code><a href="create_profiles.html">create_profiles()</a></code> 
         </dt>
         <dd>Generate mastery profiles</dd>
+      </dl></div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="measr_examples.html">measr_examples()</a></code> 
+        </dt>
+        <dd>Determine if code is executed interactively or in pkgdown</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

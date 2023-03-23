@@ -7,19 +7,19 @@
     <loc>https://measr.info/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>https://measr.info/LICENSE-text.html</loc>
+    <loc>https://measr.info/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://measr.info/LICENSE.html</loc>
+    <loc>https://measr.info/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/articles/model-estimation.html</loc>
   </url>
   <url>
     <loc>https://measr.info/authors.html</loc>
   </url>
   <url>
     <loc>https://measr.info/index.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/reference/add_criterion.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/c.measrprior.html</loc>
@@ -32,6 +32,15 @@
   </url>
   <url>
     <loc>https://measr.info/reference/ecpe.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/fit_m2.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/fit_ppmc.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/get_parameters.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/index.html</loc>
@@ -55,10 +64,19 @@
     <loc>https://measr.info/reference/measr_dcm.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/reference/measr_examples.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/measr_extract.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/reference/measrfit-class.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/measrprior.html</loc>
+  </url>
+  <url>
+    <loc>https://measr.info/reference/model_evaluation.html</loc>
   </url>
   <url>
     <loc>https://measr.info/reference/pipe.html</loc>

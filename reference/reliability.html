@@ -43,6 +43,12 @@ reliability."><meta property="og:image" content="https://measr.info/reference/fi
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+  </div>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -136,6 +142,43 @@ models. <em>Journal of Educational and Behavioral Statistics, 45</em>(1), 5-31.
 <a href="https://doi.org/10.3102/1076998619864550" class="external-link">https://doi.org/10.3102/1076998619864550</a></p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">rstn_mdm_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="measr_dcm.html">measr_dcm</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">mdm_data</span>, missing <span class="op">=</span> <span class="cn">NA</span>, qmatrix <span class="op">=</span> <span class="va">mdm_qmatrix</span>,</span></span>
+<span class="r-in"><span>  resp_id <span class="op">=</span> <span class="st">"respondent"</span>, item_id <span class="op">=</span> <span class="st">"item"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span>,</span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="st">"optim"</span>, seed <span class="op">=</span> <span class="fl">63277</span>, backend <span class="op">=</span> <span class="st">"rstan"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">reliability</span><span class="op">(</span><span class="va">rstn_mdm_lcdm</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> For i = 1 j = 1  A cell entry of 0 was replaced with correct =  0.5.  Check your data!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pattern_reliability</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       p_a       p_c </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.8860526 0.8600205 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $map_reliability</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $map_reliability$accuracy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   attribute        acc lambda_a kappa_a youden_a tetra_a  tp_a  tn_a</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> multiplication 0.886    0.657   0.339    0.769   0.930 0.880 0.889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $map_reliability$consistency</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   attribute      consist lambda_c kappa_c youden_c tetra_c  tp_c  tn_c gammak</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> multiplication       1        1   0.654        1  0.030<span style="text-decoration: underline;">4</span>     1     1  0.835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: pc_prime &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $eap_reliability</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   attribute      rho_pf rho_bs rho_i rho_tb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> multiplication   1.35  0.629 0.525  0.842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

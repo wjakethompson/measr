@@ -1,8 +1,9 @@
 pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
-articles: {}
-last_built: 2023-03-05T23:58Z
+articles:
+  model-estimation: model-estimation.html
+last_built: 2023-03-23T17:14Z
 urls:
   reference: https://measr.info/reference
   article: https://measr.info/articles
