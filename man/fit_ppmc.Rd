@@ -110,19 +110,19 @@ fit_ppmc(cmds_mdm_dina, model_fit = "raw_score", item_fit = NULL)
 Park, J. Y., Johnson, M. S., Lee, Y-S. (2015). Posterior
 predictive model checks for cognitive diagnostic models. \emph{International
 Journal of Quantitative Research in Education, 2}(3-4), 244-264.
-\url{https://doi.org/10.1504/IJQRE.2015.071738}
+\doi{10.1504/IJQRE.2015.071738}
 
 Sinharay, S., & Almond, R. G. (2007). Assessing fit of cognitive
 diagnostic models. \emph{Educational and Psychological Measurement, 67}(2),
-239-257. \url{https://doi.org/10.1177/0013164406292025}
+239-257. \doi{10.1177/0013164406292025}
 
 Sinharay, S., Johnson, M. S., & Stern, H. S. (2006). Posterior
 predictive assessment of item response theory models. \emph{Applied
 Psychological Measurement, 30}(4), 298-321.
-\url{https://doi.org/10.1177/0146621605285517}
+\doi{10.1177/0146621605285517}
 
 Thompson, W. J. (2019). \emph{Bayesian psychometrics for diagnostic
 assessments: A proof of concept} (Research Report No. 19-01). University
 of Kansas; Accessible Teaching, Learning, and Assessment Systems.
-\url{https://doi.org/10.35542/osf.io/jzqs8}
+\doi{10.35542/osf.io/jzqs8}
 }

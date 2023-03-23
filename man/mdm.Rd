@@ -39,6 +39,6 @@ an integer multiplication problem.
 \references{
 MacReady, G. B., & Dayton, C. M. (1977). The use of probabilistic
 models in the assessment of mastery. \emph{Journal of Educational Statistics,
-2}(2), 99-120. \url{https://doi.org/10.2307/1164802}
+2}(2), 99-120. \doi{10.2307/1164802}
 }
 \keyword{datasets}

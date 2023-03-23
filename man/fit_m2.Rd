@@ -43,10 +43,10 @@ fit_m2(rstn_mdm_lcdm)
 Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
 Limited-information goodness-of-fit testing of diagnostic classification
 item response models. \emph{British Journal of Mathematical and Statistical
-Psychology, 69}(3), 225-252. \url{https://doi.org/10.1111/bmsp.12074}
+Psychology, 69}(3), 225-252. \doi{10.1111/bmsp.12074}
 
 Liu, Y., Tian, W., & Xin, T. (2016). An application of
 \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic to evaluate the fit
 of cognitive diagnostic models. \emph{Journal of Educational and Behavioral
-Statistics, 41}(1), 3-26. \url{https://doi.org/10.3102/1076998615621293}
+Statistics, 41}(1), 3-26. \doi{10.3102/1076998615621293}
 }

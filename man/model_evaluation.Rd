@@ -113,54 +113,54 @@ cmds_mdm_dina <- add_fit(cmd_mdm_dina, method = "m2")
 Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
 classification consistency and accuracy for cognitive diagnostic
 assessment. \emph{Journal of Educational Measurement, 49}(1), 19-38.
-\url{https://doi.org/10.1111/j.1745-3984.2011.00158.x}
+\doi{10.1111/j.1745-3984.2011.00158.x}
 
 Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
 Limited-information goodness-of-fit testing of diagnostic classification
 item response models. \emph{British Journal of Mathematical and Statistical
-Psychology, 69}(3), 225-252. \url{https://doi.org/10.1111/bmsp.12074}
+Psychology, 69}(3), 225-252. \doi{10.1111/bmsp.12074}
 
 Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
 assess attribute-level classification accuracy and consistency for
 cognitive diagnostic assessments. \emph{Journal of Educational Measurement,
-55}(4), 635-664. \url{https://doi.org/10.1111/jedm.12196}
+55}(4), 635-664. \doi{10.1111/jedm.12196}
 
 Johnson, M. S., & Sinharay, S. (2020). The reliability of the
 posterior probability of skill attainment in diagnostic classification
 models. \emph{Journal of Educational and Behavioral Statistics, 45}(1), 5-31.
-\url{https://doi.org/10.3102/1076998619864550}
+\doi{10.3102/1076998619864550}
 
 Liu, Y., Tian, W., & Xin, T. (2016). An application of
 \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic to evaluate the fit
 of cognitive diagnostic models. \emph{Journal of Educational and Behavioral
-Statistics, 41}(1), 3-26. \url{https://doi.org/10.3102/1076998615621293}
+Statistics, 41}(1), 3-26. \doi{10.3102/1076998615621293}
 
 Park, J. Y., Johnson, M. S., Lee, Y-S. (2015). Posterior
 predictive model checks for cognitive diagnostic models. \emph{International
 Journal of Quantitative Research in Education, 2}(3-4), 244-264.
-\url{https://doi.org/10.1504/IJQRE.2015.071738}
+\doi{10.1504/IJQRE.2015.071738}
 
 Sinharay, S., & Almond, R. G. (2007). Assessing fit of cognitive
 diagnostic models. \emph{Educational and Psychological Measurement, 67}(2),
-239-257. \url{https://doi.org/10.1177/0013164406292025}
+239-257. \doi{10.1177/0013164406292025}
 
 Sinharay, S., Johnson, M. S., & Stern, H. S. (2006). Posterior
 predictive assessment of item response theory models. \emph{Applied
 Psychological Measurement, 30}(4), 298-321.
-\url{https://doi.org/10.1177/0146621605285517}
+\doi{10.1177/0146621605285517}
 
 Thompson, W. J. (2019). \emph{Bayesian psychometrics for diagnostic
 assessments: A proof of concept} (Research Report No. 19-01). University
 of Kansas; Accessible Teaching, Learning, and Assessment Systems.
-\url{https://doi.org/10.35542/osf.io/jzqs8}
+\doi{10.35542/osf.io/jzqs8}
 
 Vehtari, A., Gelman, A., & Gabry, J. (2017). Practical Bayesian
 model evaluation using leave-one-out cross-validation and WAIC.
 \emph{Statistics and Computing, 27}(5), 1413-1432.
-\url{https://doi.org/10.1007/s11222-016-9696-4}
+\doi{10.1007/s11222-016-9696-4}
 
 Watanabe, S. (2010). Asymptotic equivalence of Bayes cross
 validation and widely applicable information criterion in singular learning
 theory. \emph{Journal of Machine Learning Research, 11}(116), 3571-3594.
-\url{http://jmlr.org/papers/v11/watanabe10a.html}
+\url{https://jmlr.org/papers/v11/watanabe10a.html}
 }

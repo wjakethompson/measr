@@ -41,15 +41,15 @@ reliability <- function(model) {
 #' @references Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
 #'   classification consistency and accuracy for cognitive diagnostic
 #'   assessment. *Journal of Educational Measurement, 49*(1), 19-38.
-#'   \url{https://doi.org/10.1111/j.1745-3984.2011.00158.x}
+#'   \doi{10.1111/j.1745-3984.2011.00158.x}
 #' @references Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
 #'   assess attribute-level classification accuracy and consistency for
 #'   cognitive diagnostic assessments. *Journal of Educational Measurement,
-#'   55*(4), 635-664. \url{https://doi.org/10.1111/jedm.12196}
+#'   55*(4), 635-664. \doi{10.1111/jedm.12196}
 #' @references Johnson, M. S., & Sinharay, S. (2020). The reliability of the
 #'   posterior probability of skill attainment in diagnostic classification
 #'   models. *Journal of Educational and Behavioral Statistics, 45*(1), 5-31.
-#'   \url{https://doi.org/10.3102/1076998619864550}
+#'   \doi{10.3102/1076998619864550}
 #'
 #' @describeIn reliability Reliability measures for diagnostic classification
 #'   models.
