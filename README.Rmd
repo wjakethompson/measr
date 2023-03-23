@@ -17,11 +17,10 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![CRAN status](https://www.r-pkg.org/badges/version/measr)](https://CRAN.R-project.org/package=measr)
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![License](https://img.shields.io/badge/License-GPL_v3-blue.svg)
 
 [![R-CMD-check](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/wjakethompson/measr/branch/main/graph/badge.svg?token=TECvfoOYHh)](https://codecov.io/gh/wjakethompson/measr)
+[![codecov](https://codecov.io/gh/wjakethompson/measr/branch/main/graph/badge.svg?token=JtF3xtGt6g)](https://app.codecov.io/gh/wjakethompson/measr)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/b82caf01-0611-4f8b-bbca-5b89b5a80791/deploy-status)](https://app.netlify.com/sites/measr/deploys)
 
 [![Signed
