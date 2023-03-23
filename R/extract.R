@@ -112,13 +112,13 @@ measr_extract.measrdcm <- function(model, what, ...) {
         dplyr::select("class", dplyr::everything(), -"class_id")
     },
     class_prob = {
-      preds <- predict(model)
+      preds <- stats::predict(model)
       preds$class_probabilities %>%
         dplyr::select(!!model$data$resp_id, "class", "mean") %>%
         tidyr::pivot_wider(names_from = "class", values_from = "mean")
     },
     attribute_prob = {
-      preds <- predict(model)
+      preds <- stats::predict(model)
       preds$attribute_probabilities %>%
         dplyr::select(!!model$data$resp_id, "attribute", "mean") %>%
         tidyr::pivot_wider(names_from = "attribute", values_from = "mean")

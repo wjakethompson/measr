@@ -67,11 +67,11 @@ test_that("ecpe probabilities are accurate", {
   # extract works
   expect_equal(measr_extract(cmds_ecpe_lcdm, "class_prob"),
                ecpe_preds$class_probabilities %>%
-                 dplyr::select("respondent", "class", "mean") %>%
+                 dplyr::select("resp_id", "class", "mean") %>%
                  tidyr::pivot_wider(names_from = "class", values_from = "mean"))
   expect_equal(measr_extract(cmds_ecpe_lcdm, "attribute_prob"),
                ecpe_preds$attribute_prob %>%
-                 dplyr::select("respondent", "attribute", "mean") %>%
+                 dplyr::select("resp_id", "attribute", "mean") %>%
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "mean"))
 
