@@ -52,21 +52,28 @@ measr_extract.measrdcm <- function(model, what, ...) {
       draws <- as_draws(model) %>%
         posterior::subset_draws(variable = dplyr::pull(params, "coef")) %>%
         posterior::as_draws_rvars() %>%
-        tibble::as_tibble() %>%
-        tidyr::pivot_longer(cols = dplyr::everything(),
-                            names_to = "coef", values_to = "estimate")
+        tibble::as_tibble()
 
-      dplyr::left_join(params, draws, by = "coef")
+
+      if (model$type %in% c("lcdm")) {
+        draws <- draws %>%
+          tidyr::pivot_longer(cols = dplyr::everything(),
+                              names_to = "coef", values_to = "estimate")
+        dplyr::left_join(params, draws, by = c("coef")) %>%
+          dplyr::rename(!!model$dat$item_id := "item")
+      } else if (model$type %in% c("dina", "dino")) {
+        draws <- draws %>%
+          dplyr::mutate(item = items$item) %>%
+          tidyr::pivot_longer(cols = -"item",
+                              names_to = "coef", values_to = "estimate")
+
+        dplyr::left_join(params, draws, by = c("item", "class" = "coef"),
+                         relationship = "one-to-one") %>%
+          dplyr::rename(!!model$dat$item_id := "item")
+      }
     },
     strc_param = {
-      profiles <- create_profiles(ncol(model$data$qmatrix) - 1) %>%
-        tibble::rowid_to_column(var = "class_id") %>%
-        tidyr::pivot_longer(cols = -"class_id") %>%
-        dplyr::summarize(
-          class = paste0("[", paste(.data$value, collapse = ","), "]"),
-          .by = "class_id"
-        ) %>%
-        dplyr::arrange("class_id")
+      profiles <- profile_labels(ncol(model$data$qmatrix) - 1)
 
       as_draws(model) %>%
         posterior::subset_draws(variable = "Vc") %>%
