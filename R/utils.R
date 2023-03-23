@@ -30,6 +30,17 @@ create_profiles <- function(attributes) {
     tibble::as_tibble()
 }
 
+profile_labels <- function(attributes) {
+  create_profiles(attributes) %>%
+    tibble::rowid_to_column(var = "class_id") %>%
+    tidyr::pivot_longer(cols = -"class_id") %>%
+    dplyr::summarize(
+      class = paste0("[", paste(.data$value, collapse = ","), "]"),
+      .by = "class_id"
+    ) %>%
+    dplyr::arrange("class_id")
+}
+
 #' Get a list of possible parameters
 #'
 #' When specifying prior distributions, it is often useful to see which

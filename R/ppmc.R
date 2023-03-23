@@ -283,14 +283,7 @@ ppmc_item_fit <- function(model, post_data, attr, resp_prob, pi_draws, probs,
 
 ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
                                    return_draws) {
-  all_profiles <- create_profiles(attributes = attr) %>%
-    tibble::rowid_to_column(var = "class_id") %>%
-    tidyr::pivot_longer(cols = -"class_id") %>%
-    dplyr::summarize(
-      class = paste0("[", paste(.data$value, collapse = ","), "]"),
-      .by = "class_id"
-    ) %>%
-    dplyr::arrange("class_id")
+  all_profiles <- profile_labels(attributes = attr)
 
   obs_class <- resp_prob %>%
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw", "resp_id"),

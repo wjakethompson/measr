@@ -30,14 +30,7 @@ get_optim_draws <- function(x) {
 }
 
 extract_class_probs <- function(model, attr) {
-  all_profiles <- create_profiles(attributes = attr) %>%
-    tibble::rowid_to_column(var = "class_id") %>%
-    tidyr::pivot_longer(cols = -"class_id") %>%
-    dplyr::summarize(
-      class = paste0("[", paste(.data$value, collapse = ","), "]"),
-      .by = "class_id"
-    ) %>%
-    dplyr::arrange("class_id")
+  all_profiles <- profile_labels(attributes = attr)
 
   mastery <- posterior::as_draws_df(model) %>%
     tibble::as_tibble() %>%
