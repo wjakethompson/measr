@@ -1,7 +1,5 @@
 ---
 title: "Estimating diagnostic classification models"
-author: "W. Jake Thompson"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bib/references.bib
 csl: bib/apa.csl
