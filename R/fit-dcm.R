@@ -147,10 +147,7 @@ measr_dcm <- function(data,
   # save and return object -----
   if (!is.null(file)) {
     if (backend == "cmdstanr") {
-      ret_mod$model$save_output_files(
-        dir = fs::path_dir(file),
-        basename = fs::path_file(fs::path_ext_remove(file))
-      )
+      ret_mod$model$save_object(gsub("\\.rds", "-cmdstanr.rds", file))
     }
     saveRDS(ret_mod, file = file)
   }
