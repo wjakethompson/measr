@@ -49,11 +49,9 @@ dina_script <- function(qmatrix, prior = NULL) {
     c(prior, default_dcm_priors(type = "dina"), replace = TRUE)
   }
 
-  all_priors <- tibble::tibble(item_id = rep(seq_len(nrow(qmatrix)), each = 2),
-                               class = rep(c("slip", "guess"),
-                                           times = nrow(qmatrix))) %>%
-    dplyr::mutate(param_name = glue::glue("{.data$class}[{.data$item_id}]")) %>%
-    dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef")) %>%
+  all_priors <- get_parameters(qmatrix = qmatrix, item_id = NULL,
+                               rename_att = TRUE, type = "dina") %>%
+    dplyr::left_join(mod_prior, by = c("class", "coef")) %>%
     dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
                        dplyr::filter(is.na(.data$coef)) %>%
@@ -63,7 +61,7 @@ dina_script <- function(qmatrix, prior = NULL) {
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
                                is.na(.data$coef_def) ~ .data$class_def),
-      prior_def = glue::glue("{param_name} ~ {prior};")) %>%
+      prior_def = glue::glue("{coef} ~ {prior};")) %>%
     dplyr::pull("prior_def")
 
   model_block <- glue::glue(

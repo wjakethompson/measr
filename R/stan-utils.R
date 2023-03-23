@@ -59,24 +59,12 @@ create_stan_params <- function(backend, method, ...) {
 
 create_stan_gqs_params <- function(backend, draws) {
   stan_pars <- if (backend == "rstan") {
-    list(draws = draws)
+    list(draws = posterior::as_draws_matrix(draws))
   } else if (backend == "cmdstanr") {
     list(fitted_params = draws)
   }
 
   return(stan_pars)
-}
-
-# canonicalize Stan model file in accordance with the current Stan version
-canonicalize_cmdstan <- function(stan_file, overwrite_file = TRUE) {
-  cmdstan_mod <- cmdstanr::cmdstan_model(stan_file, compile = FALSE)
-  out <- utils::capture.output(
-    cmdstan_mod$format(
-      canonicalize = list("deprecations", "braces", "parentheses"),
-      overwrite_file = overwrite_file, backup = FALSE
-    )
-  )
-  paste0(out, collapse = "\n")
 }
 
 create_stan_function <- function(backend, method, code, pars, silent = 1) {
@@ -125,7 +113,8 @@ model_matrix_name_repair <- function(x) {
 one_down_params <- function(x, item) {
   all_atts <- strsplit(x, split = "__")[[1]]
   if (length(all_atts) <= 1) return("")
-  att_combos <- combn(all_atts, m = length(all_atts) - 1, simplify = FALSE)
+  att_combos <- utils::combn(all_atts, m = length(all_atts) - 1,
+                             simplify = FALSE)
 
   paste("l", item, "_", length(all_atts) - 1,
         sapply(att_combos, paste, collapse = ""), sep = "", collapse = ",")

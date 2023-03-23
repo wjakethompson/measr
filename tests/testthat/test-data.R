@@ -15,7 +15,7 @@ test_that("ECPE data follows expected structure", {
   expect_identical(nrow(ecpe_qmatrix), 28L)
   expect_identical(nrow(ecpe_qmatrix), ncol(ecpe_data) - 1L)
   expect_identical(colnames(ecpe_qmatrix),
-                   c("item_id", paste0("skill", 1:3)))
+                   c("item_id", "morphosyntactic", "cohesive", "lexical"))
   expect_identical(ecpe_qmatrix$item_id, paste0("E", 1:28))
   expect_identical(ecpe_qmatrix$item_id, colnames(ecpe_data)[2:29])
 

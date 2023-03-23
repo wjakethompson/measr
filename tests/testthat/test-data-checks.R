@@ -16,13 +16,28 @@ test_that("check_model", {
   expect_equal(err$arg, "check1")
   expect_match(err$message, "object with class newclass")
 
+  test_obj <- list(list(1, 2, 3), list(4, 5, 6))
+  class(test_obj[[1]]) <- "newclass"
+  err <- rlang::catch_cnd(check_model(test_obj, "newclass", name = "check1",
+                                      list = TRUE))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "only contain objects with class newclass")
+
   test_obj <- list(3, 4, 5, c(6, 7, 8))
   class(test_obj) <- "newclass"
   expect_equal(check_model(test_obj, "newclass", name = "check1"), test_obj)
+
+  test_obj <- list(list(1, 2, 3), list(4, 5, 6))
+  class(test_obj[[1]]) <- "newclass"
+  class(test_obj[[2]]) <- "newclass"
+  expect_equal(lapply(test_obj, check_model, required_class = "newclass",
+                      name = "check1", list = TRUE),
+               test_obj)
 })
 
 test_that("check_data", {
-  dat <- combn(letters, m = 3) %>%
+  dat <- utils::combn(letters, m = 3) %>%
     as.data.frame() %>%
     tidyr::pivot_longer(cols = everything()) %>%
     dplyr::group_by(name) %>%
@@ -108,6 +123,41 @@ test_that("check_data", {
                check_missing)
 })
 
+test_that("check_newdata", {
+  model <- list(data = list(data = data.frame(item_id = paste0("Item_", 1:10))))
+  model$data$data$item_id <- factor(model$data$data$item_id,
+                                    levels = model$data$data$item_id)
+
+  test_dat <- data.frame(resp_id = sample(mdm_data$respondent, size = 10),
+                         Item_1 = sample(0:1, size = 10, replace = TRUE),
+                         Item_0 = sample(0:1, size = 10, replace = TRUE),
+                         Item_3 = sample(0:1, size = 10, replace = TRUE),
+                         Item_5 = sample(0:1, size = 10, replace = TRUE))
+  expect_error(check_newdata(test_dat, name = "check1", identifier = "resp_id",
+                             model = model, missing = NA),
+               regexp = "New items found in `newdata`: Item_0")
+
+  test_dat <- data.frame(resp_id = sample(mdm_data$respondent, size = 10),
+                         Item_1 = sample(0:1, size = 10, replace = TRUE),
+                         Item_9 = sample(0:1, size = 10, replace = TRUE),
+                         Item_3 = sample(0:1, size = 10, replace = TRUE),
+                         Item_5 = sample(0:1, size = 10, replace = TRUE))
+  check_dat <- test_dat %>%
+    dplyr::mutate(resp_id = factor(.data$resp_id,
+                                   levels = unique(test_dat$resp_id))) %>%
+    tidyr::pivot_longer(cols = -"resp_id", names_to = "item_id",
+                        values_to = "score") %>%
+    dplyr::mutate(
+      item_id = factor(.data$item_id,
+                       levels = levels(model$data$data$item_id))
+      ) %>%
+    dplyr::arrange(.data$resp_id, .data$item_id)
+  new_data <- check_newdata(test_dat, name = "check1", identifier = "resp_id",
+                            model = model, missing = NA)
+  expect_equal(levels(new_data$item_id), levels(model$data$data$item_id))
+  expect_identical(new_data, check_dat)
+})
+
 test_that("check qmatrix", {
   err <- rlang::catch_cnd(check_qmatrix("a", identifier = NULL,
                                         item_levels = NA, name = "check1"))
@@ -169,33 +219,61 @@ test_that("check qmatrix", {
                             att1 = c(0L, 1L, 1L, 0L, 1L),
                             att2 = c(1L, 0L, 0L, 1L, 0L),
                             att3 = c(1L, 1L, 1L, 0L, 0L))
-  test3_q <- data.frame(item = paste0("I_", 1:5),
+  test3_q <- tibble::tibble(att1 = c(0L, 1L, 1L, 0L, 1L),
+                            att2 = c(1L, 0L, 0L, 1L, 0L),
+                            att3 = c(1L, 1L, 1L, 0L, 0L))
+  test4_q <- data.frame(item = paste0("I_", 1:5),
                         att1 = c(0, 1, 1, 0, 1),
                         att2 = c(1, 0, 0, 1, 0),
                         att3 = c(1, 1, 1, 0, 0))
-  test4_q <- data.frame(item = paste0("I_", 1:5),
+  test5_q <- data.frame(item = paste0("I_", 1:5),
                         att1 = c(0L, 1L, 1L, 0L, 1L),
+                        att2 = c(1L, 0L, 0L, 1L, 0L),
+                        att3 = c(1L, 1L, 1L, 0L, 0L))
+  test6_q <- data.frame(att1 = c(0L, 1L, 1L, 0L, 1L),
                         att2 = c(1L, 0L, 0L, 1L, 0L),
                         att3 = c(1L, 1L, 1L, 0L, 0L))
   check_q <- tibble::tibble(item_id = factor(paste0("I_", 1:5)),
                             att1 = c(0L, 1L, 1L, 0L, 1L),
                             att2 = c(1L, 0L, 0L, 1L, 0L),
                             att3 = c(1L, 1L, 1L, 0L, 0L))
+  check_q_null <- tibble::tibble(item_id = factor(paste0(1:5)),
+                                 att1 = c(0L, 1L, 1L, 0L, 1L),
+                                 att2 = c(1L, 0L, 0L, 1L, 0L),
+                                 att3 = c(1L, 1L, 1L, 0L, 0L))
   expect_identical(check_qmatrix(test1_q, identifier = "item",
                                  item_levels = paste0("I_", 1:5),
                                  name = "check1"), check_q)
   expect_identical(check_qmatrix(test2_q, identifier = "item",
                                  item_levels = paste0("I_", 1:5),
                                  name = "check1"), check_q)
-  expect_identical(check_qmatrix(test3_q, identifier = "item",
+  expect_identical(check_qmatrix(test3_q, identifier = NULL,
                                  item_levels = paste0("I_", 1:5),
                                  name = "check1"), check_q)
   expect_identical(check_qmatrix(test4_q, identifier = "item",
                                  item_levels = paste0("I_", 1:5),
                                  name = "check1"), check_q)
+  expect_identical(check_qmatrix(test5_q, identifier = "item",
+                                 item_levels = paste0("I_", 1:5),
+                                 name = "check1"), check_q)
+  expect_identical(check_qmatrix(test6_q, identifier = NULL,
+                                 item_levels = paste0("I_", 1:5),
+                                 name = "check1"), check_q)
   expect_identical(check_qmatrix(check_q, identifier = "item_id",
                                  item_levels = paste0("I_", 1:5),
                                  name = "check1"), check_q)
+  expect_identical(check_qmatrix(test1_q, identifier = "item",
+                                 item_levels = NULL,
+                                 name = "check1"), check_q)
+  expect_identical(check_qmatrix(test4_q, identifier = "item",
+                                 item_levels = NULL,
+                                 name = "check1"), check_q)
+  expect_identical(check_qmatrix(test3_q, identifier = NULL,
+                                 item_levels = NULL,
+                                 name = "check1"), check_q_null)
+  expect_identical(check_qmatrix(test6_q, identifier = NULL,
+                                 item_levels = NULL,
+                                 name = "check1"), check_q_null)
 })
 
 test_that("check_prior", {
@@ -281,6 +359,11 @@ test_that("check_integer", {
   expect_equal(err$arg, "check1")
   expect_match(err$message, "non-missing")
 
+  err <- rlang::catch_cnd(check_integer(NULL, name = "check1"))
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message, "numeric scalar")
+
   err <- rlang::catch_cnd(check_integer(-1, lb = 0L, name = "check1"))
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -306,6 +389,7 @@ test_that("check_integer", {
   expect_equal(check_integer(5L, name = "check1"), 5L)
   expect_equal(check_integer(0, lb = 0, inclusive = TRUE, name = "check1"), 0L)
   expect_equal(check_integer(6, lb = 0, name = "check1"), 6L)
+  expect_equal(check_integer(NULL, name = "check1", allow_null = TRUE), NULL)
 })
 
 test_that("check_double", {

@@ -29,8 +29,9 @@ priors used in the model.}
 \item{\code{backend}}{The name of the backend used to fit the model.}
 
 \item{\code{model}}{The fitted Stan model. This will object of class
-\link[rstan:stanfit-class]{rstan::stanfit} unless \code{backend == "cmdstanr"} and
-\code{return_stanfit = FALSE} was specified when fitting the model.}
+\link[rstan:stanfit-class]{rstan::stanfit} if \code{backend = "rstan"} and
+\link[cmdstanr:CmdStanMCMC]{cmdstanr::CmdStanMCMC} if \code{backend = "cmdstanr"} was specified when
+fitting the model.}
 
 \item{\code{model_fit}}{An empty list for adding model fit information after
 fitting the model.}

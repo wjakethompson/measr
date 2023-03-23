@@ -1,7 +1,7 @@
 # lcdm model works for ecpe
 
     Code
-      rstn_ecpe_lcdm$stancode
+      cmds_ecpe_lcdm$stancode
     Output
       data {
         int<lower=1> I;                 // number of items

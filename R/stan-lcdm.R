@@ -18,16 +18,12 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   )
 
   # parameters block -----
-  all_params <- stats::model.matrix(stats::as.formula(paste0("~ .^",
-                                                             max(ncol(qmatrix),
-                                                                 2L))),
-                                    qmatrix) %>%
-    tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
-    dplyr::select(where(~ sum(.x) > 0)) %>%
-    tibble::rowid_to_column(var = "item_id") %>%
-    tidyr::pivot_longer(cols = -"item_id", names_to = "parameter",
-                        values_to = "value") %>%
-    dplyr::filter(.data$value == 1) %>%
+  all_params <- get_parameters(qmatrix = qmatrix, item_id = NULL,
+                               rename_att = TRUE, type = "lcdm") %>%
+    dplyr::mutate(parameter = dplyr::case_when(is.na(.data$attributes) ~
+                                                 "intercept",
+                                               TRUE ~ .data$attributes)) %>%
+    dplyr::select("item_id", "parameter", param_name = "coef") %>%
     dplyr::mutate(
       param_level = dplyr::case_when(
         .data$parameter == "intercept" ~ 0,
@@ -135,8 +131,9 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::left_join(dplyr::select(all_params, "item_id", "parameter",
                                    "param_name"),
                      by = "item_id",
-                     multiple = "all") %>%
-    dplyr::left_join(profile_params, by = c("profile_id", "parameter")) %>%
+                     multiple = "all", relationship = "many-to-many") %>%
+    dplyr::left_join(profile_params, by = c("profile_id", "parameter"),
+                     relationship = "many-to-one") %>%
     dplyr::filter(.data$valid_for_profile == 1) %>%
     dplyr::group_by(.data$item_id, .data$profile_id) %>%
     dplyr::summarize(all_params = paste(unique(.data$param_name),
@@ -166,12 +163,13 @@ lcdm_script <- function(qmatrix, prior = NULL) {
       class = dplyr::case_when(.data$param_level == 0 ~ "intercept",
                                .data$param_level == 1 ~ "maineffect",
                                .data$param_level > 1 ~ "interaction")) %>%
-    dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef")) %>%
+    dplyr::left_join(mod_prior, by = c("class", "param_name" = "coef"),
+                     relationship = "one-to-one") %>%
     dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
                        dplyr::filter(is.na(.data$coef)) %>%
                        dplyr::select(-"coef"),
-                     by = c("class")) %>%
+                     by = c("class"), relationship = "many-to-one") %>%
     dplyr::rename(class_def = "prior_def") %>%
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,

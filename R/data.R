@@ -44,10 +44,10 @@
 #' contains 28 items measuring 3 skills. The `ecpe_qmatrix` correspondingly is
 #' made up of 28 rows and 4 variables.
 #' * `item_id`: Item identifier, corresponds to `E1`-`E28` in [`ecpe_data`]
-#' * `skill1`-`skill3`: Dichotomous indicator for whether or not the skill is
-#'   measured by each item. A value of `1` indicates the skill is measured by
-#'   the item and a value of `0` indicates the skill is not measured by the
-#'   item.
+#' * `morphosyntactic`, `cohesive`, and `lexical`: Dichotomous indicator for
+#'   whether or not the skill is measured by each item. A value of `1` indicates
+#'   the skill is measured by the item and a value of `0` indicates the skill is
+#'   not measured by the item.
 #' @rdname ecpe
 "ecpe_qmatrix"
 

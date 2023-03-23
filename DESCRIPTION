@@ -6,6 +6,10 @@ Authors@R: c(
            comment = c(ORCID = "0000-0001-7339-0300")),
     person("Nathan", "Jones", , "jonesnateb@gmail.com", role = "ctb",
            comment = c(ORCID = "0000-0001-6177-7161")),
+    person("Matthew", "Johnson", , , role = "cph",
+           comment = "Provided code adapted for reliability.measrdcm()"),
+    person("Paul-Christian", "Bürkner", , , role = "cph",
+           comment = "Author of eval_silent()"),
     person("University of Kansas", role = "cph"),
     person("Institute of Education Sciences", role = "fnd")
   )
@@ -13,13 +17,14 @@ Description: Estimate diagnostic classification models (DCMs; also called
     cognitive diagnostic models [CDMs]) with 'Stan'. Automatically
     generate 'Stan' code for a variety of models, estimate your model, and
     evaluate how well the model fits your data.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 URL: https://measr.info, https://github.com/wjakethompson/measr
 BugReports: https://github.com/wjakethompson/measr/issues
 Depends:
     R (>= 4.1.0)
 Imports:
-    dplyr (>= 1.1.0),
+    dcm2,
+    dplyr (>= 1.1.1),
     fs,
     glue,
     loo,
@@ -36,13 +41,17 @@ Suggests:
     cli,
     cmdstanr (>= 0.4.0),
     crayon,
+    knitr,
+    rmarkdown,
     roxygen2,
     spelling,
     testthat (>= 3.0.0)
-Additional_repositories:https://mc-stan.org/r-packages/
+Additional_repositories: https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
+Config/Needs/website: wjakethompson/wjake, showtext
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr

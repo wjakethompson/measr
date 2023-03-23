@@ -14,7 +14,6 @@ measr_dcm(
   method = c("mcmc", "optim"),
   prior = NULL,
   backend = getOption("measr.backend", "rstan"),
-  return_stanfit = TRUE,
   file = NULL,
   file_refit = getOption("measr.file_refit", "never"),
   ...
@@ -60,10 +59,6 @@ fitting the Stan model. Options are \code{"rstan"} (the default) or
 \strong{cmdstanr} packages are available at \url{https://mc-stan.org/rstan/} and
 \url{https://mc-stan.org/cmdstanr/}, respectively.}
 
-\item{return_stanfit}{Logical. If \code{backend = "cmdstanr"}, should the fitted
-model be coerced to a \link[rstan:stanfit-class]{rstan::stanfit} object in the . Ignored if
-\code{backend = "rstan"}.}
-
 \item{file}{Either \code{NULL} (the default) or a character string. If a character
 string, the fitted model object is saved as an \code{.rds} object using
 \code{\link[=saveRDS]{saveRDS()}} using the supplied character string. The \code{.rds} extension
@@ -97,5 +92,16 @@ or \code{\link[rstan:stanmodel-method-optimizing]{rstan::optimizing()}}.
 A \link{measrfit} object.
 }
 \description{
-Something...
+Estimate diagnostic classification models (DCMs; also known as cognitive
+diagnostic models) using 'Stan'. Models can be estimated using Stan's
+optimizer, or full Markov chain Monte Carlo (MCMC).
+}
+\examples{
+\dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+rstn_mdm_lcdm <- measr_dcm(
+  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+  resp_id = "respondent", item_id = "item", type = "lcdm",
+  method = "optim", seed = 63277, backend = "rstan"
+)
+\dontshow{\}) # examplesIf}
 }

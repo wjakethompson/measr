@@ -54,6 +54,14 @@ reliability <- function(model) {
 #' @describeIn reliability Reliability measures for diagnostic classification
 #'   models.
 #' @export
+#' @examplesIf measr_examples()
+#' rstn_mdm_lcdm <- measr_dcm(
+#'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+#'   resp_id = "respondent", item_id = "item", type = "lcdm",
+#'   method = "optim", seed = 63277, backend = "rstan"
+#' )
+#'
+#' reliability(rstn_mdm_lcdm)
 reliability.measrdcm <- function(model) {
   # coerce model into a list of values required for reliability
   obj <- reli_list(model)

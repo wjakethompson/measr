@@ -53,7 +53,7 @@ footer:
 
 reference:
 - title: Data sets
-  contents:
+- contents:
   - ecpe_data
   - ecpe_qmatrix
   - mdm_data
@@ -61,35 +61,52 @@ reference:
 - title: Model estimation
 - subtitle: Priors
   desc: Define prior distributions for the model parameters.
-  contents:
+- contents:
   - measrprior
   - is.measrprior
   - c.measrprior
   - default_dcm_priors
+  - get_parameters
 - subtitle: Model fitting
   desc: Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
-  contents:
+- contents:
   - measr_dcm
   - measrfit-class
 - title: Model evaluation
 - subtitle: Reliability
-  desc: |
+  desc: >
     Estimate the pattern- or attribute-level classification accuracy and
     consistency.
-  contents:
+- contents:
   - reliability
-- subtitle: Model Comparisons
-  desc: |
+- subtitle: Model fit
+  desc: >
+    Evaluate the fit of the estimated model to the observed data.
+- contents:
+  - dcm2::fit_m2
+  - fit_m2.measrdcm
+  - fit_ppmc
+- subtitle: Model comparisons
+  desc: >
     Assess the relative fit of two competing models.
-  contents:
-  - add_criterion
+- contents:
   - loo_compare.measrfit
   - loo.measrfit
   - waic.measrfit
+- subtitle: Add evaluations to model objects
+  desc: >
+    Add reliability, model fit, and model comparison information to an estimated
+    model object.
+- contents:
+  - model_evaluation
 - title: Model applications
-  desc: View and apply an estimated model to new data.
-  contents:
+  desc: View and use an estimated model.
+- contents:
+  - measr_extract
   - predict.measrdcm
 - title: Miscellaneous
-  contents:
+- contents:
   - create_profiles
+- title: internal
+- contents:
+  - measr_examples

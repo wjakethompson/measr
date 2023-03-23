@@ -17,8 +17,9 @@
 #' @slot algorithm The name of the algorithm used to fit the model.
 #' @slot backend The name of the backend used to fit the model.
 #' @slot model The fitted Stan model. This will object of class
-#'   [rstan::stanfit-class] unless `backend == "cmdstanr"` and
-#'   `return_stanfit = FALSE` was specified when fitting the model.
+#'   [rstan::stanfit-class] if `backend = "rstan"` and
+#'   [cmdstanr::CmdStanMCMC] if `backend = "cmdstanr"` was specified when
+#'   fitting the model.
 #' @slot model_fit An empty list for adding model fit information after
 #'   fitting the model.
 #' @slot criteria An empty list for adding information criteria after fitting

@@ -1,10 +1,14 @@
-abort_bad_argument <- function(arg, must, not = NULL, extra = NULL) {
+abort_bad_argument <- function(arg, must, not = NULL, extra = NULL,
+                               custom = NULL) {
   msg <- glue::glue("`{arg}` must {must}")
   if (!is.null(not)) {
     msg <- glue::glue("{msg}; not {not}")
   }
   if (!is.null(extra)) {
     msg <- glue::glue("{msg}", "{extra}", .sep = "\n")
+  }
+  if (!is.null(custom)) {
+    msg <- custom
   }
 
   rlang::abort("error_bad_argument",
@@ -39,9 +43,7 @@ check_newdata <- function(x, name, identifier, model, missing) {
     bad_items <- levels(x$item_id)[!(levels(x$item_id) %in% good_items)]
     msg <- paste0("New items found in `newdata`: ",
                   paste(bad_items, collapse = " "))
-    rlang::abort("error_bad_argument",
-                 message = msg,
-                 arg = name)
+    abort_bad_argument(name, must = NULL, custom = msg)
   }
 
   # ensure that factor levels match in original and new data so item parameters
@@ -50,7 +52,8 @@ check_newdata <- function(x, name, identifier, model, missing) {
     dplyr::mutate(
       item_id = as.character(.data$item_id),
       item_id = factor(.data$item_id, levels = levels(model$data$data$item_id))
-    )
+    ) %>%
+    dplyr::arrange(.data$resp_id, .data$item_id)
 
   x
 }
@@ -114,38 +117,13 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
     abort_bad_argument(name, must = "be a data frame")
   }
 
-  if (nrow(x) != length(item_levels)) {
+  if (nrow(x) != length(item_levels) && !is.null(item_levels)) {
     abort_bad_argument(name, must = glue::glue("have the same number of rows ",
                                                "as columns of items in `data`"))
   }
 
   #check that item ids match item levels
-  if (is.null(identifier)) {
-    x <- x %>%
-      dplyr::mutate(item_id = item_levels,
-                    item_id = factor(.data$item_id, levels = item_levels),
-                    .before = 1)
-  } else {
-    item_names <- dplyr::pull(x, !!identifier)
-    if (!all(item_levels %in% item_names)) {
-      abort_bad_argument(
-        name,
-        must = glue::glue("include all items in `data`.
-                          Missing items: {setdiff(item_levels, item_names)}")
-      )
-    }
-    if (!all(item_names %in% item_levels)) {
-      abort_bad_argument(
-        name,
-        must = glue::glue("only include items found in `data`.
-                          Extra items: {setdiff(item_names, item_levels)}")
-      )
-    }
-    x <- x %>%
-      dplyr::rename(item_id = !!identifier) %>%
-      dplyr::mutate(item_id = factor(.data$item_id, levels = item_levels)) %>%
-      dplyr::arrange(.data$item_id)
-  }
+  x <- check_item_levels(x, identifier, item_levels, name)
 
   if (!all(sapply(dplyr::select(x, -"item_id"), is.numeric))) {
     abort_bad_argument(name, must = "contain only numeric columns")
@@ -162,6 +140,49 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
   } else {
     x
   }
+}
+
+check_item_levels <- function(x, identifier, item_levels, name) {
+  if (is.null(identifier) && !is.null(item_levels)) {
+    x <- x %>%
+      dplyr::mutate(item_id = item_levels,
+                    item_id = factor(.data$item_id, levels = item_levels),
+                    .before = 1)
+  } else if (!is.null(item_levels)) {
+    item_names <- dplyr::pull(x, !!identifier)
+    if (!all(item_levels %in% item_names)) {
+      abort_bad_argument(
+        name,
+        must = glue::glue("include all items in `data`.
+                          Missing items: {setdiff(item_levels, item_names)}")
+      )
+    }
+    if (!all(item_names %in% item_levels)) {
+      abort_bad_argument(
+        name,
+        must = glue::glue("only include items found in `data`.
+                          Extra items: {paste(setdiff(item_names, item_levels),
+                                                  collapse = ', ')}")
+      )
+    }
+    x <- x %>%
+      dplyr::rename(item_id = !!identifier) %>%
+      dplyr::mutate(item_id = factor(.data$item_id, levels = item_levels)) %>%
+      dplyr::arrange(.data$item_id)
+  } else if (is.null(identifier) && is.null(item_levels)) {
+    x <- x %>%
+      dplyr::mutate(item_id = seq_len(dplyr::n()),
+                    item_id = factor(.data$item_id, levels = .data$item_id),
+                    .before = 1) %>%
+      dplyr::arrange(.data$item_id)
+  } else if (!is.null(identifier) && is.null(item_levels)) {
+    x <- x %>%
+      dplyr::rename(item_id = !!identifier) %>%
+      dplyr::mutate(item_id = factor(.data$item_id, levels = .data$item_id)) %>%
+      dplyr::arrange(.data$item_id)
+  }
+
+  return(x)
 }
 
 check_prior <- function(x, name, allow_null = FALSE) {
@@ -212,7 +233,10 @@ check_logical <- function(x, allow_na = FALSE, name) {
   x
 }
 
-check_integer <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE, name) {
+check_integer <- function(x, lb = -Inf, ub = Inf, inclusive = TRUE,
+                          allow_null = FALSE, name) {
+  if (is.null(x) && allow_null) return(x)
+
   if (inclusive) {
     check_lb <- lb
     check_ub <- ub

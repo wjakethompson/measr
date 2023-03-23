@@ -1,12 +1,16 @@
-get_mcmc_draws <- function(x) {
+get_mcmc_draws <- function(x, ndraws = NULL) {
   draw_matrix <- if (x$backend == "cmdstanr") {
-    if ("stanfit" %in% class(x$model)) {
-      posterior::as_draws_array(as.array(x$model, pars = c("log_Vc", "pi")))
-    } else {
-      x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
-    }
+    x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
   } else if (x$backend == "rstan") {
-    as.matrix(x$model, pars = c("log_Vc", "pi"))
+    posterior::as_draws_array(x$model) %>%
+      posterior::subset_draws(variable = c("log_Vc", "pi"))
+  }
+
+  if (!is.null(ndraws)) {
+    keep_draws <- sample(posterior::draw_ids(draw_matrix), size = ndraws,
+                         replace = FALSE)
+    draw_matrix <- posterior::subset_draws(posterior::merge_chains(draw_matrix),
+                                           draw = keep_draws)
   }
 
   return(draw_matrix)
@@ -14,33 +18,19 @@ get_mcmc_draws <- function(x) {
 
 get_optim_draws <- function(x) {
   draw_matrix <- if (x$backend == "rstan") {
-    t(as.matrix(x$model$par))
+    posterior::as_draws_array(t(as.matrix(x$model$par)))
   } else if (x$backend == "cmdstanr") {
-    as.matrix(x$model$draws())
+    posterior::as_draws_array(x$model$draws())
   }
 
-  all_vars <- colnames(draw_matrix)
-  keep_vars <- all_vars[c(grep("^log_Vc", all_vars),
-                          grep("^pi", all_vars))]
-
-  final_matrix <- draw_matrix[, keep_vars]
-
-  if (x$backend == "rstan") {
-    final_matrix <- t(as.matrix(final_matrix))
-  }
+  final_matrix <- posterior::subset_draws(draw_matrix,
+                                          variable = c("log_Vc", "pi"))
 
   return(final_matrix)
 }
 
 extract_class_probs <- function(model, attr) {
-  all_profiles <- create_profiles(attributes = attr) %>%
-    tibble::rowid_to_column(var = "class_id") %>%
-    tidyr::pivot_longer(cols = -"class_id") %>%
-    dplyr::summarize(
-      class = paste0("[", paste(.data$value, collapse = ","), "]"),
-      .by = "class_id"
-    ) %>%
-    dplyr::arrange("class_id")
+  all_profiles <- profile_labels(attributes = attr)
 
   mastery <- posterior::as_draws_df(model) %>%
     tibble::as_tibble() %>%
@@ -105,16 +95,4 @@ summarize_probs <- function(x, probs, id) {
                      .by = c(!!id, !!type)) %>%
     tidyr::unnest("bounds")
 
-}
-
-prob_summary <- function(x, probs, na_rm) {
-  x <- x$prob
-  tibble::tibble(mean = mean(x, na.rm = na_rm),
-                 bounds = list(
-                   tibble::enframe(stats::quantile(x, probs = probs,
-                                                   na.rm = na_rm)) %>%
-                     tidyr::pivot_wider(names_from = "name",
-                                        values_from = "value")
-                 )) %>%
-    tidyr::unnest("bounds")
 }

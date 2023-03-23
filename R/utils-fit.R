@@ -66,11 +66,18 @@ calc_xi <- function(alpha, qmatrix, type) {
 
 check_file_exists <- function(file, refit, dat, qmat, code, method) {
   if (!is.null(file)) {
-    if (fs::file_exists(file) && refit == "never") {
-      return(list(return = TRUE, obj = readRDS(file)))
-    } else if (fs::file_exists(file)) {
+    if (fs::file_exists(file)) {
       prev <- readRDS(file)
+      if (prev$backend == "cmdstanr") {
+        prev$model <- readRDS(gsub("\\.rds", "-cmdstanr.rds", file))
+      }
+    } else {
+      return(list(return = FALSE))
+    }
 
+    if (refit == "never") {
+      return(list(return = TRUE, obj = prev))
+    } else if (refit == "on_change") {
       # if fitted model matches current args and "on_change", return prev fit
       if (all(identical(prev$data, list(data = dat, qmatrix = qmat)),
               identical(prev$prior, code$prior),
@@ -80,8 +87,6 @@ check_file_exists <- function(file, refit, dat, qmat, code, method) {
       } else {
         return(list(return = FALSE))
       }
-    } else {
-      return(list(return = FALSE))
     }
   } else {
     return(list(return = FALSE))
@@ -111,15 +116,4 @@ get_version_info <- function(cmdstanr) {
   }
 
   return(version_info)
-}
-
-# https://github.com/stan-dev/cmdstanr/issues/447
-fix_cmdstanr_names <- function(obj) {
-  obj@sim$samples <- lapply(obj@sim$samples,
-                            function(x, obj) {
-                              names(x) <- obj@sim$fnames_oi
-                              return(x)
-                            },
-                            obj = obj)
-  return(obj)
 }

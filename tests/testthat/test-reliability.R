@@ -50,3 +50,12 @@ test_that("mdm reliability", {
   expect_lt(mean(eap_diff), .01)
   expect_lt(median(eap_diff), .01)
 })
+
+test_that("reliability can be added to model object", {
+  dina_mod <- rstn_dina
+  expect_equal(dina_mod$reliability, list())
+
+  dina_mod <- add_reliability(dina_mod)
+  expect_equal(names(dina_mod$reliability),
+               c("pattern_reliability", "map_reliability", "eap_reliability"))
+})
