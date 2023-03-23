@@ -118,7 +118,8 @@ measr_dcm <- function(data,
 
   # fit model -----
   stan_mod <- create_stan_function(backend = backend, method = method,
-                                   code = stan_code, pars = stan_pars)
+                                   code = stan_code, pars = stan_pars,
+                                   silent = 2)
   mod <- do.call(stan_mod$func, stan_mod$pars)
 
   # create measrfit object -----
