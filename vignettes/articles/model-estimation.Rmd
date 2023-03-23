@@ -67,7 +67,7 @@ The LCDM is a general DCM that subsumes many other DCM subtypes [@lcdm].
 
 First, we specify the data (`data`) and the Q-matrix (`qmatrix`) that should be used to estimate the model.
 Note that these are the only required arguments to the `measr_dcm()` function.
-If not other arguments are provided, sensible defaults (described below) will take care of the rest of the specification and estimation.
+If no other arguments are provided, sensible defaults (described below) will take care of the rest of the specification and estimation.
 Next, we can specify which columns, if any, in our `data` and `qmatrix` contain respondent identifiers and item identifiers in, respectively.
 If one or more of these variables are not present in the data, these arguments can be omitted, and measr will assign identifiers based on the row number (i.e., row 1 in `qmatrix` becomes item 1).
 We can then specify the type of DCM we want to estimate.
@@ -179,7 +179,7 @@ Prior distributions for measr are discussed more in the following section.
 
 ### Prior Distributions
 
-In the code to estimate the LCDM above, no prior distributions were specified.
+In the code to estimate the LCDM above, we did not specify any prior distributions in the call to `measr_dcm()`.
 By default, measr uses the following prior distributions for the LCDM:
 
 ```{r lcdm-prior}
