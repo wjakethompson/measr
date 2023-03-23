@@ -58,4 +58,13 @@ test_that("reliability can be added to model object", {
   dina_mod <- add_reliability(dina_mod)
   expect_equal(names(dina_mod$reliability),
                c("pattern_reliability", "map_reliability", "eap_reliability"))
+
+  expect_equal(measr_extract(dina_mod, "classification_reliability"),
+               dplyr::full_join(
+                 dplyr::select(dina_mod$reliability$map_reliability$accuracy,
+                               "attribute", accuracy = "acc"),
+                 dplyr::select(dina_mod$reliability$map_reliability$consistency,
+                               "attribute", consistency = "consist"),
+                 by = "attribute"
+               ))
 })

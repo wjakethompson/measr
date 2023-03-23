@@ -18,10 +18,21 @@ measr_extract <- function(model, ...) {
 #' information:
 #'   * `item_param`: The estimated item parameters. This shows the name of the
 #'     parameter, the class of the parameter, and the estimated value.
-#'   * `strc_param`: The estimated structural parameters. This is base rate of
-#'     membership in each class. This shows the class pattern and the estimated
-#'     proportion of respondents in each class.
+#'   * `strc_param`: The estimated structural parameters. This is the base rate
+#'     of membership in each class. This shows the class pattern and the
+#'     estimated proportion of respondents in each class.
 #'   * `prior`: The priors used when estimating the model.
+#'   * `classes`: The possible classes or profile patterns. This will show the
+#'     class label (i.e., the pattern of proficiency) and the attributes
+#'     included in each class.
+#'   * `class_prob`: The probability that each respondent belongs to class
+#'     (i.e., has the given pattern of proficiency).
+#'   * `attribute_prob`: The proficiency probability for each respondent and
+#'     attribute.
+#'   * `classification_accuracy`: The classification accuracy and consistency
+#'     for each attribute, using the metrics described by Johnson & Sinharay
+#'     (2018). Reliability information must first be added to the model using
+#'     [add_reliability()].
 #'
 #' @return The extracted information. The specific structure will vary depending
 #'   on what is being extracted, but usually the returned object is a
@@ -29,6 +40,12 @@ measr_extract <- function(model, ...) {
 #'
 #' @describeIn measr_extract Extract components of an estimated diagnostic
 #'   classification model.
+#'
+#' @references Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
+#'   assess attribute-level classification accuracy and consistency for
+#'   cognitive diagnostic assessments. *Journal of Educational Measurement,
+#'   55*(4), 635-664. \doi{10.1111/jedm.12196}
+#'
 #' @export
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
@@ -86,6 +103,42 @@ measr_extract.measrdcm <- function(model, what, ...) {
         dplyr::select("class", "estimate")
     },
     prior = model$prior,
+    classes = {
+      create_profiles(ncol(model$data$qmatrix) - 1) %>%
+        rlang::set_names(colnames(model$data$qmatrix)[-1]) %>%
+        tibble::rowid_to_column(var = "class_id") %>%
+        dplyr::left_join(profile_labels(ncol(model$data$qmatrix) - 1),
+                         by = "class_id", relationship = "one-to-one") %>%
+        dplyr::select("class", dplyr::everything(), -"class_id")
+    },
+    class_prob = {
+      preds <- predict(model)
+      preds$class_probabilities %>%
+        dplyr::select(!!model$data$resp_id, "class", "mean") %>%
+        tidyr::pivot_wider(names_from = "class", values_from = "mean")
+    },
+    attribute_prob = {
+      preds <- predict(model)
+      preds$attribute_probabilities %>%
+        dplyr::select(!!model$data$resp_id, "attribute", "mean") %>%
+        tidyr::pivot_wider(names_from = "attribute", values_from = "mean")
+    },
+    classification_reliability = {
+      if (identical(model$reliability, list())) {
+        rlang::abort(message = glue::glue("Reliability information must be ",
+                                          "added to a model object before it ",
+                                          "can be extracted. See ",
+                                          "`?add_reliability()`."))
+      }
+
+      dplyr::full_join(
+        dplyr::select(model$reliability$map_reliability$accuracy,
+                      "attribute", accuracy = "acc"),
+        dplyr::select(model$reliability$map_reliability$consistency,
+                      "attribute", consistency = "consist"),
+        by = "attribute"
+      )
+    },
     rlang::abort(message = glue::glue("Cannot extract element `{what}`"))
   )
 

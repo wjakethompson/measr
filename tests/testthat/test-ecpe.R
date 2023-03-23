@@ -64,6 +64,17 @@ test_that("ecpe probabilities are accurate", {
   ecpe_preds <- predict(cmds_ecpe_lcdm, newdata = ecpe_data,
                         resp_id = "resp_id", summary = TRUE)
 
+  # extract works
+  expect_equal(measr_extract(cmds_ecpe_lcdm, "class_prob"),
+               ecpe_preds$class_probabilities %>%
+                 dplyr::select("respondent", "class", "mean") %>%
+                 tidyr::pivot_wider(names_from = "class", values_from = "mean"))
+  expect_equal(measr_extract(cmds_ecpe_lcdm, "attribute_prob"),
+               ecpe_preds$attribute_prob %>%
+                 dplyr::select("respondent", "attribute", "mean") %>%
+                 tidyr::pivot_wider(names_from = "attribute",
+                                    values_from = "mean"))
+
   measr_class <- ecpe_preds$class_probabilities %>%
     dplyr::select("resp_id", "class", "mean") %>%
     tidyr::pivot_wider(names_from = "class", values_from = "mean") %>%
@@ -147,6 +158,15 @@ test_that("ecpe reliability", {
 
   reli_mod <- add_reliability(cmds_ecpe_lcdm)
   expect_equal(reli_mod$reliability, ecpe_reli)
+
+  expect_equal(measr_extract(reli_mod, "classification_reliability"),
+               dplyr::full_join(
+                 dplyr::select(reli_mod$reliability$map_reliability$accuracy,
+                               "attribute", accuracy = "acc"),
+                 dplyr::select(reli_mod$reliability$map_reliability$consistency,
+                               "attribute", consistency = "consist"),
+                 by = "attribute"
+               ))
 })
 
 test_that("m2 calculation is correct", {

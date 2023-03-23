@@ -59,3 +59,20 @@ test_that("extract priors", {
   dina_param <- measr_extract(rstn_dina, "prior")
   expect_equal(dina_param, default_dcm_priors(type = "dina"))
 })
+
+test_that("extract classes", {
+  lcdm_param <- measr_extract(rstn_mdm_lcdm, "classes")
+  expect_equal(colnames(lcdm_param), c("class", "multiplication"))
+  expect_equal(lcdm_param$class, dplyr::pull(profile_labels(1), "class"))
+  expect_equal(lcdm_param$multiplication, c(0L, 1L))
+
+  dino_param <- measr_extract(rstn_dino, "classes")
+  expect_equal(colnames(dino_param), c("class", paste0("att", 1:5)))
+  expect_equal(dino_param$class, dplyr::pull(profile_labels(5), "class"))
+
+  exp_label <- dino_param %>%
+    dplyr::mutate(new_label = paste0("[", att1, ",", att2, ",", att3, ",",
+                                     att4, ",", att5, "]")) %>%
+    dplyr::pull("new_label")
+  expect_equal(dino_param$class, exp_label)
+})

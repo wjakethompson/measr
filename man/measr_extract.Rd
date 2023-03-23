@@ -33,10 +33,21 @@ information:
 \itemize{
 \item \code{item_param}: The estimated item parameters. This shows the name of the
 parameter, the class of the parameter, and the estimated value.
-\item \code{strc_param}: The estimated structural parameters. This is base rate of
-membership in each class. This shows the class pattern and the estimated
-proportion of respondents in each class.
+\item \code{strc_param}: The estimated structural parameters. This is the base rate
+of membership in each class. This shows the class pattern and the
+estimated proportion of respondents in each class.
 \item \code{prior}: The priors used when estimating the model.
+\item \code{classes}: The possible classes or profile patterns. This will show the
+class label (i.e., the pattern of proficiency) and the attributes
+included in each class.
+\item \code{class_prob}: The probability that each respondent belongs to class
+(i.e., has the given pattern of proficiency).
+\item \code{attribute_prob}: The proficiency probability for each respondent and
+attribute.
+\item \code{classification_accuracy}: The classification accuracy and consistency
+for each attribute, using the metrics described by Johnson & Sinharay
+(2018). Reliability information must first be added to the model using
+\code{\link[=add_reliability]{add_reliability()}}.
 }
 }
 \section{Methods (by class)}{
@@ -55,4 +66,10 @@ rstn_mdm_lcdm <- measr_dcm(
 
 extract(rstn_mdm_lcdm, "strc_param")
 \dontshow{\}) # examplesIf}
+}
+\references{
+Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
+assess attribute-level classification accuracy and consistency for
+cognitive diagnostic assessments. \emph{Journal of Educational Measurement,
+55}(4), 635-664. \doi{10.1111/jedm.12196}
 }

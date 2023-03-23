@@ -28,6 +28,17 @@ test_that("returned predictions have correct dimensions and names", {
 test_that("mdm probabilities are accurate", {
   mdm_preds <- predict(rstn_mdm_lcdm, summary = TRUE)
 
+  # extract works
+  expect_equal(measr_extract(rstn_mdm_lcdm, "class_prob"),
+               mdm_preds$class_probabilities %>%
+                 dplyr::select("respondent", "class", "mean") %>%
+                 tidyr::pivot_wider(names_from = "class", values_from = "mean"))
+  expect_equal(measr_extract(rstn_mdm_lcdm, "attribute_prob"),
+               mdm_preds$attribute_prob %>%
+                 dplyr::select("respondent", "attribute", "mean") %>%
+                 tidyr::pivot_wider(names_from = "attribute",
+                                    values_from = "mean"))
+
   measr_class <- mdm_preds$class_probabilities %>%
     dplyr::select("respondent", "class", "mean") %>%
     tidyr::pivot_wider(names_from = "class", values_from = "mean") %>%
