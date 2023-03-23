@@ -1,0 +1,101 @@
+---
+title: "Getting started with measr"
+output: rmarkdown::html_vignette
+bibliography: bib/references.bib
+csl: bib/apa.csl
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Getting started with measr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The goal of measr is to make it easy to estimate and evaluate diagnostic classification models (DCMs).
+DCMs are primarily useful for assessment or survey data where responses are recorded dichotomously (e.g., right/wrong, yes/no) or polytomously (e.g., strongly agree, agree, disagree, strongly disagree).
+When using DCMs, the measured skills, or attributes, are categorical.
+Thus, these models are particularly useful when you are measuring multiple attributes that exist in different states.
+For example, an educational assessment may be interested in reporting whether or not students are proficient on a set of academic standards.
+Similarly, we might explore the presence or absence of attributes before and after an intervention.
+
+There are two main classes of functions we need to get started.
+Estimation functions are used for building the DCM using the [Stan probabilistic programming language](https://mc-stan.org) and getting estimates of respondent proficiency.
+Evaluation functions can then be applied to the fitted model to assess how well the estimates represent the observed data.
+
+```{r load-pkg}
+library(measr)
+```
+
+## Model Estimation
+
+To illustrate, we'll fit a loglinear cognitive diagnostic model (LCDM) to an assessment of English language proficiency [see @templin2013].
+There are many different subtypes of DCMs that make different assumptions about how the attributes relate to each other.
+The LCDM is a general model that makes very few assumptions about the compensatory nature of the relationships between attributes.
+For details on the LCDM, see @henson2019.
+
+The data set we're using contains 29 items that together measure three attributes: morphosyntactic rules, cohesive rules, and lexical rules.
+The Q-matrix defines which attributes are measured by each item.
+For example, item E1 measures morphosyntactic and cohesive rules.
+The data is further described in `?ecpe`.
+
+```{r data}
+ecpe_data
+
+ecpe_qmatrix
+```
+
+We can estimate the LCDM using the `measr_dcm()` function.
+We specify the data set, the Q-matrix, and the column names of the respondent and item identifiers in each (if they exist).
+Finally, we add two additional arguments.
+The `method` defines how the model should be estimated.
+For computational efficiency, I've selected `"optim"`, which uses Stan's optimizer to estimate the model.
+For a fully Bayesian estimation, you can change this `method = "mcmc"`.
+Finally, we specify the type of DCM to estimate.
+As previously discussed, we're estimating an LCDM in this example.
+For more details and options for customizing the model specification and estimation, see the [model estimation article](https://measr.info/articles/model-estimation.html) on the measr website.
+
+```{r est-hide, include = FALSE}
+ecpe_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                       resp_id = "resp_id", item_id = "item_id",
+                       method = "optim", type = "lcdm",
+                       file = "fits/ecpe-optim-lcdm")
+```
+
+```{r est-show, eval = FALSE}
+ecpe_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                       resp_id = "resp_id", item_id = "item_id",
+                       method = "optim", type = "lcdm")
+```
+
+Once the model as estimated, we can use `measr_extract()` to pull out the probability that each respondent is proficient on each of the attributes.
+For example, the first respondent has probabilities near 1 for all attributes, indicating a high degree of confidence that they are proficient in all attributes.
+On the other hand, respondent 8 has relatively low probabilities for morphosyntactic and cohesive attributes, and is likely only proficient in lexical rules.
+
+```{r resp-prob, message = FALSE, warning = FALSE, error = FALSE}
+measr_extract(ecpe_lcdm, "attribute_prob")
+```
+
+## Model Evaluation
+
+There are many ways to evaluate our estimated model including model fit, model comparisons, and reliability.
+For a complete listing of available options, see `?model_evaluation`.
+To illustrate how these functions work, we'll look at the classification accuracy and consistency metrics described by @johnson2018.
+
+We start by adding the reliability information to our estimated model using `add_reliability()`.
+We can then extract that information, again using `measr_extract()`.
+For these indices, numbers close to 1 indicate a high level of classification accuracy or consistency.
+These numbers are not amazing, but overall look pretty good.
+For guidance on cutoff values for "good," "fair," etc. reliability, see @johnson2018.
+
+```{r}
+ecpe_lcdm <- add_reliability(ecpe_lcdm)
+measr_extract(ecpe_lcdm, "classification_reliability")
+```
+
+## References
