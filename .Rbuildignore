@@ -11,3 +11,5 @@
 ^\.github$
 ^cran-comments\.md$
 ^vignettes/articles$
+^tests/testthat/test-ecpe.R$
+^tests/testthat/test-mcmc.R$
