@@ -78,6 +78,7 @@ For example, the first respondent has probabilities near 1 for all attributes, i
 On the other hand, respondent 8 has relatively low probabilities for morphosyntactic and cohesive attributes, and is likely only proficient in lexical rules.
 
 ```{r resp-prob, message = FALSE, warning = FALSE, error = FALSE}
+ecpe_lcdm <- add_respondent_estimates(ecpe_lcdm)
 measr_extract(ecpe_lcdm, "attribute_prob")
 ```
 
