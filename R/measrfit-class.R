@@ -20,16 +20,18 @@
 #'   [rstan::stanfit-class] if `backend = "rstan"` and
 #'   [cmdstanr::CmdStanMCMC] if `backend = "cmdstanr"` was specified when
 #'   fitting the model.
-#' @slot model_fit An empty list for adding model fit information after
-#'   fitting the model.
+#' @slot respondent_estimates An empty list for adding estimated person
+#'   parameters after fitting the model.
+#' @slot fit An empty list for adding model fit information after fitting the
+#'   model.
 #' @slot criteria An empty list for adding information criteria after fitting
 #'   the model.
 #' @slot reliability An empty list for adding reliability information after
 #'   fitting the model.
 #' @slot file Optional name of a file which the model objects was saved to
 #'   or loaded from.
-#' @slot version The versions of **measr**, **rstan**, **cmdstanr**, and/or
-#'   **Stan** that were used to fit the model.
+#' @slot version The versions of **measr**, **Stan**, **rstan** and/or
+#'   **cmdstanr** that were used to fit the model.
 #'
 #' @seealso [measr_dcm()]
 NULL

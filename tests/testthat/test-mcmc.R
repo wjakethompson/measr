@@ -195,15 +195,15 @@ test_that("ppmc works", {
 
 test_that("model fit can be added", {
   test_model <- cmds_mdm_lcdm
-  expect_equal(test_model$model_fit, list())
+  expect_equal(test_model$fit, list())
 
   # add m2 and ppmc odds ratios
   test_model <- add_fit(test_model, method = c("m2", "ppmc"),
                         model_fit = NULL, item_fit = "odds_ratio")
-  expect_equal(names(test_model$model_fit), c("m2", "ppmc"))
-  expect_equal(names(test_model$model_fit$ppmc), "item_fit")
-  expect_equal(names(test_model$model_fit$ppmc$item_fit), "odds_ratio")
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$odds_ratio),
+  expect_equal(names(test_model$fit), c("m2", "ppmc"))
+  expect_equal(names(test_model$fit$ppmc), "item_fit")
+  expect_equal(names(test_model$fit$ppmc$item_fit), "odds_ratio")
+  expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "ppp"))
 
@@ -211,17 +211,17 @@ test_that("model fit can be added", {
   test_model <- add_fit(test_model, method = "ppmc",
                         model_fit = "raw_score", item_fit = "conditional_prob",
                         probs = c(0.055, 0.945))
-  expect_equal(names(test_model$model_fit), c("m2", "ppmc"))
-  expect_equal(names(test_model$model_fit$ppmc), c("item_fit", "model_fit"))
-  expect_equal(names(test_model$model_fit$ppmc$model_fit), "raw_score")
-  expect_equal(names(test_model$model_fit$ppmc$model_fit$raw_score),
+  expect_equal(names(test_model$fit), c("m2", "ppmc"))
+  expect_equal(names(test_model$fit$ppmc), c("item_fit", "model_fit"))
+  expect_equal(names(test_model$fit$ppmc$model_fit), "raw_score")
+  expect_equal(names(test_model$fit$ppmc$model_fit$raw_score),
                c("obs_chisq", "ppmc_mean", "5.5%", "94.5%", "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit),
+  expect_equal(names(test_model$fit$ppmc$item_fit),
                c("odds_ratio", "conditional_prob"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$odds_ratio),
+  expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$conditional_prob),
+  expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
 
@@ -229,17 +229,17 @@ test_that("model fit can be added", {
   test_model <- add_fit(test_model, method = "ppmc", overwrite = TRUE,
                         model_fit = NULL, item_fit = "odds_ratio",
                         return_draws = 0.2, probs = c(.1, .9))
-  expect_equal(names(test_model$model_fit), c("m2", "ppmc"))
-  expect_equal(names(test_model$model_fit$ppmc), c("item_fit", "model_fit"))
-  expect_equal(names(test_model$model_fit$ppmc$model_fit), "raw_score")
-  expect_equal(names(test_model$model_fit$ppmc$model_fit$raw_score),
+  expect_equal(names(test_model$fit), c("m2", "ppmc"))
+  expect_equal(names(test_model$fit$ppmc), c("item_fit", "model_fit"))
+  expect_equal(names(test_model$fit$ppmc$model_fit), "raw_score")
+  expect_equal(names(test_model$fit$ppmc$model_fit$raw_score),
                c("obs_chisq", "ppmc_mean", "5.5%", "94.5%", "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit),
+  expect_equal(names(test_model$fit$ppmc$item_fit),
                c("odds_ratio", "conditional_prob"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$odds_ratio),
+  expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "10%", "90%",
                  "samples", "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$conditional_prob),
+  expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
 })

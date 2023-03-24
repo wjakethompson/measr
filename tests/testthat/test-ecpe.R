@@ -17,8 +17,8 @@ test_that("lcdm model works for ecpe", {
   expect_s3_class(cmds_ecpe_lcdm, "measrdcm")
   expect_equal(names(cmds_ecpe_lcdm),
                c("data", "type", "prior", "stancode", "method", "algorithm",
-                 "backend", "model", "model_fit", "criteria", "reliability",
-                 "file", "version"))
+                 "backend", "model", "respondent_estimates", "fit", "criteria",
+                 "reliability", "file", "version"))
   expect_equal(names(cmds_ecpe_lcdm$data),
                c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(cmds_ecpe_lcdm$data$data,
@@ -42,7 +42,8 @@ test_that("lcdm model works for ecpe", {
   expect_equal(tolower(cmds_ecpe_lcdm$algorithm), "lbfgs")
   expect_type(cmds_ecpe_lcdm$model, "environment")
   expect_equal(class(cmds_ecpe_lcdm$model), c("CmdStanMLE", "CmdStanFit", "R6"))
-  expect_type(cmds_ecpe_lcdm$model_fit, "list")
+  expect_type(cmds_ecpe_lcdm$respondent_estimates, "list")
+  expect_type(cmds_ecpe_lcdm$fit, "list")
   expect_type(cmds_ecpe_lcdm$criteria, "list")
   expect_type(cmds_ecpe_lcdm$reliability, "list")
   expect_null(cmds_ecpe_lcdm$file)
