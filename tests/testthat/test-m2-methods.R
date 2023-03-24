@@ -9,7 +9,7 @@ test_that("m2 works", {
   expect_equal(m2$srmsr, 0.0301, tolerance = 0.1)
 
   m2_mod <- add_fit(rstn_dina, method = "m2", ci = 0.8)
-  expect_equal(m2_mod$model_fit$m2, m2)
+  expect_equal(m2_mod$fit$m2, m2)
 
 
   m2 <- fit_m2(rstn_dino, ci = 0.95)
@@ -22,5 +22,5 @@ test_that("m2 works", {
   expect_equal(m2$srmsr, 0.031, tolerance = 0.1)
 
   m2_mod <- add_fit(rstn_dino, method = "m2", ci = 0.95)
-  expect_equal(m2_mod$model_fit$m2, m2)
+  expect_equal(m2_mod$fit$m2, m2)
 })

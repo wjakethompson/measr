@@ -3,8 +3,8 @@ test_that("dina model works", {
   expect_s3_class(rstn_dina, "measrdcm")
   expect_equal(names(rstn_dina),
                c("data", "type", "prior", "stancode", "method", "algorithm",
-                 "backend", "model", "model_fit", "criteria", "reliability",
-                 "file", "version"))
+                 "backend", "model", "respondent_estimates", "fit", "criteria",
+                 "reliability", "file", "version"))
   expect_equal(names(rstn_dina$data),
                c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_dina$data$data,
@@ -27,7 +27,8 @@ test_that("dina model works", {
   expect_type(rstn_dina$model, "list")
   expect_equal(names(rstn_dina$model),
                c("par", "value", "return_code", "theta_tilde"))
-  expect_type(rstn_dina$model_fit, "list")
+  expect_type(rstn_dina$respondent_estimates, "list")
+  expect_type(rstn_dina$fit, "list")
   expect_type(rstn_dina$criteria, "list")
   expect_type(rstn_dina$reliability, "list")
   expect_null(rstn_dina$file)
@@ -51,8 +52,8 @@ test_that("dino model works", {
   expect_s3_class(rstn_dino, "measrdcm")
   expect_equal(names(rstn_dino),
                c("data", "type", "prior", "stancode", "method", "algorithm",
-                 "backend", "model", "model_fit", "criteria", "reliability",
-                 "file", "version"))
+                 "backend", "model", "respondent_estimates", "fit", "criteria",
+                 "reliability", "file", "version"))
   expect_equal(names(rstn_dino$data),
                c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_dino$data$data,
@@ -75,7 +76,8 @@ test_that("dino model works", {
   expect_type(rstn_dino$model, "list")
   expect_equal(names(rstn_dino$model),
                c("par", "value", "return_code", "theta_tilde"))
-  expect_type(rstn_dino$model_fit, "list")
+  expect_type(rstn_dino$respondent_estimates, "list")
+  expect_type(rstn_dino$fit, "list")
   expect_type(rstn_dino$criteria, "list")
   expect_type(rstn_dino$reliability, "list")
   expect_null(rstn_dino$file)
@@ -101,8 +103,8 @@ test_that("lcdm model works for mdm", {
   expect_s3_class(rstn_mdm_lcdm, "measrdcm")
   expect_equal(names(rstn_mdm_lcdm),
                c("data", "type", "prior", "stancode", "method", "algorithm",
-                 "backend", "model", "model_fit", "criteria", "reliability",
-                 "file", "version"))
+                 "backend", "model", "respondent_estimates", "fit", "criteria",
+                 "reliability", "file", "version"))
   expect_equal(names(rstn_mdm_lcdm$data),
                c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_mdm_lcdm$data$data,
@@ -130,7 +132,8 @@ test_that("lcdm model works for mdm", {
   expect_type(rstn_mdm_lcdm$model, "list")
   expect_equal(names(rstn_mdm_lcdm$model),
                c("par", "value", "return_code", "theta_tilde"))
-  expect_type(rstn_mdm_lcdm$model_fit, "list")
+  expect_type(rstn_mdm_lcdm$respondent_estimates, "list")
+  expect_type(rstn_mdm_lcdm$fit, "list")
   expect_type(rstn_mdm_lcdm$criteria, "list")
   expect_type(rstn_mdm_lcdm$reliability, "list")
   expect_null(rstn_mdm_lcdm$file)

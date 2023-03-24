@@ -32,10 +32,12 @@ the model is scored, the \code{resp_id} is taken from the original data.}
 (e.g., \code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.}
 
 \item{summary}{Should summary statistics be returned instead of the raw
-posterior draws? Default is \code{TRUE}.}
+posterior draws? Only relevant if the model was estimated with
+\code{method = "mcmc"}. Default is \code{TRUE}.}
 
 \item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
-function. Only used if \code{summary} is \code{TRUE}.}
+function. Only relevant if the model was estimated with \code{method = "mcmc"}.
+Only used if \code{summary} is \code{TRUE}.}
 
 \item{...}{Unused.}
 }

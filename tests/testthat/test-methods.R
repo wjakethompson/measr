@@ -16,9 +16,9 @@ test_that("returned predictions have correct dimensions and names", {
   expect_equal(names(mod_preds), c("class_probabilities",
                                    "attribute_probabilities"))
   expect_equal(colnames(mod_preds$class_probabilities),
-               c("respondent", "class", "mean", "2.5%", "97.5%"))
+               c("respondent", "class", "probability"))
   expect_equal(colnames(mod_preds$attribute_probabilities),
-               c("respondent", "attribute", "mean", "2.5%", "97.5%"))
+               c("respondent", "attribute", "probability"))
   expect_equal(nrow(mod_preds$class_probabilities),
                nrow(mdm_data) * (2 ^ num_att))
   expect_equal(nrow(mod_preds$attribute_probabilities),
@@ -29,19 +29,31 @@ test_that("mdm probabilities are accurate", {
   mdm_preds <- predict(rstn_mdm_lcdm, summary = TRUE)
 
   # extract works
+  expect_equal(rstn_mdm_lcdm$respondent_estimates, list())
+  err <- rlang::catch_cnd(measr_extract(rstn_mdm_lcdm, "class_prob"))
+  expect_match(err$message,
+               "added to a model object before class probabilities")
+  err <- rlang::catch_cnd(measr_extract(rstn_mdm_lcdm, "attribute_prob"))
+  expect_match(err$message,
+               "added to a model object before attribute probabilities")
+
+  rstn_mdm_lcdm <- add_respondent_estimates(rstn_mdm_lcdm)
+  expect_equal(rstn_mdm_lcdm$respondent_estimates, mdm_preds)
+
   expect_equal(measr_extract(rstn_mdm_lcdm, "class_prob"),
                mdm_preds$class_probabilities %>%
-                 dplyr::select("respondent", "class", "mean") %>%
-                 tidyr::pivot_wider(names_from = "class", values_from = "mean"))
+                 dplyr::select("respondent", "class", "probability") %>%
+                 tidyr::pivot_wider(names_from = "class",
+                                    values_from = "probability"))
   expect_equal(measr_extract(rstn_mdm_lcdm, "attribute_prob"),
                mdm_preds$attribute_prob %>%
-                 dplyr::select("respondent", "attribute", "mean") %>%
+                 dplyr::select("respondent", "attribute", "probability") %>%
                  tidyr::pivot_wider(names_from = "attribute",
-                                    values_from = "mean"))
+                                    values_from = "probability"))
 
   measr_class <- mdm_preds$class_probabilities %>%
-    dplyr::select("respondent", "class", "mean") %>%
-    tidyr::pivot_wider(names_from = "class", values_from = "mean") %>%
+    dplyr::select("respondent", "class", "probability") %>%
+    tidyr::pivot_wider(names_from = "class", values_from = "probability") %>%
     dplyr::select(-"respondent") %>%
     as.matrix() %>%
     unname()
@@ -54,7 +66,7 @@ test_that("mdm probabilities are accurate", {
 
 
   measr_attr <- mdm_preds$attribute_probabilities %>%
-    dplyr::select("mean") %>%
+    dplyr::select("probability") %>%
     as.matrix() %>%
     unname()
 

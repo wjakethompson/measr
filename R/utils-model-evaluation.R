@@ -1,16 +1,16 @@
 existing_ppmc_check <- function(model, method, dots, overwrite) {
   run_ppmc <- if (!"ppmc" %in% method) {
     list(run = FALSE, args = NULL)
-  } else if (!("ppmc" %in% names(model$model_fit))) {
+  } else if (!("ppmc" %in% names(model$fit))) {
     dots$model <- model
     list(run = TRUE, args = dots)
   } else if (overwrite) {
     dots$model <- model
     list(run = TRUE, args = dots)
   } else {
-    existing_criteria <- lapply(names(model$model_fit$ppmc),
-                                function(.x) names(model$model_fit$ppmc[[.x]]))
-    names(existing_criteria) <- names(model$model_fit$ppmc)
+    existing_criteria <- lapply(names(model$fit$ppmc),
+                                function(.x) names(model$fit$ppmc[[.x]]))
+    names(existing_criteria) <- names(model$fit$ppmc)
 
     new_dots <- lapply(names(dots),
                        function(x, new, old) {
@@ -33,24 +33,24 @@ existing_ppmc_check <- function(model, method, dots, overwrite) {
 
 existing_m2_check <- function(model, method, overwrite) {
   ("m2" %in% method && overwrite) ||
-    ("m2" %in% method && !("m2" %in% names(model$model_fit)))
+    ("m2" %in% method && !("m2" %in% names(model$fit)))
 }
 
 add_ppmc <- function(model, run_ppmc) {
   if (run_ppmc$run) {
     new_ppmc <- do.call(fit_ppmc, run_ppmc$args)
 
-    if ("ppmc" %in% names(model$model_fit)) {
+    if ("ppmc" %in% names(model$fit)) {
       types <- names(new_ppmc)
       for (type in seq_along(types)) {
         sub_types <- names(new_ppmc[[type]])
         for (sub_type in seq_along(sub_types)) {
-          model$model_fit$ppmc[[types[type]]][[sub_types[sub_type]]] <-
+          model$fit$ppmc[[types[type]]][[sub_types[sub_type]]] <-
             new_ppmc[[types[type]]][[sub_types[sub_type]]]
         }
       }
     } else {
-      model$model_fit$ppmc <- new_ppmc
+      model$fit$ppmc <- new_ppmc
     }
   }
 

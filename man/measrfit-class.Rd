@@ -33,8 +33,11 @@ priors used in the model.}
 \link[cmdstanr:CmdStanMCMC]{cmdstanr::CmdStanMCMC} if \code{backend = "cmdstanr"} was specified when
 fitting the model.}
 
-\item{\code{model_fit}}{An empty list for adding model fit information after
-fitting the model.}
+\item{\code{respondent_estimates}}{An empty list for adding estimated person
+parameters after fitting the model.}
+
+\item{\code{fit}}{An empty list for adding model fit information after fitting the
+model.}
 
 \item{\code{criteria}}{An empty list for adding information criteria after fitting
 the model.}
@@ -45,8 +48,8 @@ fitting the model.}
 \item{\code{file}}{Optional name of a file which the model objects was saved to
 or loaded from.}
 
-\item{\code{version}}{The versions of \strong{measr}, \strong{rstan}, \strong{cmdstanr}, and/or
-\strong{Stan} that were used to fit the model.}
+\item{\code{version}}{The versions of \strong{measr}, \strong{Stan}, \strong{rstan} and/or
+\strong{cmdstanr} that were used to fit the model.}
 }}
 
 \seealso{

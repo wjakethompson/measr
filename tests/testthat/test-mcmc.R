@@ -1,4 +1,4 @@
-skip_on_cran()
+if (!identical(Sys.getenv("NOT_CRAN"), "true")) return()
 
 out <- capture.output(
   suppressMessages(
@@ -195,15 +195,15 @@ test_that("ppmc works", {
 
 test_that("model fit can be added", {
   test_model <- cmds_mdm_lcdm
-  expect_equal(test_model$model_fit, list())
+  expect_equal(test_model$fit, list())
 
   # add m2 and ppmc odds ratios
   test_model <- add_fit(test_model, method = c("m2", "ppmc"),
                         model_fit = NULL, item_fit = "odds_ratio")
-  expect_equal(names(test_model$model_fit), c("m2", "ppmc"))
-  expect_equal(names(test_model$model_fit$ppmc), "item_fit")
-  expect_equal(names(test_model$model_fit$ppmc$item_fit), "odds_ratio")
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$odds_ratio),
+  expect_equal(names(test_model$fit), c("m2", "ppmc"))
+  expect_equal(names(test_model$fit$ppmc), "item_fit")
+  expect_equal(names(test_model$fit$ppmc$item_fit), "odds_ratio")
+  expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "ppp"))
 
@@ -211,17 +211,17 @@ test_that("model fit can be added", {
   test_model <- add_fit(test_model, method = "ppmc",
                         model_fit = "raw_score", item_fit = "conditional_prob",
                         probs = c(0.055, 0.945))
-  expect_equal(names(test_model$model_fit), c("m2", "ppmc"))
-  expect_equal(names(test_model$model_fit$ppmc), c("item_fit", "model_fit"))
-  expect_equal(names(test_model$model_fit$ppmc$model_fit), "raw_score")
-  expect_equal(names(test_model$model_fit$ppmc$model_fit$raw_score),
+  expect_equal(names(test_model$fit), c("m2", "ppmc"))
+  expect_equal(names(test_model$fit$ppmc), c("item_fit", "model_fit"))
+  expect_equal(names(test_model$fit$ppmc$model_fit), "raw_score")
+  expect_equal(names(test_model$fit$ppmc$model_fit$raw_score),
                c("obs_chisq", "ppmc_mean", "5.5%", "94.5%", "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit),
+  expect_equal(names(test_model$fit$ppmc$item_fit),
                c("odds_ratio", "conditional_prob"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$odds_ratio),
+  expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$conditional_prob),
+  expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
 
@@ -229,17 +229,56 @@ test_that("model fit can be added", {
   test_model <- add_fit(test_model, method = "ppmc", overwrite = TRUE,
                         model_fit = NULL, item_fit = "odds_ratio",
                         return_draws = 0.2, probs = c(.1, .9))
-  expect_equal(names(test_model$model_fit), c("m2", "ppmc"))
-  expect_equal(names(test_model$model_fit$ppmc), c("item_fit", "model_fit"))
-  expect_equal(names(test_model$model_fit$ppmc$model_fit), "raw_score")
-  expect_equal(names(test_model$model_fit$ppmc$model_fit$raw_score),
+  expect_equal(names(test_model$fit), c("m2", "ppmc"))
+  expect_equal(names(test_model$fit$ppmc), c("item_fit", "model_fit"))
+  expect_equal(names(test_model$fit$ppmc$model_fit), "raw_score")
+  expect_equal(names(test_model$fit$ppmc$model_fit$raw_score),
                c("obs_chisq", "ppmc_mean", "5.5%", "94.5%", "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit),
+  expect_equal(names(test_model$fit$ppmc$item_fit),
                c("odds_ratio", "conditional_prob"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$odds_ratio),
+  expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "10%", "90%",
                  "samples", "ppp"))
-  expect_equal(names(test_model$model_fit$ppmc$item_fit$conditional_prob),
+  expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
+})
+
+test_that("respondent probabilities are correct", {
+  mdm_preds <- predict(cmds_mdm_lcdm, newdata = mdm_data,
+                       resp_id = "respondent", summary = TRUE)
+
+  # dimensions are correct
+  expect_equal(names(mdm_preds), c("class_probabilities",
+                                   "attribute_probabilities"))
+  expect_equal(colnames(mdm_preds$class_probabilities),
+               c("respondent", "class", "probability", "2.5%", "97.5%"))
+  expect_equal(colnames(mdm_preds$attribute_probabilities),
+               c("respondent", "attribute", "probability", "2.5%", "97.5%"))
+  expect_equal(nrow(mdm_preds$class_probabilities),
+               nrow(mdm_data) * (2 ^ 1))
+  expect_equal(nrow(mdm_preds$attribute_probabilities),
+               nrow(mdm_data) * 1)
+
+  # extract works
+  expect_equal(cmds_mdm_lcdm$respondent_estimates, list())
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "class_prob"))
+  expect_match(err$message,
+               "added to a model object before class probabilities")
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "attribute_prob"))
+  expect_match(err$message,
+               "added to a model object before attribute probabilities")
+
+  cmds_mdm_lcdm <- add_respondent_estimates(cmds_mdm_lcdm)
+  expect_equal(cmds_mdm_lcdm$respondent_estimates, mdm_preds)
+  expect_equal(measr_extract(cmds_mdm_lcdm, "class_prob"),
+               mdm_preds$class_probabilities %>%
+                 dplyr::select("respondent", "class", "probability") %>%
+                 tidyr::pivot_wider(names_from = "class",
+                                    values_from = "probability"))
+  expect_equal(measr_extract(cmds_mdm_lcdm, "attribute_prob"),
+               mdm_preds$attribute_prob %>%
+                 dplyr::select("respondent", "attribute", "probability") %>%
+                 tidyr::pivot_wider(names_from = "attribute",
+                                    values_from = "probability"))
 })

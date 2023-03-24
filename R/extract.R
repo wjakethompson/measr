@@ -112,16 +112,30 @@ measr_extract.measrdcm <- function(model, what, ...) {
         dplyr::select("class", dplyr::everything(), -"class_id")
     },
     class_prob = {
-      preds <- stats::predict(model)
-      preds$class_probabilities %>%
-        dplyr::select(!!model$data$resp_id, "class", "mean") %>%
-        tidyr::pivot_wider(names_from = "class", values_from = "mean")
+      if (identical(model$respondent_estimates, list())) {
+        rlang::abort(message = glue::glue("Respondent estimates must be ",
+                                          "added to a model object before ",
+                                          "class probabilities ",
+                                          "can be extracted. See ",
+                                          "`?add_respondent_estimates()`."))
+      }
+      model$respondent_estimates$class_probabilities %>%
+        dplyr::select(!!model$data$resp_id, "class", "probability") %>%
+        tidyr::pivot_wider(names_from = "class",
+                           values_from = "probability")
     },
     attribute_prob = {
-      preds <- stats::predict(model)
-      preds$attribute_probabilities %>%
-        dplyr::select(!!model$data$resp_id, "attribute", "mean") %>%
-        tidyr::pivot_wider(names_from = "attribute", values_from = "mean")
+      if (identical(model$respondent_estimates, list())) {
+        rlang::abort(message = glue::glue("Respondent estimates must be ",
+                                          "added to a model object before ",
+                                          "attribute probabilities ",
+                                          "can be extracted. See ",
+                                          "`?add_respondent_estimates()`."))
+      }
+      model$respondent_estimates$attribute_probabilities %>%
+        dplyr::select(!!model$data$resp_id, "attribute", "probability") %>%
+        tidyr::pivot_wider(names_from = "attribute",
+                           values_from = "probability")
     },
     classification_reliability = {
       if (identical(model$reliability, list())) {
