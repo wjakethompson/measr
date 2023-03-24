@@ -1,5 +1,4 @@
 library(testthat)
 library(measr)
 
-test_check("measr",
-           filter = "[^ecpe|mcmc]")
+test_check("measr")

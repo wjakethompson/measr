@@ -1,4 +1,4 @@
-skip_on_cran()
+if (!identical(Sys.getenv("NOT_CRAN"), "true")) return()
 
 out <- capture.output(
   suppressMessages(
