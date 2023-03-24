@@ -65,35 +65,59 @@ test_that("ecpe probabilities are accurate", {
   ecpe_preds <- predict(cmds_ecpe_lcdm, newdata = ecpe_data,
                         resp_id = "resp_id", summary = TRUE)
 
+  # dimensions are correct
+  expect_equal(names(ecpe_preds), c("class_probabilities",
+                                    "attribute_probabilities"))
+  expect_equal(colnames(ecpe_preds$class_probabilities),
+               c("resp_id", "class", "probability"))
+  expect_equal(colnames(ecpe_preds$attribute_probabilities),
+               c("resp_id", "attribute", "probability"))
+  expect_equal(nrow(ecpe_preds$class_probabilities),
+               nrow(ecpe_data) * (2 ^ 3))
+  expect_equal(nrow(ecpe_preds$attribute_probabilities),
+               nrow(ecpe_data) * 3)
+
   # extract works
+  expect_equal(cmds_ecpe_lcdm$respondent_estimates, list())
+  err <- rlang::catch_cnd(measr_extract(cmds_ecpe_lcdm, "class_prob"))
+  expect_match(err$message,
+               "added to a model object before class probabilities")
+  err <- rlang::catch_cnd(measr_extract(cmds_ecpe_lcdm, "attribute_prob"))
+  expect_match(err$message,
+               "added to a model object before attribute probabilities")
+
+  cmds_ecpe_lcdm <- add_respondent_estimates(cmds_ecpe_lcdm)
+  expect_equal(cmds_ecpe_lcdm$respondent_estimates, ecpe_preds)
   expect_equal(measr_extract(cmds_ecpe_lcdm, "class_prob"),
                ecpe_preds$class_probabilities %>%
-                 dplyr::select("resp_id", "class", "mean") %>%
-                 tidyr::pivot_wider(names_from = "class", values_from = "mean"))
+                 dplyr::select("resp_id", "class", "probability") %>%
+                 tidyr::pivot_wider(names_from = "class",
+                                    values_from = "probability"))
   expect_equal(measr_extract(cmds_ecpe_lcdm, "attribute_prob"),
                ecpe_preds$attribute_prob %>%
-                 dplyr::select("resp_id", "attribute", "mean") %>%
+                 dplyr::select("resp_id", "attribute", "probability") %>%
                  tidyr::pivot_wider(names_from = "attribute",
-                                    values_from = "mean"))
+                                    values_from = "probability"))
 
   measr_class <- ecpe_preds$class_probabilities %>%
-    dplyr::select("resp_id", "class", "mean") %>%
-    tidyr::pivot_wider(names_from = "class", values_from = "mean") %>%
+    dplyr::select("resp_id", "class", "probability") %>%
+    tidyr::pivot_wider(names_from = "class", values_from = "probability") %>%
     dplyr::select(-"resp_id") %>%
     as.matrix() %>%
     unname()
 
   class_diff <- abs(
     round(measr_class, digits = 4) -
-    round(ecpe_lldcm$posterior[, c(1, 5, 3, 2, 7, 6, 4, 8)], digits = 4))
+      round(ecpe_lldcm$posterior[, c(1, 5, 3, 2, 7, 6, 4, 8)], digits = 4))
 
   expect_lt(mean(class_diff), .02)
   expect_lt(median(class_diff), .02)
 
 
   measr_attr <- ecpe_preds$attribute_probabilities %>%
-    dplyr::select("resp_id", "attribute", "mean") %>%
-    tidyr::pivot_wider(names_from = "attribute", values_from = "mean") %>%
+    dplyr::select("resp_id", "attribute", "probability") %>%
+    tidyr::pivot_wider(names_from = "attribute",
+                       values_from = "probability") %>%
     dplyr::select(-"resp_id") %>%
     as.matrix() %>%
     unname()
@@ -110,7 +134,7 @@ test_that("ecpe reliability", {
 
   # list naming
   expect_equal(names(ecpe_reli), c("pattern_reliability", "map_reliability",
-                                  "eap_reliability"))
+                                   "eap_reliability"))
   expect_equal(names(ecpe_reli$pattern_reliability), c("p_a", "p_c"))
   expect_equal(names(ecpe_reli$map_reliability), c("accuracy", "consistency"))
   expect_equal(names(ecpe_reli$map_reliability$accuracy),
@@ -157,6 +181,12 @@ test_that("ecpe reliability", {
   expect_lt(mean(eap_diff), .01)
   expect_lt(median(eap_diff), .01)
 
+  # check extraction
+  expect_equal(cmds_ecpe_lcdm$reliability, list())
+  err <- rlang::catch_cnd(measr_extract(cmds_ecpe_lcdm,
+                                        "classification_reliability"))
+  expect_match(err$message, "Reliability information must be added to a model")
+
   reli_mod <- add_reliability(cmds_ecpe_lcdm)
   expect_equal(reli_mod$reliability, ecpe_reli)
 
@@ -182,7 +212,7 @@ test_that("m2 calculation is correct", {
   expect_equal(m2$srmsr, 0.0316, tolerance = 0.1)
 
   m2_mod <- add_fit(cmds_ecpe_lcdm, method = "m2")
-  expect_equal(m2_mod$model_fit$m2, m2)
+  expect_equal(m2_mod$fit$m2, m2)
 })
 
 test_that("mcmc requirements error", {

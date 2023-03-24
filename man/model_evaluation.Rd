@@ -5,6 +5,7 @@
 \alias{add_criterion}
 \alias{add_reliability}
 \alias{add_fit}
+\alias{add_respondent_estimates}
 \title{Add model evaluation metrics model objects}
 \usage{
 add_criterion(
@@ -26,6 +27,13 @@ add_fit(
   ...,
   ci = 0.9
 )
+
+add_respondent_estimates(
+  x,
+  probs = c(0.025, 0.975),
+  overwrite = FALSE,
+  save = TRUE
+)
 }
 \arguments{
 \item{x}{A \link{measrfit} object.}
@@ -33,10 +41,9 @@ add_fit(
 \item{criterion}{A vector of criteria to calculate and add to the model
 object.}
 
-\item{overwrite}{Logical. Indicates whether existing criteria should be
-overwritten. For example, if LOO has already been added to the model object
-\code{add_criterion()} is called again with \code{criterion = "loo"}, should LOO be
-recalculated? Default is \code{FALSE}.}
+\item{overwrite}{Logical. Indicates whether specified elements that have
+already been added to the estimated model should be overwritten. Default is
+\code{FALSE}.}
 
 \item{save}{Logical. Only relevant if a file was specified in the
 \link{measrfit} object passed to \code{x}. If \code{TRUE} (the default), the model is
@@ -61,10 +68,14 @@ not specified can be disabled by setting \code{r_eff} to \code{NA}. See the
 object.}
 
 \item{ci}{The confidence interval for the RMSEA, computed from the M2}
+
+\item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
+function to summarize the posterior distributions of each person parameter.
+Only relevant if \code{method = "mcmc"} was used to estimate the model.}
 }
 \value{
-A modified \link{measrfit} object with the \code{criteria} slot populated with
-the specified criteria.
+A modified \link{measrfit} object with the corresponding slot populated
+with the specified information.
 }
 \description{
 Add model evaluation metrics to fitted model objects. These functions are
@@ -74,6 +85,17 @@ of the model object so that time-intensive calculations do not need to be
 repeated. See Details for specifics.
 }
 \details{
+For \code{add_respondent_estimates()}, estimated person parameters are added to
+the \verb{$respondent_estimates} element of the fitted model.
+
+For \code{add_fit()}, model and item fit information are added to the \verb{$fit}
+element of the fitted model. This function wraps \code{\link[=fit_m2]{fit_m2()}} to calculate the
+\ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2006;
+Liu et al., 2016) and/or \code{\link[=fit_ppmc]{fit_ppmc()}} to calculate posterior predictive model
+checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
+Thompson, 2019), depending on which methods are specified. Additional
+arguments supplied to \code{...} are passed to \code{\link[=fit_ppmc]{fit_ppmc()}}.
+
 For \code{add_criterion()}, relative fit criteria are added to the \verb{$criteria}
 element of the fitted model. This function wraps \code{\link[=loo]{loo()}} and/or \code{\link[=waic]{waic()}},
 depending on which criteria are specified, to calculate the leave-one-out
@@ -86,14 +108,6 @@ For \code{add_reliability()}, reliability information is added to the
 described by Cui et al. (2012). Classification reliability and posterior
 probability reliability are described by Johnson & Sinharay (2018, 2020),
 respectively. This function wraps \code{\link[=reliability]{reliability()}}.
-
-For \code{add_fit()}, model and item fit information are added to the \verb{$model_fit}
-element of the fitted model. This function wraps \code{\link[=fit_m2]{fit_m2()}} to calculate the
-\ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2006;
-Liu et al., 2016) and/or \code{\link[=fit_ppmc]{fit_ppmc()}} to calculate posterior predictive model
-checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
-Thompson, 2019), depending on which methods are specified. Additional
-arguments supplied to \code{...} are passed to \code{\link[=fit_ppmc]{fit_ppmc()}}.
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -105,8 +119,9 @@ cmds_mdm_dina <- measr_dcm(
             prior(beta(5, 17), class = "guess"))
 )
 
-cmds_mdm_dina <- add_reliability(cmd_mdm_dina)
-cmds_mdm_dina <- add_fit(cmd_mdm_dina, method = "m2")
+cmds_mdm_dina <- add_reliability(cmds_mdm_dina)
+cmds_mdm_dina <- add_fit(cmds_mdm_dina, method = "m2")
+cmds_mdm_dina <- add_respondent_estimates(cmds_mdm_dina)
 \dontshow{\}) # examplesIf}
 }
 \references{

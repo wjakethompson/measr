@@ -13,10 +13,12 @@
 #'   object.
 #' @param method A vector of model fit methods to evaluate and add to the model
 #'   object.
-#' @param overwrite Logical. Indicates whether existing criteria should be
-#'   overwritten. For example, if LOO has already been added to the model object
-#'   `add_criterion()` is called again with `criterion = "loo"`, should LOO be
-#'   recalculated? Default is `FALSE`.
+#' @param probs The percentiles to be computed by the `[stats::quantile()]`
+#'   function to summarize the posterior distributions of each person parameter.
+#'   Only relevant if `method = "mcmc"` was used to estimate the model.
+#' @param overwrite Logical. Indicates whether specified elements that have
+#'   already been added to the estimated model should be overwritten. Default is
+#'   `FALSE`.
 #' @param save Logical. Only relevant if a file was specified in the
 #'   [measrfit] object passed to `x`. If `TRUE` (the default), the model is
 #'   re-saved to the specified file when new criteria are added to the R object.
@@ -25,6 +27,17 @@
 #' @param ... Additional arguments passed relevant methods. See Details.
 #'
 #' @details
+#' For `add_respondent_estimates()`, estimated person parameters are added to
+#' the `$respondent_estimates` element of the fitted model.
+#'
+#' For `add_fit()`, model and item fit information are added to the `$fit`
+#' element of the fitted model. This function wraps [fit_m2()] to calculate the
+#' \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2006;
+#' Liu et al., 2016) and/or [fit_ppmc()] to calculate posterior predictive model
+#' checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
+#' Thompson, 2019), depending on which methods are specified. Additional
+#' arguments supplied to `...` are passed to [fit_ppmc()].
+#'
 #' For `add_criterion()`, relative fit criteria are added to the `$criteria`
 #' element of the fitted model. This function wraps [loo()] and/or [waic()],
 #' depending on which criteria are specified, to calculate the leave-one-out
@@ -38,16 +51,8 @@
 #' probability reliability are described by Johnson & Sinharay (2018, 2020),
 #' respectively. This function wraps [reliability()].
 #'
-#' For `add_fit()`, model and item fit information are added to the `$model_fit`
-#' element of the fitted model. This function wraps [fit_m2()] to calculate the
-#' \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2006;
-#' Liu et al., 2016) and/or [fit_ppmc()] to calculate posterior predictive model
-#' checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
-#' Thompson, 2019), depending on which methods are specified. Additional
-#' arguments supplied to `...` are passed to [fit_ppmc()].
-#'
-#' @return A modified [measrfit] object with the `criteria` slot populated with
-#'   the specified criteria.
+#' @return A modified [measrfit] object with the corresponding slot populated
+#'   with the specified information.
 #'
 #' @references Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
 #'   classification consistency and accuracy for cognitive diagnostic
@@ -103,8 +108,9 @@
 #'             prior(beta(5, 17), class = "guess"))
 #' )
 #'
-#' cmds_mdm_dina <- add_reliability(cmd_mdm_dina)
-#' cmds_mdm_dina <- add_fit(cmd_mdm_dina, method = "m2")
+#' cmds_mdm_dina <- add_reliability(cmds_mdm_dina)
+#' cmds_mdm_dina <- add_fit(cmds_mdm_dina, method = "m2")
+#' cmds_mdm_dina <- add_respondent_estimates(cmds_mdm_dina)
 NULL
 
 #' @export
@@ -196,12 +202,35 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   run_ppmc <- existing_ppmc_check(model, method, dots, overwrite)
 
   if (run_m2) {
-    model$model_fit$m2 <- fit_m2(model, ci = ci)
+    model$fit$m2 <- fit_m2(model, ci = ci)
   }
   model <- add_ppmc(model, run_ppmc)
 
   # re-save model object (if applicable)
   if (!is.null(model$file) && (run_m2 || run_ppmc$run) && save) {
+    saveRDS(model, file = model$file)
+  }
+
+  return(model)
+}
+
+#' @export
+#' @rdname model_evaluation
+add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
+                                     overwrite = FALSE, save = TRUE) {
+  model <- check_model(x, required_class = "measrfit", name = "x")
+  overwrite <- check_logical(overwrite, name = "overwrite")
+  save <- check_logical(save, name = "force_save")
+  probs <- check_double(probs, lb = 0, ub = 1, inclusive = TRUE, name = "probs")
+
+  run_pred <- length(model$respondent_estimates) == 0 || overwrite
+
+  if (run_pred) {
+    model$respondent_estimates <- stats::predict(model, probs = probs)
+  }
+
+  # re-save model object (if applicable)
+  if (!is.null(model$file) && save) {
     saveRDS(model, file = model$file)
   }
 

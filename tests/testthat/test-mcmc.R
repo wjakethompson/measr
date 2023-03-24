@@ -243,3 +243,42 @@ test_that("model fit can be added", {
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
 })
+
+test_that("respondent probabilities are correct", {
+  mdm_preds <- predict(cmds_mdm_lcdm, newdata = mdm_data,
+                       resp_id = "respondent", summary = TRUE)
+
+  # dimensions are correct
+  expect_equal(names(mdm_preds), c("class_probabilities",
+                                   "attribute_probabilities"))
+  expect_equal(colnames(mdm_preds$class_probabilities),
+               c("respondent", "class", "probability", "2.5%", "97.5%"))
+  expect_equal(colnames(mdm_preds$attribute_probabilities),
+               c("respondent", "attribute", "probability", "2.5%", "97.5%"))
+  expect_equal(nrow(mdm_preds$class_probabilities),
+               nrow(mdm_data) * (2 ^ 1))
+  expect_equal(nrow(mdm_preds$attribute_probabilities),
+               nrow(mdm_data) * 1)
+
+  # extract works
+  expect_equal(cmds_mdm_lcdm$respondent_estimates, list())
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "class_prob"))
+  expect_match(err$message,
+               "added to a model object before class probabilities")
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "attribute_prob"))
+  expect_match(err$message,
+               "added to a model object before attribute probabilities")
+
+  cmds_mdm_lcdm <- add_respondent_estimates(cmds_mdm_lcdm)
+  expect_equal(cmds_mdm_lcdm$respondent_estimates, mdm_preds)
+  expect_equal(measr_extract(cmds_mdm_lcdm, "class_prob"),
+               mdm_preds$class_probabilities %>%
+                 dplyr::select("respondent", "class", "probability") %>%
+                 tidyr::pivot_wider(names_from = "class",
+                                    values_from = "probability"))
+  expect_equal(measr_extract(cmds_mdm_lcdm, "attribute_prob"),
+               mdm_preds$attribute_prob %>%
+                 dplyr::select("respondent", "attribute", "probability") %>%
+                 tidyr::pivot_wider(names_from = "attribute",
+                                    values_from = "probability"))
+})

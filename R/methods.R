@@ -17,9 +17,11 @@
 #' @param missing An R expression specifying how missing data in `data` is coded
 #'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
 #' @param summary Should summary statistics be returned instead of the raw
-#'   posterior draws? Default is `TRUE`.
+#'   posterior draws? Only relevant if the model was estimated with
+#'   `method = "mcmc"`. Default is `TRUE`.
 #' @param probs The percentiles to be computed by the `[stats::quantile()]`
-#'   function. Only used if `summary` is `TRUE`.
+#'   function. Only relevant if the model was estimated with `method = "mcmc"`.
+#'   Only used if `summary` is `TRUE`.
 #' @param ... Unused.
 #'
 #' @return A list with two elements: `class_probabilities` and
@@ -37,7 +39,7 @@
 #' @export
 predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
                              missing = NA, summary = TRUE,
-                             probs = c(0.025, 0.975), ...)  {
+                             probs = c(0.025, 0.975), ...) {
   model <- check_model(object, required_class = "measrdcm", name = "object")
 
   summary <- check_logical(summary, allow_na = FALSE, name = "summary")
@@ -119,7 +121,8 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
   if (!summary) return(ret_list)
 
   summary_list <- lapply(ret_list, summarize_probs, probs = probs,
-                         id = model$data$resp_id)
+                         id = model$data$resp_id,
+                         optim = model$method == "optim")
 
   return(summary_list)
 }

@@ -76,16 +76,16 @@ extract_attr_probs <- function(model, qmat) {
   return(mastery)
 }
 
-summarize_probs <- function(x, probs, id) {
+summarize_probs <- function(x, probs, id, optim) {
   summary_names <- colnames(x)[!grepl(glue::glue("{id}|chain|iteration|draw"),
                                       colnames(x))]
   type <- dplyr::if_else(all(grepl("\\[[0-1,]+\\]", summary_names)),
                          "class", "attribute")
 
-  x %>%
+  sum_frame <- x %>%
     dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
     tidyr::pivot_longer(cols = -!!id, names_to = type, values_to = "prob") %>%
-    dplyr::summarize(mean = mean(.data$prob, na.rm = TRUE),
+    dplyr::summarize(probability = mean(.data$prob, na.rm = TRUE),
                      bounds = list(
                        tibble::as_tibble_row(
                          stats::quantile(.data$prob, probs = probs,
@@ -95,4 +95,10 @@ summarize_probs <- function(x, probs, id) {
                      .by = c(!!id, !!type)) %>%
     tidyr::unnest("bounds")
 
+  if (optim) {
+    sum_frame <- sum_frame %>%
+      dplyr::select(!!id, !!type, "probability")
+  }
+
+  return(sum_frame)
 }
