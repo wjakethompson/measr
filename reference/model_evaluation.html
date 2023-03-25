@@ -87,6 +87,13 @@ repeated. See Details for specifics.</p>
 <span>  save <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  ci <span class="op">=</span> <span class="fl">0.9</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">add_respondent_estimates</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  save <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -102,10 +109,9 @@ object.</p></dd>
 
 
 <dt>overwrite</dt>
-<dd><p>Logical. Indicates whether existing criteria should be
-overwritten. For example, if LOO has already been added to the model object
-<code>add_criterion()</code> is called again with <code>criterion = "loo"</code>, should LOO be
-recalculated? Default is <code>FALSE</code>.</p></dd>
+<dd><p>Logical. Indicates whether specified elements that have
+already been added to the estimated model should be overwritten. Default is
+<code>FALSE</code>.</p></dd>
 
 
 <dt>save</dt>
@@ -141,17 +147,32 @@ object.</p></dd>
 <dt>ci</dt>
 <dd><p>The confidence interval for the RMSEA, computed from the M2</p></dd>
 
+
+<dt>probs</dt>
+<dd><p>The percentiles to be computed by the <code>[stats::quantile()]</code>
+function to summarize the posterior distributions of each person parameter.
+Only relevant if <code>method = "mcmc"</code> was used to estimate the model.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A modified <a href="measrfit-class.html">measrfit</a> object with the <code>criteria</code> slot populated with
-the specified criteria.</p>
+<p>A modified <a href="measrfit-class.html">measrfit</a> object with the corresponding slot populated
+with the specified information.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For <code>add_criterion()</code>, relative fit criteria are added to the <code>$criteria</code>
+    <p>For <code>add_respondent_estimates()</code>, estimated person parameters are added to
+the <code>$respondent_estimates</code> element of the fitted model.</p>
+<p>For <code>add_fit()</code>, model and item fit information are added to the <code>$fit</code>
+element of the fitted model. This function wraps <code><a href="https://rdrr.io/pkg/dcm2/man/fit_m2.html" class="external-link">fit_m2()</a></code> to calculate the
+M<sub>2</sub> statistic (Hansen et al., 2006;
+Liu et al., 2016) and/or <code><a href="fit_ppmc.html">fit_ppmc()</a></code> to calculate posterior predictive model
+checks (Park et al., 2015; Sinharay &amp; Almond, 2007; Sinharay et al., 2006;
+Thompson, 2019), depending on which methods are specified. Additional
+arguments supplied to <code>...</code> are passed to <code><a href="fit_ppmc.html">fit_ppmc()</a></code>.</p>
+<p>For <code>add_criterion()</code>, relative fit criteria are added to the <code>$criteria</code>
 element of the fitted model. This function wraps <code><a href="https://mc-stan.org/loo/reference/loo.html" class="external-link">loo()</a></code> and/or <code><a href="https://mc-stan.org/loo/reference/waic.html" class="external-link">waic()</a></code>,
 depending on which criteria are specified, to calculate the leave-one-out
 (LOO; Vehtari et al., 2017) and/or widely applicable information criteria
@@ -162,13 +183,6 @@ to <code>...</code> are passed to <code><a href="https://mc-stan.org/loo/referen
 described by Cui et al. (2012). Classification reliability and posterior
 probability reliability are described by Johnson &amp; Sinharay (2018, 2020),
 respectively. This function wraps <code><a href="reliability.html">reliability()</a></code>.</p>
-<p>For <code>add_fit()</code>, model and item fit information are added to the <code>$model_fit</code>
-element of the fitted model. This function wraps <code><a href="https://rdrr.io/pkg/dcm2/man/fit_m2.html" class="external-link">fit_m2()</a></code> to calculate the
-M<sub>2</sub> statistic (Hansen et al., 2006;
-Liu et al., 2016) and/or <code><a href="fit_ppmc.html">fit_ppmc()</a></code> to calculate posterior predictive model
-checks (Park et al., 2015; Sinharay &amp; Almond, 2007; Sinharay et al., 2006;
-Thompson, 2019), depending on which methods are specified. Additional
-arguments supplied to <code>...</code> are passed to <code><a href="fit_ppmc.html">fit_ppmc()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -227,10 +241,32 @@ theory. <em>Journal of Machine Learning Research, 11</em>(116), 3571-3594.
 <span class="r-in"><span>            <span class="fu"><a href="measrprior.html">prior</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Special.html" class="external-link">beta</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">17</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"guess"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">cmds_mdm_dina</span> <span class="op">&lt;-</span> <span class="fu">add_reliability</span><span class="op">(</span><span class="va">cmd_mdm_dina</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in required_class %in% class(x):</span> object 'cmd_mdm_dina' not found</span>
-<span class="r-in"><span><span class="va">cmds_mdm_dina</span> <span class="op">&lt;-</span> <span class="fu">add_fit</span><span class="op">(</span><span class="va">cmd_mdm_dina</span>, method <span class="op">=</span> <span class="st">"m2"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in required_class %in% class(x):</span> object 'cmd_mdm_dina' not found</span>
+<span class="r-in"><span><span class="va">cmds_mdm_dina</span> <span class="op">&lt;-</span> <span class="fu">add_reliability</span><span class="op">(</span><span class="va">cmds_mdm_dina</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> For i = 1 j = 1  A cell entry of 0 was replaced with correct =  0.5.  Check your data!</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NA/Inf replaced by maximum positive value</span>
+<span class="r-in"><span><span class="va">cmds_mdm_dina</span> <span class="op">&lt;-</span> <span class="fu">add_fit</span><span class="op">(</span><span class="va">cmds_mdm_dina</span>, method <span class="op">=</span> <span class="st">"m2"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cmds_mdm_dina</span> <span class="op">&lt;-</span> <span class="fu">add_respondent_estimates</span><span class="op">(</span><span class="va">cmds_mdm_dina</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

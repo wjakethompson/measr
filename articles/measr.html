@@ -186,7 +186,8 @@ they are proficient in all attributes. On the other hand, respondent 8
 has relatively low probabilities for morphosyntactic and cohesive
 attributes, and is likely only proficient in lexical rules.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">ecpe_lcdm</span>, <span class="st">"attribute_prob"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ecpe_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_evaluation.html">add_respondent_estimates</a></span><span class="op">(</span><span class="va">ecpe_lcdm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">ecpe_lcdm</span>, <span class="st">"attribute_prob"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,922 × 4</span></span></span>
 <span><span class="co">#&gt;    resp_id morphosyntactic cohesive lexical</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -197,9 +198,9 @@ attributes, and is likely only proficient in lexical rules.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 5               0.989      0.985   0.965</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 6               0.993      0.991   1.00 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 7               0.993      0.991   1.00 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8               0.004<span style="text-decoration: underline;">12</span>    0.471   0.964</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8               0.004<span style="text-decoration: underline;">11</span>    0.471   0.964</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 9               0.949      0.986   0.999</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 10              0.557      0.139   0.109</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 10              0.552      0.142   0.111</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,912 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -224,7 +225,7 @@ reliability, see <span class="citation">Johnson &amp; Sinharay (<a href="#ref-jo
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;   attribute       accuracy consistency</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> morphosyntactic    0.896       0.834</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> morphosyntactic    0.897       0.835</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> cohesive           0.858       0.809</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> lexical            0.918       0.858</span></span></code></pre></div>
 </div>

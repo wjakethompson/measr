@@ -103,12 +103,14 @@ the model is scored, the <code>resp_id</code> is taken from the original data.</
 
 <dt>summary</dt>
 <dd><p>Should summary statistics be returned instead of the raw
-posterior draws? Default is <code>TRUE</code>.</p></dd>
+posterior draws? Only relevant if the model was estimated with
+<code>method = "mcmc"</code>. Default is <code>TRUE</code>.</p></dd>
 
 
 <dt>probs</dt>
 <dd><p>The percentiles to be computed by the <code>[stats::quantile()]</code>
-function. Only used if <code>summary</code> is <code>TRUE</code>.</p></dd>
+function. Only relevant if the model was estimated with <code>method = "mcmc"</code>.
+Only used if <code>summary</code> is <code>TRUE</code>.</p></dd>
 
 
 <dt>...</dt>
