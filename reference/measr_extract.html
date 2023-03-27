@@ -12,7 +12,7 @@ Extract components of an estimated diagnostic classification model"><meta proper
     
     <a class="navbar-brand me-2" href="../index.html">measr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@ Extract components of an estimated diagnostic classification model"><meta proper
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">measr_extract</span><span class="op">(</span><span class="va">model</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for measrdcm</span></span>
-<span><span class="fu">measr_extract</span><span class="op">(</span><span class="va">model</span>, <span class="va">what</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">measr_extract</span><span class="op">(</span><span class="va">model</span>, <span class="va">what</span>, ppmc_interval <span class="op">=</span> <span class="fl">0.95</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,6 +79,18 @@ Extract components of an estimated diagnostic classification model"><meta proper
 <dt>what</dt>
 <dd><p>Character string. The information to be extracted. See details
 for available options.</p></dd>
+
+
+<dt>ppmc_interval</dt>
+<dd><p>The compatibility interval used for determining model
+fit flags to return (e.g., <code>what = "odds_ratio_flags"</code>). For example, a
+<code>ppmc_interval</code> of 0.95 will return any PPMCs where the posterior
+predictive <em>p</em>-value (ppp) is less than 0.025 or greater than 0.975.</p></dd>
+
+
+<dt>quiet</dt>
+<dd><p>Logical. Should informational summaries and messages be
+suppressed? Default is <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -105,6 +117,14 @@ included in each class.</p></li>
 (i.e., has the given pattern of proficiency).</p></li>
 <li><p><code>attribute_prob</code>: The proficiency probability for each respondent and
 attribute.</p></li>
+<li><p><code>m2</code>: The M<sub>2</sub> fit statistic,
+including RMSEA and SRMSR indices. Model fit information must first be
+added to the model using <code><a href="model_evaluation.html">add_fit()</a></code>.</p></li>
+<li><p><code>odds_ratio</code>: The observed and posterior predicted odds ratios of each
+item pair. Model fit information must first be added to the model using
+<code><a href="model_evaluation.html">add_fit()</a></code>.</p></li>
+<li><p><code>odds_ratio_flags</code>: A subset of the PPMC odds ratios where the <em>ppp</em> is
+outside the specified <code>ppmc_interval</code>.</p></li>
 <li><p><code>classification_accuracy</code>: The classification accuracy and consistency
 for each attribute, using the metrics described by Johnson &amp; Sinharay
 (2018). Reliability information must first be added to the model using
@@ -145,7 +165,7 @@ cognitive diagnostic assessments. <em>Journal of Educational Measurement,
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>The research reported here was supported by the Institute of Education Science, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the the Institute or the U.S. Department of Education.</p>
+  <p></p><p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the the Institute or the U.S. Department of Education.</p>
 </div>
 
     </footer></div>
