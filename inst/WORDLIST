@@ -23,6 +23,7 @@ PPMC
 PPMCs
 Psychometrika
 RMSEA
+SRMSR
 Sinharay
 Tatsuoka
 Templin
@@ -55,6 +56,7 @@ morphosyntactic
 pkgdown
 polytomously
 posteriori
+ppp
 pre
 psychometrics
 rlang
