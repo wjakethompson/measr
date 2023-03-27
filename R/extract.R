@@ -12,6 +12,12 @@ measr_extract <- function(model, ...) {
 #'
 #' @param what Character string. The information to be extracted. See details
 #'   for available options.
+#' @param ppmc_interval The compatibility interval used for determining model
+#'   fit flags to return (e.g., `what = "odds_ratio_flags"`). For example, a
+#'   `ppmc_interval` of 0.95 will return any PPMCs where the posterior
+#'   predictive *p*-value (ppp) is less than 0.025 or greater than 0.975.
+#' @param quiet Logical. Should informational summaries and messages be
+#'   suppressed? Default is `FALSE`.
 #'
 #' @details
 #' For diagnostic classification models, we can extract the following
@@ -29,6 +35,14 @@ measr_extract <- function(model, ...) {
 #'     (i.e., has the given pattern of proficiency).
 #'   * `attribute_prob`: The proficiency probability for each respondent and
 #'     attribute.
+#'   * `m2`: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
+#'     including RMSEA and SRMSR indices. Model fit information must first be
+#'     added to the model using [add_fit()].
+#'   * `odds_ratio`: The observed and posterior predicted odds ratios of each
+#'     item pair. Model fit information must first be added to the model using
+#'     [add_fit()].
+#'   * `odds_ratio_flags`: A subset of the PPMC odds ratios where the _ppp_ is
+#'     outside the specified `ppmc_interval`.
 #'   * `classification_accuracy`: The classification accuracy and consistency
 #'     for each attribute, using the metrics described by Johnson & Sinharay
 #'     (2018). Reliability information must first be added to the model using
@@ -55,7 +69,12 @@ measr_extract <- function(model, ...) {
 #' )
 #'
 #' extract(rstn_mdm_lcdm, "strc_param")
-measr_extract.measrdcm <- function(model, what, ...) {
+measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95,
+                                   quiet = FALSE, ...) {
+  ppmc_interval <- check_double(ppmc_interval, lb = 0, ub = 1,
+                                name = "ppmc_interval")
+  quiet <- check_logical(quiet, name = "quiet")
+
   out <- switch(
     what,
     item_param = {
@@ -136,6 +155,45 @@ measr_extract.measrdcm <- function(model, what, ...) {
         dplyr::select(!!model$data$resp_id, "attribute", "probability") %>%
         tidyr::pivot_wider(names_from = "attribute",
                            values_from = "probability")
+    },
+    m2 = {
+      if (is.null(model$fit$m2)) {
+        rlang::abort(message = glue::glue("Model fit information must be ",
+                                          "added to a model object before ",
+                                          "the M2 can be extracted. See ",
+                                          "`?add_fit()`."))
+      }
+      fit <- model$fit$m2 %>%
+        dplyr::mutate(dplyr::across(dplyr::where(is.double),
+                                    ~round(.x, digits = 3)))
+      if (!quiet) {
+        print(glue::glue("M2 = {fit$m2}, df = {fit$df}, p = {fit$pval}
+                       RMSEA = {fit$rmsea}, CI: [{fit$ci_lower},{fit$ci_upper}]
+                       SRMSR = {fit$srmsr}"))
+      }
+
+      return(invisible(model$fit$m2))
+    },
+    odds_ratio = {
+      if (is.null(model$fit$ppmc$item_fit$odds_ratio)) {
+        rlang::abort(message = glue::glue("Model fit information must be ",
+                                          "added to a model object before ",
+                                          "odds ratios can be extracted. See ",
+                                          "`?add_fit()`."))
+      }
+      model$fit$ppmc$item_fit$odds_ratio
+    },
+    odds_ratio_flags = {
+      if (is.null(model$fit$ppmc$item_fit$odds_ratio)) {
+        rlang::abort(message = glue::glue("Model fit information must be ",
+                                          "added to a model object before ",
+                                          "odds ratios can be extracted. See ",
+                                          "`?add_fit()`."))
+      }
+      model$fit$ppmc$item_fit$odds_ratio %>%
+        dplyr::filter(!dplyr::between(.data$ppp,
+                                      (1 - ppmc_interval) / 2,
+                                      1 - ((1 - ppmc_interval) / 2)))
     },
     classification_reliability = {
       if (identical(model$reliability, list())) {

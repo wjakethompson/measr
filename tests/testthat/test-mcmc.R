@@ -193,6 +193,16 @@ test_that("ppmc works", {
                  "ppp"))
 })
 
+test_that("ppmc extraction errors", {
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "odds_ratio"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "odds_ratio_flags"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+})
+
 test_that("model fit can be added", {
   test_model <- cmds_mdm_lcdm
   expect_equal(test_model$fit, list())
@@ -242,6 +252,17 @@ test_that("model fit can be added", {
   expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
+
+  # test extraction
+  or_check <- measr_extract(test_model, "odds_ratio")
+  expect_equal(or_check,
+               test_model$fit$ppmc$item_fit$odds_ratio)
+  expect_equal(measr_extract(test_model, "odds_ratio_flags",
+                             ppmc_interval = 0.95),
+               dplyr::filter(or_check, ppp <= 0.025 | ppp >= 0.975))
+  expect_equal(measr_extract(test_model, "odds_ratio_flags",
+                             ppmc_interval = 0.8),
+               dplyr::filter(or_check, ppp <= 0.1 | ppp >= 0.9))
 })
 
 test_that("respondent probabilities are correct", {
