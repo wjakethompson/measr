@@ -90,7 +90,7 @@ test_that("check_data", {
                dat_check)
 
   missing_dat <- dat %>%
-    dplyr::mutate(dplyr::across(where(is.double),
+    dplyr::mutate(dplyr::across(dplyr::where(is.double),
                                 ~sample(c(0, 1, NA_real_), size = dplyr::n(),
                                         replace = TRUE,
                                         prob = c(.45, .45, 0.1))))
@@ -106,7 +106,7 @@ test_that("check_data", {
                check_missing)
 
   missing_dat <- dat %>%
-    dplyr::mutate(dplyr::across(where(is.double),
+    dplyr::mutate(dplyr::across(dplyr::where(is.double),
                                 ~sample(c(0, 1, "."),
                                         size = dplyr::n(),
                                         replace = TRUE,

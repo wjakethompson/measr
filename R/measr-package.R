@@ -5,8 +5,9 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 #' @importFrom tibble tibble
+#' @import methods
+#' @import Rcpp
+#' @importFrom rstan sampling
+#' @useDynLib measr, .registration = TRUE
 ## usethis namespace: end
 NULL
-
-# need this until `where` is exported from tidyselect (r-lib/tidyselect#201)
-utils::globalVariables("where")
