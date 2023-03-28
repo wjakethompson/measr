@@ -204,7 +204,7 @@ test_that("ppmc extraction errors", {
 })
 
 test_that("model fit can be added", {
-  test_model <- cmds_mdm_lcdm
+  test_model <- cmds_mdm_dina
   expect_equal(test_model$fit, list())
 
   # add m2 and ppmc odds ratios
