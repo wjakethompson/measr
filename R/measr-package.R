@@ -7,8 +7,6 @@
 #' @importFrom tibble tibble
 #' @import methods
 #' @import Rcpp
-#' @import RcppParallel
-#' @import rstantools
 #' @importFrom rstan sampling
 #' @useDynLib measr, .registration = TRUE
 ## usethis namespace: end
