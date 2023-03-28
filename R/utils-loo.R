@@ -20,6 +20,7 @@ prep_loglik_array.measrdcm <- function(model) {
   stan_mod <- create_stan_function(backend = model$backend,
                                    method = "gqs",
                                    code = loglik_script(),
+                                   precompiled = stanmodels$gqs_loglik,
                                    pars = stan_pars,
                                    silent = 2)
   out <- utils::capture.output( #nolint

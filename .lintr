@@ -1,5 +1,5 @@
 linters: linters_with_defaults()
 exclusions: list(
     "R/stanmodels.R"
-)
+  )
 encoding: "UTF-8"

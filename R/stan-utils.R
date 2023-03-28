@@ -67,15 +67,21 @@ create_stan_gqs_params <- function(backend, draws) {
   return(stan_pars)
 }
 
-create_stan_function <- function(backend, method, code, pars, silent = 1) {
+create_stan_function <- function(backend, method, code, precompiled = NULL,
+                                 pars, silent = 1) {
   if (backend == "rstan") {
-    out <- utils::capture.output( #nolint
-      comp_mod <- eval_silent(
-        rstan::stan_model(model_code = code$stancode),
-        type = "message", try = TRUE, silent = silent >= 2
+    if (is.null(precompiled)) {
+      out <- utils::capture.output( #nolint
+        comp_mod <- eval_silent(
+          rstan::stan_model(model_code = code$stancode),
+          type = "message", try = TRUE, silent = silent >= 2
+        )
       )
-    )
-    pars$object <- comp_mod
+      pars$object <- comp_mod
+    } else {
+      pars$object <- precompiled
+    }
+
     fit_func <- switch(method,
                        mcmc = rstan::sampling,
                        optim = rstan::optimizing,
