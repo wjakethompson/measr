@@ -1,7 +1,7 @@
 clean_predicted_probs <- function(x, resp_id) {
   x %>%
     dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
-    dplyr::summarize(dplyr::across(where(is.double),
+    dplyr::summarize(dplyr::across(dplyr::where(is.double),
                                    \(x) mean(x, na.rm = TRUE)),
                      .by = !!resp_id) %>%
     dplyr::arrange(!!resp_id) %>%

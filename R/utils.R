@@ -92,7 +92,7 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
                                                  max(ncol(qmatrix), 2L))),
                         qmatrix) %>%
       tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
-      dplyr::select(where(~ sum(.x) > 0)) %>%
+      dplyr::select(dplyr::where(~ sum(.x) > 0)) %>%
       tibble::rowid_to_column(var = "item_id") %>%
       tidyr::pivot_longer(cols = -"item_id", names_to = "parameter",
                           values_to = "value") %>%
