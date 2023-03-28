@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Estimate diagnostic classification models (DCMs; also called cognitive diagnostic models [CDMs]) with 'Stan'. Automatically generate 'Stan' code for a variety of models, estimate your model, and evaluate how well the model fits your data.
+Estimate diagnostic classification models (also called cognitive diagnostic models) with 'Stan'. Automatically generate 'Stan' code for a variety of models and estimate your model. After estimation, evaluate the performance of your model using model fit indices, information criteria, and reliability metrics.
 }
 \seealso{
 Useful links:
