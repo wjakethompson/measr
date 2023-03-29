@@ -1,78 +1,89 @@
 test_that("returned predictions have correct dimensions and names", {
-  num_att <- ncol(rstn_mdm_lcdm$data$qmatrix) - 1
+  num_att <- ncol(rstn_dina$data$qmatrix) - 1
+  prof_labs <- profile_labels(num_att)
 
-  mod_preds <- predict(rstn_mdm_lcdm, summary = FALSE)
+  mod_preds <- predict(rstn_dina, summary = FALSE)
   expect_equal(names(mod_preds), c("class_probabilities",
                                    "attribute_probabilities"))
   expect_equal(colnames(mod_preds$class_probabilities),
-               c(".chain", ".iteration", ".draw", "respondent", "[0]", "[1]"))
+               c(".chain", ".iteration", ".draw", "resp_id",
+                 prof_labs$class))
   expect_equal(colnames(mod_preds$attribute_probabilities),
-               c(".chain", ".iteration", ".draw", "respondent",
-                 "multiplication"))
-  expect_equal(nrow(mod_preds$class_probabilities), nrow(mdm_data))
-  expect_equal(nrow(mod_preds$attribute_probabilities), nrow(mdm_data))
+               c(".chain", ".iteration", ".draw", "resp_id",
+                 paste0("att", 1:5)))
+  expect_equal(nrow(mod_preds$class_probabilities), nrow(dina_data))
+  expect_equal(nrow(mod_preds$attribute_probabilities), nrow(dina_data))
 
-  mod_preds <- predict(rstn_mdm_lcdm, summary = TRUE)
+  mod_preds <- predict(rstn_dina, summary = TRUE)
   expect_equal(names(mod_preds), c("class_probabilities",
                                    "attribute_probabilities"))
   expect_equal(colnames(mod_preds$class_probabilities),
-               c("respondent", "class", "probability"))
+               c("resp_id", "class", "probability"))
   expect_equal(colnames(mod_preds$attribute_probabilities),
-               c("respondent", "attribute", "probability"))
+               c("resp_id", "attribute", "probability"))
   expect_equal(nrow(mod_preds$class_probabilities),
-               nrow(mdm_data) * (2 ^ num_att))
+               nrow(dina_data) * (2 ^ num_att))
   expect_equal(nrow(mod_preds$attribute_probabilities),
-               nrow(mdm_data) * num_att)
+               nrow(dina_data) * num_att)
 })
 
-test_that("mdm probabilities are accurate", {
-  mdm_preds <- predict(rstn_mdm_lcdm, summary = TRUE)
+test_that("dina probabilities are accurate", {
+  dina_preds <- predict(rstn_dina, summary = TRUE)
 
   # extract works
-  expect_equal(rstn_mdm_lcdm$respondent_estimates, list())
-  err <- rlang::catch_cnd(measr_extract(rstn_mdm_lcdm, "class_prob"))
+  expect_equal(rstn_dina$respondent_estimates, list())
+  err <- rlang::catch_cnd(measr_extract(rstn_dina, "class_prob"))
   expect_match(err$message,
                "added to a model object before class probabilities")
-  err <- rlang::catch_cnd(measr_extract(rstn_mdm_lcdm, "attribute_prob"))
+  err <- rlang::catch_cnd(measr_extract(rstn_dina, "attribute_prob"))
   expect_match(err$message,
                "added to a model object before attribute probabilities")
 
-  rstn_mdm_lcdm <- add_respondent_estimates(rstn_mdm_lcdm)
-  expect_equal(rstn_mdm_lcdm$respondent_estimates, mdm_preds)
+  rstn_dina <- add_respondent_estimates(rstn_dina)
+  expect_equal(rstn_dina$respondent_estimates, dina_preds)
 
-  expect_equal(measr_extract(rstn_mdm_lcdm, "class_prob"),
-               mdm_preds$class_probabilities %>%
-                 dplyr::select("respondent", "class", "probability") %>%
+  expect_equal(measr_extract(rstn_dina, "class_prob"),
+               dina_preds$class_probabilities %>%
+                 dplyr::select("resp_id", "class", "probability") %>%
                  tidyr::pivot_wider(names_from = "class",
                                     values_from = "probability"))
-  expect_equal(measr_extract(rstn_mdm_lcdm, "attribute_prob"),
-               mdm_preds$attribute_prob %>%
-                 dplyr::select("respondent", "attribute", "probability") %>%
+  expect_equal(measr_extract(rstn_dina, "attribute_prob"),
+               dina_preds$attribute_prob %>%
+                 dplyr::select("resp_id", "attribute", "probability") %>%
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "probability"))
 
-  measr_class <- mdm_preds$class_probabilities %>%
-    dplyr::select("respondent", "class", "probability") %>%
-    tidyr::pivot_wider(names_from = "class", values_from = "probability") %>%
-    dplyr::select(-"respondent") %>%
-    as.matrix() %>%
-    unname()
+  prof_labs <- profile_labels(ncol(rstn_dina$data$qmatrix) - 1)
 
-  class_diff <- abs(round(measr_class, digits = 4) -
-                      round(mdm_lldcm$posterior, digits = 4))
+  measr_class <- dina_preds$class_probabilities %>%
+    dplyr::select("resp_id", "class", "probability") %>%
+    dplyr::mutate(resp_id = as.integer(as.character(.data$resp_id)))
 
-  expect_lt(mean(class_diff), .02)
-  expect_lt(median(class_diff), .02)
+  class_diff <- true_profiles %>%
+    tibble::rowid_to_column(var = "resp_id") %>%
+    dplyr::mutate(profile = paste0("[", .data$att1, ",", .data$att2, ",",
+                                   .data$att3, ",", .data$att4, ",",
+                                   .data$att5, "]"),
+                  true = 1) %>%
+    dplyr::select("resp_id", "profile", "true") %>%
+    dplyr::right_join(measr_class, by = c("resp_id","profile" = "class")) %>%
+    dplyr::mutate(true = tidyr::replace_na(.data$true, 0),
+                  diff = .data$true - .data$probability)
+
+  expect_lt(abs(mean(class_diff$diff)), .03)
+  expect_lt(abs(median(class_diff$diff)), .03)
 
 
-  measr_attr <- mdm_preds$attribute_probabilities %>%
-    dplyr::select("probability") %>%
-    as.matrix() %>%
-    unname()
+  measr_attr <- dina_preds$attribute_probabilities %>%
+    dplyr::mutate(resp_id = as.integer(as.character(.data$resp_id)))
 
-  attr_diff <- abs(round(measr_attr, digits = 4) -
-                     round(mdm_lldcm$eap, digits = 4))
+  attr_diff <- true_profiles %>%
+    tibble::rowid_to_column(var = "resp_id") %>%
+    tidyr::pivot_longer(cols = -"resp_id", names_to = "attribute",
+                        values_to = "true") %>%
+    dplyr::left_join(measr_attr, by = c("resp_id", "attribute")) %>%
+    dplyr::mutate(diff = .data$true - .data$probability)
 
-  expect_lt(mean(attr_diff), .02)
-  expect_lt(median(attr_diff), .02)
+  expect_lt(abs(mean(attr_diff$diff)), .03)
+  expect_lt(abs(median(attr_diff$diff)), .03)
 })

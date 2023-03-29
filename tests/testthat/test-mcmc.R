@@ -67,11 +67,11 @@ test_that("log_lik is calculated correctly", {
 })
 
 test_that("loo and waic work", {
-  err <- rlang::catch_cnd(loo(rstn_mdm_lcdm))
+  err <- rlang::catch_cnd(loo(rstn_dina))
   expect_s3_class(err, "error_bad_method")
   expect_match(err$message, "`method = \"mcmc\"`")
 
-  err <- rlang::catch_cnd(waic(rstn_mdm_lcdm))
+  err <- rlang::catch_cnd(waic(rstn_dino))
   expect_s3_class(err, "error_bad_method")
   expect_match(err$message, "`method = \"mcmc\"`")
 
@@ -83,7 +83,7 @@ test_that("loo and waic work", {
 })
 
 test_that("loo and waic can be added to model", {
-  err <- rlang::catch_cnd(add_criterion(rstn_mdm_lcdm))
+  err <- rlang::catch_cnd(add_criterion(rstn_dino))
   expect_s3_class(err, "error_bad_method")
   expect_match(err$message, "`method = \"mcmc\"`")
 
