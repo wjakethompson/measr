@@ -66,7 +66,7 @@ test_that("dina probabilities are accurate", {
                                    .data$att5, "]"),
                   true = 1) %>%
     dplyr::select("resp_id", "profile", "true") %>%
-    dplyr::right_join(measr_class, by = c("resp_id","profile" = "class")) %>%
+    dplyr::right_join(measr_class, by = c("resp_id", "profile" = "class")) %>%
     dplyr::mutate(true = tidyr::replace_na(.data$true, 0),
                   diff = .data$true - .data$probability)
 
