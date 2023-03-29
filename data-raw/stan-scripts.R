@@ -18,6 +18,3 @@ rstn_mdm_lcdm$stancode %>%
 
 rstn_dina$stancode %>%
   write_lines("inst/stan/test_dina.stan")
-
-rstn_dino$stancode %>%
-  write_lines("inst/stan/test_dino.stan")

@@ -25,6 +25,6 @@ out <- capture.output(
     rstn_dino <- measr_dcm(data = dino_data, missing = NA, qmatrix = q_matrix,
                            resp_id = "resp_id", item_id = "item", type = "dino",
                            method = "optim", seed = 63277, backend = "rstan",
-                           precompiled = stanmodels$test_dino)
+                           precompiled = stanmodels$test_dina)
   )
 )
