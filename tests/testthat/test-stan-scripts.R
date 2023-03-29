@@ -17,10 +17,33 @@ dtmr_q <- tibble::tibble(
 
 test_that("stan generated quantities script works", {
   expect_snapshot(gqs_script())
+  expect_snapshot(gqs_script(full_data = TRUE))
+
+  prob_code <- as.character(gqs_script()$stancode)
+  prob_code <- gsub("\\n\\n", "\\\n", prob_code)
+  prob_code <- gsub("\\n  \\n", "\\\n", prob_code)
+  prob_code <- gsub("\\} ", "}", prob_code)
+
+  expect_equal(prob_code, stanmodels$gqs_probs@model_code,
+               ignore_attr = TRUE)
+
+  ppmc_code <- as.character(gqs_script(full_data = TRUE)$stancode)
+  ppmc_code <- gsub("\\n\\n", "\\\n", ppmc_code)
+  ppmc_code <- gsub("\\n  \\n", "\\\n", ppmc_code)
+  ppmc_code <- gsub("\\} ", "}", ppmc_code)
+
+  expect_equal(ppmc_code, stanmodels$gqs_ppmc@model_code,
+               ignore_attr = TRUE)
 })
 
 test_that("stan log_lik script works", {
   expect_snapshot(loglik_script())
+
+  loglik_code <- as.character(loglik_script()$stancode)
+  loglik_code <- gsub("\\n\\n", "\\\n", loglik_code)
+
+  expect_equal(loglik_code, stanmodels$gqs_loglik@model_code,
+               ignore_attr = TRUE)
 })
 
 test_that("lcdm script works", {

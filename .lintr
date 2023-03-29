@@ -1,3 +1,8 @@
 linters: linters_with_defaults()
-exclusions: list()
+exclusions: list(
+    "R/stanmodels.R",
+    "R/fit-dcm.R" = list(
+      line_length_linter = Inf
+    )
+  )
 encoding: "UTF-8"

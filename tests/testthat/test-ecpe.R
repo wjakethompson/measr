@@ -61,6 +61,44 @@ test_that("lcdm model works for ecpe", {
   expect_gte(comp_cor, 0.85)
 })
 
+test_that("extract ecpe", {
+  lcdm_param <- measr_extract(cmds_ecpe_lcdm, "item_param")
+  all_param <- get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
+
+  expect_equal(nrow(lcdm_param), nrow(all_param))
+  expect_equal(colnames(lcdm_param),
+               c("item_id", "class", "attributes", "coef", "estimate"))
+  expect_equal(as.character(lcdm_param$item_id),
+               paste0("E", all_param$item_id))
+  expect_equal(lcdm_param$class, all_param$class)
+  expect_equal(lcdm_param$attributes, all_param$attributes)
+  expect_equal(lcdm_param$coef, all_param$coef)
+  expect_s3_class(lcdm_param$estimate, "rvar")
+  expect_true(all(!is.na(lcdm_param$estimate)))
+
+  lcdm_param <- measr_extract(cmds_ecpe_lcdm, "strc_param")
+  expect_equal(nrow(lcdm_param), 8)
+  expect_equal(lcdm_param$class, dplyr::pull(profile_labels(3), "class"))
+  expect_s3_class(lcdm_param$estimate, "rvar")
+  expect_true(all(!is.na(lcdm_param$estimate)))
+
+  lcdm_param <- measr_extract(cmds_ecpe_lcdm, "prior")
+  expect_equal(lcdm_param,
+               c(prior(uniform(-15, 15), class = "intercept"),
+                 prior(uniform(0, 15), class = "maineffect"),
+                 prior(uniform(-15, 15), class = "interaction")))
+
+  lcdm_param <- measr_extract(cmds_ecpe_lcdm, "classes")
+  expect_equal(colnames(lcdm_param), c("class", "morphosyntactic", "cohesive",
+                                       "lexical"))
+  expect_equal(lcdm_param$class, dplyr::pull(profile_labels(3), "class"))
+  exp_label <- lcdm_param %>%
+    dplyr::mutate(new_label = paste0("[", morphosyntactic, ",", cohesive, ",",
+                                     lexical, "]")) %>%
+    dplyr::pull("new_label")
+  expect_equal(lcdm_param$class, exp_label)
+})
+
 test_that("ecpe probabilities are accurate", {
   ecpe_preds <- predict(cmds_ecpe_lcdm, newdata = ecpe_data,
                         resp_id = "resp_id", summary = TRUE)

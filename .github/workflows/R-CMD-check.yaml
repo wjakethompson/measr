@@ -43,8 +43,6 @@ jobs:
         with:
           extra-packages: |
             any::rcmdcheck
-            any::BH
-            any::RcppEigen
             url::https://mc-stan.org/r-packages/src/contrib/rstan_2.26.16.tar.gz
             url::https://mc-stan.org/r-packages/src/contrib/StanHeaders_2.26.16.tar.gz
           needs: check

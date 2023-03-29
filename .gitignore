@@ -5,3 +5,7 @@
 .DS_Store
 docs
 inst/doc
+src/*.gcda
+src/*.gcno
+src/*.o
+src/*.so

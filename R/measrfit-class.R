@@ -18,8 +18,8 @@
 #' @slot backend The name of the backend used to fit the model.
 #' @slot model The fitted Stan model. This will object of class
 #'   [rstan::stanfit-class] if `backend = "rstan"` and
-#'   [cmdstanr::CmdStanMCMC] if `backend = "cmdstanr"` was specified when
-#'   fitting the model.
+#'   [`CmdStanMCMC`](https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html)
+#'   if `backend = "cmdstanr"` was specified when fitting the model.
 #' @slot respondent_estimates An empty list for adding estimated person
 #'   parameters after fitting the model.
 #' @slot fit An empty list for adding model fit information after fitting the

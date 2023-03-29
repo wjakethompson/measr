@@ -133,6 +133,7 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
   stan_mod <- create_stan_function(backend = model$backend,
                                    method = "gqs",
                                    code = gqs_script(full_data = TRUE),
+                                   precompiled = stanmodels$gqs_ppmc,
                                    pars = stan_pars,
                                    silent = 2)
   out <- utils::capture.output( #nolint

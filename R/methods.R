@@ -71,6 +71,7 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
   stan_mod <- create_stan_function(backend = model$backend,
                                    method = "gqs",
                                    code = gqs_script(),
+                                   precompiled = stanmodels$gqs_probs,
                                    pars = stan_pars,
                                    silent = 2)
   out <- utils::capture.output( #nolint
