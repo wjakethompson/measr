@@ -53,9 +53,12 @@
 #'   * For `backend = "rstan"`, arguments are passed to [rstan::sampling()]
 #'     or [rstan::optimizing()].
 #'   * For `backend = "cmdstanr"`, arguments are passed to the
-#'     \code{\link[cmdstanr:model-method-sample]{$sample()}} or
-#'     \code{\link[cmdstanr:model-method-optimize]{$optimize()}} methods of the
-#'     \link[cmdstanr]{CmdStanModel} class.
+#'     [sample](https://mc-stan.org/cmdstanr/reference/model-method-sample.html)
+#'     or
+#'     [optimize](https://mc-stan.org/cmdstanr/reference/model-method-optimize.html)
+#'     methods of the
+#'     [CmdStanModel](https://mc-stan.org/cmdstanr/reference/CmdStanModel.html)
+#'     class.
 #'
 #' @return A [measrfit] object.
 #' @export

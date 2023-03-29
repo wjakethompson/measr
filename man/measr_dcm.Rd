@@ -83,9 +83,12 @@ not \code{file} exists.
 \item For \code{backend = "rstan"}, arguments are passed to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
 or \code{\link[rstan:stanmodel-method-optimizing]{rstan::optimizing()}}.
 \item For \code{backend = "cmdstanr"}, arguments are passed to the
-\code{\link[cmdstanr:model-method-sample]{$sample()}} or
-\code{\link[cmdstanr:model-method-optimize]{$optimize()}} methods of the
-\link[cmdstanr]{CmdStanModel} class.
+\href{https://mc-stan.org/cmdstanr/reference/model-method-sample.html}{sample}
+or
+\href{https://mc-stan.org/cmdstanr/reference/model-method-optimize.html}{optimize}
+methods of the
+\href{https://mc-stan.org/cmdstanr/reference/CmdStanModel.html}{CmdStanModel}
+class.
 }}
 }
 \value{

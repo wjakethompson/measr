@@ -30,8 +30,8 @@ priors used in the model.}
 
 \item{\code{model}}{The fitted Stan model. This will object of class
 \link[rstan:stanfit-class]{rstan::stanfit} if \code{backend = "rstan"} and
-\link[cmdstanr:CmdStanMCMC]{cmdstanr::CmdStanMCMC} if \code{backend = "cmdstanr"} was specified when
-fitting the model.}
+\href{https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html}{\code{CmdStanMCMC}}
+if \code{backend = "cmdstanr"} was specified when fitting the model.}
 
 \item{\code{respondent_estimates}}{An empty list for adding estimated person
 parameters after fitting the model.}
