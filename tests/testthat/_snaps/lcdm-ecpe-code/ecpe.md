@@ -90,43 +90,19 @@
         real<lower=0> l28_13;
       
         ////////////////////////////////// item interactions
-        real l1_212_raw;
-        real l3_213_raw;
-        real l7_213_raw;
-        real l11_213_raw;
-        real l12_213_raw;
-        real l16_213_raw;
-        real l17_223_raw;
-        real l20_213_raw;
-        real l21_213_raw;
+        real<lower=-1 * min([l1_11,l1_12])> l1_212;
+        real<lower=-1 * min([l3_11,l3_13])> l3_213;
+        real<lower=-1 * min([l7_11,l7_13])> l7_213;
+        real<lower=-1 * min([l11_11,l11_13])> l11_213;
+        real<lower=-1 * min([l12_11,l12_13])> l12_213;
+        real<lower=-1 * min([l16_11,l16_13])> l16_213;
+        real<lower=-1 * min([l17_12,l17_13])> l17_223;
+        real<lower=-1 * min([l20_11,l20_13])> l20_213;
+        real<lower=-1 * min([l21_11,l21_13])> l21_213;
       }
       transformed parameters {
         vector[C] log_Vc = log(Vc);
         matrix[I,C] pi;
-        
-        ////////////////////////////////// 2-way interactions
-        vector[2] v1_212 = [l1_11,l1_12]';
-        vector[2] v3_213 = [l3_11,l3_13]';
-        vector[2] v7_213 = [l7_11,l7_13]';
-        vector[2] v11_213 = [l11_11,l11_13]';
-        vector[2] v12_213 = [l12_11,l12_13]';
-        vector[2] v16_213 = [l16_11,l16_13]';
-        vector[2] v17_223 = [l17_12,l17_13]';
-        vector[2] v20_213 = [l20_11,l20_13]';
-        vector[2] v21_213 = [l21_11,l21_13]';
-      
-        ////////////////////////////////// constrain 2-way
-        real l1_212 = exp(l1_212_raw) - min(v1_212);
-        real l3_213 = exp(l3_213_raw) - min(v3_213);
-        real l7_213 = exp(l7_213_raw) - min(v7_213);
-        real l11_213 = exp(l11_213_raw) - min(v11_213);
-        real l12_213 = exp(l12_213_raw) - min(v12_213);
-        real l16_213 = exp(l16_213_raw) - min(v16_213);
-        real l17_223 = exp(l17_223_raw) - min(v17_223);
-        real l20_213 = exp(l20_213_raw) - min(v20_213);
-        real l21_213 = exp(l21_213_raw) - min(v21_213);
-      
-        real interaction_raw[9] = {l1_212_raw,l3_213_raw,l7_213_raw,l11_213_raw,l12_213_raw,l16_213_raw,l17_223_raw,l20_213_raw,l21_213_raw};
       
         ////////////////////////////////// probability of correct response
         pi[1,1] = inv_logit(l1_0);
@@ -361,13 +337,13 @@
         l1_0 ~ uniform(-15, 15);
         l1_11 ~ uniform(0, 15);
         l1_12 ~ uniform(0, 15);
-        l1_212_raw ~ uniform(-15, 15);
+        l1_212 ~ uniform(-15, 15);
         l2_0 ~ uniform(-15, 15);
         l2_12 ~ uniform(0, 15);
         l3_0 ~ uniform(-15, 15);
         l3_11 ~ uniform(0, 15);
         l3_13 ~ uniform(0, 15);
-        l3_213_raw ~ uniform(-15, 15);
+        l3_213 ~ uniform(-15, 15);
         l4_0 ~ uniform(-15, 15);
         l4_13 ~ uniform(0, 15);
         l5_0 ~ uniform(-15, 15);
@@ -377,7 +353,7 @@
         l7_0 ~ uniform(-15, 15);
         l7_11 ~ uniform(0, 15);
         l7_13 ~ uniform(0, 15);
-        l7_213_raw ~ uniform(-15, 15);
+        l7_213 ~ uniform(-15, 15);
         l8_0 ~ uniform(-15, 15);
         l8_12 ~ uniform(0, 15);
         l9_0 ~ uniform(-15, 15);
@@ -387,11 +363,11 @@
         l11_0 ~ uniform(-15, 15);
         l11_11 ~ uniform(0, 15);
         l11_13 ~ uniform(0, 15);
-        l11_213_raw ~ uniform(-15, 15);
+        l11_213 ~ uniform(-15, 15);
         l12_0 ~ uniform(-15, 15);
         l12_11 ~ uniform(0, 15);
         l12_13 ~ uniform(0, 15);
-        l12_213_raw ~ uniform(-15, 15);
+        l12_213 ~ uniform(-15, 15);
         l13_0 ~ uniform(-15, 15);
         l13_11 ~ uniform(0, 15);
         l14_0 ~ uniform(-15, 15);
@@ -401,11 +377,11 @@
         l16_0 ~ uniform(-15, 15);
         l16_11 ~ uniform(0, 15);
         l16_13 ~ uniform(0, 15);
-        l16_213_raw ~ uniform(-15, 15);
+        l16_213 ~ uniform(-15, 15);
         l17_0 ~ uniform(-15, 15);
         l17_12 ~ uniform(0, 15);
         l17_13 ~ uniform(0, 15);
-        l17_223_raw ~ uniform(-15, 15);
+        l17_223 ~ uniform(-15, 15);
         l18_0 ~ uniform(-15, 15);
         l18_13 ~ uniform(0, 15);
         l19_0 ~ uniform(-15, 15);
@@ -413,11 +389,11 @@
         l20_0 ~ uniform(-15, 15);
         l20_11 ~ uniform(0, 15);
         l20_13 ~ uniform(0, 15);
-        l20_213_raw ~ uniform(-15, 15);
+        l20_213 ~ uniform(-15, 15);
         l21_0 ~ uniform(-15, 15);
         l21_11 ~ uniform(0, 15);
         l21_13 ~ uniform(0, 15);
-        l21_213_raw ~ uniform(-15, 15);
+        l21_213 ~ uniform(-15, 15);
         l22_0 ~ uniform(-15, 15);
         l22_13 ~ uniform(0, 15);
         l23_0 ~ uniform(-15, 15);
@@ -445,11 +421,6 @@
             ps[c] = log_Vc[c] + sum(log_items);
           }
           target += log_sum_exp(ps);
-        }
-      
-        ////////////////////////////////// jacobian constraint adjustments
-        for (i in 1:9) {
-          target += interaction_raw[i];
         }
       }
 

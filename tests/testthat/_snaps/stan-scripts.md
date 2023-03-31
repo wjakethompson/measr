@@ -253,43 +253,19 @@
         real<lower=0> l28_13;
       
         ////////////////////////////////// item interactions
-        real l1_212_raw;
-        real l3_213_raw;
-        real l7_213_raw;
-        real l11_213_raw;
-        real l12_213_raw;
-        real l16_213_raw;
-        real l17_223_raw;
-        real l20_213_raw;
-        real l21_213_raw;
+        real<lower=-1 * min([l1_11,l1_12])> l1_212;
+        real<lower=-1 * min([l3_11,l3_13])> l3_213;
+        real<lower=-1 * min([l7_11,l7_13])> l7_213;
+        real<lower=-1 * min([l11_11,l11_13])> l11_213;
+        real<lower=-1 * min([l12_11,l12_13])> l12_213;
+        real<lower=-1 * min([l16_11,l16_13])> l16_213;
+        real<lower=-1 * min([l17_12,l17_13])> l17_223;
+        real<lower=-1 * min([l20_11,l20_13])> l20_213;
+        real<lower=-1 * min([l21_11,l21_13])> l21_213;
       }
       transformed parameters {
         vector[C] log_Vc = log(Vc);
         matrix[I,C] pi;
-        
-        ////////////////////////////////// 2-way interactions
-        vector[2] v1_212 = [l1_11,l1_12]';
-        vector[2] v3_213 = [l3_11,l3_13]';
-        vector[2] v7_213 = [l7_11,l7_13]';
-        vector[2] v11_213 = [l11_11,l11_13]';
-        vector[2] v12_213 = [l12_11,l12_13]';
-        vector[2] v16_213 = [l16_11,l16_13]';
-        vector[2] v17_223 = [l17_12,l17_13]';
-        vector[2] v20_213 = [l20_11,l20_13]';
-        vector[2] v21_213 = [l21_11,l21_13]';
-      
-        ////////////////////////////////// constrain 2-way
-        real l1_212 = exp(l1_212_raw) - min(v1_212);
-        real l3_213 = exp(l3_213_raw) - min(v3_213);
-        real l7_213 = exp(l7_213_raw) - min(v7_213);
-        real l11_213 = exp(l11_213_raw) - min(v11_213);
-        real l12_213 = exp(l12_213_raw) - min(v12_213);
-        real l16_213 = exp(l16_213_raw) - min(v16_213);
-        real l17_223 = exp(l17_223_raw) - min(v17_223);
-        real l20_213 = exp(l20_213_raw) - min(v20_213);
-        real l21_213 = exp(l21_213_raw) - min(v21_213);
-      
-        real interaction_raw[9] = {l1_212_raw,l3_213_raw,l7_213_raw,l11_213_raw,l12_213_raw,l16_213_raw,l17_223_raw,l20_213_raw,l21_213_raw};
       
         ////////////////////////////////// probability of correct response
         pi[1,1] = inv_logit(l1_0);
@@ -524,13 +500,13 @@
         l1_0 ~ normal(0, 15);
         l1_11 ~ lognormal(0, 1);
         l1_12 ~ lognormal(0, 1);
-        l1_212_raw ~ normal(0, 15);
+        l1_212 ~ normal(0, 15);
         l2_0 ~ normal(0, 15);
         l2_12 ~ lognormal(0, 1);
         l3_0 ~ normal(0, 15);
         l3_11 ~ lognormal(0, 1);
         l3_13 ~ lognormal(0, 1);
-        l3_213_raw ~ normal(0, 15);
+        l3_213 ~ normal(0, 15);
         l4_0 ~ normal(0, 15);
         l4_13 ~ lognormal(0, 1);
         l5_0 ~ normal(0, 15);
@@ -540,7 +516,7 @@
         l7_0 ~ normal(0, 15);
         l7_11 ~ lognormal(0, 1);
         l7_13 ~ lognormal(0, 1);
-        l7_213_raw ~ normal(0, 15);
+        l7_213 ~ normal(0, 15);
         l8_0 ~ normal(0, 15);
         l8_12 ~ lognormal(0, 1);
         l9_0 ~ normal(0, 15);
@@ -550,11 +526,11 @@
         l11_0 ~ normal(0, 15);
         l11_11 ~ lognormal(0, 1);
         l11_13 ~ lognormal(0, 1);
-        l11_213_raw ~ normal(0, 15);
+        l11_213 ~ normal(0, 15);
         l12_0 ~ normal(0, 15);
         l12_11 ~ lognormal(0, 1);
         l12_13 ~ lognormal(0, 1);
-        l12_213_raw ~ normal(0, 15);
+        l12_213 ~ normal(0, 15);
         l13_0 ~ normal(0, 15);
         l13_11 ~ lognormal(0, 1);
         l14_0 ~ normal(0, 15);
@@ -564,11 +540,11 @@
         l16_0 ~ normal(0, 15);
         l16_11 ~ lognormal(0, 1);
         l16_13 ~ lognormal(0, 1);
-        l16_213_raw ~ normal(0, 15);
+        l16_213 ~ normal(0, 15);
         l17_0 ~ normal(0, 15);
         l17_12 ~ lognormal(0, 1);
         l17_13 ~ lognormal(0, 1);
-        l17_223_raw ~ normal(0, 15);
+        l17_223 ~ normal(0, 15);
         l18_0 ~ normal(0, 15);
         l18_13 ~ lognormal(0, 1);
         l19_0 ~ normal(0, 15);
@@ -576,11 +552,11 @@
         l20_0 ~ normal(0, 15);
         l20_11 ~ lognormal(0, 1);
         l20_13 ~ lognormal(0, 1);
-        l20_213_raw ~ normal(0, 15);
+        l20_213 ~ normal(0, 15);
         l21_0 ~ normal(0, 15);
         l21_11 ~ lognormal(0, 1);
         l21_13 ~ lognormal(0, 1);
-        l21_213_raw ~ normal(0, 15);
+        l21_213 ~ normal(0, 15);
         l22_0 ~ normal(0, 15);
         l22_13 ~ lognormal(0, 1);
         l23_0 ~ normal(0, 15);
@@ -608,11 +584,6 @@
             ps[c] = log_Vc[c] + sum(log_items);
           }
           target += log_sum_exp(ps);
-        }
-      
-        ////////////////////////////////// jacobian constraint adjustments
-        for (i in 1:9) {
-          target += interaction_raw[i];
         }
       }
       
@@ -663,7 +634,7 @@
       transformed parameters {
         vector[C] log_Vc = log(Vc);
         matrix[I,C] pi;
-        
+      
         ////////////////////////////////// probability of correct response
         pi[1,1] = inv_logit(l1_0);
         pi[1,2] = inv_logit(l1_0+l1_11);
@@ -801,40 +772,18 @@
         real<lower=0> l27_12;
       
         ////////////////////////////////// item interactions
-        real l14_214_raw;
-        real l15_214_raw;
-        real l18_224_raw;
-        real l19_212_raw;
-        real l20_224_raw;
-        real l24_212_raw;
-        real l25_212_raw;
-        real l27_212_raw;
+        real<lower=-1 * min([l14_11,l14_14])> l14_214;
+        real<lower=-1 * min([l15_11,l15_14])> l15_214;
+        real<lower=-1 * min([l18_12,l18_14])> l18_224;
+        real<lower=-1 * min([l19_11,l19_12])> l19_212;
+        real<lower=-1 * min([l20_12,l20_14])> l20_224;
+        real<lower=-1 * min([l24_11,l24_12])> l24_212;
+        real<lower=-1 * min([l25_11,l25_12])> l25_212;
+        real<lower=-1 * min([l27_11,l27_12])> l27_212;
       }
       transformed parameters {
         vector[C] log_Vc = log(Vc);
         matrix[I,C] pi;
-        
-        ////////////////////////////////// 2-way interactions
-        vector[2] v14_214 = [l14_11,l14_14]';
-        vector[2] v15_214 = [l15_11,l15_14]';
-        vector[2] v18_224 = [l18_12,l18_14]';
-        vector[2] v19_212 = [l19_11,l19_12]';
-        vector[2] v20_224 = [l20_12,l20_14]';
-        vector[2] v24_212 = [l24_11,l24_12]';
-        vector[2] v25_212 = [l25_11,l25_12]';
-        vector[2] v27_212 = [l27_11,l27_12]';
-      
-        ////////////////////////////////// constrain 2-way
-        real l14_214 = exp(l14_214_raw) - min(v14_214);
-        real l15_214 = exp(l15_214_raw) - min(v15_214);
-        real l18_224 = exp(l18_224_raw) - min(v18_224);
-        real l19_212 = exp(l19_212_raw) - min(v19_212);
-        real l20_224 = exp(l20_224_raw) - min(v20_224);
-        real l24_212 = exp(l24_212_raw) - min(v24_212);
-        real l25_212 = exp(l25_212_raw) - min(v25_212);
-        real l27_212 = exp(l27_212_raw) - min(v27_212);
-      
-        real interaction_raw[8] = {l14_214_raw,l15_214_raw,l18_224_raw,l19_212_raw,l20_224_raw,l24_212_raw,l25_212_raw,l27_212_raw};
       
         ////////////////////////////////// probability of correct response
         pi[1,1] = inv_logit(l1_0);
@@ -1303,11 +1252,11 @@
         l14_0 ~ normal(0, 15);
         l14_11 ~ lognormal(0, 1);
         l14_14 ~ lognormal(0, 1);
-        l14_214_raw ~ normal(0, 15);
+        l14_214 ~ normal(0, 15);
         l15_0 ~ normal(0, 15);
         l15_11 ~ lognormal(0, 1);
         l15_14 ~ lognormal(0, 1);
-        l15_214_raw ~ normal(0, 15);
+        l15_214 ~ normal(0, 15);
         l16_0 ~ normal(0, 15);
         l16_11 ~ lognormal(0, 1);
         l17_0 ~ normal(0, 15);
@@ -1315,15 +1264,15 @@
         l18_0 ~ normal(0, 15);
         l18_12 ~ lognormal(0, 1);
         l18_14 ~ lognormal(0, 1);
-        l18_224_raw ~ normal(0, 15);
+        l18_224 ~ normal(0, 15);
         l19_0 ~ normal(0, 15);
         l19_11 ~ lognormal(0, 1);
         l19_12 ~ lognormal(0, 1);
-        l19_212_raw ~ normal(0, 15);
+        l19_212 ~ normal(0, 15);
         l20_0 ~ normal(0, 15);
         l20_12 ~ lognormal(0, 1);
         l20_14 ~ lognormal(0, 1);
-        l20_224_raw ~ normal(0, 15);
+        l20_224 ~ normal(0, 15);
         l21_0 ~ normal(0, 15);
         l21_12 ~ lognormal(0, 1);
         l22_0 ~ normal(0, 15);
@@ -1333,17 +1282,17 @@
         l24_0 ~ normal(0, 15);
         l24_11 ~ lognormal(0, 1);
         l24_12 ~ lognormal(0, 1);
-        l24_212_raw ~ normal(0, 15);
+        l24_212 ~ normal(0, 15);
         l25_0 ~ normal(0, 15);
         l25_11 ~ lognormal(0, 1);
         l25_12 ~ lognormal(0, 1);
-        l25_212_raw ~ normal(0, 15);
+        l25_212 ~ normal(0, 15);
         l26_0 ~ normal(0, 15);
         l26_11 ~ lognormal(0, 1);
         l27_0 ~ normal(0, 15);
         l27_11 ~ lognormal(0, 1);
         l27_12 ~ lognormal(0, 1);
-        l27_212_raw ~ normal(0, 15);
+        l27_212 ~ normal(0, 15);
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
@@ -1357,11 +1306,6 @@
             ps[c] = log_Vc[c] + sum(log_items);
           }
           target += log_sum_exp(ps);
-        }
-      
-        ////////////////////////////////// jacobian constraint adjustments
-        for (i in 1:8) {
-          target += interaction_raw[i];
         }
       }
       

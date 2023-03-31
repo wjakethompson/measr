@@ -41,13 +41,13 @@ lcdm_script <- function(qmatrix, prior = NULL) {
       param_name = glue::glue("l{item_id}_{param_level}",
                               "{gsub(\"__\", \"\", atts)}"),
       constraint = dplyr::case_when(
+        .data$param_level == 0 ~ glue::glue(""),
         .data$param_level == 1 ~ glue::glue("<lower=0>"),
-        TRUE ~ glue::glue("")
+        .data$param_level >= 2 ~ glue::glue("<lower=-1 * min([{comp_atts}])>")
       ),
       param_def = dplyr::case_when(
         .data$param_level == 0 ~ glue::glue("real {param_name};"),
-        .data$param_level == 1 ~ glue::glue("real{constraint} {param_name};"),
-        TRUE ~ glue::glue("real {param_name}_raw;")
+        .data$param_level >= 1 ~ glue::glue("real{constraint} {param_name};")
       )
     )
 
@@ -86,34 +86,6 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   )
 
   # transformed parameters block -----
-  trans_param_defs <- all_params %>%
-    tidyr::nest(param_info = -"param_level") %>%
-    dplyr::filter(.data$param_level >= 2) %>%
-    dplyr::arrange(.data$param_level) %>%
-    dplyr::mutate(trans_pars = mapply(FUN = define_interactions,
-                                      .data$param_level, .data$param_info)) %>%
-    tidyr::unnest("trans_pars") %>%
-    glue::glue_data("{trans_pars}") %>%
-    glue::glue_collapse(sep = "\n\n")
-
-  raw_inter <- all_params %>%
-    dplyr::filter(.data$param_level >= 2) %>%
-    glue::glue_data("{param_name}_raw")
-
-  trans_interaction_stan <- if (length(trans_param_defs) > 0) {
-    glue::glue(
-      "",
-      "{glue::glue_collapse(trans_param_defs, sep = \"\n  \")}",
-      "",
-      "  {glue::glue(\"real interaction_raw[{length(raw_inter)}] = \",
-                   \"{{{glue::glue_collapse(raw_inter, sep = ',')}\")}}};",
-      "",
-      .sep = "\n", .trim = FALSE
-    )
-  } else {
-    ""
-  }
-
   all_profiles <- create_profiles(attributes = ncol(qmatrix))
 
   profile_params <-
@@ -145,7 +117,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     "transformed parameters {{",
     "  vector[C] log_Vc = log(Vc);",
     "  matrix[I,C] pi;",
-    "  {trans_interaction_stan}",
+    "",
     "  ////////////////////////////////// probability of correct response",
     "  {glue::glue_collapse(pi_def, sep = \"\n  \")}",
     "}}", .sep = "\n"
@@ -174,24 +146,8 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
                                is.na(.data$coef_def) ~ .data$class_def),
-      prior_def = glue::glue("{param_name}",
-                             "{ifelse(param_level >= 2, '_raw', '')} ",
-                             "~ {prior};")) %>%
+      prior_def = glue::glue("{param_name} ~ {prior};")) %>%
     dplyr::pull("prior_def")
-
-  jacobian_stan <- if (length(raw_inter) > 0) {
-    glue::glue(
-      "",
-      "",
-      "  ////////////////////////////////// jacobian constraint adjustments",
-      "  for (i in 1:{length(raw_inter)}) {{",
-      "    target += interaction_raw[i];",
-      "  }}",
-      .sep = "\n", .trim = FALSE
-    )
-  } else {
-    ""
-  }
 
   model_block <- glue::glue(
     "model {{",
@@ -212,7 +168,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     "      ps[c] = log_Vc[c] + sum(log_items);",
     "    }}",
     "    target += log_sum_exp(ps);",
-    "  }}{jacobian_stan}",
+    "  }}",
     "}}", .sep = "\n"
   )
 
