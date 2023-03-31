@@ -6,6 +6,9 @@
 \usage{
 measr_examples()
 }
+\value{
+A logical value indicating whether or not the examples should be run.
+}
 \description{
 Used for determining examples that shouldn't be run on CRAN, but can be run
 for the pkgdown website.
