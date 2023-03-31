@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Estimate diagnostic classification models (also called cognitive diagnostic models) with 'Stan'. Automatically generate 'Stan' code for a variety of models and estimate your model. After estimation, evaluate the performance of your model using model fit indices, information criteria, and reliability metrics.
+Estimate diagnostic classification models (also called cognitive diagnostic models) with 'Stan'. Diagnostic classification models are confirmatory latent class models, as described by Rupp et al. (2010, ISBN: 978-1-60623-527-0). Automatically generate 'Stan' code for the general loglinear cognitive diagnostic diagnostic model proposed by Henson et al. (2009) \doi{10.1007/s11336-008-9089-5} and other subtypes that introduce additional model constraints. Using the generated 'Stan' code, estimate the model evaluate the model's performance using model fit indices, information criteria, and reliability metrics.
 }
 \seealso{
 Useful links:
