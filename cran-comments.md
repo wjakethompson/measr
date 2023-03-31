@@ -1,3 +1,11 @@
+## Release summary
+
+This is a resubmission to address the following comments from the initial submission.
+
+* References to methods have been added to the description field of the DESCRIPTION file.
+
+* Missing \value Rd-tages have been added to all documentation pages.
+
 ## Test environments
 
 * local R installation macOS 13.2.1, R 4.2.2
