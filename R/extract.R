@@ -43,7 +43,7 @@ measr_extract <- function(model, ...) {
 #'     [add_fit()].
 #'   * `odds_ratio_flags`: A subset of the PPMC odds ratios where the _ppp_ is
 #'     outside the specified `ppmc_interval`.
-#'   * `classification_accuracy`: The classification accuracy and consistency
+#'   * `classification_reliability`: The classification accuracy and consistency
 #'     for each attribute, using the metrics described by Johnson & Sinharay
 #'     (2018). Reliability information must first be added to the model using
 #'     [add_reliability()].

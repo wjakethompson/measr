@@ -60,7 +60,7 @@ item pair. Model fit information must first be added to the model using
 \code{\link[=add_fit]{add_fit()}}.
 \item \code{odds_ratio_flags}: A subset of the PPMC odds ratios where the \emph{ppp} is
 outside the specified \code{ppmc_interval}.
-\item \code{classification_accuracy}: The classification accuracy and consistency
+\item \code{classification_reliability}: The classification accuracy and consistency
 for each attribute, using the metrics described by Johnson & Sinharay
 (2018). Reliability information must first be added to the model using
 \code{\link[=add_reliability]{add_reliability()}}.
