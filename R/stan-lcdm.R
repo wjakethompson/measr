@@ -20,6 +20,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   # parameters block -----
   all_params <- get_parameters(qmatrix = qmatrix, item_id = NULL,
                                rename_att = TRUE, type = "lcdm") %>%
+    dplyr::filter(class != "structural") %>%
     dplyr::mutate(parameter = dplyr::case_when(is.na(.data$attributes) ~
                                                  "intercept",
                                                TRUE ~ .data$attributes)) %>%
@@ -130,7 +131,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     c(prior, default_dcm_priors(type = "lcdm"), replace = TRUE)
   }
 
-  all_priors <- all_params %>%
+  item_priors <- all_params %>%
     dplyr::mutate(
       class = dplyr::case_when(.data$param_level == 0 ~ "intercept",
                                .data$param_level == 1 ~ "maineffect",
@@ -148,6 +149,12 @@ lcdm_script <- function(qmatrix, prior = NULL) {
                                is.na(.data$coef_def) ~ .data$class_def),
       prior_def = glue::glue("{param_name} ~ {prior};")) %>%
     dplyr::pull("prior_def")
+
+  strc_prior <- mod_prior %>%
+    dplyr::filter(class == "structural") %>%
+    glue::glue_data("Vc ~ {prior_def};")
+
+  all_priors <- glue::as_glue(c(strc_prior, item_priors))
 
   model_block <- glue::glue(
     "model {{",

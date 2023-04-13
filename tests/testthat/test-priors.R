@@ -125,7 +125,7 @@ test_that("validator works", {
 
   err <- rlang::catch_cnd(
     validate_measrprior(new_measrprior(
-      tibble::tibble(class = "structural", coef = NA_character_,
+      tibble::tibble(class = "taylor", coef = NA_character_,
                      prior_def = "normal(0, 10)")
     ))
   )
@@ -155,24 +155,28 @@ test_that("class check works", {
 test_that("default priors", {
   # lcdm defaults
   expect_equal(unclass(default_dcm_priors(type = "lcdm")),
-               list(class = c("intercept", "maineffect", "interaction"),
-                    coef = rep(NA_character_, 3),
-                    prior_def = c("normal(0, 15)", "lognormal(0, 1)",
-                                  "normal(0, 15)")),
+               list(class = c("intercept", "maineffect", "interaction",
+                              "structural"),
+                    coef = c(rep(NA_character_, 3), "Vc"),
+                    prior_def = c("normal(0, 2)", "lognormal(0, 1)",
+                                  "normal(0, 2)",
+                                  "dirichlet(rep_vector(1, C))")),
                ignore_attr = TRUE)
 
   # dina defaults
   expect_equal(unclass(default_dcm_priors(type = "dina")),
-               list(class = c("slip", "guess"),
-                    coef = rep(NA_character_, 2),
-                    prior_def = c("beta(5, 25)", "beta(5, 25)")),
+               list(class = c("slip", "guess", "structural"),
+                    coef = c(rep(NA_character_, 2), "Vc"),
+                    prior_def = c("beta(5, 25)", "beta(5, 25)",
+                                  "dirichlet(rep_vector(1, C))")),
                ignore_attr = TRUE)
 
   # dino defaults
   expect_equal(unclass(default_dcm_priors(type = "dino")),
-               list(class = c("slip", "guess"),
-                    coef = rep(NA_character_, 2),
-                    prior_def = c("beta(5, 25)", "beta(5, 25)")),
+               list(class = c("slip", "guess", "structural"),
+                    coef = c(rep(NA_character_, 2), "Vc"),
+                    prior_def = c("beta(5, 25)", "beta(5, 25)",
+                                  "dirichlet(rep_vector(1, C))")),
                ignore_attr = TRUE)
 })
 
@@ -196,11 +200,12 @@ test_that("priors can be combined", {
   expect_s3_class(final_priors, "measrprior")
   expect_equal(unclass(final_priors),
                list(class = c("intercept", "maineffect", "maineffect",
-                              "interaction"),
+                              "interaction", "structural"),
                     coef = c(NA_character_, NA_character_, "l1_12",
-                             NA_character_),
+                             NA_character_, "Vc"),
                     prior_def = c("normal(-2, 3)", "lognormal(0, 5)",
-                                  "lognormal(0, 0.2)", "normal(0, 15)")),
+                                  "lognormal(0, 0.2)", "normal(0, 2)",
+                                  "dirichlet(rep_vector(1, C))")),
                ignore_attr = TRUE)
 
   rmv_class <- class(user_priors)[!(class(user_priors) == "measrprior")]

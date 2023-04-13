@@ -49,8 +49,9 @@ dina_script <- function(qmatrix, prior = NULL) {
     c(prior, default_dcm_priors(type = "dina"), replace = TRUE)
   }
 
-  all_priors <- get_parameters(qmatrix = qmatrix, item_id = NULL,
+  item_priors <- get_parameters(qmatrix = qmatrix, item_id = NULL,
                                rename_att = TRUE, type = "dina") %>%
+    dplyr::filter(class != "structural") %>%
     dplyr::left_join(mod_prior, by = c("class", "coef")) %>%
     dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
@@ -63,6 +64,12 @@ dina_script <- function(qmatrix, prior = NULL) {
                                is.na(.data$coef_def) ~ .data$class_def),
       prior_def = glue::glue("{coef} ~ {prior};")) %>%
     dplyr::pull("prior_def")
+
+  strc_prior <- mod_prior %>%
+    dplyr::filter(class == "structural") %>%
+    glue::glue_data("Vc ~ {prior_def};")
+
+  all_priors <- glue::as_glue(c(strc_prior, item_priors))
 
   model_block <- glue::glue(
     "model {{",

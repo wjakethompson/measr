@@ -290,7 +290,7 @@ test_that("check_prior", {
   expect_s3_class(check_prior(prior(normal(0, 1)), name = "check1"),
                   "measrprior")
   expect_equal(unclass(check_prior(prior(normal(0, 1)), name = "check1")),
-               unclass(data.frame(class = "intercept", coef = NA_character_,
+               unclass(data.frame(class = "structural", coef = NA_character_,
                                   prior_def = "normal(0, 1)")))
   expect_equal(check_prior(NULL, name = "check1", allow_null = TRUE), NULL)
 })

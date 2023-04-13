@@ -13,8 +13,9 @@ test_that("extract item parameters", {
   expect_equal(dina_param$class,
                rep(c("slip", "guess"), 35))
   expect_equal(dina_param$coef,
-               dplyr::pull(get_parameters(q_matrix, item_id = "item",
-                                          type = "dina"), "coef"))
+               get_parameters(q_matrix, item_id = "item", type = "dina") %>%
+                 dplyr::filter(class != "structural") %>%
+                 dplyr::pull("coef"))
   expect_s3_class(dina_param$estimate, "rvar")
   expect_true(all(!is.na(dina_param$estimate)))
 })
