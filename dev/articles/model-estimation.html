@@ -325,12 +325,13 @@ distributions in the call to <code><a href="../reference/measr_dcm.html">measr_d
 uses the following prior distributions for the LCDM:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/default_dcm_priors.html">default_dcm_priors</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
-<span><span class="co">#&gt;   class       coef  prior_def      </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 15)  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect  <span style="color: #BB0000;">NA</span>    lognormal(0, 1)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 15)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   class       coef  prior_def                  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect  <span style="color: #BB0000;">NA</span>    lognormal(0, 1)            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> structural  Vc    dirichlet(rep_vector(1, C))</span></span></code></pre></div>
 <p>As you can see, main effect parameters get a
 <code>lognormal(0, 1)</code> prior by default. Different prior
 distributions can be specified with the <code><a href="../reference/measrprior.html">prior()</a></code> function.
@@ -360,7 +361,7 @@ use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect l7_11 exponential(2)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/get_parameters.html">get_parameters</a></span><span class="op">(</span><span class="va">ecpe_qmatrix</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 74 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 75 × 4</span></span></span>
 <span><span class="co">#&gt;    item_id class       attributes                coef  </span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1 intercept   <span style="color: #BB0000;">NA</span>                        l1_0  </span></span>
@@ -373,7 +374,7 @@ use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       3 maineffect  morphosyntactic           l3_11 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       3 maineffect  lexical                   l3_13 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       3 interaction morphosyntactic__lexical  l3_213</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 64 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 65 more rows</span></span></span></code></pre></div>
 <p>Any distribution that is supported by the <em>Stan</em> language can
 be used as a prior. A list of all distributions is available in the
 <em>Stan</em> documentation, and are linked to from the
