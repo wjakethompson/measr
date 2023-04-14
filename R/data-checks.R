@@ -185,11 +185,36 @@ check_item_levels <- function(x, identifier, item_levels, name) {
   return(x)
 }
 
-check_prior <- function(x, name, allow_null = FALSE) {
+check_prior <- function(x, type, qmatrix, name, allow_null = FALSE) {
   if (allow_null && is.null(x)) return(x)
 
   if (!is.measrprior(x)) {
     abort_bad_argument(name, must = "be a measrprior object")
+  }
+
+  mod_param <- get_parameters(qmatrix = qmatrix, type = type)
+
+  bad_class <- dplyr::anti_join(x, mod_param, by = "class") %>%
+    dplyr::pull(class)
+
+  if (length(bad_class) > 0) {
+    msg <- glue::glue("Prior for class `{bad_class}` is not relevant for the ",
+                      "chosen model or specified Q-matrix. See ",
+                      "`?get_parameters()` for a list of relevant classes and ",
+                      "parameters.")
+    abort_bad_argument(name, must = NULL, custom = msg)
+  }
+
+  bad_param <- x %>%
+    dplyr::filter(!is.na(coef)) %>%
+    dplyr::anti_join(mod_param, by = c("class", "coef"))
+
+  if (nrow(bad_param) > 0) {
+    msg <- glue::glue("Prior for parameter `{bad_param$coef}` with class ",
+                      "`{bad_param$class}` is not relevant for the chosen ",
+                      "model or specified Q-matrix. See `?get_parameters()` ",
+                      "for a list of relevant parameters.")
+    abort_bad_argument(name, must = NULL, custom = msg)
   }
 
   x
