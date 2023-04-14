@@ -24,8 +24,8 @@ jobs:
         with:
           extra-packages: |
             any::covr
-            url::https://mc-stan.org/r-packages/src/contrib/rstan_2.26.16.tar.gz
-            url::https://mc-stan.org/r-packages/src/contrib/StanHeaders_2.26.16.tar.gz
+            url::https://mc-stan.org/r-packages/src/contrib/rstan_2.26.22.tar.gz
+            url::https://mc-stan.org/r-packages/src/contrib/StanHeaders_2.26.22.tar.gz
           needs: coverage
 
       - name: Install cmdstan

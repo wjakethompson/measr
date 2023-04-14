@@ -497,79 +497,80 @@
         real ps[C];
       
         ////////////////////////////////// priors
-        l1_0 ~ normal(0, 15);
+        Vc ~ dirichlet(rep_vector(1, C));
+        l1_0 ~ normal(0, 2);
         l1_11 ~ lognormal(0, 1);
         l1_12 ~ lognormal(0, 1);
-        l1_212 ~ normal(0, 15);
-        l2_0 ~ normal(0, 15);
+        l1_212 ~ normal(0, 2);
+        l2_0 ~ normal(0, 2);
         l2_12 ~ lognormal(0, 1);
-        l3_0 ~ normal(0, 15);
+        l3_0 ~ normal(0, 2);
         l3_11 ~ lognormal(0, 1);
         l3_13 ~ lognormal(0, 1);
-        l3_213 ~ normal(0, 15);
-        l4_0 ~ normal(0, 15);
+        l3_213 ~ normal(0, 2);
+        l4_0 ~ normal(0, 2);
         l4_13 ~ lognormal(0, 1);
-        l5_0 ~ normal(0, 15);
+        l5_0 ~ normal(0, 2);
         l5_13 ~ lognormal(0, 1);
-        l6_0 ~ normal(0, 15);
+        l6_0 ~ normal(0, 2);
         l6_13 ~ lognormal(0, 1);
-        l7_0 ~ normal(0, 15);
+        l7_0 ~ normal(0, 2);
         l7_11 ~ lognormal(0, 1);
         l7_13 ~ lognormal(0, 1);
-        l7_213 ~ normal(0, 15);
-        l8_0 ~ normal(0, 15);
+        l7_213 ~ normal(0, 2);
+        l8_0 ~ normal(0, 2);
         l8_12 ~ lognormal(0, 1);
-        l9_0 ~ normal(0, 15);
+        l9_0 ~ normal(0, 2);
         l9_13 ~ lognormal(0, 1);
-        l10_0 ~ normal(0, 15);
+        l10_0 ~ normal(0, 2);
         l10_11 ~ lognormal(0, 1);
-        l11_0 ~ normal(0, 15);
+        l11_0 ~ normal(0, 2);
         l11_11 ~ lognormal(0, 1);
         l11_13 ~ lognormal(0, 1);
-        l11_213 ~ normal(0, 15);
-        l12_0 ~ normal(0, 15);
+        l11_213 ~ normal(0, 2);
+        l12_0 ~ normal(0, 2);
         l12_11 ~ lognormal(0, 1);
         l12_13 ~ lognormal(0, 1);
-        l12_213 ~ normal(0, 15);
-        l13_0 ~ normal(0, 15);
+        l12_213 ~ normal(0, 2);
+        l13_0 ~ normal(0, 2);
         l13_11 ~ lognormal(0, 1);
-        l14_0 ~ normal(0, 15);
+        l14_0 ~ normal(0, 2);
         l14_11 ~ lognormal(0, 1);
-        l15_0 ~ normal(0, 15);
+        l15_0 ~ normal(0, 2);
         l15_13 ~ lognormal(0, 1);
-        l16_0 ~ normal(0, 15);
+        l16_0 ~ normal(0, 2);
         l16_11 ~ lognormal(0, 1);
         l16_13 ~ lognormal(0, 1);
-        l16_213 ~ normal(0, 15);
-        l17_0 ~ normal(0, 15);
+        l16_213 ~ normal(0, 2);
+        l17_0 ~ normal(0, 2);
         l17_12 ~ lognormal(0, 1);
         l17_13 ~ lognormal(0, 1);
-        l17_223 ~ normal(0, 15);
-        l18_0 ~ normal(0, 15);
+        l17_223 ~ normal(0, 2);
+        l18_0 ~ normal(0, 2);
         l18_13 ~ lognormal(0, 1);
-        l19_0 ~ normal(0, 15);
+        l19_0 ~ normal(0, 2);
         l19_13 ~ lognormal(0, 1);
-        l20_0 ~ normal(0, 15);
+        l20_0 ~ normal(0, 2);
         l20_11 ~ lognormal(0, 1);
         l20_13 ~ lognormal(0, 1);
-        l20_213 ~ normal(0, 15);
-        l21_0 ~ normal(0, 15);
+        l20_213 ~ normal(0, 2);
+        l21_0 ~ normal(0, 2);
         l21_11 ~ lognormal(0, 1);
         l21_13 ~ lognormal(0, 1);
-        l21_213 ~ normal(0, 15);
-        l22_0 ~ normal(0, 15);
+        l21_213 ~ normal(0, 2);
+        l22_0 ~ normal(0, 2);
         l22_13 ~ lognormal(0, 1);
-        l23_0 ~ normal(0, 15);
+        l23_0 ~ normal(0, 2);
         l23_12 ~ lognormal(0, 1);
-        l24_0 ~ normal(0, 15);
+        l24_0 ~ normal(0, 2);
         l24_12 ~ lognormal(0, 1);
-        l25_0 ~ normal(0, 15);
+        l25_0 ~ normal(0, 2);
         l25_11 ~ lognormal(0, 1);
-        l26_0 ~ normal(0, 15);
+        l26_0 ~ normal(0, 2);
         l26_13 ~ lognormal(0, 1);
-        l27_0 ~ normal(0, 15);
+        l27_0 ~ normal(0, 2);
         l27_11 ~ lognormal(0, 1);
-        l28_0 ~ normal(0, 15);
+        l28_0 ~ normal(0, 2);
         l28_13 ~ lognormal(0, 1);
       
         ////////////////////////////////// likelihood
@@ -588,12 +589,13 @@
       }
       
       $prior
-      # A tibble: 3 x 3
-        class       coef  prior_def      
-        <chr>       <chr> <chr>          
-      1 intercept   <NA>  normal(0, 15)  
-      2 maineffect  <NA>  lognormal(0, 1)
-      3 interaction <NA>  normal(0, 15)  
+      # A tibble: 4 x 3
+        class       coef  prior_def                  
+        <chr>       <chr> <chr>                      
+      1 intercept   <NA>  normal(0, 2)               
+      2 maineffect  <NA>  lognormal(0, 1)            
+      3 interaction <NA>  normal(0, 2)               
+      4 structural  Vc    dirichlet(rep_vector(1, C))
       
 
 ---
@@ -649,13 +651,14 @@
         real ps[C];
       
         ////////////////////////////////// priors
-        l1_0 ~ normal(0, 15);
+        Vc ~ dirichlet(rep_vector(1, C));
+        l1_0 ~ normal(0, 2);
         l1_11 ~ lognormal(0, 1);
-        l2_0 ~ normal(0, 15);
+        l2_0 ~ normal(0, 2);
         l2_11 ~ lognormal(0, 1);
-        l3_0 ~ normal(0, 15);
+        l3_0 ~ normal(0, 2);
         l3_11 ~ lognormal(0, 1);
-        l4_0 ~ normal(0, 15);
+        l4_0 ~ normal(0, 2);
         l4_11 ~ lognormal(0, 1);
       
         ////////////////////////////////// likelihood
@@ -674,12 +677,13 @@
       }
       
       $prior
-      # A tibble: 3 x 3
-        class       coef  prior_def      
-        <chr>       <chr> <chr>          
-      1 intercept   <NA>  normal(0, 15)  
-      2 maineffect  <NA>  lognormal(0, 1)
-      3 interaction <NA>  normal(0, 15)  
+      # A tibble: 4 x 3
+        class       coef  prior_def                  
+        <chr>       <chr> <chr>                      
+      1 intercept   <NA>  normal(0, 2)               
+      2 maineffect  <NA>  lognormal(0, 1)            
+      3 interaction <NA>  normal(0, 2)               
+      4 structural  Vc    dirichlet(rep_vector(1, C))
       
 
 ---
@@ -1223,76 +1227,77 @@
         real ps[C];
       
         ////////////////////////////////// priors
-        l1_0 ~ normal(0, 15);
+        Vc ~ dirichlet(rep_vector(1, C));
+        l1_0 ~ normal(0, 2);
         l1_11 ~ lognormal(0, 1);
-        l2_0 ~ normal(0, 15);
+        l2_0 ~ normal(0, 2);
         l2_13 ~ lognormal(0, 1);
-        l3_0 ~ normal(0, 15);
+        l3_0 ~ normal(0, 2);
         l3_12 ~ lognormal(0, 1);
-        l4_0 ~ normal(0, 15);
+        l4_0 ~ normal(0, 2);
         l4_11 ~ lognormal(0, 1);
-        l5_0 ~ normal(0, 15);
+        l5_0 ~ normal(0, 2);
         l5_11 ~ lognormal(0, 1);
-        l6_0 ~ normal(0, 15);
+        l6_0 ~ normal(0, 2);
         l6_12 ~ lognormal(0, 1);
-        l7_0 ~ normal(0, 15);
+        l7_0 ~ normal(0, 2);
         l7_11 ~ lognormal(0, 1);
-        l8_0 ~ normal(0, 15);
+        l8_0 ~ normal(0, 2);
         l8_13 ~ lognormal(0, 1);
-        l9_0 ~ normal(0, 15);
+        l9_0 ~ normal(0, 2);
         l9_13 ~ lognormal(0, 1);
-        l10_0 ~ normal(0, 15);
+        l10_0 ~ normal(0, 2);
         l10_13 ~ lognormal(0, 1);
-        l11_0 ~ normal(0, 15);
+        l11_0 ~ normal(0, 2);
         l11_13 ~ lognormal(0, 1);
-        l12_0 ~ normal(0, 15);
+        l12_0 ~ normal(0, 2);
         l12_11 ~ lognormal(0, 1);
-        l13_0 ~ normal(0, 15);
+        l13_0 ~ normal(0, 2);
         l13_14 ~ lognormal(0, 1);
-        l14_0 ~ normal(0, 15);
+        l14_0 ~ normal(0, 2);
         l14_11 ~ lognormal(0, 1);
         l14_14 ~ lognormal(0, 1);
-        l14_214 ~ normal(0, 15);
-        l15_0 ~ normal(0, 15);
+        l14_214 ~ normal(0, 2);
+        l15_0 ~ normal(0, 2);
         l15_11 ~ lognormal(0, 1);
         l15_14 ~ lognormal(0, 1);
-        l15_214 ~ normal(0, 15);
-        l16_0 ~ normal(0, 15);
+        l15_214 ~ normal(0, 2);
+        l16_0 ~ normal(0, 2);
         l16_11 ~ lognormal(0, 1);
-        l17_0 ~ normal(0, 15);
+        l17_0 ~ normal(0, 2);
         l17_11 ~ lognormal(0, 1);
-        l18_0 ~ normal(0, 15);
+        l18_0 ~ normal(0, 2);
         l18_12 ~ lognormal(0, 1);
         l18_14 ~ lognormal(0, 1);
-        l18_224 ~ normal(0, 15);
-        l19_0 ~ normal(0, 15);
+        l18_224 ~ normal(0, 2);
+        l19_0 ~ normal(0, 2);
         l19_11 ~ lognormal(0, 1);
         l19_12 ~ lognormal(0, 1);
-        l19_212 ~ normal(0, 15);
-        l20_0 ~ normal(0, 15);
+        l19_212 ~ normal(0, 2);
+        l20_0 ~ normal(0, 2);
         l20_12 ~ lognormal(0, 1);
         l20_14 ~ lognormal(0, 1);
-        l20_224 ~ normal(0, 15);
-        l21_0 ~ normal(0, 15);
+        l20_224 ~ normal(0, 2);
+        l21_0 ~ normal(0, 2);
         l21_12 ~ lognormal(0, 1);
-        l22_0 ~ normal(0, 15);
+        l22_0 ~ normal(0, 2);
         l22_12 ~ lognormal(0, 1);
-        l23_0 ~ normal(0, 15);
+        l23_0 ~ normal(0, 2);
         l23_11 ~ lognormal(0, 1);
-        l24_0 ~ normal(0, 15);
+        l24_0 ~ normal(0, 2);
         l24_11 ~ lognormal(0, 1);
         l24_12 ~ lognormal(0, 1);
-        l24_212 ~ normal(0, 15);
-        l25_0 ~ normal(0, 15);
+        l24_212 ~ normal(0, 2);
+        l25_0 ~ normal(0, 2);
         l25_11 ~ lognormal(0, 1);
         l25_12 ~ lognormal(0, 1);
-        l25_212 ~ normal(0, 15);
-        l26_0 ~ normal(0, 15);
+        l25_212 ~ normal(0, 2);
+        l26_0 ~ normal(0, 2);
         l26_11 ~ lognormal(0, 1);
-        l27_0 ~ normal(0, 15);
+        l27_0 ~ normal(0, 2);
         l27_11 ~ lognormal(0, 1);
         l27_12 ~ lognormal(0, 1);
-        l27_212 ~ normal(0, 15);
+        l27_212 ~ normal(0, 2);
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
@@ -1310,12 +1315,13 @@
       }
       
       $prior
-      # A tibble: 3 x 3
-        class       coef  prior_def      
-        <chr>       <chr> <chr>          
-      1 intercept   <NA>  normal(0, 15)  
-      2 maineffect  <NA>  lognormal(0, 1)
-      3 interaction <NA>  normal(0, 15)  
+      # A tibble: 4 x 3
+        class       coef  prior_def                  
+        <chr>       <chr> <chr>                      
+      1 intercept   <NA>  normal(0, 2)               
+      2 maineffect  <NA>  lognormal(0, 1)            
+      3 interaction <NA>  normal(0, 2)               
+      4 structural  Vc    dirichlet(rep_vector(1, C))
       
 
 # dina and dino script works
@@ -1359,6 +1365,7 @@
         real ps[C];
       
         ////////////////////////////////// priors
+        Vc ~ dirichlet(rep_vector(1, C));
         slip[1] ~ beta(5, 25);
         guess[1] ~ beta(5, 25);
         slip[2] ~ beta(5, 25);
@@ -1432,11 +1439,12 @@
       }
       
       $prior
-      # A tibble: 2 x 3
-        class coef  prior_def  
-        <chr> <chr> <chr>      
-      1 slip  <NA>  beta(5, 25)
-      2 guess <NA>  beta(5, 25)
+      # A tibble: 3 x 3
+        class      coef  prior_def                  
+        <chr>      <chr> <chr>                      
+      1 slip       <NA>  beta(5, 25)                
+      2 guess      <NA>  beta(5, 25)                
+      3 structural Vc    dirichlet(rep_vector(1, C))
       
 
 ---
@@ -1480,6 +1488,7 @@
         real ps[C];
       
         ////////////////////////////////// priors
+        Vc ~ dirichlet(rep_vector(1, C));
         slip[1] ~ beta(5, 25);
         guess[1] ~ beta(5, 25);
         slip[2] ~ beta(5, 25);
@@ -1505,11 +1514,12 @@
       }
       
       $prior
-      # A tibble: 2 x 3
-        class coef  prior_def  
-        <chr> <chr> <chr>      
-      1 slip  <NA>  beta(5, 25)
-      2 guess <NA>  beta(5, 25)
+      # A tibble: 3 x 3
+        class      coef  prior_def                  
+        <chr>      <chr> <chr>                      
+      1 slip       <NA>  beta(5, 25)                
+      2 guess      <NA>  beta(5, 25)                
+      3 structural Vc    dirichlet(rep_vector(1, C))
       
 
 ---
@@ -1553,6 +1563,7 @@
         real ps[C];
       
         ////////////////////////////////// priors
+        Vc ~ dirichlet(rep_vector(1, C));
         slip[1] ~ beta(5, 25);
         guess[1] ~ beta(5, 25);
         slip[2] ~ beta(5, 25);
@@ -1624,10 +1635,11 @@
       }
       
       $prior
-      # A tibble: 2 x 3
-        class coef  prior_def  
-        <chr> <chr> <chr>      
-      1 slip  <NA>  beta(5, 25)
-      2 guess <NA>  beta(5, 25)
+      # A tibble: 3 x 3
+        class      coef  prior_def                  
+        <chr>      <chr> <chr>                      
+      1 slip       <NA>  beta(5, 25)                
+      2 guess      <NA>  beta(5, 25)                
+      3 structural Vc    dirichlet(rep_vector(1, C))
       
 

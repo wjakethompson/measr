@@ -28,8 +28,8 @@
 #' identical(prior1, prior3)
 #' identical(prior2, prior3)
 measrprior <- function(prior,
-                       class = c("intercept", "maineffect", "interaction",
-                                 "slip", "guess"),
+                       class = c("structural", "intercept", "maineffect",
+                                 "interaction", "slip", "guess"),
                        coef = NA, lb = NA, ub = NA) {
   prior <- check_character(prior, allow_na = FALSE, name = "prior")
   class <- rlang::arg_match(class)
@@ -96,13 +96,17 @@ default_dcm_priors <- function(type = "lcdm") {
   type <- rlang::arg_match(type, dcm_choices())
 
   prior <- if (type == "lcdm") {
-    c(prior_string("normal(0, 15)", class = "intercept"),
+    c(prior_string("normal(0, 2)", class = "intercept"),
       prior_string("lognormal(0, 1)", class = "maineffect"),
-      prior_string("normal(0, 15)", class = "interaction"))
+      prior_string("normal(0, 2)", class = "interaction"))
   } else if (type %in% c("dina", "dino")) {
     c(prior_string("beta(5, 25)", class = "slip"),
       prior_string("beta(5, 25)", class = "guess"))
   }
+
+  prior <- c(prior,
+             prior_string("dirichlet(rep_vector(1, C))",
+                          class = "structural", coef = "Vc"))
 
   return(prior)
 }
@@ -160,7 +164,8 @@ validate_measrprior <- function(x) {
                                          "`class` or `prior_def`"))
   }
 
-  if (!all(x$class %in% c("intercept", "maineffect", "interaction",
+  if (!all(x$class %in% c("structural",
+                          "intercept", "maineffect", "interaction",
                           "slip", "guess"))) {
     abort_bad_argument("x",
                        must = glue::glue("only include values of ",
@@ -199,13 +204,14 @@ is.measrprior <- function(x) { #nolint
 #'
 #' @export
 c.measrprior <- function(x, ..., replace = FALSE) {
-  replace <- check_logical(replace, name = "replace")
+  replace <- check_logical(replace, allow_na = FALSE, name = "replace")
 
   dots <- list(...)
   dots_class <- sapply(dots, is.measrprior)
   if (length(dots) && all(dots_class)) {
-    replace <- check_logical(replace, allow_na = FALSE, name = "replace")
-    out <- do.call(dplyr::bind_rows, list(x, ...))
+    out <- do.call(dplyr::bind_rows, list(x, ...)) %>%
+      dplyr::mutate(coef = dplyr::case_when(.data$class == "structural" ~ "Vc",
+                                            TRUE ~ .data$coef))
 
     if (replace) {
       out <- dplyr::distinct(out, .data$class, .data$coef, .keep_all = TRUE)

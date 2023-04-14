@@ -13,5 +13,6 @@ loglik_script() %>%
   pluck("stancode") %>%
   write_lines("inst/stan/gqs_loglik.stan")
 
-rstn_dina$stancode %>%
+dina_script(qmatrix = q_matrix[, -1]) %>%
+  pluck("stancode") %>%
   write_lines("inst/stan/test_dina.stan")

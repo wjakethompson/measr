@@ -9,8 +9,7 @@ out <- capture.output(
       iter_sampling = 500, iter_warmup = 1000, chains = 2,
       parallel_chains = 2,
       prior = c(prior(uniform(-15, 15), class = "intercept"),
-                prior(uniform(0, 15), class = "maineffect"),
-                prior(uniform(-15, 15), class = "interaction")))
+                prior(uniform(0, 15), class = "maineffect")))
   )
 )
 

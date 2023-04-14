@@ -125,6 +125,10 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
     }
   }
 
+  all_params <- dplyr::bind_rows(all_params,
+                                 tibble::tibble(class = "structural",
+                                                coef = "Vc"))
+
   return(all_params)
 }
 

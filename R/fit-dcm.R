@@ -92,7 +92,8 @@ measr_dcm <- function(data,
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
   type <- rlang::arg_match(type, dcm_choices())
   method <- rlang::arg_match(method, c("mcmc", "optim"))
-  prior <- check_prior(prior, name = "prior", allow_null = TRUE)
+  prior <- check_prior(prior, type = type, qmatrix = clean_qmatrix,
+                       name = "prior", allow_null = TRUE)
   backend <- rlang::arg_match(backend, backend_choices())
   file <- check_file(file, name = "file", create_dir = FALSE,
                      check_file = FALSE, ext = "rds", allow_null = TRUE)

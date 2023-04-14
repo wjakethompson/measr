@@ -334,6 +334,7 @@
         real ps[C];
       
         ////////////////////////////////// priors
+        Vc ~ dirichlet(rep_vector(1, C));
         l1_0 ~ uniform(-15, 15);
         l1_11 ~ uniform(0, 15);
         l1_12 ~ uniform(0, 15);

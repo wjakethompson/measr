@@ -36,7 +36,9 @@ test_that("lcdm model works for ecpe", {
   expect_equal(cmds_ecpe_lcdm$prior,
                c(prior(uniform(-15, 15), class = "intercept"),
                  prior(uniform(0, 15), class = "maineffect"),
-                 prior(uniform(-15, 15), class = "interaction")))
+                 prior(uniform(-15, 15), class = "interaction"),
+                 prior(dirichlet(rep_vector(1, C)), class = "structural",
+                       coef = "Vc")))
   expect_snapshot(cmds_ecpe_lcdm$stancode, variant = "lcdm-ecpe-code")
   expect_equal(cmds_ecpe_lcdm$method, "optim")
   expect_equal(tolower(cmds_ecpe_lcdm$algorithm), "lbfgs")
@@ -63,7 +65,9 @@ test_that("lcdm model works for ecpe", {
 
 test_that("extract ecpe", {
   lcdm_param <- measr_extract(cmds_ecpe_lcdm, "item_param")
-  all_param <- get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
+  all_param <- get_parameters(ecpe_qmatrix, item_id = "item_id",
+                              type = "lcdm") %>%
+    dplyr::filter(class != "structural")
 
   expect_equal(nrow(lcdm_param), nrow(all_param))
   expect_equal(colnames(lcdm_param),
@@ -86,7 +90,9 @@ test_that("extract ecpe", {
   expect_equal(lcdm_param,
                c(prior(uniform(-15, 15), class = "intercept"),
                  prior(uniform(0, 15), class = "maineffect"),
-                 prior(uniform(-15, 15), class = "interaction")))
+                 prior(uniform(-15, 15), class = "interaction"),
+                 prior(dirichlet(rep_vector(1, C)), class = "structural",
+                       coef = "Vc")))
 
   lcdm_param <- measr_extract(cmds_ecpe_lcdm, "classes")
   expect_equal(colnames(lcdm_param), c("class", "morphosyntactic", "cohesive",

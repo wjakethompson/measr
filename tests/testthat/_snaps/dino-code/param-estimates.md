@@ -38,6 +38,7 @@
         real ps[C];
       
         ////////////////////////////////// priors
+        Vc ~ dirichlet(rep_vector(1, C));
         slip[1] ~ beta(5, 25);
         guess[1] ~ beta(5, 25);
         slip[2] ~ beta(5, 25);
