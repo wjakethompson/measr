@@ -42,7 +42,10 @@ create_stan_params <- function(backend, method, ...) {
   ## some reasonable defaults
   if (method == "mcmc") {
     if (backend == "rstan") {
-      defl_pars <- list(iter = 4000, warmup = 2000, chains = 4,
+      defl_iter <- ifelse("iter" %in% user_names, user_pars$iter, 4000)
+      defl_warmup <- ifelse("warmup" %in% user_names, user_pars$warmup,
+                            defl_iter / 2)
+      defl_pars <- list(iter = defl_iter, warmup = defl_warmup, chains = 4,
                         cores = getOption("mc.cores", 1L))
     } else if (backend == "cmdstanr") {
       defl_pars <- list(iter_sampling = 2000, iter_warmup = 2000, chains = 4,
