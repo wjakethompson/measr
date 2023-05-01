@@ -24,7 +24,7 @@ present in the Q-matrix.}
 generic, but consistent names (e.g., "att1", "att2", "att3").}
 
 \item{type}{Type of DCM to determine the possible parameters. Must be one of
-lcdm, dina, or dino.}
+lcdm, dina, dino, or crum.}
 }
 \value{
 A \link[tibble:tibble-package]{tibble} with one row per parameter.
