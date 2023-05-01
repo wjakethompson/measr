@@ -206,7 +206,7 @@ check_prior <- function(x, type, qmatrix, name, allow_null = FALSE) {
   }
 
   bad_param <- x %>%
-    dplyr::filter(!is.na(coef)) %>%
+    dplyr::filter(!is.na(.data$coef)) %>%
     dplyr::anti_join(mod_param, by = c("class", "coef"))
 
   if (nrow(bad_param) > 0) {

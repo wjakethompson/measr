@@ -1,4 +1,4 @@
-dina_script <- function(qmatrix, prior = NULL) {
+dina_script <- function(qmatrix, prior = NULL, ...) {
   # data block -----
   data_block <- glue::glue(
     "data {{
@@ -51,7 +51,7 @@ dina_script <- function(qmatrix, prior = NULL) {
 
   item_priors <- get_parameters(qmatrix = qmatrix, item_id = NULL,
                                rename_att = TRUE, type = "dina") %>%
-    dplyr::filter(class != "structural") %>%
+    dplyr::filter(.data$class != "structural") %>%
     dplyr::left_join(mod_prior, by = c("class", "coef")) %>%
     dplyr::rename(coef_def = "prior_def") %>%
     dplyr::left_join(mod_prior %>%
@@ -66,7 +66,7 @@ dina_script <- function(qmatrix, prior = NULL) {
     dplyr::pull("prior_def")
 
   strc_prior <- mod_prior %>%
-    dplyr::filter(class == "structural") %>%
+    dplyr::filter(.data$class == "structural") %>%
     glue::glue_data("Vc ~ {prior_def};")
 
   all_priors <- glue::as_glue(c(strc_prior, item_priors))

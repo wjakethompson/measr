@@ -95,10 +95,10 @@ prior_string <- function(prior, ...) {
 default_dcm_priors <- function(type = "lcdm") {
   type <- rlang::arg_match(type, dcm_choices())
 
-  prior <- if (type == "lcdm") {
+  prior <- if (type %in% c("lcdm", "crum")) {
     c(prior_string("normal(0, 2)", class = "intercept"),
       prior_string("lognormal(0, 1)", class = "maineffect"),
-      prior_string("normal(0, 2)", class = "interaction"))
+      if (type == "lcdm") prior_string("normal(0, 2)", class = "interaction"))
   } else if (type %in% c("dina", "dino")) {
     c(prior_string("beta(5, 25)", class = "slip"),
       prior_string("beta(5, 25)", class = "guess"))

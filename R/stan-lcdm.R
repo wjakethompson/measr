@@ -1,4 +1,4 @@
-lcdm_script <- function(qmatrix, prior = NULL) {
+lcdm_script <- function(qmatrix, prior = NULL, max_interaction = Inf, ...) {
   # data block -----
   data_block <- glue::glue(
     "data {{
@@ -20,7 +20,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   # parameters block -----
   all_params <- get_parameters(qmatrix = qmatrix, item_id = NULL,
                                rename_att = TRUE, type = "lcdm") %>%
-    dplyr::filter(class != "structural") %>%
+    dplyr::filter(.data$class != "structural") %>%
     dplyr::mutate(parameter = dplyr::case_when(is.na(.data$attributes) ~
                                                  "intercept",
                                                TRUE ~ .data$attributes)) %>%
@@ -50,7 +50,8 @@ lcdm_script <- function(qmatrix, prior = NULL) {
         .data$param_level == 0 ~ glue::glue("real {param_name};"),
         .data$param_level >= 1 ~ glue::glue("real{constraint} {param_name};")
       )
-    )
+    ) %>%
+    dplyr::filter(.data$param_level <= max_interaction)
 
   intercepts <- all_params %>%
     dplyr::filter(.data$param_level == 0) %>%
@@ -131,6 +132,10 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     c(prior, default_dcm_priors(type = "lcdm"), replace = TRUE)
   }
 
+  if (max_interaction <= 1) {
+    mod_prior <- dplyr::filter(mod_prior, .data$class != "interaction")
+  }
+
   item_priors <- all_params %>%
     dplyr::mutate(
       class = dplyr::case_when(.data$param_level == 0 ~ "intercept",
@@ -151,7 +156,7 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     dplyr::pull("prior_def")
 
   strc_prior <- mod_prior %>%
-    dplyr::filter(class == "structural") %>%
+    dplyr::filter(.data$class == "structural") %>%
     glue::glue_data("Vc ~ {prior_def};")
 
   all_priors <- glue::as_glue(c(strc_prior, item_priors))
@@ -189,4 +194,8 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   )
 
   return(list(stancode = full_script, prior = mod_prior))
+}
+
+crum_script <- function(qmatrix, prior = NULL, ...) {
+  lcdm_script(qmatrix, prior, max_interaction = 1L)
 }

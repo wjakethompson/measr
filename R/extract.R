@@ -83,7 +83,7 @@ measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95,
         dplyr::mutate(item_id = as.integer(.data$item))
       params <- get_parameters(dplyr::select(model$data$qmatrix, -"item_id"),
                                type = model$type) %>%
-        dplyr::filter(class != "structural") %>%
+        dplyr::filter(.data$class != "structural") %>%
         dplyr::left_join(items, by = "item_id", multiple = "all") %>%
         dplyr::select("item", dplyr::everything(), -"item_id")
       draws <- as_draws(model) %>%

@@ -24,6 +24,13 @@
 #'   of `qmatrix` is the item in column 1 of `data`, excluding `resp_id`).
 #' @param type Type of DCM to estimate. Must be one of
 #'   `r glue::glue_collapse(dcm_choices(), sep = ", ", last = ", or ")`.
+#' @param max_interaction If `type = "lcdm"`, the highest level of interaction
+#'   to estimate. The default is to estimate all possible interactions. For
+#'   example, an item that measures 4 attributes would have 4 main effects,
+#'   6 two-way interactions, 4 three-way interactions, and 1 four-way
+#'   interaction. Setting `max_interaction = 2` would result in only estimating
+#'   the main effects and two-way interactions, excluding the three- and four-
+#'   way interactions.
 #' @param method Estimation method. Options are `"mcmc"`, which uses Stan's
 #'   sampling method, or `"optim"`, which uses Stan's optimizer.
 #' @param prior A [measrprior][measrprior()] object. If `NULL`, default priors
@@ -73,7 +80,8 @@ measr_dcm <- function(data,
                       qmatrix,
                       resp_id = NULL,
                       item_id = NULL,
-                      type = c("lcdm", "dina", "dino"),
+                      type = c("lcdm", "dina", "dino", "crum"),
+                      max_interaction = Inf,
                       method = c("mcmc", "optim"),
                       prior = NULL,
                       backend = getOption("measr.backend", "rstan"),
@@ -91,6 +99,9 @@ measr_dcm <- function(data,
     dplyr::select(-"item_id") %>%
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
   type <- rlang::arg_match(type, dcm_choices())
+  max_interaction <- check_integer(
+    ifelse(is.infinite(max_interaction), ncol(clean_qmatrix), max_interaction),
+    lb = 1, inclusive = TRUE, name = "max_interaction")
   method <- rlang::arg_match(method, c("mcmc", "optim"))
   prior <- check_prior(prior, type = type, qmatrix = clean_qmatrix,
                        name = "prior", allow_null = TRUE)
@@ -111,8 +122,9 @@ measr_dcm <- function(data,
   # compile model -----
   func_name <- rlang::sym(paste0(type, "_script"))
   script_call <- rlang::call2(func_name,
-                              rlang::expr(clean_qmatrix),
-                              rlang::expr(prior))
+                              qmatrix = rlang::expr(clean_qmatrix),
+                              prior = rlang::expr(prior),
+                              max_interaction = rlang::expr(max_interaction))
   stan_code <- eval(script_call)
 
   # check for existing file -----
