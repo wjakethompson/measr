@@ -68,7 +68,9 @@ profile_labels <- function(attributes) {
 #' get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm",
 #'                rename_att = TRUE)
 get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
-                           type = c("lcdm", "dina", "dino")) {
+                           type = c("lcdm", "dina", "dino", "crum"),
+                           attribute_structure = c("unconstrained",
+                                                   "independent")) {
   item_id <- check_character(item_id, name = "item_id", allow_null = TRUE)
   qmatrix <- check_qmatrix(qmatrix, identifier = item_id, item_levels = NULL,
                            name = "qmatrix")
@@ -80,6 +82,7 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
                        .cols = dplyr::everything())
 
   type <- rlang::arg_match(type, dcm_choices())
+  attribute_structure <- rlang::arg_match(attribute_structure, strc_choices())
 
   all_params <- if (type %in% c("dina", "dino")) {
     tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
@@ -125,9 +128,15 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
     }
   }
 
-  all_params <- dplyr::bind_rows(all_params,
-                                 tibble::tibble(class = "structural",
-                                                coef = "Vc"))
+  strc_params <- if (attribute_structure == "unconstrained") {
+    tibble::tibble(class = "structural", coef = "Vc")
+  } else if (attribute_structure == "independent") {
+    tibble::tibble(class = "structural",
+                   coef = glue::glue("eta[{seq_len(length(att_names))}]"))
+  }
+
+
+  all_params <- dplyr::bind_rows(all_params, strc_params)
 
   return(all_params)
 }

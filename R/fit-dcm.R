@@ -82,6 +82,8 @@ measr_dcm <- function(data,
                       item_id = NULL,
                       type = c("lcdm", "dina", "dino", "crum"),
                       max_interaction = Inf,
+                      attribute_structure = c("unconstrained",
+                                              "independent"),
                       method = c("mcmc", "optim"),
                       prior = NULL,
                       backend = getOption("measr.backend", "rstan"),
@@ -102,8 +104,10 @@ measr_dcm <- function(data,
   max_interaction <- check_integer(
     ifelse(is.infinite(max_interaction), ncol(clean_qmatrix), max_interaction),
     lb = 1, inclusive = TRUE, name = "max_interaction")
+  attribute_structure <- rlang::arg_match(attribute_structure, strc_choices())
   method <- rlang::arg_match(method, c("mcmc", "optim"))
   prior <- check_prior(prior, type = type, qmatrix = clean_qmatrix,
+                       strc = attribute_structure,
                        name = "prior", allow_null = TRUE)
   backend <- rlang::arg_match(backend, backend_choices())
   file <- check_file(file, name = "file", create_dir = FALSE,
@@ -124,6 +128,7 @@ measr_dcm <- function(data,
   script_call <- rlang::call2(func_name,
                               qmatrix = rlang::expr(clean_qmatrix),
                               prior = rlang::expr(prior),
+                              strc = rlang::expr(attribute_structure),
                               max_interaction = rlang::expr(max_interaction))
   stan_code <- eval(script_call)
 

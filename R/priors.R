@@ -92,10 +92,11 @@ prior_string <- function(prior, ...) {
 #'
 #' @examples
 #' default_dcm_priors(type = "lcdm")
-default_dcm_priors <- function(type = "lcdm") {
+default_dcm_priors <- function(type = "lcdm",
+                               attribute_structure = "unconstrained") {
   type <- rlang::arg_match(type, dcm_choices())
 
-  prior <- if (type %in% c("lcdm", "crum")) {
+  meas_prior <- if (type %in% c("lcdm", "crum")) {
     c(prior_string("normal(0, 2)", class = "intercept"),
       prior_string("lognormal(0, 1)", class = "maineffect"),
       if (type == "lcdm") prior_string("normal(0, 2)", class = "interaction"))
@@ -104,10 +105,14 @@ default_dcm_priors <- function(type = "lcdm") {
       prior_string("beta(5, 25)", class = "guess"))
   }
 
-  prior <- c(prior,
-             prior_string("dirichlet(rep_vector(1, C))",
-                          class = "structural", coef = "Vc"))
+  strc_prior <- if (attribute_structure == "unconstrained") {
+    prior_string("dirichlet(rep_vector(1, C))",
+                 class = "structural", coef = "Vc")
+  } else if (attribute_structure == "independent") {
+    prior_string("beta(1, 1)", class = "structural")
+  }
 
+  prior <- c(meas_prior, strc_prior)
   return(prior)
 }
 
@@ -209,9 +214,7 @@ c.measrprior <- function(x, ..., replace = FALSE) {
   dots <- list(...)
   dots_class <- sapply(dots, is.measrprior)
   if (length(dots) && all(dots_class)) {
-    out <- do.call(dplyr::bind_rows, list(x, ...)) %>%
-      dplyr::mutate(coef = dplyr::case_when(.data$class == "structural" ~ "Vc",
-                                            TRUE ~ .data$coef))
+    out <- do.call(dplyr::bind_rows, list(x, ...))
 
     if (replace) {
       out <- dplyr::distinct(out, .data$class, .data$coef, .keep_all = TRUE)

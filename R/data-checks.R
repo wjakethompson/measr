@@ -185,14 +185,15 @@ check_item_levels <- function(x, identifier, item_levels, name) {
   return(x)
 }
 
-check_prior <- function(x, type, qmatrix, name, allow_null = FALSE) {
+check_prior <- function(x, type, qmatrix, strc, name, allow_null = FALSE) {
   if (allow_null && is.null(x)) return(x)
 
   if (!is.measrprior(x)) {
     abort_bad_argument(name, must = "be a measrprior object")
   }
 
-  mod_param <- get_parameters(qmatrix = qmatrix, type = type)
+  mod_param <- get_parameters(qmatrix = qmatrix, type = type,
+                              attribute_structure = strc)
 
   bad_class <- dplyr::anti_join(x, mod_param, by = "class") %>%
     dplyr::pull(class)
