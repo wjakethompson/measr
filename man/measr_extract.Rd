@@ -55,9 +55,18 @@ attribute.
 \item \code{m2}: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
 including RMSEA and SRMSR indices. Model fit information must first be
 added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{ppmc_raw_score}: The observed and posterior predicted chi-square
+statistic for the raw score distribution. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{ppmc_conditional_prob}: The observed and posterior predicted conditional
+probabilities of each class providing a correct response to each item.
+See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{ppmc_conditional_prob_flags}: A subset of the PPMC conditional
+probabilities where the \emph{ppp} is outside the specified \code{ppmc_interval}.
 \item \code{odds_ratio}: The observed and posterior predicted odds ratios of each
-item pair. Model fit information must first be added to the model using
-\code{\link[=add_fit]{add_fit()}}.
+item pair. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
 \item \code{odds_ratio_flags}: A subset of the PPMC odds ratios where the \emph{ppp} is
 outside the specified \code{ppmc_interval}.
 \item \code{classification_reliability}: The classification accuracy and consistency

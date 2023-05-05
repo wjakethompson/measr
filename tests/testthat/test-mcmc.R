@@ -193,11 +193,24 @@ test_that("ppmc works", {
 })
 
 test_that("ppmc extraction errors", {
-  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "odds_ratio"))
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "ppmc_raw_score"))
   expect_s3_class(err, "rlang_error")
   expect_match(err$message, "Model fit information must be added")
 
-  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "odds_ratio_flags"))
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "ppmc_conditional_prob"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm,
+                                        "ppmc_conditional_prob_flags"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "ppmc_odds_ratio"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "ppmc_odds_ratio_flags"))
   expect_s3_class(err, "rlang_error")
   expect_match(err$message, "Model fit information must be added")
 })
@@ -208,13 +221,14 @@ test_that("model fit can be added", {
 
   # add m2 and ppmc odds ratios
   test_model <- add_fit(test_model, method = c("m2", "ppmc"),
-                        model_fit = NULL, item_fit = "odds_ratio")
+                        model_fit = NULL, item_fit = "odds_ratio",
+                        return_draws = 0.2)
   expect_equal(names(test_model$fit), c("m2", "ppmc"))
   expect_equal(names(test_model$fit$ppmc), "item_fit")
   expect_equal(names(test_model$fit$ppmc$item_fit), "odds_ratio")
   expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
-                 "ppp"))
+                 "samples", "ppp"))
 
   # now add ppmc raw score and conditional probs -- other fit should persist
   test_model <- add_fit(test_model, method = "ppmc",
@@ -229,14 +243,14 @@ test_that("model fit can be added", {
                c("odds_ratio", "conditional_prob"))
   expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
-                 "ppp"))
+                 "samples", "ppp"))
   expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
 
-  # overwrite just odds ration with sample and new probs
+  # overwrite just conditional prob with samples and new probs
   test_model <- add_fit(test_model, method = "ppmc", overwrite = TRUE,
-                        model_fit = NULL, item_fit = "odds_ratio",
+                        model_fit = NULL, item_fit = "conditional_prob",
                         return_draws = 0.2, probs = c(.1, .9))
   expect_equal(names(test_model$fit), c("m2", "ppmc"))
   expect_equal(names(test_model$fit$ppmc), c("item_fit", "model_fit"))
@@ -246,20 +260,33 @@ test_that("model fit can be added", {
   expect_equal(names(test_model$fit$ppmc$item_fit),
                c("odds_ratio", "conditional_prob"))
   expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
-               c("item_1", "item_2", "obs_or", "ppmc_mean", "10%", "90%",
+               c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "samples", "ppp"))
   expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
-               c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
-                 "ppp"))
+               c("item", "class", "obs_cond_pval", "ppmc_mean", "10%", "90%",
+                 "samples", "ppp"))
 
   # test extraction
-  or_check <- measr_extract(test_model, "odds_ratio")
+  rs_check <- measr_extract(test_model, "ppmc_raw_score")
+  expect_equal(rs_check, test_model$fit$ppmc$model_fit$raw_score)
+
+  cp_check <- measr_extract(test_model, "ppmc_conditional_prob")
+  expect_equal(cp_check,
+               test_model$fit$ppmc$item_fit$conditional_prob)
+  expect_equal(measr_extract(test_model, "ppmc_conditional_prob_flags",
+                             ppmc_interval = 0.95),
+               dplyr::filter(cp_check, ppp <= 0.025 | ppp >= 0.975))
+  expect_equal(measr_extract(test_model, "ppmc_conditional_prob_flags",
+                             ppmc_interval = 0.8),
+               dplyr::filter(cp_check, ppp <= 0.1 | ppp >= 0.9))
+
+  or_check <- measr_extract(test_model, "ppmc_odds_ratio")
   expect_equal(or_check,
                test_model$fit$ppmc$item_fit$odds_ratio)
-  expect_equal(measr_extract(test_model, "odds_ratio_flags",
+  expect_equal(measr_extract(test_model, "ppmc_odds_ratio_flags",
                              ppmc_interval = 0.95),
                dplyr::filter(or_check, ppp <= 0.025 | ppp >= 0.975))
-  expect_equal(measr_extract(test_model, "odds_ratio_flags",
+  expect_equal(measr_extract(test_model, "ppmc_odds_ratio_flags",
                              ppmc_interval = 0.8),
                dplyr::filter(or_check, ppp <= 0.1 | ppp >= 0.9))
 })

@@ -38,9 +38,18 @@ measr_extract <- function(model, ...) {
 #'   * `m2`: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
 #'     including RMSEA and SRMSR indices. Model fit information must first be
 #'     added to the model using [add_fit()].
+#'   * `ppmc_raw_score`: The observed and posterior predicted chi-square
+#'     statistic for the raw score distribution. See [fit_ppmc()] for details.
+#'     Model fit information must first be added to the model using [add_fit()].
+#'   * `ppmc_conditional_prob`: The observed and posterior predicted conditional
+#'     probabilities of each class providing a correct response to each item.
+#'     See [fit_ppmc()] for details.
+#'     Model fit information must first be added to the model using [add_fit()].
+#'   * `ppmc_conditional_prob_flags`: A subset of the PPMC conditional
+#'     probabilities where the _ppp_ is outside the specified `ppmc_interval`.
 #'   * `odds_ratio`: The observed and posterior predicted odds ratios of each
-#'     item pair. Model fit information must first be added to the model using
-#'     [add_fit()].
+#'     item pair. See [fit_ppmc()] for details.
+#'     Model fit information must first be added to the model using [add_fit()].
 #'   * `odds_ratio_flags`: A subset of the PPMC odds ratios where the _ppp_ is
 #'     outside the specified `ppmc_interval`.
 #'   * `classification_reliability`: The classification accuracy and consistency
@@ -175,7 +184,37 @@ measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95,
 
       return(invisible(model$fit$m2))
     },
-    odds_ratio = {
+    ppmc_raw_score = {
+      if (is.null(model$fit$ppmc$model_fit$raw_score)) {
+        rlang::abort(message = glue::glue("Model fit information must be ",
+                                          "added to a model object before ",
+                                          "the raw score distribution can be ",
+                                          "extracted. See `?add_fit()`."))
+      }
+      model$fit$ppmc$model_fit$raw_score
+    },
+    ppmc_conditional_prob = {
+      if (is.null(model$fit$ppmc$item_fit$conditional_prob)) {
+        rlang::abort(message = glue::glue("Model fit information must be ",
+                                          "added to a model object before ",
+                                          "conditional probabilities can be ",
+                                          "extracted. See `?add_fit()`."))
+      }
+      model$fit$ppmc$item_fit$conditional_prob
+    },
+    ppmc_conditional_prob_flags = {
+      if (is.null(model$fit$ppmc$item_fit$conditional_prob)) {
+        rlang::abort(message = glue::glue("Model fit information must be ",
+                                          "added to a model object before ",
+                                          "conditional probabilities can be ",
+                                          "extracted. See `?add_fit()`."))
+      }
+      model$fit$ppmc$item_fit$conditional_prob %>%
+        dplyr::filter(!dplyr::between(.data$ppp,
+                                      (1 - ppmc_interval) / 2,
+                                      1 - ((1 - ppmc_interval) / 2)))
+    },
+    ppmc_odds_ratio = {
       if (is.null(model$fit$ppmc$item_fit$odds_ratio)) {
         rlang::abort(message = glue::glue("Model fit information must be ",
                                           "added to a model object before ",
@@ -184,7 +223,7 @@ measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95,
       }
       model$fit$ppmc$item_fit$odds_ratio
     },
-    odds_ratio_flags = {
+    ppmc_odds_ratio_flags = {
       if (is.null(model$fit$ppmc$item_fit$odds_ratio)) {
         rlang::abort(message = glue::glue("Model fit information must be ",
                                           "added to a model object before ",
