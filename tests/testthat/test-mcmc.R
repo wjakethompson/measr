@@ -132,6 +132,10 @@ test_that("model comparisons work", {
 })
 
 test_that("ppmc works", {
+  test_ppmc <- fit_ppmc(cmds_mdm_lcdm, model_fit = character(),
+                        item_fit = character())
+  expect_equal(test_ppmc, list())
+
   test_ppmc <- fit_ppmc(cmds_mdm_lcdm, ndraws = 500, return_draws = 0.2,
                         model_fit = "raw_score",
                         item_fit = "conditional_prob")
@@ -229,6 +233,11 @@ test_that("model fit can be added", {
   expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "samples", "ppp"))
+
+  # nothing new does nothing
+  test_model2 <- add_fit(test_model, method = "ppmc", model_fit = NULL,
+                        item_fit = NULL)
+  expect_identical(test_model, test_model2)
 
   # now add ppmc raw score and conditional probs -- other fit should persist
   test_model <- add_fit(test_model, method = "ppmc",
