@@ -117,6 +117,8 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
     rlang::arg_match(item_fit, multiple = TRUE)
   }
 
+  if (length(model_fit) == 0 && length(item_fit) == 0) return(list())
+
   clean_qmatrix <- model$data$qmatrix %>%
     dplyr::select(-"item_id") %>%
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
