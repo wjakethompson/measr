@@ -32,7 +32,7 @@
 #'
 #' For `add_fit()`, model and item fit information are added to the `$fit`
 #' element of the fitted model. This function wraps [fit_m2()] to calculate the
-#' \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2006;
+#' \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} statistic (Hansen et al., 2016;
 #' Liu et al., 2016) and/or [fit_ppmc()] to calculate posterior predictive model
 #' checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
 #' Thompson, 2019), depending on which methods are specified. Additional
