@@ -18,6 +18,7 @@ out <- capture.output(
     cmds_mdm_dina <- measr_dcm(
       data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
       resp_id = "respondent", item_id = "item", type = "dina",
+      attribute_structure = "independent",
       method = "mcmc", seed = 63277, backend = "rstan",
       iter = 1500, warmup = 1000, chains = 2,
       cores = 2,
