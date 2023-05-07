@@ -31,6 +31,11 @@
 #'   interaction. Setting `max_interaction = 2` would result in only estimating
 #'   the main effects and two-way interactions, excluding the three- and four-
 #'   way interactions.
+#' @param attribute_structure Structural model specification. Must be one of
+#'   `r glue::glue_collapse(strc_choices(), sep = ", ", last = ", or ")`.
+#'   `unconstrained` makes no assumptions about the relationships between
+#'   attributes, whereas `independent` assumes that proficiency statuses on
+#'   attributes are independent of each other.
 #' @param method Estimation method. Options are `"mcmc"`, which uses Stan's
 #'   sampling method, or `"optim"`, which uses Stan's optimizer.
 #' @param prior A [measrprior][measrprior()] object. If `NULL`, default priors

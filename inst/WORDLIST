@@ -24,6 +24,7 @@ PPMC
 PPMCs
 Psychometrika
 RMSEA
+Rupp
 SRMSR
 Sinharay
 Tatsuoka
@@ -38,9 +39,11 @@ al
 att
 cmdstanr
 codecov
+crum
 dichotomously
 dina
 dino
+doi
 dplyr
 et
 eval
@@ -68,3 +71,4 @@ tibble
 tibbles
 tunnelled
 tunnelling
+warmup

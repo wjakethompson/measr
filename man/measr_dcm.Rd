@@ -12,6 +12,7 @@ measr_dcm(
   item_id = NULL,
   type = c("lcdm", "dina", "dino", "crum"),
   max_interaction = Inf,
+  attribute_structure = c("unconstrained", "independent"),
   method = c("mcmc", "optim"),
   prior = NULL,
   backend = getOption("measr.backend", "rstan"),
@@ -54,6 +55,12 @@ example, an item that measures 4 attributes would have 4 main effects,
 interaction. Setting \code{max_interaction = 2} would result in only estimating
 the main effects and two-way interactions, excluding the three- and four-
 way interactions.}
+
+\item{attribute_structure}{Structural model specification. Must be one of
+unconstrained, or independent.
+\code{unconstrained} makes no assumptions about the relationships between
+attributes, whereas \code{independent} assumes that proficiency statuses on
+attributes are independent of each other.}
 
 \item{method}{Estimation method. Options are \code{"mcmc"}, which uses Stan's
 sampling method, or \code{"optim"}, which uses Stan's optimizer.}

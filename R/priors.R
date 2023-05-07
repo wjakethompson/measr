@@ -95,6 +95,7 @@ prior_string <- function(prior, ...) {
 default_dcm_priors <- function(type = "lcdm",
                                attribute_structure = "unconstrained") {
   type <- rlang::arg_match(type, dcm_choices())
+  attribute_structure <- rlang::arg_match(attribute_structure, strc_choices())
 
   meas_prior <- if (type %in% c("lcdm", "crum")) {
     c(prior_string("normal(0, 2)", class = "intercept"),

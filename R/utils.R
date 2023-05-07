@@ -48,16 +48,12 @@ profile_labels <- function(attributes) {
 #' diagnostic model to estimated, we can create a list of all included
 #' parameters for which a prior can be specified.
 #'
-#' @param qmatrix The Q-matrix. A data frame with 1 row per item and 1 column
-#'   per attribute. All cells should be either 0 (item does not measure the
-#'   attribute) or 1 (item does measure the attribute).
+#' @inheritParams measr_dcm
 #' @param item_id Optional. Variable name of a column in `qmatrix` that contains
 #'   item identifiers. `NULL` (the default) indicates that no identifiers are
 #'   present in the Q-matrix.
 #' @param rename_att Should attribute names from the `qmatrix` be replaced with
 #'   generic, but consistent names (e.g., "att1", "att2", "att3").
-#' @param type Type of DCM to determine the possible parameters. Must be one of
-#'   `r glue::glue_collapse(dcm_choices(), sep = ", ", last = ", or ")`.
 #'
 #' @return A [tibble][tibble::tibble-package] with one row per parameter.
 #' @export
