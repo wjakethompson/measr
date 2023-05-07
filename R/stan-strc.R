@@ -14,7 +14,7 @@ strc_script <- function(strc) {
     glue::glue("  real<lower=0,upper=1> eta[A];", .trim = FALSE)
   }
 
-  transformed_parameters_block <- if(strc == "unconstrained") {
+  transformed_parameters_block <- if (strc == "unconstrained") {
     glue::glue("  vector[C] log_Vc = log(Vc);", .trim = FALSE)
   } else if (strc == "independent") {
     glue::glue(
