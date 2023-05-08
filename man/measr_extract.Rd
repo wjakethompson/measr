@@ -7,7 +7,7 @@
 \usage{
 measr_extract(model, ...)
 
-\method{measr_extract}{measrdcm}(model, what, ppmc_interval = 0.95, quiet = FALSE, ...)
+\method{measr_extract}{measrdcm}(model, what, ppmc_interval = 0.95, ...)
 }
 \arguments{
 \item{model}{The estimated to extract information from.}
@@ -21,9 +21,6 @@ for available options.}
 fit flags to return (e.g., \code{what = "odds_ratio_flags"}). For example, a
 \code{ppmc_interval} of 0.95 will return any PPMCs where the posterior
 predictive \emph{p}-value (ppp) is less than 0.025 or greater than 0.975.}
-
-\item{quiet}{Logical. Should informational summaries and messages be
-suppressed? Default is \code{FALSE}.}
 }
 \value{
 The extracted information. The specific structure will vary depending
@@ -53,8 +50,8 @@ included in each class.
 \item \code{attribute_prob}: The proficiency probability for each respondent and
 attribute.
 \item \code{m2}: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
-including RMSEA and SRMSR indices. Model fit information must first be
-added to the model using \code{\link[=add_fit]{add_fit()}}.
+including RMSEA and SRMSR indices. See \code{\link[=fit_m2]{fit_m2()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
 \item \code{ppmc_raw_score}: The observed and posterior predicted chi-square
 statistic for the raw score distribution. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
 Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.

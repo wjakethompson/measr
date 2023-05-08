@@ -16,8 +16,6 @@ measr_extract <- function(model, ...) {
 #'   fit flags to return (e.g., `what = "odds_ratio_flags"`). For example, a
 #'   `ppmc_interval` of 0.95 will return any PPMCs where the posterior
 #'   predictive *p*-value (ppp) is less than 0.025 or greater than 0.975.
-#' @param quiet Logical. Should informational summaries and messages be
-#'   suppressed? Default is `FALSE`.
 #'
 #' @details
 #' For diagnostic classification models, we can extract the following
@@ -36,8 +34,8 @@ measr_extract <- function(model, ...) {
 #'   * `attribute_prob`: The proficiency probability for each respondent and
 #'     attribute.
 #'   * `m2`: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
-#'     including RMSEA and SRMSR indices. Model fit information must first be
-#'     added to the model using [add_fit()].
+#'     including RMSEA and SRMSR indices. See [fit_m2()] for details.
+#'     Model fit information must first be added to the model using [add_fit()].
 #'   * `ppmc_raw_score`: The observed and posterior predicted chi-square
 #'     statistic for the raw score distribution. See [fit_ppmc()] for details.
 #'     Model fit information must first be added to the model using [add_fit()].
@@ -78,197 +76,29 @@ measr_extract <- function(model, ...) {
 #' )
 #'
 #' extract(rstn_mdm_lcdm, "strc_param")
-measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95,
-                                   quiet = FALSE, ...) {
+measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95, ...) {
   ppmc_interval <- check_double(ppmc_interval, lb = 0, ub = 1,
                                 name = "ppmc_interval")
-  quiet <- check_logical(quiet, name = "quiet")
 
   out <- switch(
     what,
-    item_param = {
-      items <- model$data$qmatrix %>%
-        dplyr::select(item = "item_id") %>%
-        dplyr::mutate(item_id = as.integer(.data$item))
-      params <- get_parameters(dplyr::select(model$data$qmatrix, -"item_id"),
-                               type = model$type) %>%
-        dplyr::filter(.data$class != "structural") %>%
-        dplyr::left_join(items, by = "item_id", multiple = "all") %>%
-        dplyr::select("item", dplyr::everything(), -"item_id")
-      draws <- as_draws(model) %>%
-        posterior::subset_draws(variable = dplyr::pull(params, "coef")) %>%
-        posterior::as_draws_rvars() %>%
-        tibble::as_tibble()
-
-
-      if (model$type %in% c("lcdm")) {
-        draws <- draws %>%
-          tidyr::pivot_longer(cols = dplyr::everything(),
-                              names_to = "coef", values_to = "estimate")
-        dplyr::left_join(params, draws, by = c("coef")) %>%
-          dplyr::rename(!!model$dat$item_id := "item")
-      } else if (model$type %in% c("dina", "dino")) {
-        draws <- draws %>%
-          dplyr::mutate(item = items$item) %>%
-          tidyr::pivot_longer(cols = -"item",
-                              names_to = "coef", values_to = "estimate")
-
-        dplyr::left_join(params, draws, by = c("item", "class" = "coef"),
-                         relationship = "one-to-one") %>%
-          dplyr::rename(!!model$dat$item_id := "item")
-      }
-    },
-    strc_param = {
-      profiles <- profile_labels(ncol(model$data$qmatrix) - 1)
-
-      as_draws(model) %>%
-        posterior::subset_draws(variable = "Vc") %>%
-        posterior::as_draws_rvars() %>%
-        tibble::as_tibble() %>%
-        tidyr::pivot_longer(cols = dplyr::everything(),
-                            names_to = "coef", values_to = "estimate") %>%
-        tibble::rowid_to_column(var = "class_id") %>%
-        dplyr::left_join(profiles, by = "class_id") %>%
-        dplyr::select("class", "estimate")
-    },
+    item_param = dcm_extract_item_param(model),
+    strc_param = dcm_extract_strc_param(model),
     prior = model$prior,
-    classes = {
-      create_profiles(ncol(model$data$qmatrix) - 1) %>%
-        rlang::set_names(colnames(model$data$qmatrix)[-1]) %>%
-        tibble::rowid_to_column(var = "class_id") %>%
-        dplyr::left_join(profile_labels(ncol(model$data$qmatrix) - 1),
-                         by = "class_id", relationship = "one-to-one") %>%
-        dplyr::select("class", dplyr::everything(), -"class_id")
-    },
-    class_prob = {
-      if (identical(model$respondent_estimates, list())) {
-        rlang::abort(message = glue::glue("Respondent estimates must be ",
-                                          "added to a model object before ",
-                                          "class probabilities ",
-                                          "can be extracted. See ",
-                                          "`?add_respondent_estimates()`."))
-      }
-      model$respondent_estimates$class_probabilities %>%
-        dplyr::select(!!model$data$resp_id, "class", "probability") %>%
-        tidyr::pivot_wider(names_from = "class",
-                           values_from = "probability")
-    },
-    attribute_prob = {
-      if (identical(model$respondent_estimates, list())) {
-        rlang::abort(message = glue::glue("Respondent estimates must be ",
-                                          "added to a model object before ",
-                                          "attribute probabilities ",
-                                          "can be extracted. See ",
-                                          "`?add_respondent_estimates()`."))
-      }
-      model$respondent_estimates$attribute_probabilities %>%
-        dplyr::select(!!model$data$resp_id, "attribute", "probability") %>%
-        tidyr::pivot_wider(names_from = "attribute",
-                           values_from = "probability")
-    },
-    m2 = {
-      if (is.null(model$fit$m2)) {
-        rlang::abort(message = glue::glue("Model fit information must be ",
-                                          "added to a model object before ",
-                                          "the M2 can be extracted. See ",
-                                          "`?add_fit()`."))
-      }
-      fit <- model$fit$m2 %>%
-        dplyr::mutate(dplyr::across(dplyr::where(is.double),
-                                    ~round(.x, digits = 3)))
-      if (!quiet) {
-        print(glue::glue("M2 = {fit$m2}, df = {fit$df}, p = {fit$pval}
-                       RMSEA = {fit$rmsea}, CI: [{fit$ci_lower},{fit$ci_upper}]
-                       SRMSR = {fit$srmsr}"))
-      }
-
-      return(invisible(model$fit$m2))
-    },
-    ppmc_raw_score = {
-      if (is.null(model$fit$ppmc$model_fit$raw_score)) {
-        rlang::abort(message = glue::glue("Model fit information must be ",
-                                          "added to a model object before ",
-                                          "the raw score distribution can be ",
-                                          "extracted. See `?add_fit()`."))
-      }
-      model$fit$ppmc$model_fit$raw_score
-    },
-    ppmc_conditional_prob = {
-      if (is.null(model$fit$ppmc$item_fit$conditional_prob)) {
-        rlang::abort(message = glue::glue("Model fit information must be ",
-                                          "added to a model object before ",
-                                          "conditional probabilities can be ",
-                                          "extracted. See `?add_fit()`."))
-      }
-      model$fit$ppmc$item_fit$conditional_prob
-    },
-    ppmc_conditional_prob_flags = {
-      if (is.null(model$fit$ppmc$item_fit$conditional_prob)) {
-        rlang::abort(message = glue::glue("Model fit information must be ",
-                                          "added to a model object before ",
-                                          "conditional probabilities can be ",
-                                          "extracted. See `?add_fit()`."))
-      }
-      model$fit$ppmc$item_fit$conditional_prob %>%
-        dplyr::filter(!dplyr::between(.data$ppp,
-                                      (1 - ppmc_interval) / 2,
-                                      1 - ((1 - ppmc_interval) / 2)))
-    },
-    ppmc_odds_ratio = {
-      if (is.null(model$fit$ppmc$item_fit$odds_ratio)) {
-        rlang::abort(message = glue::glue("Model fit information must be ",
-                                          "added to a model object before ",
-                                          "odds ratios can be extracted. See ",
-                                          "`?add_fit()`."))
-      }
-      model$fit$ppmc$item_fit$odds_ratio
-    },
-    ppmc_odds_ratio_flags = {
-      if (is.null(model$fit$ppmc$item_fit$odds_ratio)) {
-        rlang::abort(message = glue::glue("Model fit information must be ",
-                                          "added to a model object before ",
-                                          "odds ratios can be extracted. See ",
-                                          "`?add_fit()`."))
-      }
-      model$fit$ppmc$item_fit$odds_ratio %>%
-        dplyr::filter(!dplyr::between(.data$ppp,
-                                      (1 - ppmc_interval) / 2,
-                                      1 - ((1 - ppmc_interval) / 2)))
-    },
-    loo = {
-      if (is.null(model$criteria$loo)) {
-        rlang::abort(message = glue::glue("The LOO criterion must be ",
-                                          "added to a model object before ",
-                                          "it can be extracted. See ",
-                                          "`?add_criterion()`."))
-      }
-      model$criteria$loo
-    },
-    waic = {
-      if (is.null(model$criteria$waic)) {
-        rlang::abort(message = glue::glue("The WAIC criterion must be ",
-                                          "added to a model object before ",
-                                          "it can be extracted. See ",
-                                          "`?add_criterion()`."))
-      }
-      model$criteria$waic
-    },
-    classification_reliability = {
-      if (identical(model$reliability, list())) {
-        rlang::abort(message = glue::glue("Reliability information must be ",
-                                          "added to a model object before it ",
-                                          "can be extracted. See ",
-                                          "`?add_reliability()`."))
-      }
-
-      dplyr::full_join(
-        dplyr::select(model$reliability$map_reliability$accuracy,
-                      "attribute", accuracy = "acc"),
-        dplyr::select(model$reliability$map_reliability$consistency,
-                      "attribute", consistency = "consist"),
-        by = "attribute"
-      )
-    },
+    classes = dcm_extract_classes(model),
+    class_prob = dcm_extract_class_prob(model),
+    attribute_prob = dcm_extract_attr_prob(model),
+    m2 = extract_m2(model),
+    ppmc_raw_score = extract_ppmc_raw_score(model),
+    ppmc_conditional_prob = dcm_extract_ppmc_cond_prob(model,
+                                                       ppmc_interval = NULL),
+    ppmc_conditional_prob_flags = dcm_extract_ppmc_cond_prob(model,
+                                                             ppmc_interval),
+    ppmc_odds_ratio = extract_or(model, ppmc_interval = NULL),
+    ppmc_odds_ratio_flags = extract_or(model, ppmc_interval),
+    loo = extract_info_crit(model, "loo"),
+    waic = extract_info_crit(model, "waic"),
+    classification_reliability = dcm_extract_reli_conacc(model),
     rlang::abort(message = glue::glue("Cannot extract element `{what}`"))
   )
 
