@@ -235,6 +235,24 @@ measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95,
                                       (1 - ppmc_interval) / 2,
                                       1 - ((1 - ppmc_interval) / 2)))
     },
+    loo = {
+      if (is.null(model$criteria$loo)) {
+        rlang::abort(message = glue::glue("The LOO criterion must be ",
+                                          "added to a model object before ",
+                                          "it can be extracted. See ",
+                                          "`?add_criterion()`."))
+      }
+      model$criteria$loo
+    },
+    waic = {
+      if (is.null(model$criteria$waic)) {
+        rlang::abort(message = glue::glue("The WAIC criterion must be ",
+                                          "added to a model object before ",
+                                          "it can be extracted. See ",
+                                          "`?add_criterion()`."))
+      }
+      model$criteria$waic
+    },
     classification_reliability = {
       if (identical(model$reliability, list())) {
         rlang::abort(message = glue::glue("Reliability information must be ",

@@ -83,6 +83,14 @@ test_that("loo and waic work", {
 })
 
 test_that("loo and waic can be added to model", {
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "loo"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "LOO criterion must be added")
+
+  err <- rlang::catch_cnd(measr_extract(cmds_mdm_lcdm, "waic"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "WAIC criterion must be added")
+
   err <- rlang::catch_cnd(add_criterion(rstn_dino))
   expect_s3_class(err, "error_bad_method")
   expect_match(err$message, "`method = \"mcmc\"`")
@@ -97,6 +105,9 @@ test_that("loo and waic can be added to model", {
   expect_s3_class(lw_model$criteria$loo, "psis_loo")
   expect_s3_class(lw_model$criteria$waic, "waic")
   expect_identical(loo_model$criteria$loo, lw_model$criteria$loo)
+
+  expect_identical(measr_extract(lw_model, "loo"), lw_model$criteria$loo)
+  expect_identical(measr_extract(lw_model, "waic"), lw_model$criteria$waic)
 })
 
 test_that("model comparisons work", {
