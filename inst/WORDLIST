@@ -11,6 +11,7 @@ Gabry
 Gelman
 Gierl
 HDCM
+Kruskal's
 LCDM
 Liu
 MDM
@@ -35,8 +36,10 @@ WAIC
 WIP
 Watanabe
 Xin
+Youden's
 al
 att
+biserial
 cmdstanr
 codecov
 crum
@@ -47,6 +50,7 @@ doi
 dplyr
 et
 eval
+examinee
 extensibility
 funder
 ggplot
@@ -67,6 +71,7 @@ rlang
 rstan
 subtype
 subtypes
+tetrachoric
 tibble
 tibbles
 tunnelled
