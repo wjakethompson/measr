@@ -80,7 +80,7 @@ fit_m2.measrdcm <- function(model, ci = 0.9, ...) {
                       qmatrix = q, ci = ci, link = "logit",
                       model_type = toupper(model$type)) %>%
     dplyr::mutate(dplyr::across(dplyr::starts_with("ci"), ~round(.x, 4)),
-                  !!glue::glue("{ci * 100}% CI") :=
+                  !!glue::glue("{ci * 100}% CI") := #nolint
                     paste0("[", .data$ci_lower, ", ", .data$ci_upper, "]"),
                   .before = "srmsr")
 
