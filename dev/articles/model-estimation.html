@@ -15,9 +15,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.5/font.css" rel="stylesheet">
-<link href="../deps/Fira_Code-0.4.5/font.css" rel="stylesheet">
-<link href="../deps/Playfair_Display-0.4.5/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/Playfair_Display-0.4.6/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -248,16 +248,16 @@ attributes.</li>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 74 × 5</span></span></span>
 <span><span class="co">#&gt;    item_id class       attributes                coef         estimate</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1      intercept   <span style="color: #BB0000;">NA</span>                        l1_0     0.82 <span style="color: #949494;">± 0.075</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E1      maineffect  morphosyntactic           l1_11    0.61 <span style="color: #949494;">± 0.385</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E1      maineffect  cohesive                  l1_12    0.64 <span style="color: #949494;">± 0.207</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E1      interaction morphosyntactic__cohesive l1_212   0.54 <span style="color: #949494;">± 0.512</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E2      intercept   <span style="color: #BB0000;">NA</span>                        l2_0     1.04 <span style="color: #949494;">± 0.078</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E2      maineffect  cohesive                  l2_12    1.24 <span style="color: #949494;">± 0.154</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E3      intercept   <span style="color: #BB0000;">NA</span>                        l3_0    -0.35 <span style="color: #949494;">± 0.069</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E3      maineffect  morphosyntactic           l3_11    0.72 <span style="color: #949494;">± 0.366</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E3      maineffect  lexical                   l3_13    0.36 <span style="color: #949494;">± 0.110</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E3      interaction morphosyntactic__lexical  l3_213   0.56 <span style="color: #949494;">± 0.389</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1      intercept   <span style="color: #BB0000;">NA</span>                        l1_0     0.82 <span style="color: #949494;">± 0.077</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E1      maineffect  morphosyntactic           l1_11    0.61 <span style="color: #949494;">± 0.377</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E1      maineffect  cohesive                  l1_12    0.64 <span style="color: #949494;">± 0.224</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E1      interaction morphosyntactic__cohesive l1_212   0.53 <span style="color: #949494;">± 0.500</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E2      intercept   <span style="color: #BB0000;">NA</span>                        l2_0     1.05 <span style="color: #949494;">± 0.080</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E2      maineffect  cohesive                  l2_12    1.23 <span style="color: #949494;">± 0.157</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E3      intercept   <span style="color: #BB0000;">NA</span>                        l3_0    -0.35 <span style="color: #949494;">± 0.072</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E3      maineffect  morphosyntactic           l3_11    0.74 <span style="color: #949494;">± 0.385</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E3      maineffect  lexical                   l3_13    0.36 <span style="color: #949494;">± 0.114</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E3      interaction morphosyntactic__lexical  l3_213   0.53 <span style="color: #949494;">± 0.402</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 64 more rows</span></span></span></code></pre></div>
 <p>We can compare these estimates to those that <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span> reported when using different
 software to estimate the same model. In the figure below, most
@@ -295,14 +295,14 @@ attribute.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 2</span></span></span>
 <span><span class="co">#&gt;   class           estimate</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> [0,0,0]  0.2992 <span style="color: #949494;">± 0.0174</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> [1,0,0]  0.0116 <span style="color: #949494;">± 0.0063</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> [0,1,0]  0.0155 <span style="color: #949494;">± 0.0107</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> [0,0,1]  0.1288 <span style="color: #949494;">± 0.0195</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> [1,1,0]  0.0095 <span style="color: #949494;">± 0.0055</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> [1,0,1]  0.0185 <span style="color: #949494;">± 0.0102</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> [0,1,1]  0.1725 <span style="color: #949494;">± 0.0198</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> [1,1,1]  0.3445 <span style="color: #949494;">± 0.0168</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> [0,0,0]  0.2991 <span style="color: #949494;">± 0.0167</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> [1,0,0]  0.0119 <span style="color: #949494;">± 0.0064</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> [0,1,0]  0.0160 <span style="color: #949494;">± 0.0107</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> [0,0,1]  0.1280 <span style="color: #949494;">± 0.0199</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> [1,1,0]  0.0094 <span style="color: #949494;">± 0.0056</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> [1,0,1]  0.0185 <span style="color: #949494;">± 0.0097</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> [0,1,1]  0.1723 <span style="color: #949494;">± 0.0200</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> [1,1,1]  0.3448 <span style="color: #949494;">± 0.0169</span></span></span></code></pre></div>
 <p>This means that the prior will have more influence on these
 parameters. Note in the above figure that the main effect estimates that
 are off the diagonal are less extreme when using measr. For example, the
@@ -378,7 +378,7 @@ use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>
 <p>Any distribution that is supported by the <em>Stan</em> language can
 be used as a prior. A list of all distributions is available in the
 <em>Stan</em> documentation, and are linked to from the
-<code><a href="../reference/measrprior.html">prior()</a></code> help page.</p>
+<code>?prior()</code> help page.</p>
 <p>Priors can be defined before estimating the function, or created at
 the same time the model is estimated. For example, both of the following
 are equivalent. Here we set the prior for main effects to be a truncated
@@ -414,12 +414,13 @@ priors were still applied to the parameters for which we did not
 explicitly state a prior distribution.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">new_lcdm</span>, <span class="st">"prior"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
-<span><span class="co">#&gt;   class       coef  prior_def         </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> maineffect  <span style="color: #BB0000;">NA</span>    normal(0, 15)T[0,]</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 15)     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 15)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   class       coef  prior_def                  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> maineffect  <span style="color: #BB0000;">NA</span>    normal(0, 15)T[0,]         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> structural  Vc    dirichlet(rep_vector(1, C))</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="subtype">Other DCM Sub-Types<a class="anchor" aria-label="anchor" href="#subtype"></a>
@@ -434,7 +435,7 @@ specifying a different <code>type</code> in the <code><a href="../reference/meas
 function.</p>
 <p>Future development work will continue to add functionality for more
 DCM subtypes. If there is a specific subtype you are interested in, or
-would like to see supported, please open an issues on the <a href="https://github.com/wjakethompson/measr/issues" class="external-link">GitHub
+would like to see supported, please open an issue on the <a href="https://github.com/wjakethompson/measr/issues" class="external-link">GitHub
 repository</a>.</p>
 </div>
 </div>
