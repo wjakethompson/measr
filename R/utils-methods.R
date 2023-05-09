@@ -1,3 +1,16 @@
+constrain_01 <- function(x) {
+  max(min(x, 0.99999), 0.00001)
+}
+
+constrain_pi <- function(draw_matrix) {
+  posterior::bind_draws(
+    posterior::subset_draws(draw_matrix, variable = "log_Vc"),
+    apply(posterior::subset_draws(draw_matrix, variable = "pi"),
+          c(1, 2, 3), constrain_01) %>%
+      posterior::as_draws_array()
+  )
+}
+
 get_mcmc_draws <- function(x, ndraws = NULL) {
   draw_matrix <- if (x$backend == "cmdstanr") {
     x$model$draws(variables = c("log_Vc", "pi"), format = "draws_array")
@@ -13,7 +26,9 @@ get_mcmc_draws <- function(x, ndraws = NULL) {
                                            draw = keep_draws)
   }
 
-  return(draw_matrix)
+  final_matrix <- constrain_pi(draw_matrix)
+
+  return(final_matrix)
 }
 
 get_optim_draws <- function(x) {
@@ -23,8 +38,9 @@ get_optim_draws <- function(x) {
     posterior::as_draws_array(x$model$draws())
   }
 
-  final_matrix <- posterior::subset_draws(draw_matrix,
-                                          variable = c("log_Vc", "pi"))
+  draw_matrix <- posterior::subset_draws(draw_matrix,
+                                         variable = c("log_Vc", "pi"))
+  final_matrix <- constrain_pi(draw_matrix)
 
   return(final_matrix)
 }

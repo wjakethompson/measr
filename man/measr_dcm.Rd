@@ -10,7 +10,9 @@ measr_dcm(
   qmatrix,
   resp_id = NULL,
   item_id = NULL,
-  type = c("lcdm", "dina", "dino"),
+  type = c("lcdm", "dina", "dino", "crum"),
+  max_interaction = Inf,
+  attribute_structure = c("unconstrained", "independent"),
   method = c("mcmc", "optim"),
   prior = NULL,
   backend = getOption("measr.backend", "rstan"),
@@ -44,7 +46,21 @@ is the same as the order of the columns in \code{data} (i.e., the item in row 1
 of \code{qmatrix} is the item in column 1 of \code{data}, excluding \code{resp_id}).}
 
 \item{type}{Type of DCM to estimate. Must be one of
-lcdm, dina, or dino.}
+lcdm, dina, dino, or crum.}
+
+\item{max_interaction}{If \code{type = "lcdm"}, the highest level of interaction
+to estimate. The default is to estimate all possible interactions. For
+example, an item that measures 4 attributes would have 4 main effects,
+6 two-way interactions, 4 three-way interactions, and 1 four-way
+interaction. Setting \code{max_interaction = 2} would result in only estimating
+the main effects and two-way interactions, excluding the three- and four-
+way interactions.}
+
+\item{attribute_structure}{Structural model specification. Must be one of
+unconstrained, or independent.
+\code{unconstrained} makes no assumptions about the relationships between
+attributes, whereas \code{independent} assumes that proficiency statuses on
+attributes are independent of each other.}
 
 \item{method}{Estimation method. Options are \code{"mcmc"}, which uses Stan's
 sampling method, or \code{"optim"}, which uses Stan's optimizer.}

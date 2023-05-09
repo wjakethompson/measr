@@ -7,23 +7,40 @@
 \usage{
 measr_extract(model, ...)
 
-\method{measr_extract}{measrdcm}(model, what, ppmc_interval = 0.95, quiet = FALSE, ...)
+\method{measr_extract}{measrdcm}(model, what, ...)
 }
 \arguments{
 \item{model}{The estimated to extract information from.}
 
-\item{...}{Additional arguments passed to specific methods.}
+\item{...}{Additional arguments passed to each extract method.
+\itemize{
+\item \code{ppmc_interval}:
+
+For \code{what = "odds_ratio_flags"} and
+\code{what = "conditional_prob_flags"}, the compatibility interval used for
+determining model fit flags to return. For example, a \code{ppmc_interval} of
+0.95 (the default) will return any PPMCs where the posterior predictive
+\emph{p}-value (ppp) is less than 0.025 or greater than 0.975.
+\item \code{agreement}:
+
+For \code{what = "classification_reliability"}, additional
+measures of agreement to include. By default, the classification
+accuracy and consistency metrics defined Johnson & Sinharay (2018) are
+returned. Additional metrics that can be specified to \code{agreement} are
+Goodman & Kruskal's lambda (\code{lambda}), Cohen's kappa (\code{kappa}), Youden's
+statistic (\code{youden}), the tetrachoric correlation (\code{tetra}), true
+positive rate (\code{tp}), and the true negative rate (\code{tn}).
+
+For \code{what = "probability_reliability"}, additional measures of agreement
+to include. By default, the informational reliability index defined by
+Johnson & Sinharay (2020) is returned. Additional metrics that can be
+specified to \code{agreement} are the point biserial reliability index (\code{bs}),
+parallel forms reliability index (\code{pf}), and the tetrachoric reliability
+index (\code{tb}), which was originally defined by Templin & Bradshaw (2013).
+}}
 
 \item{what}{Character string. The information to be extracted. See details
 for available options.}
-
-\item{ppmc_interval}{The compatibility interval used for determining model
-fit flags to return (e.g., \code{what = "odds_ratio_flags"}). For example, a
-\code{ppmc_interval} of 0.95 will return any PPMCs where the posterior
-predictive \emph{p}-value (ppp) is less than 0.025 or greater than 0.975.}
-
-\item{quiet}{Logical. Should informational summaries and messages be
-suppressed? Default is \code{FALSE}.}
 }
 \value{
 The extracted information. The specific structure will vary depending
@@ -52,17 +69,46 @@ included in each class.
 (i.e., has the given pattern of proficiency).
 \item \code{attribute_prob}: The proficiency probability for each respondent and
 attribute.
-\item \code{m2}: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
-including RMSEA and SRMSR indices. Model fit information must first be
-added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{m2}: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic.
+See \code{\link[=fit_m2]{fit_m2()}} for details. Model fit information must first be added to
+the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{rmsea}: The root mean square error of approximation (RMSEA) fit
+statistic and associated confidence interval. See \code{\link[=fit_m2]{fit_m2()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{srmsr}: The standardized root mean square residual (SRMSR) fit
+statistic. See \code{\link[=fit_m2]{fit_m2()}} for details. Model fit information must first
+be added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{ppmc_raw_score}: The observed and posterior predicted chi-square
+statistic for the raw score distribution. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{ppmc_conditional_prob}: The observed and posterior predicted conditional
+probabilities of each class providing a correct response to each item.
+See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{ppmc_conditional_prob_flags}: A subset of the PPMC conditional
+probabilities where the \emph{ppp} is outside the specified \code{ppmc_interval}.
 \item \code{odds_ratio}: The observed and posterior predicted odds ratios of each
-item pair. Model fit information must first be added to the model using
-\code{\link[=add_fit]{add_fit()}}.
+item pair. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
+Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
 \item \code{odds_ratio_flags}: A subset of the PPMC odds ratios where the \emph{ppp} is
 outside the specified \code{ppmc_interval}.
+\item \code{loo}: The leave-one-out cross validation results. See \code{\link[loo:loo]{loo::loo()}} for
+details. The information criterion must first be added to the model using
+\code{\link[=add_criterion]{add_criterion()}}.
+\item \code{waic}: The widely applicable information criterion results. See
+\code{\link[loo:waic]{loo::waic()}} for details. The information criterion must first be added
+to the model using \code{\link[=add_criterion]{add_criterion()}}.
+\item \code{pattern_reliability}: The accuracy and consistency of the overall
+attribute profile classification, as described by Cui et al. (2012).
+Reliability information must first be added to the model using
+\code{\link[=add_reliability]{add_reliability()}}.
 \item \code{classification_reliability}: The classification accuracy and consistency
 for each attribute, using the metrics described by Johnson & Sinharay
 (2018). Reliability information must first be added to the model using
+\code{\link[=add_reliability]{add_reliability()}}.
+\item \code{probability_reliability}: Reliability estimates for the probability of
+proficiency on each attribute, as described by Johnson & Sinharay (2020).
+Reliability information must first be added to the model using
 \code{\link[=add_reliability]{add_reliability()}}.
 }
 }
@@ -84,8 +130,22 @@ extract(rstn_mdm_lcdm, "strc_param")
 \dontshow{\}) # examplesIf}
 }
 \references{
+Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
+classification consistency and accuracy for cognitive diagnostic
+assessment. \emph{Journal of Educational Measurement, 49}(1), 19-38.
+\doi{10.1111/j.1745-3984.2011.00158.x}
+
 Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
 assess attribute-level classification accuracy and consistency for
 cognitive diagnostic assessments. \emph{Journal of Educational Measurement,
 55}(4), 635-664. \doi{10.1111/jedm.12196}
+
+Johnson, M. S., & Sinharay, S. (2020). The reliability of the
+posterior probability of skill attainment in diagnostic classification
+models. \emph{Journal of Educational and Behavioral Statistics, 45}(1), 5-31.
+\doi{10.3102/1076998619864550}
+
+Templin, J., & Bradshaw, L. (2013). Measuring the reliability of
+diagnostic classification model examinee estimates. \emph{Journal of
+Classification, 30}(2), 251-275. \doi{10.1007/s00357-013-9129-4}
 }

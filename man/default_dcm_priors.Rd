@@ -4,11 +4,17 @@
 \alias{default_dcm_priors}
 \title{Default priors for diagnostic classification models}
 \usage{
-default_dcm_priors(type = "lcdm")
+default_dcm_priors(type = "lcdm", attribute_structure = "unconstrained")
 }
 \arguments{
 \item{type}{Type of DCM to estimate. Must be one of
-lcdm, dina, or dino.}
+lcdm, dina, dino, or crum.}
+
+\item{attribute_structure}{Structural model specification. Must be one of
+unconstrained, or independent.
+\code{unconstrained} makes no assumptions about the relationships between
+attributes, whereas \code{independent} assumes that proficiency statuses on
+attributes are independent of each other.}
 }
 \value{
 A \code{measrprior} object.

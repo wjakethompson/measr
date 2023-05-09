@@ -17,7 +17,7 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest, r: 'release', rtools: ''}
-          - {os: windows-latest, r: 'release', rtools: '42'}
+          - {os: windows-latest, r: 'release', rtools: '43'}
           - {os: ubuntu-latest, r: 'devel', rtools: '', http-user-agent: 'release'}
           - {os: ubuntu-latest, r: 'release', rtools: ''}
           - {os: ubuntu-latest, r: 'oldrel-1', rtools: ''}
@@ -41,8 +41,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 2
           extra-packages: |
             any::rcmdcheck
+            github::stan-dev/cmdstanr
             url::https://mc-stan.org/r-packages/src/contrib/rstan_2.26.22.tar.gz
             url::https://mc-stan.org/r-packages/src/contrib/StanHeaders_2.26.22.tar.gz
           needs: check

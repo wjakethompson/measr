@@ -11,6 +11,7 @@ Gabry
 Gelman
 Gierl
 HDCM
+Kruskal's
 LCDM
 Liu
 MDM
@@ -24,6 +25,7 @@ PPMC
 PPMCs
 Psychometrika
 RMSEA
+Rupp
 SRMSR
 Sinharay
 Tatsuoka
@@ -34,16 +36,21 @@ WAIC
 WIP
 Watanabe
 Xin
+Youden's
 al
 att
+biserial
 cmdstanr
 codecov
+crum
 dichotomously
 dina
 dino
+doi
 dplyr
 et
 eval
+examinee
 extensibility
 funder
 ggplot
@@ -64,7 +71,9 @@ rlang
 rstan
 subtype
 subtypes
+tetrachoric
 tibble
 tibbles
 tunnelled
 tunnelling
+warmup

@@ -278,12 +278,14 @@ test_that("check qmatrix", {
 
 test_that("check_prior", {
   err <- rlang::catch_cnd(check_prior(1L, name = "check1", type = "dina",
+                                      strc = "unconstrained",
                                       qmatrix = q_matrix))
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
   expect_match(err$message, "be a measrprior")
 
   err <- rlang::catch_cnd(check_prior(NULL, name = "check1", type = "dina",
+                                      strc = "unconstrained",
                                       qmatrix = q_matrix))
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -291,7 +293,8 @@ test_that("check_prior", {
 
   err <- rlang::catch_cnd(
     check_prior(prior(normal(0, 3), class = "intercept"),
-                type = "dina", qmatrix = q_matrix[, -1], name = "check1")
+                type = "dina", strc = "unconstrained", qmatrix = q_matrix[, -1],
+                name = "check1")
   )
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -299,7 +302,8 @@ test_that("check_prior", {
 
   err <- rlang::catch_cnd(
     check_prior(prior(normal(0, 3), class = "maineffect", coef = "l1_0"),
-                type = "dina", qmatrix = q_matrix[, -1], name = "check1")
+                type = "dina", strc = "unconstrained", qmatrix = q_matrix[, -1],
+                name = "check1")
   )
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -307,7 +311,8 @@ test_that("check_prior", {
 
   err <- rlang::catch_cnd(
     check_prior(prior(normal(0, 3), class = "slip", coef = "l1_0"),
-                type = "lcdm", qmatrix = q_matrix[, -1], name = "check1")
+                type = "lcdm", strc = "unconstrained", qmatrix = q_matrix[, -1],
+                name = "check1")
   )
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -315,7 +320,8 @@ test_that("check_prior", {
 
   err <- rlang::catch_cnd(
     check_prior(prior(normal(0, 3), class = "maineffect", coef = "l30_0"),
-                type = "lcdm", qmatrix = q_matrix[, -1], name = "check1")
+                type = "lcdm", strc = "unconstrained", qmatrix = q_matrix[, -1],
+                name = "check1")
   )
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
@@ -323,20 +329,46 @@ test_that("check_prior", {
 
   err <- rlang::catch_cnd(
     check_prior(prior(normal(0, 3), class = "interaction", coef = "l1_0"),
-                type = "lcdm", qmatrix = q_matrix[, -1], name = "check1")
+                type = "lcdm", strc = "unconstrained", qmatrix = q_matrix[, -1],
+                name = "check1")
   )
   expect_s3_class(err, "error_bad_argument")
   expect_equal(err$arg, "check1")
   expect_match(err$message, "`l1_0` with class `interaction` is not relevant")
 
+  err <- rlang::catch_cnd(
+    check_prior(prior(beta(12, 13), class = "structural", coef = "eta[2]"),
+                type = "dina", qmatrix = q_matrix[, -1],
+                strc = "unconstrained", name = "check1")
+  )
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message,
+               "`eta\\[2\\]` with class `structural` is not relevant")
+
+  err <- rlang::catch_cnd(
+    check_prior(prior(dirichlet(rep_vector(1, C)), class = "structural",
+                      coef = "Vc"),
+                type = "crum", qmatrix = q_matrix[, -1],
+                strc = "independent", name = "check1")
+  )
+  expect_s3_class(err, "error_bad_argument")
+  expect_equal(err$arg, "check1")
+  expect_match(err$message,
+               "`Vc` with class `structural` is not relevant")
+
+
   expect_s3_class(check_prior(prior(normal(0, 1)), type = "lcdm",
+                              strc = "unconstrained",
                               qmatrix = q_matrix[, -1], name = "check1"),
                   "measrprior")
   expect_equal(unclass(check_prior(prior(normal(0, 1)), type = "lcdm",
+                                   strc = "unconstrained",
                                    qmatrix = q_matrix[, -1], name = "check1")),
                unclass(data.frame(class = "structural", coef = NA_character_,
                                   prior_def = "normal(0, 1)")))
   expect_equal(check_prior(NULL, type = "dino", qmatrix = q_matrix[, -1],
+                           strc = "unconstrained",
                            name = "check1", allow_null = TRUE),
                NULL)
 })

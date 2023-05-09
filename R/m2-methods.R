@@ -78,7 +78,11 @@ fit_m2.measrdcm <- function(model, ci = 0.9, ...) {
 
   m2 <- dcm2::calc_m2(data = dat, struc_params = strc, pi_matrix = pi,
                       qmatrix = q, ci = ci, link = "logit",
-                      model_type = toupper(model$type))
+                      model_type = toupper(model$type)) %>%
+    dplyr::mutate(dplyr::across(dplyr::starts_with("ci"), ~round(.x, 4)),
+                  !!glue::glue("{ci * 100}% CI") := #nolint
+                    paste0("[", .data$ci_lower, ", ", .data$ci_upper, "]"),
+                  .before = "srmsr")
 
   return(m2)
 }

@@ -8,7 +8,8 @@ get_parameters(
   qmatrix,
   item_id = NULL,
   rename_att = FALSE,
-  type = c("lcdm", "dina", "dino")
+  type = c("lcdm", "dina", "dino", "crum"),
+  attribute_structure = c("unconstrained", "independent")
 )
 }
 \arguments{
@@ -23,8 +24,14 @@ present in the Q-matrix.}
 \item{rename_att}{Should attribute names from the \code{qmatrix} be replaced with
 generic, but consistent names (e.g., "att1", "att2", "att3").}
 
-\item{type}{Type of DCM to determine the possible parameters. Must be one of
-lcdm, dina, or dino.}
+\item{type}{Type of DCM to estimate. Must be one of
+lcdm, dina, dino, or crum.}
+
+\item{attribute_structure}{Structural model specification. Must be one of
+unconstrained, or independent.
+\code{unconstrained} makes no assumptions about the relationships between
+attributes, whereas \code{independent} assumes that proficiency statuses on
+attributes are independent of each other.}
 }
 \value{
 A \link[tibble:tibble-package]{tibble} with one row per parameter.

@@ -153,6 +153,9 @@ test_that("class check works", {
 })
 
 test_that("default priors", {
+  all_default <- lapply(dcm_choices(), default_dcm_priors)
+  expect_true(all(vapply(all_default, is.measrprior, logical(1))))
+
   # lcdm defaults
   expect_equal(unclass(default_dcm_priors(type = "lcdm")),
                list(class = c("intercept", "maineffect", "interaction",
@@ -160,6 +163,14 @@ test_that("default priors", {
                     coef = c(rep(NA_character_, 3), "Vc"),
                     prior_def = c("normal(0, 2)", "lognormal(0, 1)",
                                   "normal(0, 2)",
+                                  "dirichlet(rep_vector(1, C))")),
+               ignore_attr = TRUE)
+
+  # crum defaults
+  expect_equal(unclass(default_dcm_priors(type = "crum")),
+               list(class = c("intercept", "maineffect", "structural"),
+                    coef = c(rep(NA_character_, 2), "Vc"),
+                    prior_def = c("normal(0, 2)", "lognormal(0, 1)",
                                   "dirichlet(rep_vector(1, C))")),
                ignore_attr = TRUE)
 

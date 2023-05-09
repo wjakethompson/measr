@@ -1,4 +1,5 @@
-lcdm_script <- function(qmatrix, prior = NULL) {
+lcdm_script <- function(qmatrix, prior = NULL, strc = "unconstrained",
+                        max_interaction = Inf, ...) {
   # data block -----
   data_block <- glue::glue(
     "data {{
@@ -19,8 +20,12 @@ lcdm_script <- function(qmatrix, prior = NULL) {
 
   # parameters block -----
   all_params <- get_parameters(qmatrix = qmatrix, item_id = NULL,
-                               rename_att = TRUE, type = "lcdm") %>%
-    dplyr::filter(class != "structural") %>%
+                               rename_att = TRUE, type = "lcdm",
+                               attribute_structure = strc)
+  strc_params <- all_params %>%
+    dplyr::filter(.data$class == "structural")
+  meas_params <- all_params %>%
+    dplyr::filter(.data$class != "structural") %>%
     dplyr::mutate(parameter = dplyr::case_when(is.na(.data$attributes) ~
                                                  "intercept",
                                                TRUE ~ .data$attributes)) %>%
@@ -50,15 +55,16 @@ lcdm_script <- function(qmatrix, prior = NULL) {
         .data$param_level == 0 ~ glue::glue("real {param_name};"),
         .data$param_level >= 1 ~ glue::glue("real{constraint} {param_name};")
       )
-    )
+    ) %>%
+    dplyr::filter(.data$param_level <= max_interaction)
 
-  intercepts <- all_params %>%
+  intercepts <- meas_params %>%
     dplyr::filter(.data$param_level == 0) %>%
     dplyr::pull(.data$param_def)
-  main_effects <- all_params %>%
+  main_effects <- meas_params %>%
     dplyr::filter(.data$param_level == 1) %>%
     dplyr::pull(.data$param_def)
-  interactions <- all_params %>%
+  interactions <- meas_params %>%
     dplyr::filter(.data$param_level >= 2) %>%
     dplyr::pull(.data$param_def)
 
@@ -74,9 +80,10 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     ""
   }
 
+  strc_code <- strc_script(strc = strc)
   parameters_block <- glue::glue(
     "parameters {{",
-    "  simplex[C] Vc;                  // base rates of class membership",
+    "{strc_code$parameters}",
     "",
     "  ////////////////////////////////// item intercepts",
     "  {glue::glue_collapse(intercepts, sep = \"\n  \")}",
@@ -99,9 +106,9 @@ lcdm_script <- function(qmatrix, prior = NULL) {
     tidyr::pivot_longer(-"profile_id", names_to = "parameter",
                         values_to = "valid_for_profile")
 
-  pi_def <- tidyr::expand_grid(item_id = unique(all_params$item_id),
+  pi_def <- tidyr::expand_grid(item_id = unique(meas_params$item_id),
                                profile_id = seq_len(nrow(all_profiles))) %>%
-    dplyr::left_join(dplyr::select(all_params, "item_id", "parameter",
+    dplyr::left_join(dplyr::select(meas_params, "item_id", "parameter",
                                    "param_name"),
                      by = "item_id",
                      multiple = "all", relationship = "many-to-many") %>%
@@ -109,14 +116,14 @@ lcdm_script <- function(qmatrix, prior = NULL) {
                      relationship = "many-to-one") %>%
     dplyr::filter(.data$valid_for_profile == 1) %>%
     dplyr::group_by(.data$item_id, .data$profile_id) %>%
-    dplyr::summarize(all_params = paste(unique(.data$param_name),
+    dplyr::summarize(meas_params = paste(unique(.data$param_name),
                                         collapse = "+"),
                      .groups = "drop") %>%
-    glue::glue_data("pi[{item_id},{profile_id}] = inv_logit({all_params});")
+    glue::glue_data("pi[{item_id},{profile_id}] = inv_logit({meas_params});")
 
   transformed_parameters_block <- glue::glue(
     "transformed parameters {{",
-    "  vector[C] log_Vc = log(Vc);",
+    "{strc_code$transformed}",
     "  matrix[I,C] pi;",
     "",
     "  ////////////////////////////////// probability of correct response",
@@ -126,12 +133,17 @@ lcdm_script <- function(qmatrix, prior = NULL) {
 
   # model block -----
   mod_prior <- if (is.null(prior)) {
-    default_dcm_priors(type = "lcdm")
+    default_dcm_priors(type = "lcdm", attribute_structure = strc)
   } else {
-    c(prior, default_dcm_priors(type = "lcdm"), replace = TRUE)
+    c(prior, default_dcm_priors(type = "lcdm", attribute_structure = strc),
+      replace = TRUE)
   }
 
-  item_priors <- all_params %>%
+  if (max_interaction <= 1) {
+    mod_prior <- dplyr::filter(mod_prior, .data$class != "interaction")
+  }
+
+  item_priors <- meas_params %>%
     dplyr::mutate(
       class = dplyr::case_when(.data$param_level == 0 ~ "intercept",
                                .data$param_level == 1 ~ "maineffect",
@@ -150,9 +162,21 @@ lcdm_script <- function(qmatrix, prior = NULL) {
       prior_def = glue::glue("{param_name} ~ {prior};")) %>%
     dplyr::pull("prior_def")
 
-  strc_prior <- mod_prior %>%
-    dplyr::filter(class == "structural") %>%
-    glue::glue_data("Vc ~ {prior_def};")
+  strc_prior <- strc_params %>%
+    dplyr::left_join(mod_prior, by = c("class", "coef"),
+                     relationship = "one-to-one") %>%
+    dplyr::rename(coef_def = "prior_def") %>%
+    dplyr::left_join(mod_prior %>%
+                       dplyr::filter(is.na(.data$coef)) %>%
+                       dplyr::select(-"coef"),
+                     by = c("class"), relationship = "many-to-one") %>%
+    dplyr::rename(class_def = "prior_def") %>%
+    dplyr::mutate(
+      prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
+                               is.na(.data$coef_def) ~ .data$class_def),
+      prior_def = glue::glue("{coef} ~ {prior};")
+    ) %>%
+    dplyr::pull("prior_def")
 
   all_priors <- glue::as_glue(c(strc_prior, item_priors))
 
@@ -189,4 +213,8 @@ lcdm_script <- function(qmatrix, prior = NULL) {
   )
 
   return(list(stancode = full_script, prior = mod_prior))
+}
+
+crum_script <- function(qmatrix, prior = NULL, strc = "unconstrained", ...) {
+  lcdm_script(qmatrix, prior, strc = strc, max_interaction = 1L)
 }

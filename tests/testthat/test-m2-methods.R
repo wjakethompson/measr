@@ -12,18 +12,22 @@ test_that("m2 works", {
   expect_s3_class(err, "rlang_error")
   expect_match(err$message, "Model fit information must be added")
 
+  err <- rlang::catch_cnd(measr_extract(rstn_dina, "rmsea"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
+  err <- rlang::catch_cnd(measr_extract(rstn_dina, "srmsr"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
   m2_mod <- add_fit(rstn_dina, method = "m2", ci = 0.8)
   expect_equal(m2_mod$fit$m2, m2)
-  expect_equal(measr_extract(m2_mod, "m2", quiet = TRUE), m2)
-  extract_check <- utils::capture.output(
-    m2_check <- measr_extract(m2_mod, "m2")
-  )
-  expect_equal(m2_check, m2)
-  expect_equal(length(extract_check), 3)
-  expect_match(extract_check[1], "M2 =")
-  expect_match(extract_check[2], "RMSEA =")
-  expect_match(extract_check[3], "SRMSR =")
-
+  expect_equal(measr_extract(m2_mod, "m2"),
+               dplyr::select(m2, "m2", "df", "pval"))
+  expect_equal(measr_extract(m2_mod, "rmsea"),
+               dplyr::select(m2, "rmsea", "80% CI"))
+  expect_equal(measr_extract(m2_mod, "srmsr"),
+               dplyr::select(m2, "srmsr"))
 
 
   m2 <- fit_m2(rstn_dino, ci = 0.95)
@@ -39,15 +43,20 @@ test_that("m2 works", {
   expect_s3_class(err, "rlang_error")
   expect_match(err$message, "Model fit information must be added")
 
+  err <- rlang::catch_cnd(measr_extract(rstn_dino, "rmsea"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
+  err <- rlang::catch_cnd(measr_extract(rstn_dino, "srmsr"))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "Model fit information must be added")
+
   m2_mod <- add_fit(rstn_dino, method = "m2", ci = 0.95)
   expect_equal(m2_mod$fit$m2, m2)
-  expect_equal(measr_extract(m2_mod, "m2", quiet = TRUE), m2)
-  extract_check <- utils::capture.output(
-    m2_check <- measr_extract(m2_mod, "m2")
-  )
-  expect_equal(m2_check, m2)
-  expect_equal(length(extract_check), 3)
-  expect_match(extract_check[1], "M2 =")
-  expect_match(extract_check[2], "RMSEA =")
-  expect_match(extract_check[3], "SRMSR =")
+  expect_equal(measr_extract(m2_mod, "m2"),
+               dplyr::select(m2, "m2", "df", "pval"))
+  expect_equal(measr_extract(m2_mod, "rmsea"),
+               dplyr::select(m2, "rmsea", "95% CI"))
+  expect_equal(measr_extract(m2_mod, "srmsr"),
+               dplyr::select(m2, "srmsr"))
 })

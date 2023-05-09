@@ -50,10 +50,22 @@ test_that("lcdm script works", {
   expect_snapshot(lcdm_script(ecpe_q))
   expect_snapshot(lcdm_script(mdm_q))
   expect_snapshot(lcdm_script(dtmr_q))
+
+  expect_snapshot(lcdm_script(ecpe_q, strc = "independent"))
+})
+
+test_that("crum script works", {
+  expect_snapshot(crum_script(ecpe_q))
+  expect_snapshot(crum_script(mdm_q))
+  expect_snapshot(crum_script(dtmr_q))
+
+  expect_snapshot(crum_script(mdm_q, strc = "independent"))
 })
 
 test_that("dina and dino script works", {
   expect_snapshot(dina_script(ecpe_q))
   expect_snapshot(dino_script(mdm_q))
   expect_snapshot(dina_script(dtmr_q))
+
+  expect_snapshot(dino_script(dtmr_q, strc = "independent"))
 })

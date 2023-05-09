@@ -207,7 +207,7 @@ get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
 ```
 
 Any distribution that is supported by the *Stan* language can be used as a prior.
-A list of all distributions is available in the *Stan* documentation, and are linked to from the `prior()` help page.
+A list of all distributions is available in the *Stan* documentation, and are linked to from the `?prior()` help page.
 
 Priors can be defined before estimating the function, or created at the same time the model is estimated.
 For example, both of the following are equivalent.
@@ -248,6 +248,6 @@ Although a primary motivation for measr is to provide researchers with software 
 For example, we can estimate the deterministic inputs, noisy "and" gate [DINA, @junker2001] or the deterministic inputs, noisy "or" gate [DINO, @templin2006] models by specifying a different `type` in the `measr_dcm()` function.
 
 Future development work will continue to add functionality for more DCM subtypes.
-If there is a specific subtype you are interested in, or would like to see supported, please open an issues on the [GitHub repository](https://github.com/wjakethompson/measr/issues).
+If there is a specific subtype you are interested in, or would like to see supported, please open an issue on the [GitHub repository](https://github.com/wjakethompson/measr/issues).
 
 ## References

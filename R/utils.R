@@ -48,16 +48,12 @@ profile_labels <- function(attributes) {
 #' diagnostic model to estimated, we can create a list of all included
 #' parameters for which a prior can be specified.
 #'
-#' @param qmatrix The Q-matrix. A data frame with 1 row per item and 1 column
-#'   per attribute. All cells should be either 0 (item does not measure the
-#'   attribute) or 1 (item does measure the attribute).
+#' @inheritParams measr_dcm
 #' @param item_id Optional. Variable name of a column in `qmatrix` that contains
 #'   item identifiers. `NULL` (the default) indicates that no identifiers are
 #'   present in the Q-matrix.
 #' @param rename_att Should attribute names from the `qmatrix` be replaced with
 #'   generic, but consistent names (e.g., "att1", "att2", "att3").
-#' @param type Type of DCM to determine the possible parameters. Must be one of
-#'   `r glue::glue_collapse(dcm_choices(), sep = ", ", last = ", or ")`.
 #'
 #' @return A [tibble][tibble::tibble-package] with one row per parameter.
 #' @export
@@ -68,7 +64,9 @@ profile_labels <- function(attributes) {
 #' get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm",
 #'                rename_att = TRUE)
 get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
-                           type = c("lcdm", "dina", "dino")) {
+                           type = c("lcdm", "dina", "dino", "crum"),
+                           attribute_structure = c("unconstrained",
+                                                   "independent")) {
   item_id <- check_character(item_id, name = "item_id", allow_null = TRUE)
   qmatrix <- check_qmatrix(qmatrix, identifier = item_id, item_levels = NULL,
                            name = "qmatrix")
@@ -80,6 +78,7 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
                        .cols = dplyr::everything())
 
   type <- rlang::arg_match(type, dcm_choices())
+  attribute_structure <- rlang::arg_match(attribute_structure, strc_choices())
 
   all_params <- if (type %in% c("dina", "dino")) {
     tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
@@ -125,9 +124,15 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
     }
   }
 
-  all_params <- dplyr::bind_rows(all_params,
-                                 tibble::tibble(class = "structural",
-                                                coef = "Vc"))
+  strc_params <- if (attribute_structure == "unconstrained") {
+    tibble::tibble(class = "structural", coef = "Vc")
+  } else if (attribute_structure == "independent") {
+    tibble::tibble(class = "structural",
+                   coef = glue::glue("eta[{seq_len(length(att_names))}]"))
+  }
+
+
+  all_params <- dplyr::bind_rows(all_params, strc_params)
 
   return(all_params)
 }

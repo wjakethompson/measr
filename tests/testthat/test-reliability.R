@@ -28,13 +28,22 @@ test_that("reliability can be added to model object", {
   dina_mod <- rstn_dina
   expect_equal(dina_mod$reliability, list())
 
-  err <- rlang::catch_cnd(measr_extract(dina_mod,
-                                        "classification_reliability"))
+  err <- rlang::catch_cnd(measr_extract(dina_mod, "pattern_reliability"))
+  expect_match(err$message, "Reliability information must be added to a model")
+  err <- rlang::catch_cnd(measr_extract(dina_mod, "classification_reliability"))
+  expect_match(err$message, "Reliability information must be added to a model")
+  err <- rlang::catch_cnd(measr_extract(dina_mod, "probability_reliability"))
   expect_match(err$message, "Reliability information must be added to a model")
 
   dina_mod <- add_reliability(dina_mod)
   expect_equal(names(dina_mod$reliability),
                c("pattern_reliability", "map_reliability", "eap_reliability"))
+
+  expect_equal(
+    measr_extract(dina_mod, "pattern_reliability"),
+    tibble(accuracy = dina_mod$reliability$pattern_reliability[["p_a"]],
+           consistency = dina_mod$reliability$pattern_reliability[["p_c"]])
+  )
 
   expect_equal(measr_extract(dina_mod, "classification_reliability"),
                dplyr::full_join(
@@ -44,4 +53,25 @@ test_that("reliability can be added to model object", {
                                "attribute", consistency = "consist"),
                  by = "attribute"
                ))
+
+  expect_equal(measr_extract(dina_mod, "classification_reliability",
+                             agreement = c("lambda", "tn")),
+               dplyr::full_join(
+                 dplyr::select(dina_mod$reliability$map_reliability$accuracy,
+                               "attribute", accuracy = "acc",
+                               "lambda_a", "tn_a"),
+                 dplyr::select(dina_mod$reliability$map_reliability$consistency,
+                               "attribute", consistency = "consist",
+                               "lambda_c", "tn_c"),
+                 by = "attribute"
+               ))
+
+  expect_equal(measr_extract(dina_mod, "probability_reliability"),
+               dplyr::select(dina_mod$reliability$eap_reliability,
+                             "attribute", informational = "rho_i"))
+
+  expect_equal(measr_extract(dina_mod, "probability_reliability",
+                             agreement = "bs"),
+               dplyr::select(dina_mod$reliability$eap_reliability,
+                             "attribute", informational = "rho_i", "rho_bs"))
 })

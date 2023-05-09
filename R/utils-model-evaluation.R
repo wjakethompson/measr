@@ -22,10 +22,16 @@ existing_ppmc_check <- function(model, method, dots, overwrite) {
     names(new_dots) <- names(dots)
 
     new_dots <- utils::modifyList(list(model_fit = NULL, item_fit = NULL),
-                                  new_dots)
+                                  new_dots, keep.null = TRUE)
 
-    new_dots$model <- model
-    list(run = TRUE, args = new_dots)
+    if ((is.null(new_dots$model_fit) || !length(new_dots$model_fit)) &&
+        (is.null(new_dots$item_fit) || !length(new_dots$item_fit))) {
+      list(run = FALSE, args = NULL)
+    } else {
+      new_dots$model <- model
+      list(run = TRUE, args = new_dots)
+    }
+
   }
 
   return(run_ppmc)
