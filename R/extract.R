@@ -12,10 +12,31 @@ measr_extract <- function(model, ...) {
 #'
 #' @param what Character string. The information to be extracted. See details
 #'   for available options.
-#' @param ppmc_interval The compatibility interval used for determining model
-#'   fit flags to return (e.g., `what = "odds_ratio_flags"`). For example, a
-#'   `ppmc_interval` of 0.95 will return any PPMCs where the posterior
-#'   predictive *p*-value (ppp) is less than 0.025 or greater than 0.975.
+#' @param ... Additional arguments passed to each extract method.
+#'   * `ppmc_interval`:
+#'
+#'     For `what = "odds_ratio_flags"` and
+#'     `what = "conditional_prob_flags"`, the compatibility interval used for
+#'     determining model fit flags to return. For example, a `ppmc_interval` of
+#'     0.95 (the default) will return any PPMCs where the posterior predictive
+#'     *p*-value (ppp) is less than 0.025 or greater than 0.975.
+#'
+#'   * `agreement`:
+#'
+#'     For `what = "classification_reliability"`, additional
+#'     measures of agreement to include. By default, the classification
+#'     accuracy and consistency metrics defined Johnson & Sinharay (2018) are
+#'     returned. Additional metrics that can be specified to `agreement` are
+#'     Goodman & Kruskal's lambda (`lambda`), Cohen's kappa (`kappa`), Youden's
+#'     statistic (`youden`), the tetrachoric correlation (`tetra`), true
+#'     positive rate (`tp`), and the true negative rate (`tn`).
+#'
+#'     For `what = "probability_reliability"`, additional measures of agreement
+#'     to include. By default, the informational reliability index defined by
+#'     Johnson & Sinharay (2020) is returned. Additional metrics that can be
+#'     specified to `agreement` are the point biserial reliability index (`bs`),
+#'     parallel forms reliability index (`pf`), and the tetrachoric reliability
+#'     index (`tb`), which was originally defined by Templin & Bradshaw (2013).
 #'
 #' @details
 #' For diagnostic classification models, we can extract the following
@@ -50,9 +71,23 @@ measr_extract <- function(model, ...) {
 #'     Model fit information must first be added to the model using [add_fit()].
 #'   * `odds_ratio_flags`: A subset of the PPMC odds ratios where the _ppp_ is
 #'     outside the specified `ppmc_interval`.
+#'   * `loo`: The leave-one-out cross validation results. See [loo::loo()] for
+#'     details. The information criterion must first be added to the model using
+#'     [add_criterion()].
+#'   * `waic`: The widely applicable information criterion results. See
+#'     [loo::waic()] for details. The information criterion must first be added
+#'     to the model using [add_criterion()].
+#'   * `pattern_reliability`: The accuracy and consistency of the overall
+#'     attribute profile classification, as described by Cui et al. (2012).
+#'     Reliability information must first be added to the model using
+#'     [add_reliability()].
 #'   * `classification_reliability`: The classification accuracy and consistency
 #'     for each attribute, using the metrics described by Johnson & Sinharay
 #'     (2018). Reliability information must first be added to the model using
+#'     [add_reliability()].
+#'   * `probability_reliability`: Reliability estimates for the probability of
+#'     proficiency on each attribute, as described by Johnson & Sinharay (2020).
+#'     Reliability information must first be added to the model using
 #'     [add_reliability()].
 #'
 #' @return The extracted information. The specific structure will vary depending
@@ -62,10 +97,21 @@ measr_extract <- function(model, ...) {
 #' @describeIn measr_extract Extract components of an estimated diagnostic
 #'   classification model.
 #'
+#' @references Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
+#'   classification consistency and accuracy for cognitive diagnostic
+#'   assessment. *Journal of Educational Measurement, 49*(1), 19-38.
+#'   \doi{10.1111/j.1745-3984.2011.00158.x}
 #' @references Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to
 #'   assess attribute-level classification accuracy and consistency for
 #'   cognitive diagnostic assessments. *Journal of Educational Measurement,
 #'   55*(4), 635-664. \doi{10.1111/jedm.12196}
+#' @references Johnson, M. S., & Sinharay, S. (2020). The reliability of the
+#'   posterior probability of skill attainment in diagnostic classification
+#'   models. *Journal of Educational and Behavioral Statistics, 45*(1), 5-31.
+#'   \doi{10.3102/1076998619864550}
+#' @references Templin, J., & Bradshaw, L. (2013). Measuring the reliability of
+#'   diagnostic classification model examinee estimates. *Journal of
+#'   Classification, 30*(2), 251-275. \doi{10.1007/s00357-013-9129-4}
 #'
 #' @export
 #' @examplesIf measr_examples()
@@ -76,10 +122,7 @@ measr_extract <- function(model, ...) {
 #' )
 #'
 #' extract(rstn_mdm_lcdm, "strc_param")
-measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95, ...) {
-  ppmc_interval <- check_double(ppmc_interval, lb = 0, ub = 1,
-                                name = "ppmc_interval")
-
+measr_extract.measrdcm <- function(model, what, ...) {
   out <- switch(
     what,
     item_param = dcm_extract_item_param(model),
@@ -92,13 +135,14 @@ measr_extract.measrdcm <- function(model, what, ppmc_interval = 0.95, ...) {
     ppmc_raw_score = extract_ppmc_raw_score(model),
     ppmc_conditional_prob = dcm_extract_ppmc_cond_prob(model,
                                                        ppmc_interval = NULL),
-    ppmc_conditional_prob_flags = dcm_extract_ppmc_cond_prob(model,
-                                                             ppmc_interval),
+    ppmc_conditional_prob_flags = dcm_extract_ppmc_cond_prob(model, ...),
     ppmc_odds_ratio = extract_or(model, ppmc_interval = NULL),
-    ppmc_odds_ratio_flags = extract_or(model, ppmc_interval),
+    ppmc_odds_ratio_flags = extract_or(model, ...),
     loo = extract_info_crit(model, "loo"),
     waic = extract_info_crit(model, "waic"),
-    classification_reliability = dcm_extract_reli_conacc(model),
+    pattern_reliability = dcm_extract_patt_reli(model),
+    classification_reliability = dcm_extract_map_reli(model, ...),
+    probability_reliability = dcm_extract_eap_reli(model, ...),
     rlang::abort(message = glue::glue("Cannot extract element `{what}`"))
   )
 

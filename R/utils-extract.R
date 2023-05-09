@@ -19,7 +19,12 @@ extract_ppmc_raw_score <- function(model) {
   model$fit$ppmc$model_fit$raw_score
 }
 
-extract_or <- function(model, ppmc_interval) {
+extract_or <- function(model, ppmc_interval = 0.95) {
+  if (!is.null(ppmc_interval)) {
+    ppmc_interval <- check_double(ppmc_interval, lb = 0, ub = 1,
+                                  name = "ppmc_interval")
+  }
+
   if (is.null(model$fit$ppmc$item_fit$odds_ratio)) {
     rlang::abort(message = glue::glue("Model fit information must be ",
                                       "added to a model object before ",
@@ -134,7 +139,12 @@ dcm_extract_attr_prob <- function(model) {
                        values_from = "probability")
 }
 
-dcm_extract_ppmc_cond_prob <- function(model, ppmc_interval) {
+dcm_extract_ppmc_cond_prob <- function(model, ppmc_interval = 0.95) {
+  if (!is.null(ppmc_interval)) {
+    ppmc_interval <- check_double(ppmc_interval, lb = 0, ub = 1,
+                                  name = "ppmc_interval")
+  }
+
   if (is.null(model$fit$ppmc$item_fit$conditional_prob)) {
     rlang::abort(message = glue::glue("Model fit information must be ",
                                       "added to a model object before ",
@@ -154,7 +164,7 @@ dcm_extract_ppmc_cond_prob <- function(model, ppmc_interval) {
   return(res)
 }
 
-dcm_extract_reli_conacc <- function(model) {
+dcm_extract_patt_reli <- function(model) {
   if (identical(model$reliability, list())) {
     rlang::abort(message = glue::glue("Reliability information must be ",
                                       "added to a model object before it ",
@@ -162,11 +172,51 @@ dcm_extract_reli_conacc <- function(model) {
                                       "`?add_reliability()`."))
   }
 
+  model$reliability$pattern_reliability %>%
+    tibble::enframe() %>%
+    tidyr::pivot_wider(names_from = "name", values_from = "value") %>%
+    dplyr::rename(accuracy = "p_a", consistency = "p_c")
+}
+
+dcm_extract_map_reli <- function(model, agreement = NULL) {
+  if (identical(model$reliability, list())) {
+    rlang::abort(message = glue::glue("Reliability information must be ",
+                                      "added to a model object before it ",
+                                      "can be extracted. See ",
+                                      "`?add_reliability()`."))
+  }
+
+  if (is.null(agreement)) {
+    agreement <- c("acc", "consist")
+  } else {
+    agreement <- c("acc", "consist", agreement)
+  }
+
   dplyr::full_join(
     dplyr::select(model$reliability$map_reliability$accuracy,
-                  "attribute", accuracy = "acc"),
+                  "attribute", dplyr::any_of(dplyr::matches(agreement))),
     dplyr::select(model$reliability$map_reliability$consistency,
-                  "attribute", consistency = "consist"),
+                  "attribute", dplyr::any_of(dplyr::matches(agreement))),
     by = "attribute"
-  )
+  ) %>%
+    dplyr::rename(accuracy = "acc", consistency = "consist")
+}
+
+dcm_extract_eap_reli <- function(model, agreement = NULL) {
+  if (identical(model$reliability, list())) {
+    rlang::abort(message = glue::glue("Reliability information must be ",
+                                      "added to a model object before it ",
+                                      "can be extracted. See ",
+                                      "`?add_reliability()`."))
+  }
+
+  if (is.null(agreement)) {
+    agreement <- c("rho_i")
+  } else {
+    agreement <- c("rho_i", agreement)
+  }
+
+  dplyr::select(model$reliability$eap_reliability,
+                "attribute", dplyr::any_of(dplyr::matches(agreement))) %>%
+    dplyr::rename(informational = "rho_i")
 }
