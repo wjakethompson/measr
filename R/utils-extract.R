@@ -6,7 +6,29 @@ extract_m2 <- function(model) {
                                       "the M2 can be extracted. See ",
                                       "`?add_fit()`."))
   }
-  model$fit$m2
+  dplyr::select(model$fit$m2, "m2", "df", "pval")
+}
+
+extract_rmsea <- function(model) {
+  if (is.null(model$fit$m2)) {
+    rlang::abort(message = glue::glue("Model fit information must be ",
+                                      "added to a model object before ",
+                                      "the RMSEA can be extracted. See ",
+                                      "`?add_fit()`."))
+  }
+
+  dplyr::select(model$fit$m2, "rmsea", dplyr::ends_with("CI"))
+}
+
+extract_srmsr <- function(model) {
+  if (is.null(model$fit$m2)) {
+    rlang::abort(message = glue::glue("Model fit information must be ",
+                                      "added to a model object before ",
+                                      "the SRMSR can be extracted. See ",
+                                      "`?add_fit()`."))
+  }
+
+  dplyr::select(model$fit$m2, "srmsr")
 }
 
 extract_ppmc_raw_score <- function(model) {

@@ -54,9 +54,15 @@ measr_extract <- function(model, ...) {
 #'     (i.e., has the given pattern of proficiency).
 #'   * `attribute_prob`: The proficiency probability for each respondent and
 #'     attribute.
-#'   * `m2`: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
-#'     including RMSEA and SRMSR indices. See [fit_m2()] for details.
+#'   * `m2`: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic.
+#'     See [fit_m2()] for details. Model fit information must first be added to
+#'     the model using [add_fit()].
+#'   * `rmsea`: The root mean square error of approximation (RMSEA) fit
+#'     statistic and associated confidence interval. See [fit_m2()] for details.
 #'     Model fit information must first be added to the model using [add_fit()].
+#'   * `srmsr`: The standardized root mean square residual (SRMSR) fit
+#'     statistic. See [fit_m2()] for details. Model fit information must first
+#'     be added to the model using [add_fit()].
 #'   * `ppmc_raw_score`: The observed and posterior predicted chi-square
 #'     statistic for the raw score distribution. See [fit_ppmc()] for details.
 #'     Model fit information must first be added to the model using [add_fit()].
@@ -132,6 +138,8 @@ measr_extract.measrdcm <- function(model, what, ...) {
     class_prob = dcm_extract_class_prob(model),
     attribute_prob = dcm_extract_attr_prob(model),
     m2 = extract_m2(model),
+    rmsea = extract_rmsea(model),
+    srmsr = extract_srmsr(model),
     ppmc_raw_score = extract_ppmc_raw_score(model),
     ppmc_conditional_prob = dcm_extract_ppmc_cond_prob(model,
                                                        ppmc_interval = NULL),

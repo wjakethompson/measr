@@ -69,9 +69,15 @@ included in each class.
 (i.e., has the given pattern of proficiency).
 \item \code{attribute_prob}: The proficiency probability for each respondent and
 attribute.
-\item \code{m2}: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic,
-including RMSEA and SRMSR indices. See \code{\link[=fit_m2]{fit_m2()}} for details.
+\item \code{m2}: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic.
+See \code{\link[=fit_m2]{fit_m2()}} for details. Model fit information must first be added to
+the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{rmsea}: The root mean square error of approximation (RMSEA) fit
+statistic and associated confidence interval. See \code{\link[=fit_m2]{fit_m2()}} for details.
 Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
+\item \code{srmsr}: The standardized root mean square residual (SRMSR) fit
+statistic. See \code{\link[=fit_m2]{fit_m2()}} for details. Model fit information must first
+be added to the model using \code{\link[=add_fit]{add_fit()}}.
 \item \code{ppmc_raw_score}: The observed and posterior predicted chi-square
 statistic for the raw score distribution. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
 Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
