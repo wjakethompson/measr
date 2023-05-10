@@ -127,7 +127,7 @@ measr_extract <- function(model, ...) {
 #'   method = "optim", seed = 63277, backend = "rstan"
 #' )
 #'
-#' extract(rstn_mdm_lcdm, "strc_param")
+#' measr_extract(rstn_mdm_lcdm, "strc_param")
 measr_extract.measrdcm <- function(model, what, ...) {
   out <- switch(
     what,

@@ -126,7 +126,7 @@ rstn_mdm_lcdm <- measr_dcm(
   method = "optim", seed = 63277, backend = "rstan"
 )
 
-extract(rstn_mdm_lcdm, "strc_param")
+measr_extract(rstn_mdm_lcdm, "strc_param")
 \dontshow{\}) # examplesIf}
 }
 \references{
