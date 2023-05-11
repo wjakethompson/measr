@@ -25,6 +25,8 @@ PPMC
 PPMCs
 Psychometrika
 RMSEA
+RStan
+Rtools
 Rupp
 SRMSR
 Sinharay
@@ -33,8 +35,8 @@ Templin
 Tian
 Vehtari
 WAIC
-WIP
 Watanabe
+Xcode
 Xin
 Youden's
 al
@@ -56,9 +58,11 @@ funder
 ggplot
 lcdm
 magrittr
+measr's
 measrdcm
 measrfit
 measrprior
+measr’s
 monotonicity
 morphosyntactic
 pkgdown
