@@ -44,7 +44,7 @@ library(measr)
 
 ## Examination for the Certificate of Proficiency in English Data
 
-To demonstrate how {measr} works, we will examine data from the grammar section of the Examination for the Certificate of Proficiency in English (ECPE).
+To demonstrate how measr works, we will examine data from the grammar section of the Examination for the Certificate of Proficiency in English (ECPE).
 This section of the ECPE consists of 28 item multiple-choice items that together measure three attributes: morphosyntactic rules, cohesive rules, and lexical rules.
 In total, data is available for 2,922 respondents.
 This data set has been widely studied in the DCM literature [e.g., @chen2018; @liu2019; @hdcm].
