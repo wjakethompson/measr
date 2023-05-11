@@ -117,17 +117,17 @@ the measr package.</p>
 <div class="section level2">
 <h2 id="examination-for-the-certificate-of-proficiency-in-english-data">Examination for the Certificate of Proficiency in English Data<a class="anchor" aria-label="anchor" href="#examination-for-the-certificate-of-proficiency-in-english-data"></a>
 </h2>
-<p>To demonstrate how {measr} works, we will examine data from the
-grammar section of the Examination for the Certificate of Proficiency in
-English (ECPE). This section of the ECPE consists of 28 item
-multiple-choice items that together measure three attributes:
-morphosyntactic rules, cohesive rules, and lexical rules. In total, data
-is available for 2,922 respondents. This data set has been widely
-studied in the DCM literature <span class="citation">(e.g., <a href="#ref-chen2018" role="doc-biblioref">Chen et al., 2018</a>; <a href="#ref-liu2019" role="doc-biblioref">Liu &amp; Johnson, 2019</a>; <a href="#ref-hdcm" role="doc-biblioref">Templin &amp; Bradshaw,
-2014</a>)</span>. Additionally, parameter estimates from other software
-(Mplus) are readily available from <span class="citation">Templin &amp;
-Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, so we can compare the parameter
-estimates from measr to estimates derived from other software.</p>
+<p>To demonstrate how measr works, we will examine data from the grammar
+section of the Examination for the Certificate of Proficiency in English
+(ECPE). This section of the ECPE consists of 28 item multiple-choice
+items that together measure three attributes: morphosyntactic rules,
+cohesive rules, and lexical rules. In total, data is available for 2,922
+respondents. This data set has been widely studied in the DCM literature
+<span class="citation">(e.g., <a href="#ref-chen2018" role="doc-biblioref">Chen et al., 2018</a>; <a href="#ref-liu2019" role="doc-biblioref">Liu &amp; Johnson, 2019</a>; <a href="#ref-hdcm" role="doc-biblioref">Templin &amp; Bradshaw, 2014</a>)</span>.
+Additionally, parameter estimates from other software (Mplus) are
+readily available from <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, so we
+can compare the parameter estimates from measr to estimates derived from
+other software.</p>
 <p>The ECPE data is included within the measr package. For additional
 information on these data, see <code><a href="../reference/ecpe.html">?ecpe_data</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -248,16 +248,16 @@ attributes.</li>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 74 × 5</span></span></span>
 <span><span class="co">#&gt;    item_id class       attributes                coef         estimate</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1      intercept   <span style="color: #BB0000;">NA</span>                        l1_0     0.82 <span style="color: #949494;">± 0.077</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E1      maineffect  morphosyntactic           l1_11    0.61 <span style="color: #949494;">± 0.377</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E1      maineffect  cohesive                  l1_12    0.64 <span style="color: #949494;">± 0.224</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E1      interaction morphosyntactic__cohesive l1_212   0.53 <span style="color: #949494;">± 0.500</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E2      intercept   <span style="color: #BB0000;">NA</span>                        l2_0     1.05 <span style="color: #949494;">± 0.080</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E2      maineffect  cohesive                  l2_12    1.23 <span style="color: #949494;">± 0.157</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E3      intercept   <span style="color: #BB0000;">NA</span>                        l3_0    -0.35 <span style="color: #949494;">± 0.072</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E3      maineffect  morphosyntactic           l3_11    0.74 <span style="color: #949494;">± 0.385</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E3      maineffect  lexical                   l3_13    0.36 <span style="color: #949494;">± 0.114</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E3      interaction morphosyntactic__lexical  l3_213   0.53 <span style="color: #949494;">± 0.402</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1      intercept   <span style="color: #BB0000;">NA</span>                        l1_0     0.82 <span style="color: #949494;">± 0.074</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E1      maineffect  morphosyntactic           l1_11    0.59 <span style="color: #949494;">± 0.356</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E1      maineffect  cohesive                  l1_12    0.64 <span style="color: #949494;">± 0.217</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E1      interaction morphosyntactic__cohesive l1_212   0.54 <span style="color: #949494;">± 0.481</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E2      intercept   <span style="color: #BB0000;">NA</span>                        l2_0     1.04 <span style="color: #949494;">± 0.077</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E2      maineffect  cohesive                  l2_12    1.24 <span style="color: #949494;">± 0.147</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E3      intercept   <span style="color: #BB0000;">NA</span>                        l3_0    -0.35 <span style="color: #949494;">± 0.073</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E3      maineffect  morphosyntactic           l3_11    0.74 <span style="color: #949494;">± 0.379</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E3      maineffect  lexical                   l3_13    0.36 <span style="color: #949494;">± 0.115</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E3      interaction morphosyntactic__lexical  l3_213   0.53 <span style="color: #949494;">± 0.395</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 64 more rows</span></span></span></code></pre></div>
 <p>We can compare these estimates to those that <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span> reported when using different
 software to estimate the same model. In the figure below, most
@@ -267,19 +267,19 @@ perfect agreement.</p>
 <p>There are some parameters that deviate from the line of perfect
 agreement, but these are expected. For example, take item E7, which
 measures morphosyntactic and lexical rules. Both measr and <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span> report values of approximately
--0.09 for the intercept and 0.92 for the main effect of lexical rules.
+-0.09 for the intercept and 0.93 for the main effect of lexical rules.
 For the main effect of morphosyntactic rules, measr estimated a value of
-1.56, compared to a value of 2.86 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a difference of -1.3. Similarly,
-the interaction term estimated by measr is 0.38, compared to a value of
+1.59, compared to a value of 2.86 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a difference of -1.26. Similarly,
+the interaction term estimated by measr is 0.36, compared to a value of
 -0.95 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a
-difference of 1.33. This indicates that the log-odds of providing a
+difference of 1.31. This indicates that the log-odds of providing a
 correct response for an individual who has mastered both attributes is
 approximately the same, regardless of software. That is, for measr, we
-get a log-odds of <code>-0.9 + 1.56 + 0.92 + 0.38 = 1.96</code>, and
+get a log-odds of <code>-0.07 + 1.59 + 0.91 + 0.36 = 2.8</code>, and
 from <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, we get a
-log-odds of <code>-0.9, + 2.86 + 0.92 - 0.95 = 1.93</code>. This is true
-for all of the differences in the figure. There is a change to the main
-effect for morphosyntactic rules and corresponding change to the
+log-odds of <code>-0.11 + 2.86 + 0.95 + -0.95 = 2.75</code>. This is
+true for all of the differences in the figure. There is a change to the
+main effect for morphosyntactic rules and corresponding change to the
 interaction term that “cancels out” the difference.</p>
 <p>So why is this happening? Let’s look at the proportion of respondents
 in each class. There are very few respondents who are proficient in
@@ -295,14 +295,14 @@ attribute.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 2</span></span></span>
 <span><span class="co">#&gt;   class           estimate</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> [0,0,0]  0.2991 <span style="color: #949494;">± 0.0167</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> [1,0,0]  0.0119 <span style="color: #949494;">± 0.0064</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> [0,1,0]  0.0160 <span style="color: #949494;">± 0.0107</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> [0,0,1]  0.1280 <span style="color: #949494;">± 0.0199</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> [1,1,0]  0.0094 <span style="color: #949494;">± 0.0056</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> [1,0,1]  0.0185 <span style="color: #949494;">± 0.0097</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> [0,1,1]  0.1723 <span style="color: #949494;">± 0.0200</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> [1,1,1]  0.3448 <span style="color: #949494;">± 0.0169</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> [0,0,0]  0.2981 <span style="color: #949494;">± 0.0165</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> [1,0,0]  0.0118 <span style="color: #949494;">± 0.0063</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> [0,1,0]  0.0164 <span style="color: #949494;">± 0.0109</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> [0,0,1]  0.1279 <span style="color: #949494;">± 0.0198</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> [1,1,0]  0.0093 <span style="color: #949494;">± 0.0057</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> [1,0,1]  0.0184 <span style="color: #949494;">± 0.0100</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> [0,1,1]  0.1730 <span style="color: #949494;">± 0.0203</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> [1,1,1]  0.3451 <span style="color: #949494;">± 0.0167</span></span></span></code></pre></div>
 <p>This means that the prior will have more influence on these
 parameters. Note in the above figure that the main effect estimates that
 are off the diagonal are less extreme when using measr. For example, the
@@ -310,8 +310,8 @@ triangle at the top right is a main effect that is nearly 3 as reported
 by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, but is
 just over 1.5 when using with measr. Thus, there is a regularizing
 effect, where the prior is pulling in extreme values, which is an
-intended outcome Prior distributions for measr are discussed more in the
-following section.</p>
+intended outcome. Prior distributions for measr are discussed more in
+the following section.</p>
 </div>
 </div>
 <div class="section level2">
