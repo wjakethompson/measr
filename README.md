@@ -8,17 +8,18 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R package
 version](https://www.r-pkg.org/badges/version/measr)](https://cran.r-project.org/package=measr)
 [![Package
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/measr)](https://cran.r-project.org/package=measr)
-![License](https://img.shields.io/badge/License-GPL_v3-blue.svg)</br>
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/measr)](https://cran.r-project.org/package=measr)</br>
 [![R-CMD-check](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/wjakethompson/measr/branch/main/graph/badge.svg?token=JtF3xtGt6g)](https://app.codecov.io/gh/wjakethompson/measr)
 [![Netlify
 Status](https://api.netlify.com/api/v1/badges/b82caf01-0611-4f8b-bbca-5b89b5a80791/deploy-status)](https://app.netlify.com/sites/measr/deploys)</br>
 [![Signed
 by](https://img.shields.io/badge/Keybase-Verified-brightgreen.svg)](https://keybase.io/wjakethompson)
+![License](https://img.shields.io/badge/License-GPL_v3-blue.svg)
 <!-- badges: end -->
 
 Diagnostic classification models (DCMs) are a class of psychometric
@@ -77,8 +78,7 @@ data (see `?ecpe` for details).
 library(measr)
 
 model <- measr_dcm(data = ecpe_data, resp_id = "resp_id",
-                   qmatrix = ecpe_qmatrix, item_id = "item_id",
-                   method = "optim", backend = "cmdstanr")
+                   qmatrix = ecpe_qmatrix, item_id = "item_id")
 ```
 
 Once a model has been estimated, we can then add and evaluate model fit.
