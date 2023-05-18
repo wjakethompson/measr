@@ -26,6 +26,7 @@ jobs:
           extra-packages: |
             any::covr
             github::stan-dev/cmdstanr
+          upgrade: true
           needs: coverage
 
       - name: Install cmdstan

@@ -45,6 +45,7 @@ jobs:
           extra-packages: |
             any::rcmdcheck
             github::stan-dev/cmdstanr
+          upgrade: true
           needs: check
 
       - name: Install cmdstan
