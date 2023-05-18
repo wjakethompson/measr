@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 Diagnostic classification models (DCMs) are a class of psychometric models that estimate respondent abilities as a profile of proficiency on a pre-defined set of skills, or attributes.
 Despite the utility of DCMs for providing fine-grained and actionable feedback with shorter assessments, they have are not widely used in applied settings, in part due to a lack of user-friendly software.
 Using [R](https://www.r-project.org/) and [Stan](https://mc-stan.org/), measr (said: "measure") simplifies the process of estimating and evaluating DCMs.
-Users can specify different DCM subtypes, define prior distributions, and estimate the model using the [rstan](https://mc-stan.org/rstan) or [cmdstanr](https://mc-stan.org/cmdstanr) interface to Stan.
+Users can specify different DCM subtypes, define prior distributions, and estimate the model using the [rstan](https://mc-stan.org/rstan/) or [cmdstanr](https://mc-stan.org/cmdstanr/) interface to Stan.
 You can then easily examine model parameters, calculate model fit metrics, compare competing models, and evaluate the reliability of the attributes.
 
 ## Installation

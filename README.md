@@ -32,10 +32,11 @@ due to a lack of user-friendly software. Using
 (said: “measure”) simplifies the process of estimating and evaluating
 DCMs. Users can specify different DCM subtypes, define prior
 distributions, and estimate the model using the
-[rstan](https://mc-stan.org/rstan) or
-[cmdstanr](https://mc-stan.org/cmdstanr) interface to Stan. You can then
-easily examine model parameters, calculate model fit metrics, compare
-competing models, and evaluate the reliability of the attributes.
+[rstan](https://mc-stan.org/rstan/) or
+[cmdstanr](https://mc-stan.org/cmdstanr/) interface to Stan. You can
+then easily examine model parameters, calculate model fit metrics,
+compare competing models, and evaluate the reliability of the
+attributes.
 
 ## Installation
 
