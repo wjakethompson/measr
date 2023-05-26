@@ -1,10 +1,8 @@
 # measr 0.3.0
 
-# measr 0.2.1.9000
-
 * Added a `NEWS.md` file to track changes to the package.
 
-# New features
+## New features
 
 * Support for additional model specifications has been added (#10):
   * The compensatory reparameterized unified model (C-RUM) can now be estimated by defining `type = "crum"` in the `measr_dcm()` function.
@@ -15,7 +13,7 @@
   * Users can now specify a prior distribution for the structural parameters that govern the base rates of class membership (#2).
   * Safeguards were added to warn users when a specified prior is not defined for the chosen DCM sub-type. For example, an error is generated if a prior is defined for a slipping parameter, but the LCDM was chosen as the type of model to be estimated (#1).
 
-# Minor improvements and fixes
+## Minor improvements and fixes
 
 * Fixed bug with `backend = "rstan"` where warmup iterations could be more than the total iterations requested by the user if warmup iterations were not also specified (#6).
 
