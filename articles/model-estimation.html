@@ -15,9 +15,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.5/font.css" rel="stylesheet">
-<link href="../deps/Fira_Code-0.4.5/font.css" rel="stylesheet">
-<link href="../deps/Playfair_Display-0.4.5/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/Playfair_Display-0.4.6/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -41,7 +41,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">measr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,15 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+  </div>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/">Version 0.2.1</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
   </div>
 </li>
       </ul>
@@ -107,17 +116,17 @@ the measr package.</p>
 <div class="section level2">
 <h2 id="examination-for-the-certificate-of-proficiency-in-english-data">Examination for the Certificate of Proficiency in English Data<a class="anchor" aria-label="anchor" href="#examination-for-the-certificate-of-proficiency-in-english-data"></a>
 </h2>
-<p>To demonstrate how {measr} works, we will examine data from the
-grammar section of the Examination for the Certificate of Proficiency in
-English (ECPE). This section of the ECPE consists of 28 item
-multiple-choice items that together measure three attributes:
-morphosyntactic rules, cohesive rules, and lexical rules. In total, data
-is available for 2,922 respondents. This data set has been widely
-studied in the DCM literature <span class="citation">(e.g., <a href="#ref-chen2018" role="doc-biblioref">Chen et al., 2018</a>; <a href="#ref-liu2019" role="doc-biblioref">Liu &amp; Johnson, 2019</a>; <a href="#ref-hdcm" role="doc-biblioref">Templin &amp; Bradshaw,
-2014</a>)</span>. Additionally, parameter estimates from other software
-(Mplus) are readily available from <span class="citation">Templin &amp;
-Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, so we can compare the parameter
-estimates from measr to estimates derived from other software.</p>
+<p>To demonstrate how measr works, we will examine data from the grammar
+section of the Examination for the Certificate of Proficiency in English
+(ECPE). This section of the ECPE consists of 28 item multiple-choice
+items that together measure three attributes: morphosyntactic rules,
+cohesive rules, and lexical rules. In total, data is available for 2,922
+respondents. This data set has been widely studied in the DCM literature
+<span class="citation">(e.g., <a href="#ref-chen2018" role="doc-biblioref">Chen et al., 2018</a>; <a href="#ref-liu2019" role="doc-biblioref">Liu &amp; Johnson, 2019</a>; <a href="#ref-hdcm" role="doc-biblioref">Templin &amp; Bradshaw, 2014</a>)</span>.
+Additionally, parameter estimates from other software (Mplus) are
+readily available from <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, so we
+can compare the parameter estimates from measr to estimates derived from
+other software.</p>
 <p>The ECPE data is included within the measr package. For additional
 information on these data, see <code><a href="../reference/ecpe.html">?ecpe_data</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -238,16 +247,16 @@ attributes.</li>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 74 × 5</span></span></span>
 <span><span class="co">#&gt;    item_id class       attributes                coef         estimate</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1      intercept   <span style="color: #BB0000;">NA</span>                        l1_0     0.82 <span style="color: #949494;">± 0.075</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E1      maineffect  morphosyntactic           l1_11    0.61 <span style="color: #949494;">± 0.385</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E1      maineffect  cohesive                  l1_12    0.64 <span style="color: #949494;">± 0.207</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E1      interaction morphosyntactic__cohesive l1_212   0.54 <span style="color: #949494;">± 0.512</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E2      intercept   <span style="color: #BB0000;">NA</span>                        l2_0     1.04 <span style="color: #949494;">± 0.078</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E2      maineffect  cohesive                  l2_12    1.24 <span style="color: #949494;">± 0.154</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E3      intercept   <span style="color: #BB0000;">NA</span>                        l3_0    -0.35 <span style="color: #949494;">± 0.069</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E3      maineffect  morphosyntactic           l3_11    0.72 <span style="color: #949494;">± 0.366</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E3      maineffect  lexical                   l3_13    0.36 <span style="color: #949494;">± 0.110</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E3      interaction morphosyntactic__lexical  l3_213   0.56 <span style="color: #949494;">± 0.389</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1      intercept   <span style="color: #BB0000;">NA</span>                        l1_0     0.82 <span style="color: #949494;">± 0.074</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E1      maineffect  morphosyntactic           l1_11    0.59 <span style="color: #949494;">± 0.356</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E1      maineffect  cohesive                  l1_12    0.64 <span style="color: #949494;">± 0.217</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E1      interaction morphosyntactic__cohesive l1_212   0.54 <span style="color: #949494;">± 0.481</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E2      intercept   <span style="color: #BB0000;">NA</span>                        l2_0     1.04 <span style="color: #949494;">± 0.077</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E2      maineffect  cohesive                  l2_12    1.24 <span style="color: #949494;">± 0.147</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E3      intercept   <span style="color: #BB0000;">NA</span>                        l3_0    -0.35 <span style="color: #949494;">± 0.073</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E3      maineffect  morphosyntactic           l3_11    0.74 <span style="color: #949494;">± 0.379</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E3      maineffect  lexical                   l3_13    0.36 <span style="color: #949494;">± 0.115</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E3      interaction morphosyntactic__lexical  l3_213   0.53 <span style="color: #949494;">± 0.395</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 64 more rows</span></span></span></code></pre></div>
 <p>We can compare these estimates to those that <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span> reported when using different
 software to estimate the same model. In the figure below, most
@@ -257,19 +266,19 @@ perfect agreement.</p>
 <p>There are some parameters that deviate from the line of perfect
 agreement, but these are expected. For example, take item E7, which
 measures morphosyntactic and lexical rules. Both measr and <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span> report values of approximately
--0.09 for the intercept and 0.92 for the main effect of lexical rules.
+-0.09 for the intercept and 0.93 for the main effect of lexical rules.
 For the main effect of morphosyntactic rules, measr estimated a value of
-1.56, compared to a value of 2.86 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a difference of -1.3. Similarly,
-the interaction term estimated by measr is 0.38, compared to a value of
+1.59, compared to a value of 2.86 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a difference of -1.26. Similarly,
+the interaction term estimated by measr is 0.36, compared to a value of
 -0.95 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a
-difference of 1.33. This indicates that the log-odds of providing a
+difference of 1.31. This indicates that the log-odds of providing a
 correct response for an individual who has mastered both attributes is
 approximately the same, regardless of software. That is, for measr, we
-get a log-odds of <code>-0.9 + 1.56 + 0.92 + 0.38 = 1.96</code>, and
+get a log-odds of <code>-0.07 + 1.59 + 0.91 + 0.36 = 2.8</code>, and
 from <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, we get a
-log-odds of <code>-0.9, + 2.86 + 0.92 - 0.95 = 1.93</code>. This is true
-for all of the differences in the figure. There is a change to the main
-effect for morphosyntactic rules and corresponding change to the
+log-odds of <code>-0.11 + 2.86 + 0.95 + -0.95 = 2.75</code>. This is
+true for all of the differences in the figure. There is a change to the
+main effect for morphosyntactic rules and corresponding change to the
 interaction term that “cancels out” the difference.</p>
 <p>So why is this happening? Let’s look at the proportion of respondents
 in each class. There are very few respondents who are proficient in
@@ -285,14 +294,14 @@ attribute.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 2</span></span></span>
 <span><span class="co">#&gt;   class           estimate</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> [0,0,0]  0.2992 <span style="color: #949494;">± 0.0174</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> [1,0,0]  0.0116 <span style="color: #949494;">± 0.0063</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> [0,1,0]  0.0155 <span style="color: #949494;">± 0.0107</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> [0,0,1]  0.1288 <span style="color: #949494;">± 0.0195</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> [1,1,0]  0.0095 <span style="color: #949494;">± 0.0055</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> [1,0,1]  0.0185 <span style="color: #949494;">± 0.0102</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> [0,1,1]  0.1725 <span style="color: #949494;">± 0.0198</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> [1,1,1]  0.3445 <span style="color: #949494;">± 0.0168</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> [0,0,0]  0.2981 <span style="color: #949494;">± 0.0165</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> [1,0,0]  0.0118 <span style="color: #949494;">± 0.0063</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> [0,1,0]  0.0164 <span style="color: #949494;">± 0.0109</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> [0,0,1]  0.1279 <span style="color: #949494;">± 0.0198</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> [1,1,0]  0.0093 <span style="color: #949494;">± 0.0057</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> [1,0,1]  0.0184 <span style="color: #949494;">± 0.0100</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> [0,1,1]  0.1730 <span style="color: #949494;">± 0.0203</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> [1,1,1]  0.3451 <span style="color: #949494;">± 0.0167</span></span></span></code></pre></div>
 <p>This means that the prior will have more influence on these
 parameters. Note in the above figure that the main effect estimates that
 are off the diagonal are less extreme when using measr. For example, the
@@ -300,8 +309,8 @@ triangle at the top right is a main effect that is nearly 3 as reported
 by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, but is
 just over 1.5 when using with measr. Thus, there is a regularizing
 effect, where the prior is pulling in extreme values, which is an
-intended outcome Prior distributions for measr are discussed more in the
-following section.</p>
+intended outcome. Prior distributions for measr are discussed more in
+the following section.</p>
 </div>
 </div>
 <div class="section level2">
@@ -315,12 +324,13 @@ distributions in the call to <code><a href="../reference/measr_dcm.html">measr_d
 uses the following prior distributions for the LCDM:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/default_dcm_priors.html">default_dcm_priors</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
-<span><span class="co">#&gt;   class       coef  prior_def      </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 15)  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect  <span style="color: #BB0000;">NA</span>    lognormal(0, 1)</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 15)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   class       coef  prior_def                  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect  <span style="color: #BB0000;">NA</span>    lognormal(0, 1)            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> structural  Vc    dirichlet(rep_vector(1, C))</span></span></code></pre></div>
 <p>As you can see, main effect parameters get a
 <code>lognormal(0, 1)</code> prior by default. Different prior
 distributions can be specified with the <code><a href="../reference/measrprior.html">prior()</a></code> function.
@@ -350,7 +360,7 @@ use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect l7_11 exponential(2)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/get_parameters.html">get_parameters</a></span><span class="op">(</span><span class="va">ecpe_qmatrix</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 74 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 75 × 4</span></span></span>
 <span><span class="co">#&gt;    item_id class       attributes                coef  </span></span>
 <span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1 intercept   <span style="color: #BB0000;">NA</span>                        l1_0  </span></span>
@@ -363,11 +373,11 @@ use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       3 maineffect  morphosyntactic           l3_11 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       3 maineffect  lexical                   l3_13 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       3 interaction morphosyntactic__lexical  l3_213</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 64 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 65 more rows</span></span></span></code></pre></div>
 <p>Any distribution that is supported by the <em>Stan</em> language can
 be used as a prior. A list of all distributions is available in the
 <em>Stan</em> documentation, and are linked to from the
-<code><a href="../reference/measrprior.html">prior()</a></code> help page.</p>
+<code>?prior()</code> help page.</p>
 <p>Priors can be defined before estimating the function, or created at
 the same time the model is estimated. For example, both of the following
 are equivalent. Here we set the prior for main effects to be a truncated
@@ -403,12 +413,13 @@ priors were still applied to the parameters for which we did not
 explicitly state a prior distribution.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">new_lcdm</span>, <span class="st">"prior"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
-<span><span class="co">#&gt;   class       coef  prior_def         </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> maineffect  <span style="color: #BB0000;">NA</span>    normal(0, 15)T[0,]</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 15)     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 15)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   class       coef  prior_def                  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> maineffect  <span style="color: #BB0000;">NA</span>    normal(0, 15)T[0,]         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> intercept   <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> interaction <span style="color: #BB0000;">NA</span>    normal(0, 2)               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> structural  Vc    dirichlet(rep_vector(1, C))</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="subtype">Other DCM Sub-Types<a class="anchor" aria-label="anchor" href="#subtype"></a>
@@ -423,7 +434,7 @@ specifying a different <code>type</code> in the <code><a href="../reference/meas
 function.</p>
 <p>Future development work will continue to add functionality for more
 DCM subtypes. If there is a specific subtype you are interested in, or
-would like to see supported, please open an issues on the <a href="https://github.com/wjakethompson/measr/issues" class="external-link">GitHub
+would like to see supported, please open an issue on the <a href="https://github.com/wjakethompson/measr/issues" class="external-link">GitHub
 repository</a>.</p>
 </div>
 </div>

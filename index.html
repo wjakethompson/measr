@@ -23,9 +23,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="deps/Open_Sans-0.4.5/font.css" rel="stylesheet">
-<link href="deps/Fira_Code-0.4.5/font.css" rel="stylesheet">
-<link href="deps/Playfair_Display-0.4.5/font.css" rel="stylesheet">
+<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="deps/Open_Sans-0.4.6/font.css" rel="stylesheet">
+<link href="deps/Fira_Code-0.4.6/font.css" rel="stylesheet">
+<link href="deps/Playfair_Display-0.4.6/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
@@ -57,7 +57,7 @@
     
     <a class="navbar-brand me-2" href="index.html">measr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,6 +76,15 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/model-estimation.html">Estimating diagnostic classification models</a>
+  </div>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/">Version 0.2.1</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="news/index.html">Changelog</a>
   </div>
 </li>
       </ul>
@@ -99,29 +108,47 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="diagnostic-classification-models-with-r-and-stan">Diagnostic Classification Models with R and Stan<a class="anchor" aria-label="anchor" href="#diagnostic-classification-models-with-r-and-stan"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="measr-">measr <a class="anchor" aria-label="anchor" href="#measr-"></a>
 </h1>
 </div>
-<p>measr is an R package for the estimation and evaluation of educational measurement, or psychometric, models. Initial development is focused on diagnostic classification models (DCMs), specifically the loglinear cognitive diagnostic model (LCDM). DCMs are a powerful tool that can be used to estimate mastery profiles for respondents on a set of pre-defined skills that are measured by the assessment. The measr package will provide improved model estimation techniques, including a fully Bayesian estimation using <a href="https://mc-stan.org/" class="external-link">Stan</a>. Additionally, measr will include functions to easily evaluate how well the estimated model fits the observed data.</p>
-<p>This package is under active development, and functions may change prior to the initial release. If you’d like to use the development version, it can be installed from GitHub.</p>
+<!-- badges: start -->
+
+<p>Diagnostic classification models (DCMs) are a class of psychometric models that estimate respondent abilities as a profile of proficiency on a pre-defined set of skills, or attributes. Despite the utility of DCMs for providing fine-grained and actionable feedback with shorter assessments, they have are not widely used in applied settings, in part due to a lack of user-friendly software. Using <a href="https://www.r-project.org/" class="external-link">R</a> and <a href="https://mc-stan.org/" class="external-link">Stan</a>, measr (said: “measure”) simplifies the process of estimating and evaluating DCMs. Users can specify different DCM subtypes, define prior distributions, and estimate the model using the <a href="https://mc-stan.org/rstan/" class="external-link">rstan</a> or <a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a> interface to Stan. You can then easily examine model parameters, calculate model fit metrics, compare competing models, and evaluate the reliability of the attributes.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the released version of measr from <a href="https://cran.r-project.org/" class="external-link">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"measr"</span><span class="op">)</span></span></code></pre></div>
+<p>To install the development version of measr from <a href="https://github.com/wjakethompson/measr" class="external-link">GitHub</a> use:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"wjakethompson/measr"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level2">
-<h2 id="timeline">Timeline<a class="anchor" aria-label="anchor" href="#timeline"></a>
-</h2>
-<p>There are two main phases to the project. During the first year of the project, effort is focused on developing measr. This includes building functionality, documenting usage, and providing example case studies. In the second year of the project, measr will be officially released to <a href="https://cran.r-project.org/" class="external-link">CRAN</a> and effort will shift to dissemination. Work in the second phase includes writing journal articles about how to use measr, presenting at conferences, and using measr in new research projects to guide best practices for the implemenation of DCMs in applied research settings.</p>
-<p><img src="reference/figures/measr-timeline.png" width="100%"></p>
+<p>Because measr is based on Stan, a C++ compiler is required. For Windows, the <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools program</a> comes with a C++ compiler. On Mac, it’s recommended that you install Xcode. For additional instructions and help setting up the compilers, see the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">RStan installation help page</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="project-goals">Project Goals<a class="anchor" aria-label="anchor" href="#project-goals"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Initial development of measr is being funded by a grant from the <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">Institute of Education Sciences</a>. Within the scope of the grant, there are two main goals:</p>
-<ol style="list-style-type: decimal">
-<li><p>Develop a user-friendly R package for the estimation of the LCDM and other common DCMs. This is accomplished with extensive documentation, example case studies, and an accessible website to support use by applied researchers.</p></li>
-<li><p>Provide best practices for the evaluation of DCMs in practice. During the second phase of work, a simulation study will be conducted, using measr, to evaluate different measures of model and examine how each relates to how accurately the model identifies respondent mastery of the assessed skills.</p></li>
-</ol>
-<p>After the grant funding period as ended, we plan to explore incorporating functionality for additional educational measurement models, such as item response theory.</p>
+<p>We can estimate a DCM using <code><a href="reference/measr_dcm.html">measr_dcm()</a></code>. This function only requires a data set of item responses and a Q-matrix defining which attributes are measured by each item. We also identify any respondent or item identifier columns. Other arguments can be specified to customize the type of model to estimates (see <code>?measr_dcm()</code>).</p>
+<p>To demonstrate measr’s functionality, example data sets are included. Here we use the Examination of Certificate of Proficiency in English (ECPE; <a href="https://doi.org/10.1111/emip.12010" class="external-link">Templin &amp; Hoffman, 2013</a>) data (see <code>?ecpe</code> for details).</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://measr.info">measr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ecpe_data</span>, resp_id <span class="op">=</span> <span class="st">"resp_id"</span>,</span>
+<span>                   qmatrix <span class="op">=</span> <span class="va">ecpe_qmatrix</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span><span class="op">)</span></span></code></pre></div>
+<p>Once a model has been estimated, we can then add and evaluate model fit. This can done through absolute model fit, relative model fit (information criteria), or reliability indices. Model parameters, respondent classifications, and results of the model fit analyses can then be extracted using <code><a href="reference/measr_extract.html">measr_extract()</a></code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/model_evaluation.html">add_fit</a></span><span class="op">(</span><span class="va">model</span>, method <span class="op">=</span> <span class="st">"m2"</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/model_evaluation.html">add_criterion</a></span><span class="op">(</span><span class="va">model</span>, criterion <span class="op">=</span> <span class="st">"loo"</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/model_evaluation.html">add_reliability</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">model</span>, <span class="st">"m2"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 3</span></span>
+<span><span class="co">#&gt;      m2    df     pval</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  506.   325 4.37e-10</span></span></code></pre></div>
+<hr>
+<p>Please note that the measr project is released with a <a href="https://measr.info/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

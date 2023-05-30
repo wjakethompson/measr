@@ -131,6 +131,10 @@ p a {
 }
 
 /* headers */
+.template-home .page-header {
+    min-height: 50px;
+}
+
 h1 {
   font-size: 2.0em;
   font-weight: 400;
