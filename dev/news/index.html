@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">measr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,10 +60,31 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1.9000" id="measr-0219000">measr 0.2.1.9000<a class="anchor" aria-label="anchor" href="#measr-0219000"></a></h2>
+<h2 class="pkg-version" data-toc-text="development version" id="measr-development-version">measr (development version)<a class="anchor" aria-label="anchor" href="#measr-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.1" id="measr-031">measr 0.3.1<a class="anchor" aria-label="anchor" href="#measr-031"></a></h2><p class="text-muted">CRAN release: 2023-05-27</p>
 <ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+</ul><div class="section level3">
+<h3 id="new-features-0-3-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-1"></a></h3>
+<ul><li>Support for additional model specifications has been added (<a href="https://github.com/wjakethompson/measr/issues/10" class="external-link">#10</a>):
+<ul><li>The compensatory reparameterized unified model (C-RUM) can now be estimated by defining <code>type = "crum"</code> in the <code><a href="../reference/measr_dcm.html">measr_dcm()</a></code> function.</li>
+<li>Users can now drop higher order interactions from the loglinear cognitive diagnostic model (LCDM). A new argument for <code><a href="../reference/measr_dcm.html">measr_dcm()</a></code>, <code>max_interaction</code>, defines the highest order interactions to estimate. For example, <code>max_interaction = 2</code> will estimate only intercepts, main effects, and two-way interactions.</li>
+<li>A new argument to <code><a href="../reference/measr_dcm.html">measr_dcm()</a></code>, <code>attribute_structure</code> allows users to specified either “unconstrained” relationships between attributes or “independent” attributes.</li>
+</ul></li>
+<li>Updated prior specifications:
+<ul><li>Users can now specify a prior distribution for the structural parameters that govern the base rates of class membership (<a href="https://github.com/wjakethompson/measr/issues/2" class="external-link">#2</a>).</li>
+<li>Safeguards were added to warn users when a specified prior is not defined for the chosen DCM sub-type. For example, an error is generated if a prior is defined for a slipping parameter, but the LCDM was chosen as the type of model to be estimated (<a href="https://github.com/wjakethompson/measr/issues/1" class="external-link">#1</a>).</li>
+</ul></li>
 </ul></div>
-  </main></div>
+<div class="section level3">
+<h3 id="minor-improvements-and-fixes-0-3-1">Minor improvements and fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-fixes-0-3-1"></a></h3>
+<ul><li><p>Fixed bug with <code>backend = "rstan"</code> where warmup iterations could be more than the total iterations requested by the user if warmup iterations were not also specified (<a href="https://github.com/wjakethompson/measr/issues/6" class="external-link">#6</a>).</p></li>
+<li><p>Additional specifications were added to <code><a href="../reference/measr_extract.html">measr_extract()</a></code> for extracting results from an estimated model.</p></li>
+</ul></div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
