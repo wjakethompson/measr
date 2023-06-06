@@ -1,5 +1,7 @@
 # measr (development version)
 
+* Fixed bug in the LCDM specification of constraints for level-3 and above interaction terms.
+
 # measr 0.3.1
 
 * Added a `NEWS.md` file to track changes to the package.

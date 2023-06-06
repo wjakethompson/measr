@@ -124,11 +124,25 @@ model_matrix_name_repair <- function(x) {
 one_down_params <- function(x, item) {
   all_atts <- strsplit(x, split = "__")[[1]]
   if (length(all_atts) <= 1) return("")
-  att_combos <- utils::combn(all_atts, m = length(all_atts) - 1,
-                             simplify = FALSE)
 
-  paste("l", item, "_", length(all_atts) - 1,
-        sapply(att_combos, paste, collapse = ""), sep = "", collapse = ",")
+  comps <- vector("list", length(all_atts))
+  for (att in seq_along(all_atts)) {
+    att_comp <- vector("character", length(all_atts) - 1)
+    for (level in seq_along(att_comp)) {
+      att_combos <- utils::combn(all_atts, m = level, simplify = FALSE)
+      att_combos <- att_combos[vapply(att_combos,
+                                      function(.x, att) {
+                                        any(.x == att)
+                                      },
+                                      logical(1), att = all_atts[att])]
+
+      att_comp[level] <- paste("l", item, "_", level,
+            sapply(att_combos, paste, collapse = ""), sep = "", collapse = "+")
+    }
+    comps[[att]] <- paste(att_comp, collapse = "+")
+  }
+
+  paste(comps, collapse = ",")
 }
 one_down_params <- Vectorize(one_down_params, USE.NAMES = FALSE)
 
