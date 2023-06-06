@@ -39,11 +39,6 @@ lcdm_script <- function(qmatrix, prior = NULL, strc = "unconstrained",
       ),
       atts = gsub("[^0-9|_]", "", .data$parameter),
       comp_atts = one_down_params(.data$atts, item = .data$item_id),
-      num_comp = dplyr::case_when(
-        comp_atts == "" ~ 0,
-        TRUE ~ sapply(gregexpr(pattern = ",", text = .data$comp_atts),
-                      function(.x) length(attr(.x, "match.length"))) + 1
-      ),
       param_name = glue::glue("l{item_id}_{param_level}",
                               "{gsub(\"__\", \"\", atts)}"),
       constraint = dplyr::case_when(
