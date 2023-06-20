@@ -72,11 +72,11 @@ measr_extract <- function(model, ...) {
 #'     Model fit information must first be added to the model using [add_fit()].
 #'   * `ppmc_conditional_prob_flags`: A subset of the PPMC conditional
 #'     probabilities where the _ppp_ is outside the specified `ppmc_interval`.
-#'   * `ppmc_odds_ratio`: The observed and posterior predicted odds ratios of each
-#'     item pair. See [fit_ppmc()] for details.
+#'   * `ppmc_odds_ratio`: The observed and posterior predicted odds ratios of
+#'     each item pair. See [fit_ppmc()] for details.
 #'     Model fit information must first be added to the model using [add_fit()].
-#'   * `ppmc_odds_ratio_flags`: A subset of the PPMC odds ratios where the _ppp_ is
-#'     outside the specified `ppmc_interval`.
+#'   * `ppmc_odds_ratio_flags`: A subset of the PPMC odds ratios where the _ppp_
+#'     is outside the specified `ppmc_interval`.
 #'   * `loo`: The leave-one-out cross validation results. See [loo::loo()] for
 #'     details. The information criterion must first be added to the model using
 #'     [add_criterion()].
