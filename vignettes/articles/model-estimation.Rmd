@@ -152,7 +152,7 @@ param_compare %>%
   geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
   geom_point(aes(color = type, shape = type), size = 3) +
   scale_color_manual(values = msr_colors) +
-  labs(x = "measr", y = "Templin et al. (2013)",
+  labs(x = "measr", y = "Templin & Hoffman (2013)",
        color = "Parameter Type", shape = "Parameter Type")
 ```
 
