@@ -24,8 +24,6 @@ vignette: >
 
 # Summary
 
-[![](measr-logo.png){ width=120px }](https://measr.info)
-
 In educational and psychological research, we are often interested discrete latent states of individuals responding to an assessment (e.g., proficiency or non-proficiency on educational standards, the presence or absence of a psychological disorder).
 Diagnostic classification models (DCMs; also called cognitive diagnostic models [CDMs]) are a type of psychometric model that facilitates these inferences [@rupp-dcm; @dcm-handbook].
 DCMs are multi-dimensional, meaning that we can classify respondents over a profile of assessed skills, or attributes.
@@ -50,10 +48,6 @@ However, all of these packages only estimate a single type of DCM, severely limi
 The measr package seeks to overcome the limitations of existing software options by serving as an interface to the 'Stan' probabilistic programming language [@stan].
 With 'Stan' as a backend, measr can estimate a wide variety of DCMs and then provide model evaluations using both limited-information indices and posterior predictive checks.
 Thus, with measr, users get the power of Bayesian methods for model evaluation, compatibility with other packages in the larger Stan ecosystem, and a user-friendly interface so knowledge of the 'Stan' language is not required.
-
-# Example functionality
-
-Something...
 
 # Acknowledgements
 

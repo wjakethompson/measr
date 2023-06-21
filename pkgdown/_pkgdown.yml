@@ -111,6 +111,13 @@ reference:
 - contents:
   - measr_examples
 
+articles:
+- title: Overview
+  navbar: ~
+  contents:
+  - paper
+  - articles/model-estimation
+
 news:
   releases:
   - text: "Version 0.2.1"
