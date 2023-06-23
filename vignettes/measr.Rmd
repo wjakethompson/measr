@@ -28,6 +28,12 @@ There are two main classes of functions we need to get started.
 Estimation functions are used for building the DCM using the [Stan probabilistic programming language](https://mc-stan.org) and getting estimates of respondent proficiency.
 Evaluation functions can then be applied to the fitted model to assess how well the estimates represent the observed data.
 
+## Installation
+
+
+
+Once everything is installed correctly, we're ready to start estimating and evaluating our DCMs.
+
 ```{r load-pkg}
 library(measr)
 ```
