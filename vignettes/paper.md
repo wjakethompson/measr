@@ -46,8 +46,10 @@ To date, there are three R packages that offer Bayesian estimation of DCMs: dina
 However, all of these packages only estimate a single type of DCM, severely limiting the generalizability of these packages to a wide range of applications.
 
 The measr package seeks to overcome the limitations of existing software options by serving as an interface to the 'Stan' probabilistic programming language [@stan].
-With 'Stan' as a backend, measr can estimate a wide variety of DCMs and then provide model evaluations using both limited-information indices and posterior predictive checks.
-Thus, with measr, users get the power of Bayesian methods for model evaluation, compatibility with other packages in the larger Stan ecosystem, and a user-friendly interface so knowledge of the 'Stan' language is not required.
+With Stan as a backend, measr can estimate a wide variety of DCMs and then provide model evaluations using both limited-information indices and posterior predictive checks.
+Thus, with measr, users get the power of Bayesian methods for model evaluation, compatibility with other packages in the larger Stan ecosystem, and a user-friendly interface so knowledge of the Stan language is not required.
+However, model estimated with measr also include the fitted Stan object so users can access it if they are familiar with Stan and prefer to work with those object.
+Additionally, the Stan code used to estimate the model is also returned so that users familiar with the Stan langauge can use that code as a starting point for writing their own customized models.
 
 # Acknowledgements
 
