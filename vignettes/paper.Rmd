@@ -1,7 +1,6 @@
 ---
 title: "measr: Bayesian psychometric measurement using 'Stan'"
 output:
-  rmarkdown::word_document: default
   rmarkdown::html_vignette:
     keep_md: TRUE
 tags:
