@@ -19,7 +19,7 @@ affiliations:
     index: 1
   - name: University of Kansas
     index: 2
-date: 20 June 2023
+date: 14 July 2023
 bibliography: paper.bib
 vignette: >
   %\VignetteEncoding{UTF-8}
@@ -54,7 +54,9 @@ To date, there are three R packages that offer Bayesian estimation of DCMs: dina
 However, all of these packages only estimate a single type of DCM, severely limiting their generalizability to a wide range of applications.
 
 The measr package seeks to overcome the limitations of existing software options by serving as an interface to the Stan probabilistic programming language [@stan].
-With Stan as a backend, measr can estimate a wide variety of DCMs, such as the loglinear cognitive diagnostic model [LCDM; @lcdm]; the deterministic inputs, noisy "and" gate (DINA) model [@dina]; and the deterministic inputs, noisy "or" gate (DINO) model [@dino].
+With Stan as a backend, measr can estimate a wide variety of DCMs.
+Primarily, measr supports the estimation of the loglinear cognitive diagnostic model (LCDM).
+However, because the LCDM is a general DCM that subsumes many subtypes [@lcdm], measr also supports other DCMs such as the deterministic inputs, noisy "and" gate (DINA) model [@dina] and the deterministic inputs, noisy "or" gate (DINO) model [@dino].
 After estimation, measr provides model evaluations using both limited-information indices and posterior predictive checks.
 By providing straightforward estimation and evaluation of DCMs, measr makes these models more accessible to practitioners and applied researchers.
 Thus, with measr, users get the power of Bayesian methods for model evaluation, compatibility with other packages in the larger Stan ecosystem, and a user-friendly interface so that knowledge of the Stan language is not required.
