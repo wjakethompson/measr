@@ -1,12 +1,13 @@
 #' Estimate the reliability of psychometric models
 #'
 #' @param model The estimated model to be evaluated.
+#' @param ... Unused. For future extensions.
 #' @param force If reliability information has already been added to the model
 #'   object with [add_reliability()], should it be recalculated. Default is
 #'   `FALSE`.
 #'
 #' @export
-reliability <- function(model) {
+reliability <- function(model, ...) {
   UseMethod("reliability")
 }
 
@@ -65,7 +66,7 @@ reliability <- function(model) {
 #' )
 #'
 #' reliability(rstn_mdm_lcdm)
-reliability.measrdcm <- function(model, force = FALSE) {
+reliability.measrdcm <- function(model, ..., force = FALSE) {
   if ((!is.null(model$reliability) && length(model$reliability) > 0) &&
       !force) {
     return(model$reliability)
