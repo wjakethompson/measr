@@ -19,12 +19,18 @@ loo::loo_compare
 #' @inheritParams loo::loo
 #' @param x A [measrfit] object.
 #' @param ... Additional arguments passed to [loo::loo.array()].
+#' @param force If the LOO criterion has already been added to the model object
+#'   with [add_criterion()], should it be recalculated. Default is `FALSE`.
 #'
 #' @return The object returned by [loo::loo.array()].
 #'
 #' @export
-loo.measrfit <- function(x, ..., r_eff = NA) { #nolint
+loo.measrfit <- function(x, ..., r_eff = NA, force = FALSE) { #nolint
   model <- check_model(x, required_class = "measrfit", name = "x")
+
+  if (!is.null(model$criteria$loo) && !force) {
+    return(model$criteria$loo)
+  }
 
   if (model$method != "mcmc") {
     rlang::abort("error_bad_method",
@@ -45,12 +51,18 @@ loo.measrfit <- function(x, ..., r_eff = NA) { #nolint
 #'
 #' @param x A [measrfit] object.
 #' @param ... Additional arguments passed to [loo::waic.array()].
+#' @param force If the WAIC criterion has already been added to the model object
+#'   with [add_criterion()], should it be recalculated. Default is `FALSE`.
 #'
 #' @return The object returned by [loo::waic.array()].
 #'
 #' @export
-waic.measrfit <- function(x, ...) { #nolint
+waic.measrfit <- function(x, ..., force = FALSE) { #nolint
   model <- check_model(x, required_class = "measrfit", name = "x")
+
+  if (!is.null(model$criteria$waic) && !force) {
+    return(model$criteria$waic)
+  }
 
   if (model$method != "mcmc") {
     rlang::abort("error_bad_method",
