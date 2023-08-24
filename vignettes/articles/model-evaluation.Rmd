@@ -123,7 +123,7 @@ With measr, PPMCs can be calculated with `fit_ppmc()`.
 Using `fit_ppmc()` can specify which PPMCs to calculate.
 For example, here we estimate just the model-level raw score check by setting `item_fit = NULL`.
 
-```{r raw-score-ppmc, cache = TRUE}
+```{r raw-score-ppmc}
 fit_ppmc(lcdm, model_fit = "raw_score", item_fit = NULL)
 ```
 
@@ -139,7 +139,7 @@ Because the LCDM was used to generate this data, it's not surprising that the *p
 We can also specify the posterior quantiles that are returned.
 For example, we can calculate the item-level odds ratios and request quantiles that will result in a 90% credible interval.
 
-```{r odds-ratio-ppmc, cache = TRUE}
+```{r odds-ratio-ppmc}
 fit_ppmc(lcdm, model_fit = NULL, item_fit = "odds_ratio",
          probs = c(0.05, 0.95))
 ```
@@ -160,7 +160,7 @@ Currently, the *Stan* ecosystem supports two information criteria through the [l
 The information criteria can be calculated using the associated functions from the loo package (i.e., `loo()` and `waic()`).
 Here, we calculate the LOO for both the LCDM and DINA models.
 
-```{r estimate-loo, cache = TRUE}
+```{r estimate-loo}
 lcdm_loo <- loo(lcdm)
 lcdm_loo
 
@@ -178,7 +178,7 @@ The `se_diff` column is the standard error of the difference between that model 
 loo_compare(list(lcdm = lcdm_loo, dina = dina_loo))
 ```
 
-```{r loo-compare-store, include = FALSE, cache = TRUE, dependson = "estimate-loo"}
+```{r loo-compare-store}
 loo_comp <- loo_compare(list(lcdm = lcdm_loo, dina = dina_loo))
 ```
 
@@ -225,6 +225,47 @@ As with the classification reliability indices, @johnson2020 provide recommendat
 
 ## Storing Model Evaluations
 
+If you have followed along with running the code in this vignette, you will have noticed that some of the model evaluations take a significant amount of computation time.
+This means repeating the calculations (e.g., didn't assign the output new a new object, opened a new R session) can be a very time-consuming process.
+To make you analysis more efficient, measr offers several functions that can be used to add the model evaluation metrics described in this vignette directly to the model object.
+If you specified a `file` when the model was estimated, the updated model object with the model evaluation components will automatically resave, ensuring that you don't have to rerun computationally intensive tasks.
 
+There are three functions for adding model evaluation components to a model object, which correspond to the three types of evaluation described in this vignette:
+
+* `add_fit()`: Adds absolute model fit indices (i.e., M<sub>2</sub>, PPMCs)
+* `add_criterion()`: Adds relative model fit indices (i.e., LOO, WAIC)
+* `add_reliability()`: Adds reliability metrics
+
+All three functions have several arguments in common.
+
+* `x`: The model to add evaluation components to.
+* `save`: Whether to resave the model object if `file` was specified when estimating the model. The default is `TRUE`.
+* `overwrite`: Whether to overwrite existing evaluations. For example, if you attempt to add reliability metrics with `add_reliability()`, but those metrics have already been added, should the reliability metrics be recalculated and overwrite the existing metrics? The default is `FALSE`.
+
+Additionally, all three functions have a `...` argument for passing additional argyments along to the relevant functions.
+For example, if we want to add PPMC absolute model fit indices, we can specify the types of model- and item-level fit indices to calculate, just as we did when using `fit_ppmc()`.
+
+```{r add-fit}
+lcdm <- add_fit(lcdm, method = "ppmc",
+                model_fit = "raw_score",
+                item_fit = "odds_ratio")
+```
+
+Once components have been added to the model, a helper function, `measr_extract()`, can be used to pull out relevant pieces of output.
+For example, we can extract the PPMC raw score results.
+
+```{r extract-raw-score}
+measr_extract(lcdm, what = "ppmc_raw_score")
+```
+
+In addition, we can also extract elements of the model, such as the priors that were used during estimation, or estimated parameters like the base rate of membership in each class.
+
+```{r extract-model}
+measr_extract(lcdm, what = "prior")
+
+measr_extract(lcdm, what = "strc_param")
+```
+
+For a complete list of what can be extract with `measr_extract()`, see `?measr_extract`.
 
 ## References
