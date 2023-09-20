@@ -4,7 +4,7 @@
 \alias{loo.measrfit}
 \title{Efficient approximate leave-one-out cross-validation (LOO)}
 \usage{
-\method{loo}{measrfit}(x, ..., r_eff = NA)
+\method{loo}{measrfit}(x, ..., r_eff = NA, force = FALSE)
 }
 \arguments{
 \item{x}{A \link{measrfit} object.}
@@ -21,6 +21,9 @@ will be over-optimistic. If the posterior draws are independent then
 \code{r_eff=1} and can be omitted. The warning message thrown when \code{r_eff} is
 not specified can be disabled by setting \code{r_eff} to \code{NA}. See the
 \code{\link[loo:relative_eff]{relative_eff()}} helper functions for computing \code{r_eff}.}
+
+\item{force}{If the LOO criterion has already been added to the model object
+with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is \code{FALSE}.}
 }
 \value{
 The object returned by \code{\link[loo:loo]{loo::loo.array()}}.

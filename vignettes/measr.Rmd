@@ -28,6 +28,87 @@ There are two main classes of functions we need to get started.
 Estimation functions are used for building the DCM using the [Stan probabilistic programming language](https://mc-stan.org) and getting estimates of respondent proficiency.
 Evaluation functions can then be applied to the fitted model to assess how well the estimates represent the observed data.
 
+## Installation
+
+Because measr uses *Stan* as a backend for estimating DCMs, an installation of [rstan](https://mc-stan.org/rstan) or [cmdstanr](https://mc-stan.org/cmdstanr) is required.
+
+### rstan
+
+Before installing rstan, your system must be configured to compile C++ code.
+You can find instructions on the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) guide for [Windows](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows), [Mac](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Mac), and [Linux](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux).
+
+The rstan package can then be installed directly from CRAN:
+
+```{r install-rstan, eval = FALSE}
+install.packages("rstan")
+```
+
+To verify the installation was successful, you can run a test model.
+If everything is set up correctly, the model should compile and sample.
+For additional troubleshooting help, see the [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) guide.
+
+```{r rstan-test, eval = FALSE}
+library(rstan)
+
+example(stan_model, package = "rstan", run.dontrun = TRUE)
+```
+
+### cmdstanr
+
+The cmdstanr package is not yet available on CRAN.
+The beta release can be installed from the *Stan* R package repository:
+
+```{r stan-repo, eval = FALSE}
+install.packages("cmdstanr",
+                 repos = c("https://mc-stan.org/r-packages/",
+                           getOption("repos")))
+```
+
+Or the development version can be installed from [GitHub](https://github.com/stan-dev/cmdstanr):
+
+```{r stan-dev, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("stan-dev/cmdstanr")
+```
+
+The cmdstanr package requires a suitable C++ toolchain.
+Requirements and instructions for ensuring your toolchain is properly set up are described in the [CmdStan User Guide](https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain).
+
+You can verify that the C++ toolchain is set up correctly with:
+
+```{r check-toolchain, eval = FALSE}
+library(cmdstanr)
+
+check_cmdstan_toolchain()
+```
+
+Finally, cmdstanr requires that CmdStan (the shell interface to *Stan*).
+Once the toolchain is properly set up, CmdStan can be installed with:
+
+```{r install-cmdstan, eval = FALSE}
+install_cmdstan(cores = 2)
+```
+
+For additional installation help, getting the [Getting Started with CmdStanR](https://mc-stan.org/cmdstanr/articles/cmdstanr.html) vignette.
+
+### measr
+
+Once rstan and/or cmdstanr have been installed, we are ready to install measr.
+The released version of measr can be installed directly from CRAN:
+
+```{r install-measr, eval = FALSE}
+install.packages("measr")
+```
+
+Or, the development version can be installed from [GitHub](https://github.com/wjakethompson/measr):
+
+```{r measr-dev, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("wjakethompson/measr")
+```
+
+Once everything has been installed, we're ready to start estimating and evaluating our DCMs.
+
 ```{r load-pkg}
 library(measr)
 ```

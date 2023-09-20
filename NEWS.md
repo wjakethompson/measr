@@ -2,6 +2,13 @@
 
 * Fixed bug in the LCDM specification of constraints for level-3 and above interaction terms.
 
+* Functions for evaluating estimated models (e.g., `fit_ppmc()`, `reliability()`) no longer recalculate indices if they have previously been saved to the model object. This behavior can be overwritten with `force = TRUE`.
+
+* Updates to documentation
+  * A new article on model evaluation has been added.
+  * The model estimation article has been updated to use the same data set as the model evaluation article.
+  * More detailed installation instructions have been added to the getting started vignette.
+
 # measr 0.3.1
 
 * Added a `NEWS.md` file to track changes to the package.

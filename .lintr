@@ -1,8 +1,16 @@
-linters: linters_with_defaults()
+linters: linters_with_defaults(
+    indentation_linter = NULL
+  )
 exclusions: list(
     "R/stanmodels.R",
     "R/fit-dcm.R" = list(
       line_length_linter = Inf
+    ),
+    "vignettes/measr.Rmd" = list(
+      commented_code_linter = Inf
+    ),
+    "vignettes/articles/data-raw/example-data.R" = list(
+      object_usage_linter = Inf
     )
   )
 encoding: "UTF-8"
