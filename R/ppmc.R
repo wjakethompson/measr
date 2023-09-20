@@ -28,6 +28,8 @@
 #'   Multiple checks can be provided in order to calculate more than one check
 #'   simultaneously (e.g., `item_fit = c("conditional_prob", "odds_ratio")`).
 #'   See details.
+#' @param force If all requested PPMCs have already been added to the model
+#'   object using [add_fit()], should they be recalculated. Default is `FALSE`.
 #'
 #' @details
 #' Posterior predictive model checks (PPMCs) use the posterior distribution of
@@ -102,7 +104,8 @@
 fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                      return_draws = 0,
                      model_fit = c("raw_score"),
-                     item_fit = c("conditional_prob", "odds_ratio")) {
+                     item_fit = c("conditional_prob", "odds_ratio"),
+                     force = FALSE) {
   model <- check_model(model, required_class = "measrdcm", name = "object")
   total_draws <- posterior::ndraws(posterior::as_draws(model))
   ndraws <- check_integer(ndraws, lb = 1, ub = total_draws,
@@ -116,6 +119,33 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
   item_fit <- if (!is.null(item_fit)) {
     rlang::arg_match(item_fit, multiple = TRUE)
   }
+
+  # check for existing fit analyses
+  check_ppmc <- existing_ppmc_check(model = model, method = "ppmc",
+                                    dots = list(ndraws = ndraws,
+                                                probs = probs,
+                                                return_draws = return_draws,
+                                                model_fit = model_fit,
+                                                item_fit = item_fit),
+                                    overwrite = force)
+  if (!check_ppmc$run && !force) {
+    requested <- list(model_fit = model_fit,
+                      item_fit = item_fit)
+    requested[sapply(requested, is.null)] <- NULL
+
+    res <- mapply(
+      function(x, nm, model) {
+        element <- model$fit$ppmc[[nm]][x]
+        rlang::set_names(element, nm = x)
+        return(element)
+      },
+      requested, names(requested),
+      MoreArgs = list(model = model), SIMPLIFY = FALSE, USE.NAMES = TRUE
+    )
+
+    return(res)
+  }
+
 
   if (length(model_fit) == 0 && length(item_fit) == 0) return(list())
 

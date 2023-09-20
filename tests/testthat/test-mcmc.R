@@ -108,6 +108,9 @@ test_that("loo and waic can be added to model", {
 
   expect_identical(measr_extract(lw_model, "loo"), lw_model$criteria$loo)
   expect_identical(measr_extract(lw_model, "waic"), lw_model$criteria$waic)
+
+  expect_identical(lw_model$criteria$loo, loo(lw_model))
+  expect_identical(lw_model$criteria$waic, waic(lw_model))
 })
 
 test_that("model comparisons work", {
@@ -245,10 +248,13 @@ test_that("model fit can be added", {
   expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "samples", "ppp"))
+  expect_identical(test_model$fit$ppmc, fit_ppmc(test_model,
+                                                 model_fit = NULL,
+                                                 item_fit = "odds_ratio"))
 
   # nothing new does nothing
   test_model2 <- add_fit(test_model, method = "ppmc", model_fit = NULL,
-                        item_fit = NULL)
+                         item_fit = NULL)
   expect_identical(test_model, test_model2)
 
   # now add ppmc raw score and conditional probs -- other fit should persist

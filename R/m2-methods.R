@@ -10,6 +10,9 @@ dcm2::fit_m2
 #' described by Hansen et al. (2016) and Liu et al. (2016).
 #'
 #' @inheritParams dcm2::fit_m2
+#' @param force If the \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} has already
+#'   been saved to the model object with [add_fit()], should it be recalculated.
+#'   Default is `FALSE`.
 #'
 #' @return A data frame created by [dcm2::fit_m2()].
 #'
@@ -33,9 +36,13 @@ dcm2::fit_m2
 #' )
 #'
 #' fit_m2(rstn_mdm_lcdm)
-fit_m2.measrdcm <- function(model, ci = 0.9, ...) {
+fit_m2.measrdcm <- function(model, ..., ci = 0.9, force = FALSE) {
   model <- check_model(model, required_class = "measrdcm", name = "model")
   ci <- check_double(ci, lb = 0, ub = 1, inclusive = FALSE, name = "ci")
+
+  if (!is.null(model$fit$m2) && !force) {
+    return(model$fit$m2)
+  }
 
   item_order <- levels(model$data$data$item_id)
   dat <- model$data$data %>%

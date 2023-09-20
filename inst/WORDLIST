@@ -1,7 +1,9 @@
 CDMs
 CMD
 Cai
+CmdStan
 CmdStanModel
+CmdStanR
 Cui
 DCM
 DCMs
@@ -72,6 +74,7 @@ posteriori
 ppp
 pre
 psychometrics
+resave
 rlang
 rstan
 subtype
@@ -79,6 +82,9 @@ subtypes
 tetrachoric
 tibble
 tibbles
+toolchain
 tunnelled
 tunnelling
 warmup
+κ
+λ

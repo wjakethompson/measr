@@ -200,6 +200,7 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   # determine if/which ppmc need to be run
   dots <- list(...)
   run_ppmc <- existing_ppmc_check(model, method, dots, overwrite)
+  run_ppmc$args$force <- TRUE
 
   if (run_m2) {
     model$fit$m2 <- fit_m2(model, ci = ci)

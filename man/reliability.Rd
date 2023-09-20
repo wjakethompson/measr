@@ -5,12 +5,18 @@
 \alias{reliability.measrdcm}
 \title{Estimate the reliability of psychometric models}
 \usage{
-reliability(model)
+reliability(model, ...)
 
-\method{reliability}{measrdcm}(model)
+\method{reliability}{measrdcm}(model, ..., force = FALSE)
 }
 \arguments{
 \item{model}{The estimated model to be evaluated.}
+
+\item{...}{Unused. For future extensions.}
+
+\item{force}{If reliability information has already been added to the model
+object with \code{\link[=add_reliability]{add_reliability()}}, should it be recalculated. Default is
+\code{FALSE}.}
 }
 \value{
 For class \code{measrdcm}, a list with 3 elements:

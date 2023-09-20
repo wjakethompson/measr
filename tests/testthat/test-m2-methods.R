@@ -59,4 +59,8 @@ test_that("m2 works", {
                dplyr::select(m2, "rmsea", "95% CI"))
   expect_equal(measr_extract(m2_mod, "srmsr"),
                dplyr::select(m2, "srmsr"))
+
+  # recalculating returns same object
+  m2_recalc <- fit_m2(m2_mod)
+  expect_identical(m2_recalc, m2_mod$fit$m2)
 })
