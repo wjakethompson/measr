@@ -72,8 +72,7 @@ test_that("extract ecpe", {
   expect_equal(nrow(lcdm_param), nrow(all_param))
   expect_equal(colnames(lcdm_param),
                c("item_id", "class", "attributes", "coef", "estimate"))
-  expect_equal(as.character(lcdm_param$item_id),
-               paste0("E", all_param$item_id))
+  expect_equal(lcdm_param$item_id, all_param$item_id)
   expect_equal(lcdm_param$class, all_param$class)
   expect_equal(lcdm_param$attributes, all_param$attributes)
   expect_equal(lcdm_param$coef, all_param$coef)

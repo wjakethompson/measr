@@ -8,6 +8,7 @@ get_parameters(
   qmatrix,
   item_id = NULL,
   rename_att = FALSE,
+  rename_item = FALSE,
   type = c("lcdm", "dina", "dino", "crum"),
   attribute_structure = c("unconstrained", "independent")
 )
@@ -23,6 +24,9 @@ present in the Q-matrix.}
 
 \item{rename_att}{Should attribute names from the \code{qmatrix} be replaced with
 generic, but consistent names (e.g., "att1", "att2", "att3").}
+
+\item{rename_item}{Should item names from the \code{qmatrix} be replaced with
+generic, but consistent names (e.g., 1, 2, 3).}
 
 \item{type}{Type of DCM to estimate. Must be one of
 lcdm, dina, dino, or crum.}

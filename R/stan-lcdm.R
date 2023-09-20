@@ -20,7 +20,8 @@ lcdm_script <- function(qmatrix, prior = NULL, strc = "unconstrained",
 
   # parameters block -----
   all_params <- get_parameters(qmatrix = qmatrix, item_id = NULL,
-                               rename_att = TRUE, type = "lcdm",
+                               rename_att = TRUE, rename_item = TRUE,
+                               type = "lcdm",
                                attribute_structure = strc)
   strc_params <- all_params %>%
     dplyr::filter(.data$class == "structural")

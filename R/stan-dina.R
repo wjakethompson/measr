@@ -51,7 +51,8 @@ dina_script <- function(qmatrix, prior = NULL, strc = "unconstrained", ...) {
   }
 
   item_priors <- get_parameters(qmatrix = qmatrix, item_id = NULL,
-                               rename_att = TRUE, type = "dina") %>%
+                               rename_att = TRUE, rename_item = TRUE,
+                               type = "dina") %>%
     dplyr::filter(.data$class != "structural") %>%
     dplyr::left_join(mod_prior, by = c("class", "coef")) %>%
     dplyr::rename(coef_def = "prior_def") %>%
