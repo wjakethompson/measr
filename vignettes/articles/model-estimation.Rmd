@@ -200,14 +200,14 @@ prior(normal(0, 10), class = "maineffect")
 
 By default, the prior is applied to all parameters in the class (i.e., all main effects).
 However, we can also apply a prior to a specific parameter.
-For example, here we specify a $\chi^2$ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 (morphosyntactic rules) on item 7.
+For example, here we specify a $\chi^2$ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 on just item 7.
 To see all parameters (including `class` and `coef`) that can be specified, we can use `get_parameters()`.
 
 ```{r multi-prior}
 c(prior(chi_square(2), class = "maineffect"),
   prior(exponential(2), class = "maineffect", coef = "l7_11"))
 
-get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
+get_parameters(sim_data$q_matrix, item_id = "item_id", type = "lcdm")
 ```
 
 Any distribution that is supported by the *Stan* language can be used as a prior.
@@ -223,17 +223,15 @@ Note that the prior still influences the model when using `method = "optim"`, ju
 
 ```{r new-prior}
 new_prior <- prior(normal(0, 15), class = "maineffect", lb = 0)
-new_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+new_lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
                       resp_id = "resp_id", item_id = "item_id",
-                      type = "lcdm", backend = "cmdstanr",
-                      method = "optim",
+                      type = "lcdm", method = "optim", backend = "cmdstanr",
                       prior = new_prior,
                       file = "fits/sim-lcdm-optim")
 
-new_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+new_lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
                       resp_id = "resp_id", item_id = "item_id",
-                      type = "lcdm", backend = "cmdstanr",
-                      method = "optim",
+                      type = "lcdm", method = "optim", backend = "cmdstanr",
                       prior = c(prior(normal(0, 15), class = "maineffect",
                                       lb = 0)),
                       file = "fits/sim-lcdm-optim")
