@@ -192,7 +192,7 @@ reliability(lcdm)
 
 There are several types of reliability evidence that are provided in the output.
 For all indices reported, values can range from 0 to 1, where 1 represents perfect accuracy or consistency.
-The first type reliabliity in the output is pattern-level reliability, as described by @cui2012.
+The first type reliability in the output is pattern-level reliability, as described by @cui2012.
 This reliability describes the accuracy (`p_a`) and consistency (`p_c`) of the classification of respondents into an overall profile of proficiency on the on assessed skills.
 For example, in a 3-attribute assessment there are 8 possible profiles: [0,0,0], [1,0,0], [0,1,0], [0,0,1], [1,1,0], [1,0,1], [0,1,1], [1,1,1].
 One option for reporting results from a DCM-based assessment is to select the profile that is most likely for each respondent.
@@ -205,7 +205,7 @@ For models estimated with measr, this is referred to *maximum a posteriori* (MAP
 The MAP values reported in the output are those described by @johnson2018.
 The `acc` and `consist` variables in `map_reliability$accuracy` and `map_reliability_consistency` tables, respectively, are the classification accuracy and consistency metrics described by @johnson2018.
 In their paper, they also compared these metrics to other measures of agreement (e.g., Cohen's &kappa;, Goodman and Kruskal's &lambda;), which are also included in the output.
-@johnson2018 also provide recommendations for threhsold values for each metric that represent poor, fair, good, very good, or excellent reliability.
+@johnson2018 also provide recommendations for threshold values for each metric that represent poor, fair, good, very good, or excellent reliability.
 
 Finally, rather than reporting results as classifications (e.g., proficient/not proficient), results can also be reported simply as the probability that each respondent is proficient on each attribute.
 Thus, rather than reporting the accuracy and consistency of a classification, we should report the precision of the reported probability.
@@ -235,7 +235,7 @@ All three functions have several arguments in common.
 * `save`: Whether to resave the model object if `file` was specified when estimating the model. The default is `TRUE`.
 * `overwrite`: Whether to overwrite existing evaluations. For example, if you attempt to add reliability metrics with `add_reliability()`, but those metrics have already been added, should the reliability metrics be recalculated and overwrite the existing metrics? The default is `FALSE`.
 
-Additionally, all three functions have a `...` argument for passing additional argyments along to the relevant functions.
+Additionally, all three functions have a `...` argument for passing additional arguments along to the relevant functions.
 For example, if we want to add PPMC absolute model fit indices, we can specify the types of model- and item-level fit indices to calculate, just as we did when using `fit_ppmc()`.
 
 ```{r add-fit}
