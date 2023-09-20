@@ -45,39 +45,32 @@ library(measr)
 
 ## Example Data
 
-To demonstrate the model fit functionality of measr, we'll examine a simulated data set.
-This data set contains 1,000 respondents and 20 items that measure a total of 4 attributes, but no item measures more than 2 attributes.
+To demonstrate the model fit functionality of measr, we'll use the same simulated data set that was used to illustrate [model estimation functionality](model-estimation.html).
+This data set contains 2,000 respondents and 20 items that measure a total of 4 attributes, but no item measures more than 2 attributes.
 The data was generated from the loglinear cognitive diagnostic model (LCDM), which is a general model that subsumes many other DCM subtypes [@lcdm].
 To demonstrate model fit functionality, we'll first fit an LCDM and a deterministic-input, noisy "and" gate (DINA) model [@dina] to the data set in order to compare the fit indices.
 Because the LCDM was used to generate our fake data, we expect our estimated LCDM model to perform well.
 On the other hand, the DINA model places heavy constraints on the LCDM, and therefore we expect worse performance from the DINA model.
 For details on model estimation, see [Estimating diagnostic classification models](model-estimation.html).
 
-```{r read-data, eval = FALSE, include = FALSE}
-library(tidyverse)
-
-dat <- read_rds("data/example-data.rds")
-sim_data <- dat$data[, -1]
-sim_qmatrix <- dat$q_matrix[, -1]
-
-write_rds(list(data = sim_data, qmatrix = sim_qmatrix),
-          file = "vignettes/articles/data/sim-data.rds")
-```
-
 ```{r estimate-models}
 library(tidyverse)
 
-sim_data <- read_rds("data/sim-data.rds")
+sim_data <- read_rds("data/simulated-data.rds")
 
-lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$qmatrix,
-                  type = "lcdm", backend = "cmdstanr",
+lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
+                  resp_id = "resp_id", item_id = "item_id",
+                  type = "lcdm", method = "mcmc", backend = "cmdstanr",
                   iter_warmup = 1000, iter_sampling = 500,
-                  chains = 4, parallel_chains = 4, file = "fits/lcdm.rds")
+                  chains = 4, parallel_chains = 4,
+                  file = "fits/sim-lcdm")
 
-dina <- measr_dcm(data = sim_data$data, qmatrix = sim_data$qmatrix,
-                  type = "dina", backend = "cmdstanr",
+dina <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
+                  resp_id = "resp_id", item_id = "item_id",
+                  type = "dina", method = "mcmc", backend = "cmdstanr",
                   iter_warmup = 1000, iter_sampling = 500,
-                  chains = 4, parallel_chains = 4, file = "fits/dina.rds")
+                  chains = 4, parallel_chains = 4,
+                  file = "fits/sim-dina.rds")
 ```
 
 ## Model Evaluation
