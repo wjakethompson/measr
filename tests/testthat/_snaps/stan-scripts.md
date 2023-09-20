@@ -14,7 +14,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -23,8 +23,8 @@
         matrix[I,C] pi;
       }
       generated quantities {
-        matrix[R,C] prob_resp_class;         // post prob of respondent R in class C
-        matrix[R,A] prob_resp_attr;          // post prob of respondent R master A
+        matrix[R,C] prob_resp_class;         // post prob of resp R in class C
+        matrix[R,A] prob_resp_attr;          // post prob of resp R master A
         
         for (r in 1:R) {
           row_vector[C] prob_joint;
@@ -68,7 +68,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -77,8 +77,8 @@
         matrix[I,C] pi;
       }
       generated quantities {
-        matrix[R,C] prob_resp_class;         // post prob of respondent R in class C
-        matrix[R,A] prob_resp_attr;          // post prob of respondent R master A
+        matrix[R,C] prob_resp_class;         // post prob of resp R in class C
+        matrix[R,A] prob_resp_attr;          // post prob of resp R master A
         array[N] int y_rep;
         array[R] int r_class;
       
@@ -133,7 +133,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -176,7 +176,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -614,7 +614,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -702,7 +702,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -1340,7 +1340,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -1789,7 +1789,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -2206,7 +2206,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -2293,7 +2293,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -2912,7 +2912,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -3008,7 +3008,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -3131,7 +3131,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -3206,7 +3206,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }
@@ -3327,7 +3327,7 @@
         array[N] int<lower=1,upper=R> rr;    // respondent for observation n
         array[N] int<lower=0,upper=1> y;     // score for observation n
         array[R] int<lower=1,upper=N> start; // starting row for respondent R
-        array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
         matrix[C,A] Alpha;                   // attribute pattern for each class
         matrix[I,C] Xi;                      // class attribute mastery indicator
       }

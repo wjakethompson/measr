@@ -9,7 +9,7 @@ exclusions: list(
     "vignettes/measr.Rmd" = list(
       commented_code_linter = Inf
     ),
-    "vignettes/articles/data-raw/example-data.R" = list(
+    "data-raw/example-data.R" = list(
       object_usage_linter = Inf
     )
   )

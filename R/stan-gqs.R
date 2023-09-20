@@ -11,7 +11,7 @@ gqs_script <- function(full_data = FALSE) {
       array[N] int<lower=1,upper=R> rr;    // respondent for observation n
       array[N] int<lower=0,upper=1> y;     // score for observation n
       array[R] int<lower=1,upper=N> start; // starting row for respondent R
-      array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+      array[R] int<lower=1,upper=I> num;   // number of items for respondent R
       matrix[C,A] Alpha;                   // attribute pattern for each class
       matrix[I,C] Xi;                      // class attribute mastery indicator
     }}"
@@ -39,9 +39,10 @@ gqs_script <- function(full_data = FALSE) {
 
   gqs_block <- glue::glue(
     "generated quantities {{",
-    "  matrix[R,C] prob_resp_class;         // post prob of respondent R in class C",
-    "  matrix[R,A] prob_resp_attr;          // post prob of respondent R master A",
-    "  {ifelse(full_data, \"array[N] int y_rep;\n  array[R] int r_class;\n\", \"\")}",
+    "  matrix[R,C] prob_resp_class;         // post prob of resp R in class C",
+    "  matrix[R,A] prob_resp_attr;          // post prob of resp R master A",
+    "  {ifelse(full_data, \"array[N] int y_rep;\n  array[R] int r_class;\n\",
+               \"\")}",
     "  for (r in 1:R) {{",
     "    row_vector[C] prob_joint;",
     "    for (c in 1:C) {{",
@@ -92,7 +93,7 @@ loglik_script <- function() {
       array[N] int<lower=1,upper=R> rr;    // respondent for observation n
       array[N] int<lower=0,upper=1> y;     // score for observation n
       array[R] int<lower=1,upper=N> start; // starting row for respondent R
-      array[R] int<lower=1,upper=I> num;   // number of rows (items) for respondent R
+      array[R] int<lower=1,upper=I> num;   // number of items for respondent R
       matrix[C,A] Alpha;                   // attribute pattern for each class
       matrix[I,C] Xi;                      // class attribute mastery indicator
     }}"
