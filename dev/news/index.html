@@ -65,11 +65,13 @@
 <h2 class="pkg-version" data-toc-text="development version" id="measr-development-version">measr (development version)<a class="anchor" aria-label="anchor" href="#measr-development-version"></a></h2>
 <ul><li><p>Fixed bug in the LCDM specification of constraints for level-3 and above interaction terms.</p></li>
 <li><p>Functions for evaluating estimated models (e.g., <code><a href="../reference/fit_ppmc.html">fit_ppmc()</a></code>, <code><a href="../reference/reliability.html">reliability()</a></code>) no longer recalculate indices if they have previously been saved to the model object. This behavior can be overwritten with <code>force = TRUE</code>.</p></li>
+<li><p>Updated <em>Stan</em> syntax to be compatible with the new array syntax (<a href="https://github.com/andrjohns" class="external-link">@andrjohns</a>, <a href="https://github.com/wjakethompson/measr/issues/36" class="external-link">#36</a>)</p></li>
+<li><p><code><a href="../reference/get_parameters.html">get_parameters()</a></code> now preserves item identifiers by default. Items can be renamed with numbers (e.g., 1, 2, 3, …) by setting <code>rename_item = TRUE</code>.</p></li>
 <li>
 <p>Updates to documentation</p>
 <ul><li>A new article on model evaluation has been added.</li>
 <li>The model estimation article has been updated to use the same data set as the model evaluation article.</li>
-<li>More detailed installation instructions have been added to the getting started vignette.</li>
+<li>More detailed installation instructions have been added to the getting started vignette (<a href="https://github.com/wjakethompson/measr/issues/23" class="external-link">#23</a>).</li>
 </ul></li>
 </ul></div>
     <div class="section level2">

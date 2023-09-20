@@ -312,10 +312,10 @@ main effects with:</p>
 (i.e., all main effects). However, we can also apply a prior to a
 specific parameter. For example, here we specify a <span class="math inline">\(\chi^2\)</span> distribution with 2 degrees of
 freedom as the default prior for main effects, and an exponential
-distribution with a rate of 2 for the main effect of attribute 1
-(morphosyntactic rules) on item 7. To see all parameters (including
-<code>class</code> and <code>coef</code>) that can be specified, we can
-use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>.</p>
+distribution with a rate of 2 for the main effect of attribute 1 on just
+item 7. To see all parameters (including <code>class</code> and
+<code>coef</code>) that can be specified, we can use
+<code><a href="../reference/get_parameters.html">get_parameters()</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">chi_square</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">exponential</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span>, coef <span class="op">=</span> <span class="st">"l7_11"</span><span class="op">)</span><span class="op">)</span></span>
@@ -325,21 +325,21 @@ use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> maineffect <span style="color: #BB0000;">NA</span>    chi_square(2) </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect l7_11 exponential(2)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/get_parameters.html">get_parameters</a></span><span class="op">(</span><span class="va">ecpe_qmatrix</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 75 × 4</span></span></span>
-<span><span class="co">#&gt;    item_id class       attributes                coef  </span></span>
-<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1 intercept   <span style="color: #BB0000;">NA</span>                        l1_0  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       1 maineffect  morphosyntactic           l1_11 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       1 maineffect  cohesive                  l1_12 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       1 interaction morphosyntactic__cohesive l1_212</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       2 intercept   <span style="color: #BB0000;">NA</span>                        l2_0  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       2 maineffect  cohesive                  l2_12 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       3 intercept   <span style="color: #BB0000;">NA</span>                        l3_0  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       3 maineffect  morphosyntactic           l3_11 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       3 maineffect  lexical                   l3_13 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       3 interaction morphosyntactic__lexical  l3_213</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 65 more rows</span></span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/get_parameters.html">get_parameters</a></span><span class="op">(</span><span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 67 × 4</span></span></span>
+<span><span class="co">#&gt;    item_id class       attributes coef  </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> A1      intercept   <span style="color: #BB0000;">NA</span>         l1_0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> A1      maineffect  att2       l1_12 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> A1      maineffect  att4       l1_14 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> A1      interaction att2__att4 l1_224</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> A2      intercept   <span style="color: #BB0000;">NA</span>         l2_0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> A2      maineffect  att3       l2_13 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> A2      maineffect  att4       l2_14 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> A2      interaction att3__att4 l2_234</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> A3      intercept   <span style="color: #BB0000;">NA</span>         l3_0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> A3      maineffect  att1       l3_11 </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 57 more rows</span></span></span></code></pre></div>
 <p>Any distribution that is supported by the <em>Stan</em> language can
 be used as a prior. A list of all distributions is available in the
 <em>Stan</em> documentation, and are linked to from the
@@ -357,17 +357,15 @@ using <code>method = "optim"</code>, just as they do when using
 <code>method = "mcmc"</code> (the default).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_prior</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">normal</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span>, lb <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ecpe_data</span>, qmatrix <span class="op">=</span> <span class="va">ecpe_qmatrix</span>,</span>
+<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">data</span>, qmatrix <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span>,</span>
 <span>                      resp_id <span class="op">=</span> <span class="st">"resp_id"</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>,</span>
-<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
-<span>                      method <span class="op">=</span> <span class="st">"optim"</span>,</span>
+<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, method <span class="op">=</span> <span class="st">"optim"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
 <span>                      prior <span class="op">=</span> <span class="va">new_prior</span>,</span>
 <span>                      file <span class="op">=</span> <span class="st">"fits/sim-lcdm-optim"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ecpe_data</span>, qmatrix <span class="op">=</span> <span class="va">ecpe_qmatrix</span>,</span>
+<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">data</span>, qmatrix <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span>,</span>
 <span>                      resp_id <span class="op">=</span> <span class="st">"resp_id"</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>,</span>
-<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
-<span>                      method <span class="op">=</span> <span class="st">"optim"</span>,</span>
+<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, method <span class="op">=</span> <span class="st">"optim"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
 <span>                      prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">normal</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span>,</span>
 <span>                                      lb <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                      file <span class="op">=</span> <span class="st">"fits/sim-lcdm-optim"</span><span class="op">)</span></span></code></pre></div>
