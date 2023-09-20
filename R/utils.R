@@ -78,6 +78,7 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
                        .cols = dplyr::everything())
 
   type <- rlang::arg_match(type, dcm_choices())
+  max_interaction <- ifelse(type == "crum", 1L, Inf)
   attribute_structure <- rlang::arg_match(attribute_structure, strc_choices())
 
   all_params <- if (type %in% c("dina", "dino")) {
@@ -86,7 +87,7 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
       dplyr::mutate(
         coef = glue::glue("{.data$class}[{.data$item_id}]")
       )
-  } else if (type == "lcdm") {
+  } else if (type %in% c("lcdm", "crum")) {
     stats::model.matrix(stats::as.formula(paste0("~ .^",
                                                  max(ncol(qmatrix), 2L))),
                         qmatrix) %>%
@@ -112,6 +113,7 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
         attributes = dplyr::case_when(.data$param_level == 0 ~ NA_character_,
                                       .data$param_level >= 1 ~ .data$parameter)
       ) %>%
+      dplyr::filter(.data$param_level <= max_interaction) %>%
       dplyr::select("item_id", "class", "attributes", "coef")
   }
 
