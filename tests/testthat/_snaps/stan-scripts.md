@@ -5,31 +5,31 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         vector[C] log_Vc;
         matrix[I,C] pi;
       }
       generated quantities {
-        matrix[R,C] prob_resp_class;   // post prob of respondent R in class C
-        matrix[R,A] prob_resp_attr;    // post prob of respondent R master A
+        matrix[R,C] prob_resp_class;         // post prob of resp R in class C
+        matrix[R,A] prob_resp_attr;          // post prob of resp R master A
         
         for (r in 1:R) {
           row_vector[C] prob_joint;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -59,33 +59,33 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         vector[C] log_Vc;
         matrix[I,C] pi;
       }
       generated quantities {
-        matrix[R,C] prob_resp_class;   // post prob of respondent R in class C
-        matrix[R,A] prob_resp_attr;    // post prob of respondent R master A
-        int y_rep[N];
-        int r_class[R];
+        matrix[R,C] prob_resp_class;         // post prob of resp R in class C
+        matrix[R,A] prob_resp_attr;          // post prob of resp R master A
+        array[N] int y_rep;
+        array[R] int r_class;
       
         for (r in 1:R) {
           row_vector[C] prob_joint;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -124,18 +124,18 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         vector[C] log_Vc;
@@ -147,7 +147,7 @@
         for (r in 1:R) {
           row_vector[C] prob_joint;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -167,18 +167,18 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
@@ -494,7 +494,6 @@
         pi[28,8] = inv_logit(l28_0+l28_13);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -575,8 +574,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -605,18 +605,18 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
@@ -648,7 +648,6 @@
         pi[4,2] = inv_logit(l4_0+l4_11);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -663,8 +662,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -693,18 +693,18 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
@@ -1224,7 +1224,6 @@
         pi[27,16] = inv_logit(l27_0+l27_11+l27_12+l27_212);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -1301,8 +1300,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -1331,21 +1331,21 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
-        real<lower=0,upper=1> eta[A];
+        array[A] real<lower=0,upper=1> eta;
       
         ////////////////////////////////// item intercepts
         real l1_0;
@@ -1667,7 +1667,6 @@
         pi[28,8] = inv_logit(l28_0+l28_13);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         eta[1] ~ beta(1, 1);
@@ -1750,8 +1749,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -1780,18 +1780,18 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
@@ -2096,7 +2096,6 @@
         pi[28,8] = inv_logit(l28_0+l28_13);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -2168,8 +2167,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -2197,18 +2197,18 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
@@ -2240,7 +2240,6 @@
         pi[4,2] = inv_logit(l4_0+l4_11);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -2255,8 +2254,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -2284,18 +2284,18 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
@@ -2805,7 +2805,6 @@
         pi[27,16] = inv_logit(l27_0+l27_11+l27_12);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -2874,8 +2873,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -2903,21 +2903,21 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
-        real<lower=0,upper=1> eta[A];
+        array[A] real<lower=0,upper=1> eta;
       
         ////////////////////////////////// item intercepts
         real l1_0;
@@ -2955,7 +2955,6 @@
         pi[4,2] = inv_logit(l4_0+l4_11);
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         eta[1] ~ beta(1, 1);
@@ -2970,8 +2969,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -2999,25 +2999,25 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
       
         ////////////////////////////////// item parameters
-        real<lower=0,upper=1> slip[I];
-        real<lower=0,upper=1> guess[I];
+        array[I] real<lower=0,upper=1> slip;
+        array[I] real<lower=0,upper=1> guess;
       }
       transformed parameters {
         vector[C] log_Vc = log(Vc);
@@ -3030,7 +3030,6 @@
         }
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -3093,8 +3092,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -3122,25 +3122,25 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
       
         ////////////////////////////////// item parameters
-        real<lower=0,upper=1> slip[I];
-        real<lower=0,upper=1> guess[I];
+        array[I] real<lower=0,upper=1> slip;
+        array[I] real<lower=0,upper=1> guess;
       }
       transformed parameters {
         vector[C] log_Vc = log(Vc);
@@ -3153,7 +3153,6 @@
         }
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -3168,8 +3167,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -3197,25 +3197,25 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
         simplex[C] Vc;                  // base rates of class membership
       
         ////////////////////////////////// item parameters
-        real<lower=0,upper=1> slip[I];
-        real<lower=0,upper=1> guess[I];
+        array[I] real<lower=0,upper=1> slip;
+        array[I] real<lower=0,upper=1> guess;
       }
       transformed parameters {
         vector[C] log_Vc = log(Vc);
@@ -3228,7 +3228,6 @@
         }
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ dirichlet(rep_vector(1, C));
@@ -3289,8 +3288,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +
@@ -3318,25 +3318,25 @@
     Output
       $stancode
       data {
-        int<lower=1> I;                 // number of items
-        int<lower=1> R;                 // number of respondents
-        int<lower=1> N;                 // number of observations
-        int<lower=1> C;                 // number of classes
-        int<lower=1> A;                 // number of attributes
-        int<lower=1,upper=I> ii[N];     // item for observation n
-        int<lower=1,upper=R> rr[N];     // respondent for observation n
-        int<lower=0,upper=1> y[N];      // score for observation n
-        int<lower=1,upper=N> start[R];  // starting row for respondent R
-        int<lower=1,upper=I> num[R];    // number of rows (items) for respondent R
-        matrix[C,A] Alpha;              // attribute pattern for each class
-        matrix[I,C] Xi;                 // class attribute mastery indicator
+        int<lower=1> I;                      // number of items
+        int<lower=1> R;                      // number of respondents
+        int<lower=1> N;                      // number of observations
+        int<lower=1> C;                      // number of classes
+        int<lower=1> A;                      // number of attributes
+        array[N] int<lower=1,upper=I> ii;    // item for observation n
+        array[N] int<lower=1,upper=R> rr;    // respondent for observation n
+        array[N] int<lower=0,upper=1> y;     // score for observation n
+        array[R] int<lower=1,upper=N> start; // starting row for respondent R
+        array[R] int<lower=1,upper=I> num;   // number of items for respondent R
+        matrix[C,A] Alpha;                   // attribute pattern for each class
+        matrix[I,C] Xi;                      // class attribute mastery indicator
       }
       parameters {
-        real<lower=0,upper=1> eta[A];
+        array[A] real<lower=0,upper=1> eta;
       
         ////////////////////////////////// item parameters
-        real<lower=0,upper=1> slip[I];
-        real<lower=0,upper=1> guess[I];
+        array[I] real<lower=0,upper=1> slip;
+        array[I] real<lower=0,upper=1> guess;
       }
       transformed parameters {
         simplex[C] Vc;
@@ -3358,7 +3358,6 @@
         }
       }
       model {
-        real ps[C];
       
         ////////////////////////////////// priors
         Vc ~ beta(1, 1);
@@ -3419,8 +3418,9 @@
       
         ////////////////////////////////// likelihood
         for (r in 1:R) {
+          row_vector[C] ps;
           for (c in 1:C) {
-            real log_items[num[r]];
+            array[num[r]] real log_items;
             for (m in 1:num[r]) {
               int i = ii[start[r] + m - 1];
               log_items[m] = y[start[r] + m - 1] * log(pi[i,c]) +

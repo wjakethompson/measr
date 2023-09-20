@@ -11,7 +11,7 @@ strc_script <- function(strc) {
       .trim = FALSE
     )
   } else if (strc == "independent") {
-    glue::glue("  real<lower=0,upper=1> eta[A];", .trim = FALSE)
+    glue::glue("  array[A] real<lower=0,upper=1> eta;", .trim = FALSE)
   }
 
   transformed_parameters_block <- if (strc == "unconstrained") {
