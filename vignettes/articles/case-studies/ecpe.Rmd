@@ -2,7 +2,7 @@
 title: "Examination for the Certificate of Proficiency in English"
 output: rmarkdown::html_vignette
 bibliography: bib/references.bib
-csl: bib/apa.csl
+csl: ../../bib/apa.csl
 link-citations: true
 vignette: >
   %\VignetteIndexEntry{Examination for the Certificate of Proficiency in English}
@@ -33,4 +33,224 @@ options(mc.cores = 4,
         tidyverse.quiet = TRUE)
 ```
 
-Some placeholder text...
+The *Examination for the Certificate of Proficiency in English* (ECPE) is an assessment that measures advanced English skills for individuals for whom English is not the primary language.
+In this case study, we'll use data from the grammar section of the ECPE, which measures 3 skills with 28 items: morphosyntactic rules, cohesive rules, and lexical rules.
+This data set has previously been used by @templin-emip-2013 and @mcmc-handbook to demonstrate how to estimate diagnostic classification models (DCMs) with Mplus and Markov chain Monte Carlo (MCMC), respectively.
+Additionally, @hdcm used this ECPE data as a motivating example for developing a hierarchical DCM, and @chen2018 used the ECPE data to evaluate the effectiveness of the *M<sub>2</sub>* statistic for assessing model fit in the presence of attribute hierarchies.
+
+
+## Explore the Data
+
+The ECPE data is built into measr and can be accessed by loading the package.
+A complete description of the data can be viewed using `?ecpe_data`.
+
+```{r view-data}
+library(measr)
+
+ecpe_data
+```
+
+We can see that the data set has one row for each respondent, and that `r nrow(ecpe_data)` respondents completed this section of the ECPE.
+We also see that the data has `r ncol(ecpe_data)` columns.
+The first column contains respondent identifiers, and the remaining `r ncol(ecpe_data) - 1` columns contain dichotomous item responses for each items.
+The item responses are coded as 0 for an incorrect response and 1 for a correct response.
+
+In addition to the data, we also have a Q-matrix that define which attributes are measured by each item.
+The Q-matrix has `r nrow(ecpe_qmatrix)` rows, which corresponds to the total number of items.
+The first column of the Q-matrix contains item identifiers, which are the same as the column names in `ecpe_data` that contain item responses.
+The remaining columns define the attributes measured by the ECPE.
+A value of 0 indicates that the item does not measure that attribute, whereas a value of 1 indicates that the attribute is measured by that item.
+For example, item E1 measures both morphosyntactic rules and cohesive rules, and item E4 measures only lexical rules.
+
+```{r view-qmatrix}
+ecpe_qmatrix
+```
+
+For a quick summary of the data, we can calculate the proportion of respondents that answered each question correctly (i.e., the item *p*-values).
+
+```{r pvalues}
+library(tidyverse)
+
+ecpe_data %>% 
+  summarize(across(-resp_id, mean)) %>% 
+  pivot_longer(everything(), names_to = "item_id", values_to = "pvalue")
+```
+
+We can then join the item *p*-values with the Q-matrix to get a sense of which attributes are the most difficult.
+Overall, most of the items have relatively high *p*-values, with most items having a *p*-value between .6 and .9.
+Note that in general, items measuring morphosyntactic rules tend to be the most difficult (i.e., lower *p*-values), followed by items measuring cohesive rules, and finally items measuring lexical rules.
+
+<details><summary>Plot code</summary>
+
+```{r pvalue-plot, eval = FALSE}
+ecpe_data %>% 
+  summarize(across(-resp_id, mean)) %>% 
+  pivot_longer(everything(), names_to = "item_id", values_to = "pvalue") %>% 
+  left_join(ecpe_qmatrix, join_by(item_id)) %>% 
+  pivot_longer(c(morphosyntactic, cohesive, lexical),
+               names_to = "attribute",
+               values_to = "measured") %>% 
+  filter(measured == 1) %>% 
+  summarize(measures = paste(str_to_title(attribute), collapse = "/<br>"),
+            .by = c(item_id, pvalue)) %>% 
+  mutate(measures = fct_reorder(measures, pvalue, mean)) %>% 
+  ggplot(aes(x = pvalue, y = measures)) +
+  geom_jitter(aes(color = measures),
+              position = position_jitter(height = 0.2, width = 0),
+              show.legend = FALSE) +
+  scale_color_manual(values = c("#023047", "#D7263D", "#8ECAE6", "#219EBC",
+                                "#F3D3BD", "#000000")) +
+  expand_limits(x = c(0, 1)) +
+  scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+  labs(x = "Item *p*-value", y = "Measured attributes")
+```
+
+</details>
+
+```{r pvalue-plot, echo = FALSE}
+#| fig.asp: 0.618
+#| fig.alt: >
+#|   Scatter plot showing item p-values on the x-axis and attribute combinations
+#|   from the Q-matrix on the y-axis.
+```
+
+
+## DCM Estimation
+
+Now that we have a feel for our data, we will estimate a DCM.
+Following the original analysis of the ECPE data by @templin-emip-2013, we'll estimate a loglinear cognitive diagnostic model (LCDM).
+The LCDM is a general diagnostic model that allow for different attribute relationships on items (e.g., compensatory, non-compensatory) and subsumes many other types of DCMs [@lcdm; @lcdm-handbook].
+
+The following code will estimate an LCDM.
+In the first two lines, we specify our data, Q-matrix, and the respondent and item identifiers.
+We then specify the type of DCM we want to estimate and define how the model should be estimated.
+In this case, we want to estimate the model using MCMC with the [rstan](https://mc-stan.org/rstan) package as the estimation engine.
+Finally, we can customize how the MCMC process is executed.
+For this example, we specified 4 chains, each with 1,000 warmup iterations and 500 retained iterations for 1,500 iterations total.
+This results in a total posterior distribution of 2,000 samples for each parameter (i.e., 500 iterations from each of the 4 chains).
+We also specified a file so that the estimated model will be saved once it is estimated.
+
+```{r}
+ecpe_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                       resp_id = "resp_id", item_id = "item_id",
+                       type = "lcdm", method = "mcmc", backend = "rstan",
+                       chains = 4, iter = 1500, warmup = 1000,
+                       file = "fits/ecpe-lcdm")
+```
+
+### Examining Parameter Estimates
+
+Now that we’ve estimated a model, let’s compare our parameter estimates to those reported for the ECPE data by @templin-emip-2013.
+We can start be looking at our estimates using `measr_extract()`.
+This function extracts different aspects of a model estimated with measr.
+Here, the estimate column reports estimated value for each parameter and a measure of the associated error (i.e., the standard deviation of the posterior distribution).
+For example, item E1 has four parameters, as it measures two attributes:
+
+1. An intercept, which represents the log-odds of providing a correct response for a respondent who is proficient in neither of the attributes this item measures (i.e., morphosyntactic rules and cohesive rules).
+2. A main effect for morphosyntactic rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+3. A main effect for cohesive rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+4. An interaction between morphosyntactic and cohesive rules, which is the change in the log-odds for a respondent who is proficient in both attributes.
+
+```{r}
+item_parameters <- measr_extract(ecpe_lcdm, what = "item_param")
+item_parameters
+```
+
+We can compare these estimates to those that @templin-emip-2013 reported when using different software to estimate the same model.
+In the figure below, most parameters fall on or very close to the dashed line, which represents perfect agreement.
+
+<details><summary>Plot code</summary>
+
+```{r lcdm-param-compare, eval = FALSE}
+library(glue)
+
+ecpe_templin <- read_csv("data/mplus-estimates-templin.csv",
+                         col_types = cols(.default = col_double()))
+
+param_compare <- item_parameters %>%
+  full_join(ecpe_templin %>%
+              pivot_longer(-item) %>%
+              mutate(param = glue("l{item}_{name}")) %>%
+              select(param, mplus_est = value) %>%
+              drop_na(everything()),
+            by = c("coef" = "param")) %>%
+  mutate(measr_est = map_dbl(estimate, mean),
+         type = case_when(str_detect(coef, "_0") ~ "Intercept",
+                          str_detect(coef, "_1") ~ "Main Effect",
+                          str_detect(coef, "_2") ~ "Interaction"),
+         type = factor(type, levels = c("Intercept", "Main Effect",
+                                        "Interaction")))
+
+msr_colors <- c("#8ECAE6", "#023047", "#D7263D")
+
+param_compare %>%
+  ggplot(aes(x = measr_est, y = mplus_est)) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  geom_point(aes(color = type, shape = type), size = 3) +
+  scale_color_manual(values = msr_colors) +
+  expand_limits(x = c(-2, 3), y = c(-2, 3)) +
+  coord_fixed() +
+  labs(x = "measr", y = "Templin & Hoffman (2013)",
+       color = "Parameter Type", shape = "Parameter Type")
+```
+
+</details>
+
+```{r lcdm-param-compare, echo = FALSE}
+#| fig.asp: 0.7
+#| fig.alt: >
+#|   Figure shows a strong correlation between item parameters, with only a few
+#|   discrepancies off of the line of perfect agreement.
+```
+
+```{r example-item, echo = FALSE}
+example_item <- filter(param_compare, item_id == "E7")
+example_measr <- deframe(select(example_item, attributes, measr_est))
+example_mplus <- deframe(select(example_item, attributes, mplus_est))
+```
+
+There are some parameters that deviate from the line of perfect agreement, but these are expected.
+For example, take item E7, which measures morphosyntactic and lexical rules.
+Both measr and @templin-emip-2013 report values of approximately `r round(mean(c(example_measr[1], example_mplus[1])), 2)` for the intercept and `r round(mean(c(example_measr["lexical"], example_mplus["lexical"])), 2)` for the main effect of lexical rules.
+For the main effect of morphosyntactic rules, measr estimated a value of `r round(example_measr["morphosyntactic"], 2)`, compared to a value of `r round(example_mplus["morphosyntactic"], 2)` reported by @templin-emip-2013, a difference of `r round(example_measr["morphosyntactic"] - example_mplus["morphosyntactic"], 2)`.
+Similarly, the interaction term estimated by measr is `r round(example_measr["morphosyntactic__lexical"], 2)`, compared to a value of `r round(example_mplus["morphosyntactic__lexical"], 2)` reported by @templin-emip-2013, a difference of `r round(example_measr["morphosyntactic__lexical"] - example_mplus["morphosyntactic__lexical"], 2)`.
+This indicates that the log-odds of providing a correct response for an individual who has mastered both attributes is approximately the same, regardless of software.
+That is, for measr, we get a log-odds of `` `r knitr::combine_words(round(c(example_measr, sum(example_measr)), 2), sep = " + ", and = " = ", oxford_comma = FALSE)` ``, and from @templin-emip-2013, we get a log-odds of `` `r knitr::combine_words(round(c(example_mplus, sum(example_mplus)), 2), sep = " + ", and = " = ", oxford_comma = FALSE)` ``.
+This is true for all of the differences in the figure.
+There is a change to the main effect for morphosyntactic rules and corresponding change to the interaction term that "cancels out" the difference.
+
+```{r class-exam, echo = FALSE}
+bad_class <- measr_extract(ecpe_lcdm, "strc_param") %>% 
+  slice(2, 5, 6)
+```
+
+Why is this happening? Let's look at the proportion of respondents in each class.
+There are very few respondents who are proficient in morphosyntactic rules without also being proficient in both of the other attributes (classes 2, 5, and 6; less than `r ceiling(sum(mean(bad_class$estimate)) * 100)`% of all respondents).
+Therefore, there is less information for estimating the morphosyntactic main effects, which for items that measure multiple attributes, represent the increase in log-odds for proficiency in morphosyntactic rules *conditional on not being proficient* on the other attribute.
+
+```{r}
+measr_extract(ecpe_lcdm, "strc_param")
+```
+
+This means that the prior will have more influence on these parameters.
+Note in the above figure that the main effect estimates that are off the diagonal are less extreme when using measr.
+For example, the triangle at the top right is a main effect that is nearly 3 as reported by @templin-emip-2013, but is just over 1.5 when using with measr.
+Thus, there is a regularizing effect, where the prior is pulling in extreme values, which is an intended outcome.
+For more information on prior distributions, see `?prior` and the [model estimation vignette](../model-estimation.html).
+
+
+## DCM Evaluation
+
+There are several ways we might evaluate an estimate model.
+In this case study, we'll focus on two: absolute model fit and classification reliability.
+
+### Absolute Model Fit
+
+Something...
+
+### Classification Reliability
+
+Something...
+
+
+## References
