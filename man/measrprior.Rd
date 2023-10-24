@@ -70,4 +70,10 @@ specified as character strings.
 identical(prior1, prior2)
 identical(prior1, prior3)
 identical(prior2, prior3)
+
+# Define a prior for an entire class of parameters
+prior(beta(5, 25), class = "slip")
+
+# Or for a specific item (e.g., just the slipping parameter for item 7)
+prior(beta(5, 25), class = "slip", coef = "slip[7]")
 }
