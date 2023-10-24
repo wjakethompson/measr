@@ -2,7 +2,7 @@
 title: "Estimating diagnostic classification models"
 output: rmarkdown::html_vignette
 bibliography: bib/references.bib
-csl: bib/apa.csl
+csl: ../bib/apa.csl
 link-citations: true
 vignette: >
   %\VignetteIndexEntry{Estimating diagnostic classification models}
