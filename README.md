@@ -73,7 +73,13 @@ type of model to estimates (see `?measr_dcm()`).
 To demonstrate measr’s functionality, example data sets are included.
 Here we use the Examination of Certificate of Proficiency in English
 (ECPE; [Templin & Hoffman, 2013](https://doi.org/10.1111/emip.12010))
-data (see `?ecpe` for details).
+data (see `?ecpe` for details). Note that by default, measr uses a full
+Markov chain Monte Carlo (MCMC) estimation with Stan, which can be time
+and computationally intensive. For a quicker estimation, we can use
+Stan’s optimizer instead of MCMC by adding `method = "optim"` to the
+function call. However, please not that some functionality will be lost
+when using the optimizer (e.g., the calculation of relative fit criteria
+requires the use of MCMC).
 
 ``` r
 library(measr)
