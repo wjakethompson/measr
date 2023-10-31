@@ -4,6 +4,9 @@
     <loc>https://measr.info/dev/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
+    <loc>https://measr.info/dev/CONTRIBUTING.html</loc>
+  </url>
+  <url>
     <loc>https://measr.info/dev/LICENSE.html</loc>
   </url>
   <url>
@@ -16,7 +19,7 @@
     <loc>https://measr.info/dev/articles/model-estimation.html</loc>
   </url>
   <url>
-    <loc>https://measr.info/dev/articles/model-evaluation.html</loc>
+    <loc>https://measr.info/dev/articles/paper.html</loc>
   </url>
   <url>
     <loc>https://measr.info/dev/authors.html</loc>

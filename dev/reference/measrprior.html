@@ -27,15 +27,14 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/paper.html">measr: Bayesian psychometric measurement using Stan</a>
     <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
-    <a class="dropdown-item" href="../articles/model-evaluation.html">Evaluating diagnostic classification models</a>
   </div>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-news">
     <h6 class="dropdown-header" data-toc-skip>Releases</h6>
-    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-06-measr-0.3.1/">Version 0.3.1</a>
     <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/">Version 0.2.1</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../news/index.html">Changelog</a>
@@ -160,6 +159,20 @@ specified as character strings.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">prior2</span>, <span class="va">prior3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Define a prior for an entire class of parameters</span></span></span>
+<span class="r-in"><span><span class="fu">prior</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Special.html" class="external-link">beta</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">25</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"slip"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   class coef  prior_def  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> slip  <span style="color: #BB0000;">NA</span>    beta(5, 25)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Or for a specific item (e.g., just the slipping parameter for item 7)</span></span></span>
+<span class="r-in"><span><span class="fu">prior</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Special.html" class="external-link">beta</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">25</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"slip"</span>, coef <span class="op">=</span> <span class="st">"slip[7]"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   class coef    prior_def  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> slip  slip[7] beta(5, 25)</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -171,7 +184,7 @@ specified as character strings.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the the Institute or the U.S. Department of Education.</p>
+  <p></p><p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the Institute or the U.S. Department of Education.</p>
 </div>
 
     </footer></div>
