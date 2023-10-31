@@ -74,4 +74,6 @@ test_that("reliability can be added to model object", {
                              agreement = "bs"),
                dplyr::select(dina_mod$reliability$eap_reliability,
                              "attribute", informational = "rho_i", "rho_bs"))
+
+  expect_identical(dina_mod$reliability, reliability(dina_mod))
 })

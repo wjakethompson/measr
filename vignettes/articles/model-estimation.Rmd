@@ -38,25 +38,25 @@ We start with the data to analyze, understand how to specify a DCM to estimate, 
 
 To use the code in this article, you will need to install and load the measr package.
 
-```{r}
+```{r load-measr}
 library(measr)
 ```
 
-## Examination for the Certificate of Proficiency in English Data
+## Example Data
 
-To demonstrate how measr works, we will examine data from the grammar section of the Examination for the Certificate of Proficiency in English (ECPE).
-This section of the ECPE consists of 28 item multiple-choice items that together measure three attributes: morphosyntactic rules, cohesive rules, and lexical rules.
-In total, data is available for 2,922 respondents.
-This data set has been widely studied in the DCM literature [e.g., @chen2018; @liu2019; @hdcm].
-Additionally, parameter estimates from other software (Mplus) are readily available from @templin2013a, so we can compare the parameter estimates from measr to estimates derived from other software.
+To demonstrate the model estimation functionality of measr, we'll examine a simulated data set.
+This data set contains 2,000 respondents and 20 items that measure a total of 4 attributes, but no item measures more than 2 attributes.
+The data was generated from the loglinear cognitive diagnostic model (LCDM), which is a general model that subsumes many other DCM subtypes [@lcdm].
+By using a simulated data set, we can compare the parameter estimates from measr to the true data generating parameters.
 
-The ECPE data is included within the measr package.
-For additional information on these data, see `?ecpe_data`.
+```{r explore-data}
+library(tidyverse)
 
-```{r}
-ecpe_data
+sim_data <- read_rds("data/simulated-data.rds")
 
-ecpe_qmatrix
+sim_data$data
+
+sim_data$q_matrix
 ```
 
 ## Specifying a DCM for Estimation
@@ -86,34 +86,34 @@ If a file is specified, an R object of the fitted model will be automatically sa
 If the specified `file` already exists, then the fitted model will be read back into R, eliminating the need to re-estimate the model.
 
 ```{r}
-ecpe <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
-                  resp_id = "resp_id", item_id = "item_id", type = "lcdm",
-                  method = "mcmc", backend = "cmdstanr",
-                  chains = 4, iter_warmup = 1000, iter_sampling = 500,
-                  parallel_chains = 4,
-                  file = "fits/ecpe-lcdm")
+lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
+                  resp_id = "resp_id", item_id = "item_id",
+                  type = "lcdm", method = "mcmc", backend = "cmdstanr",
+                  iter_warmup = 1000, iter_sampling = 500,
+                  chains = 4, parallel_chains = 4,
+                  file = "fits/sim-lcdm")
 ```
 
 ### Examining Parameter Estimates
 
-Now that we've estimated a model, let's compare our parameter estimates to those reported for the ECPE data by @templin2013a.
+Now that we've estimated a model, let's compare our parameter estimates to the true values used to generate the data.
 We can start be looking at our estimates using `measr_extract()`.
 This function extracts different aspects of a model estimated with measr.
 Here, the `estimate` column reports estimated value for each parameter and a measure of the associated error (i.e., the standard deviation of the posterior distribution).
-For example, item E1 has four parameters, as it measures two attributes:
+For example, item A1 measures two attributes and therefore has four parameters:
 
-1. An intercept, which represents the log-odds of providing a correct response for a respondent who is proficient in neither of the attributes this item measures (i.e., morphosyntactic rules and cohesive rules).
-2. A main effect for morphosyntactic rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
-3. A main effect for cohesive rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
-4. An interaction between morphosyntactic and cohesive rules, which is the change in the log-odds for a respondent who is proficient in both attributes.
+1. An intercept, which represents the log-odds of providing a correct response for a respondent who is proficient in neither of the attributes this item measures (i.e., `att2` and `att4`).
+2. A main effect for the second attribute, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+3. A main effect for the fourth attribute, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+4. An interaction between the second and fourth attributes, which is the change in the log-odds for a respondent who is proficient in both attributes.
 
-```{r}
-item_parameters <- measr_extract(ecpe, what = "item_param")
+```{r item-params}
+item_parameters <- measr_extract(lcdm, what = "item_param")
 item_parameters
 ```
 
-We can compare these estimates to those that @templin2013a reported when using different software to estimate the same model.
-In the figure below, most parameters fall on or very close to the dashed line, which represents perfect agreement.
+We can compare these estimates to those that were used to generate the data.
+In the figure below, most parameters fall on or very close to the dashed line, which represents perfect agreement, indicating that the estimated model is accurately estimating the parameter values.
 
 ```{r lcdm-param-compare, echo = FALSE}
 #| fig.asp: 0.618
@@ -124,16 +124,10 @@ In the figure below, most parameters fall on or very close to the dashed line, w
 library(tidyverse)
 library(glue)
 
-ecpe_templin <- read_csv("data/mplus-estimates-templin.csv",
-                         col_types = cols(.default = col_double()))
-
 param_compare <- item_parameters %>%
-  full_join(ecpe_templin %>%
-              pivot_longer(-item) %>%
-              mutate(param = glue("l{item}_{name}")) %>%
-              select(param, mplus_est = value) %>%
-              drop_na(everything()),
-            by = c("coef" = "param")) %>%
+  left_join(sim_data$true_items,
+            by = c("item_id", "class", "attributes", "coef"),
+            relationship = "one-to-one") %>%
   mutate(measr_est = map_dbl(estimate, mean),
          type = case_when(str_detect(coef, "_0") ~ "Intercept",
                           str_detect(coef, "_1") ~ "Main Effect",
@@ -141,44 +135,49 @@ param_compare <- item_parameters %>%
          type = factor(type, levels = c("Intercept", "Main Effect",
                                         "Interaction")))
 
-example_item <- filter(param_compare, item_id == "E7")
+example_item <- filter(param_compare, item_id == "A15")
 example_measr <- deframe(select(example_item, attributes, measr_est))
-example_mplus <- deframe(select(example_item, attributes, mplus_est))
+example_true <- deframe(select(example_item, attributes, value))
 
 msr_colors <- c("#8ECAE6", "#023047", "#D7263D")
 
 param_compare %>%
-  ggplot(aes(x = measr_est, y = mplus_est)) +
+  ggplot(aes(x = measr_est, y = value)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
   geom_point(aes(color = type, shape = type), size = 3) +
   scale_color_manual(values = msr_colors) +
-  labs(x = "measr", y = "Templin et al. (2013)",
+  labs(x = "measr", y = "True Value",
        color = "Parameter Type", shape = "Parameter Type")
 ```
 
-There are some parameters that deviate from the line of perfect agreement, but these are expected.
-For example, take item E7, which measures morphosyntactic and lexical rules.
-Both measr and @templin2013a report values of approximately `r round(mean(c(example_measr[1], example_mplus[1])), 2)` for the intercept and `r round(mean(c(example_measr["lexical"], example_mplus["lexical"])), 2)` for the main effect of lexical rules.
-For the main effect of morphosyntactic rules, measr estimated a value of `r round(example_measr["morphosyntactic"], 2)`, compared to a value of `r round(example_mplus["morphosyntactic"], 2)` reported by @templin2013a, a difference of `r round(example_measr["morphosyntactic"] - example_mplus["morphosyntactic"], 2)`.
-Similarly, the interaction term estimated by measr is `r round(example_measr["morphosyntactic__lexical"], 2)`, compared to a value of `r round(example_mplus["morphosyntactic__lexical"], 2)` reported by @templin2013a, a difference of `r round(example_measr["morphosyntactic__lexical"] - example_mplus["morphosyntactic__lexical"], 2)`.
-This indicates that the log-odds of providing a correct response for an individual who has mastered both attributes is approximately the same, regardless of software.
-That is, for measr, we get a log-odds of `` `r knitr::combine_words(round(c(example_measr, sum(example_measr)), 2), sep = " + ", and = " = ", oxford_comma = FALSE)` ``, and from @templin2013a, we get a log-odds of `` `r knitr::combine_words(round(c(example_mplus, sum(example_mplus)), 2), sep = " + ", and = " = ", oxford_comma = FALSE)` ``.
-This is true for all of the differences in the figure.
-There is a change to the main effect for morphosyntactic rules and corresponding change to the interaction term that "cancels out" the difference.
+We can also examine the structural parameters, which represent the overall proportion of respondents in each class.
+Again, we see relatively strong agreement between the estimates from our model and the true generating values.
 
-So why is this happening? Let's look at the proportion of respondents in each class.
-There are very few respondents who are proficient in morphosyntactic rules without also being proficient in the other attributes (classes 2, 5, and 6; less than 4% of all respondents).
-Therefore, there is less information for estimating the morphosyntactic main effects, which for items that measure multiple attributes, represent the increase in log-odds for proficiency in morphosyntactic rules *conditional on not being proficient* on the other attribute.
+```{r lcdm-strc-compare, echo = FALSE}
+#| fig.asp: 0.618
+#| fig.alt: >
+#|   Figure shows a strong correlation between item parameters, with only a few
+#|   discrepancies off of the line of perfect agreement.
 
-```{r}
-measr_extract(ecpe, "strc_param")
+true_strc <- create_profiles(4) %>%
+  rowwise() %>%
+  mutate(label = glue("[{att1},{att2},{att3},{att4}]")) %>%
+  ungroup() %>%
+  select(label) %>%
+  mutate(value = sim_data$true_strc)
+
+strc_compare <- measr_extract(lcdm, "strc_param") %>%
+  left_join(true_strc, join_by(class == label),
+            relationship = "one-to-one") %>%
+  mutate(measr_est = map_dbl(estimate, mean))
+
+strc_compare %>%
+  ggplot(aes(x = measr_est, y = value)) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  geom_point(size = 3, color = msr_colors[2]) +
+  expand_limits(x = c(0, 0.1), y = c(0, 0.1)) +
+  labs(x = "measr", y = "True Value")
 ```
-
-This means that the prior will have more influence on these parameters.
-Note in the above figure that the main effect estimates that are off the diagonal are less extreme when using measr.
-For example, the triangle at the top right is a main effect that is nearly 3 as reported by @templin2013a, but is just over 1.5 when using with measr.
-Thus, there is a regularizing effect, where the prior is pulling in extreme values, which is an intended outcome.
-Prior distributions for measr are discussed more in the following section.
 
 ## Customizing the Model Estimation Process
 
@@ -201,14 +200,14 @@ prior(normal(0, 10), class = "maineffect")
 
 By default, the prior is applied to all parameters in the class (i.e., all main effects).
 However, we can also apply a prior to a specific parameter.
-For example, here we specify a $\chi^2$ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 (morphosyntactic rules) on item 7.
+For example, here we specify a $\chi^2$ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 on just item 7.
 To see all parameters (including `class` and `coef`) that can be specified, we can use `get_parameters()`.
 
 ```{r multi-prior}
 c(prior(chi_square(2), class = "maineffect"),
   prior(exponential(2), class = "maineffect", coef = "l7_11"))
 
-get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
+get_parameters(sim_data$q_matrix, item_id = "item_id", type = "lcdm")
 ```
 
 Any distribution that is supported by the *Stan* language can be used as a prior.
@@ -224,20 +223,18 @@ Note that the prior still influences the model when using `method = "optim"`, ju
 
 ```{r new-prior}
 new_prior <- prior(normal(0, 15), class = "maineffect", lb = 0)
-new_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+new_lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
                       resp_id = "resp_id", item_id = "item_id",
-                      type = "lcdm", backend = "cmdstanr",
-                      method = "optim",
+                      type = "lcdm", method = "optim", backend = "cmdstanr",
                       prior = new_prior,
-                      file = "fits/ecpe-optim-lcdm")
+                      file = "fits/sim-lcdm-optim")
 
-new_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+new_lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
                       resp_id = "resp_id", item_id = "item_id",
-                      type = "lcdm", backend = "cmdstanr",
-                      method = "optim",
+                      type = "lcdm", method = "optim", backend = "cmdstanr",
                       prior = c(prior(normal(0, 15), class = "maineffect",
                                       lb = 0)),
-                      file = "fits/ecpe-optim-lcdm")
+                      file = "fits/sim-lcdm-optim")
 ```
 
 The priors used to estimate the model are saved in the returned model object, so we can always go back and see which priors were used if we are unsure.

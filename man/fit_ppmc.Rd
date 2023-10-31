@@ -10,7 +10,8 @@ fit_ppmc(
   probs = c(0.025, 0.975),
   return_draws = 0,
   model_fit = c("raw_score"),
-  item_fit = c("conditional_prob", "odds_ratio")
+  item_fit = c("conditional_prob", "odds_ratio"),
+  force = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,9 @@ evaluation of item-level fit. If \code{NULL}, no item-level checks are computed.
 Multiple checks can be provided in order to calculate more than one check
 simultaneously (e.g., \code{item_fit = c("conditional_prob", "odds_ratio")}).
 See details.}
+
+\item{force}{If all requested PPMCs have already been added to the model
+object using \code{\link[=add_fit]{add_fit()}}, should they be recalculated. Default is \code{FALSE}.}
 }
 \value{
 A list with two elements, "model_fit" and "item_fit". If either

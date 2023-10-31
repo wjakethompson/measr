@@ -4,12 +4,15 @@
 \alias{waic.measrfit}
 \title{Widely applicable information criterion (WAIC)}
 \usage{
-\method{waic}{measrfit}(x, ...)
+\method{waic}{measrfit}(x, ..., force = FALSE)
 }
 \arguments{
 \item{x}{A \link{measrfit} object.}
 
 \item{...}{Additional arguments passed to \code{\link[loo:waic]{loo::waic.array()}}.}
+
+\item{force}{If the WAIC criterion has already been added to the model object
+with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is \code{FALSE}.}
 }
 \value{
 The object returned by \code{\link[loo:waic]{loo::waic.array()}}.

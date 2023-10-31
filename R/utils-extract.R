@@ -82,7 +82,8 @@ dcm_extract_item_param <- function(model) {
     dplyr::select(item = "item_id") %>%
     dplyr::mutate(item_id = as.integer(.data$item))
   params <- get_parameters(dplyr::select(model$data$qmatrix, -"item_id"),
-                           type = model$type) %>%
+                           type = model$type,
+                           rename_item = TRUE) %>%
     dplyr::filter(.data$class != "structural") %>%
     dplyr::left_join(items, by = "item_id", multiple = "all") %>%
     dplyr::select("item", dplyr::everything(), -"item_id")

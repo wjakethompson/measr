@@ -120,5 +120,7 @@ articles:
 
 news:
   releases:
+  - text: "Version 0.3.1"
+    href: https://www.wjakethompson.com/blog/measr/2023-06-measr-0.3.1/
   - text: "Version 0.2.1"
     href: https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/
