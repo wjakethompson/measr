@@ -33,12 +33,14 @@ vignettes for details."><meta property="og:image" content="https://measr.info/re
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/paper.html">measr: Bayesian psychometric measurement using Stan</a>
     <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+    <a class="dropdown-item" href="../articles/model-evaluation.html">Evaluating diagnostic classification models</a>
   </div>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-news">
     <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-06-measr-0.3.1/">Version 0.3.1</a>
     <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/">Version 0.2.1</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../news/index.html">Changelog</a>
@@ -74,7 +76,7 @@ simple wrapper around <code><a href="https://mc-stan.org/loo/reference/waic.html
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for measrfit</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/loo/reference/waic.html" class="external-link">waic</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://mc-stan.org/loo/reference/waic.html" class="external-link">waic</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,6 +87,11 @@ simple wrapper around <code><a href="https://mc-stan.org/loo/reference/waic.html
 
 <dt>...</dt>
 <dd><p>Additional arguments passed to <code><a href="https://mc-stan.org/loo/reference/waic.html" class="external-link">loo::waic.array()</a></code>.</p></dd>
+
+
+<dt>force</dt>
+<dd><p>If the WAIC criterion has already been added to the model object
+with <code><a href="model_evaluation.html">add_criterion()</a></code>, should it be recalculated. Default is <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

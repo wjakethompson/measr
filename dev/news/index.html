@@ -29,12 +29,14 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/paper.html">measr: Bayesian psychometric measurement using Stan</a>
     <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+    <a class="dropdown-item" href="../articles/model-evaluation.html">Evaluating diagnostic classification models</a>
   </div>
 </li>
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-news">
     <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-06-measr-0.3.1/">Version 0.3.1</a>
     <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/">Version 0.2.1</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../news/index.html">Changelog</a>
@@ -62,7 +64,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="measr-development-version">measr (development version)<a class="anchor" aria-label="anchor" href="#measr-development-version"></a></h2>
-<ul><li>Fixed bug in the LCDM specification of constraints for level-3 and above interaction terms.</li>
+<ul><li><p>Fixed bug in the LCDM specification of constraints for level-3 and above interaction terms.</p></li>
+<li><p>Functions for evaluating estimated models (e.g., <code><a href="../reference/fit_ppmc.html">fit_ppmc()</a></code>, <code><a href="../reference/reliability.html">reliability()</a></code>) no longer recalculate indices if they have previously been saved to the model object. This behavior can be overwritten with <code>force = TRUE</code>.</p></li>
+<li><p>Updated <em>Stan</em> syntax to be compatible with the new array syntax (<a href="https://github.com/andrjohns" class="external-link">@andrjohns</a>, <a href="https://github.com/wjakethompson/measr/issues/36" class="external-link">#36</a>)</p></li>
+<li><p><code><a href="../reference/get_parameters.html">get_parameters()</a></code> now preserves item identifiers by default. Items can be renamed with numbers (e.g., 1, 2, 3, …) by setting <code>rename_item = TRUE</code>.</p></li>
+<li>
+<p>Updates to documentation</p>
+<ul><li>A new article on model evaluation has been added.</li>
+<li>The model estimation article has been updated to use the same data set as the model evaluation article.</li>
+<li>More detailed installation instructions have been added to the getting started vignette (<a href="https://github.com/wjakethompson/measr/issues/23" class="external-link">#23</a>).</li>
+</ul></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="measr-031">measr 0.3.1<a class="anchor" aria-label="anchor" href="#measr-031"></a></h2><p class="text-muted">CRAN release: 2023-05-27</p>
