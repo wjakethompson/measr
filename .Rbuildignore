@@ -13,3 +13,4 @@
 ^vignettes/articles$
 ^CRAN-SUBMISSION$
 ^revdep$
+^CITATION\.cff$
