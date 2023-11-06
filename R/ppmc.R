@@ -93,14 +93,14 @@
 #'
 #' @export
 #' @examplesIf measr_examples()
-#' cmds_mdm_dina <- measr_dcm(
+#' mdm_dina <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "dina",
 #'   method = "mcmc", seed = 63277, backend = "rstan",
 #'   iter = 700, warmup = 500, chains = 2, refresh = 0
 #' )
 #'
-#' fit_ppmc(cmds_mdm_dina, model_fit = "raw_score", item_fit = NULL)
+#' fit_ppmc(mdm_dina, model_fit = "raw_score", item_fit = NULL)
 fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                      return_draws = 0,
                      model_fit = c("raw_score"),
