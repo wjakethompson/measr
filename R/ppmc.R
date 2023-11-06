@@ -92,7 +92,7 @@
 #'   \doi{10.35542/osf.io/jzqs8}
 #'
 #' @export
-#' @examplesIf interactive()
+#' @examplesIf measr_examples()
 #' cmds_mdm_dina <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "dina",

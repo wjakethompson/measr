@@ -19,7 +19,8 @@ knitr::opts_chunk$set(
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R package version](https://www.r-pkg.org/badges/version/measr)](https://cran.r-project.org/package=measr)
-[![Package downloads](https://cranlogs.r-pkg.org/badges/grand-total/measr)](https://cran.r-project.org/package=measr)</br>
+[![Package downloads](https://cranlogs.r-pkg.org/badges/grand-total/measr)](https://cran.r-project.org/package=measr)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.05742/status.svg)](https://doi.org/10.21105/joss.05742)</br>
 [![R-CMD-check](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/wjakethompson/measr/branch/main/graph/badge.svg?token=JtF3xtGt6g)](https://app.codecov.io/gh/wjakethompson/measr)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/b82caf01-0611-4f8b-bbca-5b89b5a80791/deploy-status)](https://app.netlify.com/sites/measr/deploys)</br>
@@ -62,6 +63,9 @@ Other arguments can be specified to customize the type of model to estimates (se
 
 To demonstrate measr's functionality, example data sets are included.
 Here we use the Examination of Certificate of Proficiency in English (ECPE; [Templin & Hoffman, 2013](https://doi.org/10.1111/emip.12010)) data (see `?ecpe` for details).
+Note that by default, measr uses a full Markov chain Monte Carlo (MCMC) estimation with Stan, which can be time and computationally intensive.
+For a quicker estimation, we can use Stan's optimizer instead of MCMC by adding `method = "optim"` to the function call.
+However, please not that some functionality will be lost when using the optimizer (e.g., the calculation of relative fit criteria requires the use of MCMC).
 
 ```{r est-model, eval = FALSE}
 library(measr)
@@ -89,4 +93,6 @@ measr_extract(model, "m2")
 
 ---
 
+Contributions are welcome.
+To ensure a smooth process, please review the [Contributing Guide](https://measr.info/CONTRIBUTING.html).
 Please note that the measr project is released with a [Contributor Code of Conduct](https://measr.info/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
