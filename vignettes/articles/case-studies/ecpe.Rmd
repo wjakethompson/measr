@@ -71,8 +71,8 @@ For a quick summary of the data, we can calculate the proportion of respondents 
 ```{r pvalues}
 library(tidyverse)
 
-ecpe_data %>% 
-  summarize(across(-resp_id, mean)) %>% 
+ecpe_data %>%
+  summarize(across(-resp_id, mean)) %>%
   pivot_longer(everything(), names_to = "item_id", values_to = "pvalue")
 ```
 
@@ -83,17 +83,17 @@ Note that in general, items measuring morphosyntactic rules tend to be the most 
 <details><summary>Plot code</summary>
 
 ```{r pvalue-plot, eval = FALSE}
-ecpe_data %>% 
-  summarize(across(-resp_id, mean)) %>% 
-  pivot_longer(everything(), names_to = "item_id", values_to = "pvalue") %>% 
-  left_join(ecpe_qmatrix, join_by(item_id)) %>% 
+ecpe_data %>%
+  summarize(across(-resp_id, mean)) %>%
+  pivot_longer(everything(), names_to = "item_id", values_to = "pvalue") %>%
+  left_join(ecpe_qmatrix, join_by(item_id)) %>%
   pivot_longer(c(morphosyntactic, cohesive, lexical),
                names_to = "attribute",
-               values_to = "measured") %>% 
-  filter(measured == 1) %>% 
+               values_to = "measured") %>%
+  filter(measured == 1) %>%
   summarize(measures = paste(str_to_title(attribute), collapse = "/<br>"),
-            .by = c(item_id, pvalue)) %>% 
-  mutate(measures = fct_reorder(measures, pvalue, mean)) %>% 
+            .by = c(item_id, pvalue)) %>%
+  mutate(measures = fct_reorder(measures, pvalue, mean)) %>%
   ggplot(aes(x = pvalue, y = measures)) +
   geom_jitter(aes(color = measures),
               position = position_jitter(height = 0.2, width = 0),
@@ -130,7 +130,7 @@ For this example, we specified 4 chains, each with 1,000 warmup iterations and 5
 This results in a total posterior distribution of 2,000 samples for each parameter (i.e., 500 iterations from each of the 4 chains).
 We also specified a file so that the estimated model will be saved once it is estimated.
 
-```{r}
+```{r estimate-lcdm}
 ecpe_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
                        resp_id = "resp_id", item_id = "item_id",
                        type = "lcdm", method = "mcmc", backend = "rstan",
@@ -151,7 +151,7 @@ For example, item E1 has four parameters, as it measures two attributes:
 3. A main effect for cohesive rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
 4. An interaction between morphosyntactic and cohesive rules, which is the change in the log-odds for a respondent who is proficient in both attributes.
 
-```{r}
+```{r extract-items}
 item_parameters <- measr_extract(ecpe_lcdm, what = "item_param")
 item_parameters
 ```
@@ -220,7 +220,7 @@ This is true for all of the differences in the figure.
 There is a change to the main effect for morphosyntactic rules and corresponding change to the interaction term that "cancels out" the difference.
 
 ```{r class-exam, echo = FALSE}
-bad_class <- measr_extract(ecpe_lcdm, "strc_param") %>% 
+bad_class <- measr_extract(ecpe_lcdm, "strc_param") %>%
   slice(2, 5, 6)
 ```
 
@@ -228,7 +228,7 @@ Why is this happening? Let's look at the proportion of respondents in each class
 There are very few respondents who are proficient in morphosyntactic rules without also being proficient in both of the other attributes (classes 2, 5, and 6; less than `r ceiling(sum(mean(bad_class$estimate)) * 100)`% of all respondents).
 Therefore, there is less information for estimating the morphosyntactic main effects, which for items that measure multiple attributes, represent the increase in log-odds for proficiency in morphosyntactic rules *conditional on not being proficient* on the other attribute.
 
-```{r}
+```{r extract-structural}
 measr_extract(ecpe_lcdm, "strc_param")
 ```
 
@@ -246,11 +246,45 @@ In this case study, we'll focus on two: absolute model fit and classification re
 
 ### Absolute Model Fit
 
-Something...
+```{r calc-mod-fit, echo = FALSE}
+ecpe_lcdm <- add_fit(ecpe_lcdm, method = c("m2", "ppmc"), item_fit = NULL,
+                     return_draws = 1)
+```
+
+One of the most common measures of model fit for DCMs is the M<sub>2</sub> statistic.
+This index is a limited information goodness-of-fit measure originally described by Maydeu-Olivares & Joe [-@m2-2005; -@m2-2006] and adapted for DCMs by @liu2016.
+We can calculate the M<sub>2</sub> for a model estimated with measr with `fit_m2()`.
+In addition to the calculated M<sub>2</sub> statistic, `fit_m2()` also returns the root mean square error of approximation (RMSEA) with an associated confidence interval and the standardized root mean square residual (SRMSR).
+
+```{r ecpe-m2}
+fit_m2(ecpe_lcdm)
+```
+
+For our estimated LCDM, we see an M<sub>2</sub> value of `r fmt_digits(ecpe_lcdm$fit$m2$m2, digits = 1)`, which has a corresponding *p*-value of `r ifelse(ecpe_lcdm$fit$m2$pval < .01, "<.01", fmt_digits(ecpe_lcdm$fit$m2$pval, digits = 2))`.
+When interpreting the M<sub>2</sub> and its *p*-value, the null hypothesis is that the model fits.
+Thus, the *p*-value represents the probability of observing an M<sub>2</sub> value this large if the model fits.
+For our estimated LCDM, the *p*-value is extremely small, indicating that our model has poor fit.
+
+As described in the [model evaluation vignette](../model-evaluation.html), a fully Bayesian estimation allows us to evaluate model fit using posterior predictive model checks (PPMCs).
+Specifically, measr supports a PPMC of the overall raw score distribution as described by @park2015 and @thompson2019.
+
+```{r ecpe-ppmc-raw-score}
+fit_ppmc(ecpe_lcdm, model_fit = "raw_score", item_fit = NULL, return_draws = 1)
+```
+
+
 
 ### Classification Reliability
 
+```{r calc-reli, echo = FALSE}
+ecpe_lcdm <- add_reliability(ecpe_lcdm)
+```
+
 Something...
+
+```{r}
+reliability(ecpe_lcdm)
+```
 
 
 ## References
