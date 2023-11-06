@@ -1,0 +1,11 @@
+bibentry(
+  "Article",
+  title = "{measr}: {Bayesian} psychometric measurement using {Stan}",
+  author = "W. Jake Thompson",
+  year = 2023,
+  journal = "Journal of Open Source Software",
+  volume = 8,
+  number = 91,
+  pages = 5742,
+  doi = "10.21105/joss.05742"
+)

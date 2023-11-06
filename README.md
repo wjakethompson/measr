@@ -12,7 +12,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![R package
 version](https://www.r-pkg.org/badges/version/measr)](https://cran.r-project.org/package=measr)
 [![Package
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/measr)](https://cran.r-project.org/package=measr)</br>
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/measr)](https://cran.r-project.org/package=measr)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.05742/status.svg)](https://doi.org/10.21105/joss.05742)</br>
 [![R-CMD-check](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wjakethompson/measr/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/wjakethompson/measr/branch/main/graph/badge.svg?token=JtF3xtGt6g)](https://app.codecov.io/gh/wjakethompson/measr)
 [![Netlify
@@ -73,7 +74,13 @@ type of model to estimates (see `?measr_dcm()`).
 To demonstrate measr’s functionality, example data sets are included.
 Here we use the Examination of Certificate of Proficiency in English
 (ECPE; [Templin & Hoffman, 2013](https://doi.org/10.1111/emip.12010))
-data (see `?ecpe` for details).
+data (see `?ecpe` for details). Note that by default, measr uses a full
+Markov chain Monte Carlo (MCMC) estimation with Stan, which can be time
+and computationally intensive. For a quicker estimation, we can use
+Stan’s optimizer instead of MCMC by adding `method = "optim"` to the
+function call. However, please not that some functionality will be lost
+when using the optimizer (e.g., the calculation of relative fit criteria
+requires the use of MCMC).
 
 ``` r
 library(measr)
@@ -102,6 +109,8 @@ measr_extract(model, "m2")
 
 ------------------------------------------------------------------------
 
-Please note that the measr project is released with a [Contributor Code
-of Conduct](https://measr.info/CODE_OF_CONDUCT.html). By contributing to
+Contributions are welcome. To ensure a smooth process, please review the
+[Contributing Guide](https://measr.info/CONTRIBUTING.html). Please note
+that the measr project is released with a [Contributor Code of
+Conduct](https://measr.info/CODE_OF_CONDUCT.html). By contributing to
 this project, you agree to abide by its terms.
