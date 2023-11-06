@@ -19,7 +19,7 @@ affiliations:
     index: 1
   - name: University of Kansas
     index: 2
-date: 14 July 2023
+date: 6 November 2023
 bibliography: paper.bib
 vignette: >
   %\VignetteEncoding{UTF-8}
