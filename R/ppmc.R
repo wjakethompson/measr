@@ -283,7 +283,11 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
   if (return_draws > 0) {
     raw_score_res <- raw_score_res %>%
       dplyr::mutate(
-        samples = list(chisq_ppmc %>%
+        rawscore_samples = list(raw_score_post %>%
+                                  tidyr::nest(raw_scores = -".draw") %>%
+                                  dplyr::slice_sample(prop = return_draws) %>%
+                                  dplyr::select(-".draw")),
+        chisq_samples = list(chisq_ppmc %>%
                          dplyr::slice_sample(prop = return_draws) %>%
                          dplyr::pull("chisq")),
         .before = "ppp")

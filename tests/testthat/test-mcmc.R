@@ -159,8 +159,10 @@ test_that("ppmc works", {
   expect_s3_class(test_ppmc$model_fit$raw_score, "tbl_df")
   expect_equal(nrow(test_ppmc$model_fit$raw_score), 1L)
   expect_equal(colnames(test_ppmc$model_fit$raw_score),
-               c("obs_chisq", "ppmc_mean", "2.5%", "97.5%", "samples", "ppp"))
-  expect_equal(length(test_ppmc$model_fit$raw_score$samples[[1]]), 100)
+               c("obs_chisq", "ppmc_mean", "2.5%", "97.5%", "rawscore_samples",
+                 "chisq_samples", "ppp"))
+  expect_equal(nrow(test_ppmc$model_fit$raw_score$rawscore_samples[[1]]), 100)
+  expect_equal(length(test_ppmc$model_fit$raw_score$chisq_samples[[1]]), 100)
 
   expect_equal(names(test_ppmc$item_fit), "conditional_prob")
   expect_s3_class(test_ppmc$item_fit$conditional_prob, "tbl_df")
