@@ -117,6 +117,7 @@ articles:
   contents:
   - paper
   - articles/model-estimation
+  - articles/model-evaluation
 
 news:
   releases:
