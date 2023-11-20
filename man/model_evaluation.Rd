@@ -70,6 +70,11 @@ object.}
 
 \item{ci}{The confidence interval for the RMSEA, computed from the M2}
 
+\item{summary}{Logical. For respondent estimates, should posteriors be
+summarized (i.e., mean and quantiles defined by \code{probs}). If \code{FALSE}
+(the default), the full posterior distribution is returned for each
+estimate.}
+
 \item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
 function to summarize the posterior distributions of each person parameter.
 Only relevant if \code{method = "mcmc"} was used to estimate the model.}

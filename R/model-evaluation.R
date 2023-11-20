@@ -13,6 +13,10 @@
 #'   object.
 #' @param method A vector of model fit methods to evaluate and add to the model
 #'   object.
+#' @param summary Logical. For respondent estimates, should posteriors be
+#'   summarized (i.e., mean and quantiles defined by `probs`). If `FALSE`
+#'   (the default), the full posterior distribution is returned for each
+#'   estimate.
 #' @param probs The percentiles to be computed by the `[stats::quantile()]`
 #'   function to summarize the posterior distributions of each person parameter.
 #'   Only relevant if `method = "mcmc"` was used to estimate the model.
