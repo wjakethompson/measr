@@ -13,6 +13,10 @@
   * The model estimation article has been updated to use the same data set as the model evaluation article.
   * More detailed installation instructions have been added to the getting started vignette (#23).
 
+* measr now reexports functions from [posterior](https://mc-stan.org/posterior/) for conducting mathematical operations on `posterior::rvar()` objects.
+
+* Respondent estimates are now returned as `posterior::rvar()` objects when not summarized.
+
 # measr 0.3.1
 
 * Added a `NEWS.md` file to track changes to the package.
