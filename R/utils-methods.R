@@ -46,13 +46,11 @@ get_optim_draws <- function(x) {
 }
 
 extract_class_probs <- function(model, attr, method) {
-  all_profiles <- profile_labels(attributes = attr)
-
   draws <- posterior::as_draws_rvars(model)
 
   mastery <- draws$prob_resp_class %>%
     tibble::as_tibble() %>%
-    dplyr::rename_with(~ all_profiles$class) %>%
+    dplyr::rename_with(~ profile_labels(attributes = attr)$class) %>%
     tibble::rowid_to_column(var = "resp_id")
 
   mastery <- mastery %>%
@@ -64,13 +62,11 @@ extract_class_probs <- function(model, attr, method) {
 }
 
 extract_attr_probs <- function(model, qmat, method) {
-  all_attributes <- colnames(qmat)
-
   draws <- posterior::as_draws_rvars(model)
 
   mastery <- draws$prob_resp_attr %>%
     tibble::as_tibble() %>%
-    dplyr::rename_with(~ all_attributes) %>%
+    dplyr::rename_with(~ colnames(qmat)) %>%
     tibble::rowid_to_column(var = "resp_id")
 
   mastery <- mastery %>%

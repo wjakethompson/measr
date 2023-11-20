@@ -57,8 +57,16 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     resp_id <- check_character(resp_id, name = "resp_id", allow_null = TRUE)
     score_data <- check_newdata(newdata, identifier = resp_id, model = model,
                                 missing = missing, name = "newdata")
+    resp_lookup <- score_data %>%
+      dplyr::rename(orig_resp = "resp_id") %>%
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+      dplyr::distinct(.data$orig_resp, .data$resp_id)
   } else {
     score_data <- model$data$data
+    resp_lookup <- model$data$data %>%
+      dplyr::rename(orig_resp = "resp_id") %>%
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+      dplyr::distinct(.data$orig_resp, .data$resp_id)
   }
 
   clean_qmatrix <- model$data$qmatrix %>%
@@ -66,11 +74,9 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
   stan_data <- create_stan_data(dat = score_data, qmat = clean_qmatrix,
                                 type = model$type)
-  stan_draws <- if (model$method == "mcmc") {
-    get_mcmc_draws(model)
-  } else if (model$method == "optim") {
-    get_optim_draws(model)
-  }
+  stan_draws <- switch(model$method,
+                       "mcmc" = get_mcmc_draws(model),
+                       "optim" = get_optim_draws(model))
 
   stan_pars <- create_stan_gqs_params(backend = model$backend,
                                       draws = stan_draws)
@@ -95,17 +101,6 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
                                    qmat = clean_qmatrix,
                                    method = model$method)
 
-  if (!is.null(newdata)) {
-    resp_lookup <- score_data %>%
-      dplyr::rename(orig_resp = "resp_id") %>%
-      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
-      dplyr::distinct(.data$orig_resp, .data$resp_id)
-  } else {
-    resp_lookup <- model$data$data %>%
-      dplyr::rename(orig_resp = "resp_id") %>%
-      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
-      dplyr::distinct(.data$orig_resp, .data$resp_id)
-  }
   attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
     dplyr::filter(.data$real_names != "item_id") %>%
     dplyr::mutate(att_id = paste0("att", seq_len(dplyr::n())))
@@ -127,7 +122,7 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
   ret_list <- list(class_probabilities = class_probs,
                    attribute_probabilities = attr_probs)
 
-  if (!summary & model$method == "optim") {
+  if (!summary && model$method == "optim") {
     ret_list <- lapply(ret_list,
                        function(.x) {
                          dplyr::mutate(
