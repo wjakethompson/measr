@@ -30,6 +30,7 @@ add_fit(
 
 add_respondent_estimates(
   x,
+  summary = FALSE,
   probs = c(0.025, 0.975),
   overwrite = FALSE,
   save = TRUE

@@ -6,13 +6,16 @@ test_that("returned predictions have correct dimensions and names", {
   expect_equal(names(mod_preds), c("class_probabilities",
                                    "attribute_probabilities"))
   expect_equal(colnames(mod_preds$class_probabilities),
-               c(".chain", ".iteration", ".draw", "resp_id",
-                 prof_labs$class))
+               c("resp_id", "class", "probability"))
   expect_equal(colnames(mod_preds$attribute_probabilities),
-               c(".chain", ".iteration", ".draw", "resp_id",
-                 paste0("att", 1:5)))
-  expect_equal(nrow(mod_preds$class_probabilities), nrow(dina_data))
-  expect_equal(nrow(mod_preds$attribute_probabilities), nrow(dina_data))
+               c("resp_id", "attribute", "probability"))
+  expect_equal(nrow(mod_preds$class_probabilities),
+               nrow(dina_data) * nrow(prof_labs))
+  expect_equal(nrow(mod_preds$attribute_probabilities),
+               nrow(dina_data) * num_att)
+  expect_true(all(mod_preds$class_probabilities$class %in% prof_labs$class))
+  expect_true(all(mod_preds$attribute_probabilities$attribute %in%
+                    paste0("att", seq_len(num_att))))
 
   mod_preds <- predict(rstn_dina, summary = TRUE)
   expect_equal(names(mod_preds), c("class_probabilities",

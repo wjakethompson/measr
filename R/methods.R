@@ -18,10 +18,13 @@
 #'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
 #' @param summary Should summary statistics be returned instead of the raw
 #'   posterior draws? Only relevant if the model was estimated with
-#'   `method = "mcmc"`. Default is `TRUE`.
+#'   `method = "mcmc"`. Default is `FALSE`.
 #' @param probs The percentiles to be computed by the `[stats::quantile()]`
 #'   function. Only relevant if the model was estimated with `method = "mcmc"`.
 #'   Only used if `summary` is `TRUE`.
+#' @param force If respondent estimates have already been added to the model
+#'   object with [add_respondent_estimates()], should they be recalculated.
+#'   Default is `FALSE`.
 #' @param ... Unused.
 #'
 #' @return A list with two elements: `class_probabilities` and
@@ -38,9 +41,15 @@
 #'   `probs`.
 #' @export
 predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
-                             missing = NA, summary = TRUE,
-                             probs = c(0.025, 0.975), ...) {
+                             missing = NA, summary = FALSE,
+                             probs = c(0.025, 0.975), force = FALSE, ...) {
   model <- check_model(object, required_class = "measrdcm", name = "object")
+
+  if ((!is.null(model$respondent_estimates) &&
+       length(model$respondent_estimates) > 0) &&
+      !force) {
+    return(model$respondent_estimates)
+  }
 
   summary <- check_logical(summary, allow_na = FALSE, name = "summary")
   probs <- check_double(probs, lb = 0, ub = 1, inclusive = TRUE, name = "probs")
@@ -80,8 +89,11 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
 
   # get mastery information -----
   class_probs <- extract_class_probs(model = gqs_model,
-                                     attr = ncol(clean_qmatrix))
-  attr_probs <- extract_attr_probs(model = gqs_model, qmat = clean_qmatrix)
+                                     attr = ncol(clean_qmatrix),
+                                     method = model$method)
+  attr_probs <- extract_attr_probs(model = gqs_model,
+                                   qmat = clean_qmatrix,
+                                   method = model$method)
 
   if (!is.null(newdata)) {
     resp_lookup <- score_data %>%
@@ -105,21 +117,29 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     dplyr::rename(!!model$data$resp_id := "resp_id")
 
   attr_probs <- attr_probs %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw",
-                                  "resp_id")) %>%
     dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
-    dplyr::left_join(attr_lookup, by = c("name" = "att_id")) %>%
+    dplyr::left_join(attr_lookup, by = c("attribute" = "att_id")) %>%
     dplyr::mutate(resp_id = .data$orig_resp) %>%
     dplyr::select(-"orig_resp") %>%
     dplyr::rename(!!model$data$resp_id := "resp_id") %>%
-    dplyr::select(".chain", ".iteration", ".draw", !!model$data$resp_id,
-                  "real_names", "value") %>%
-    tidyr::pivot_wider(names_from = "real_names", values_from = "value")
+    dplyr::select(!!model$data$resp_id, attribute = "real_names", "probability")
 
   ret_list <- list(class_probabilities = class_probs,
                    attribute_probabilities = attr_probs)
 
-  if (!summary) return(ret_list)
+  if (!summary & model$method == "optim") {
+    ret_list <- lapply(ret_list,
+                       function(.x) {
+                         dplyr::mutate(
+                           .x,
+                           dplyr::across(dplyr::where(posterior::is_rvar),
+                                         posterior::E)
+                         )
+                       })
+    return(ret_list)
+  } else if (!summary) {
+    return(ret_list)
+  }
 
   summary_list <- lapply(ret_list, summarize_probs, probs = probs,
                          id = model$data$resp_id,

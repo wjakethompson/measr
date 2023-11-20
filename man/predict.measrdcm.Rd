@@ -9,8 +9,9 @@
   newdata = NULL,
   resp_id = NULL,
   missing = NA,
-  summary = TRUE,
+  summary = FALSE,
   probs = c(0.025, 0.975),
+  force = FALSE,
   ...
 )
 }
@@ -33,11 +34,15 @@ the model is scored, the \code{resp_id} is taken from the original data.}
 
 \item{summary}{Should summary statistics be returned instead of the raw
 posterior draws? Only relevant if the model was estimated with
-\code{method = "mcmc"}. Default is \code{TRUE}.}
+\code{method = "mcmc"}. Default is \code{FALSE}.}
 
 \item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
 function. Only relevant if the model was estimated with \code{method = "mcmc"}.
 Only used if \code{summary} is \code{TRUE}.}
+
+\item{force}{If respondent estimates have already been added to the model
+object with \code{\link[=add_respondent_estimates]{add_respondent_estimates()}}, should they be recalculated.
+Default is \code{FALSE}.}
 
 \item{...}{Unused.}
 }

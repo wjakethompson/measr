@@ -1,9 +1,8 @@
 clean_predicted_probs <- function(x, resp_id) {
   x %>%
-    dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
-    dplyr::summarize(dplyr::across(dplyr::where(is.double),
-                                   \(x) mean(x, na.rm = TRUE)),
-                     .by = !!resp_id) %>%
+    tidyr::pivot_wider(names_from = 2,
+                       values_from = "probability") %>%
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E)) %>%
     dplyr::arrange(!!resp_id) %>%
     dplyr::select(-!!resp_id)
 }

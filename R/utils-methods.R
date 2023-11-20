@@ -45,71 +45,51 @@ get_optim_draws <- function(x) {
   return(final_matrix)
 }
 
-extract_class_probs <- function(model, attr) {
+extract_class_probs <- function(model, attr, method) {
   all_profiles <- profile_labels(attributes = attr)
 
-  mastery <- posterior::as_draws_df(model) %>%
+  draws <- posterior::as_draws_rvars(model)
+
+  mastery <- draws$prob_resp_class %>%
     tibble::as_tibble() %>%
-    dplyr::select(".chain", ".iteration", ".draw",
-                  dplyr::matches("prob_resp_class")) %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
-    tidyr::separate_wider_regex(
-      cols = "name",
-      patterns = c("prob_resp_class\\[", r = "\\d+", ",", c = "\\d+", "\\]")
-    ) %>%
-    dplyr::mutate(resp_id = as.integer(.data$r),
-                  class_id = as.integer(.data$c)) %>%
-    dplyr::left_join(all_profiles, by = "class_id") %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id", "class",
-                  probability = "value") %>%
-    tidyr::pivot_wider(names_from = "class", values_from = "probability") %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id",
-                  dplyr::all_of(all_profiles$class))
+    dplyr::rename_with(~ all_profiles$class) %>%
+    tibble::rowid_to_column(var = "resp_id")
+
+  mastery <- mastery %>%
+    tidyr::pivot_longer(cols = -"resp_id",
+                        names_to = "class",
+                        values_to = "probability")
 
   return(mastery)
 }
 
-extract_attr_probs <- function(model, qmat) {
+extract_attr_probs <- function(model, qmat, method) {
   all_attributes <- colnames(qmat)
 
-  mastery <- posterior::as_draws_df(model) %>%
+  draws <- posterior::as_draws_rvars(model)
+
+  mastery <- draws$prob_resp_attr %>%
     tibble::as_tibble() %>%
-    dplyr::select(".chain", ".iteration", ".draw",
-                  dplyr::matches("prob_resp_attr")) %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
-    tidyr::separate_wider_regex(
-      cols = "name",
-      patterns = c("prob_resp_attr\\[", r = "\\d+", ",", a = "\\d+", "\\]")
-    ) %>%
-    dplyr::mutate(resp_id = as.integer(.data$r),
-                  attr = paste0("att", .data$a)) %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id", "attr",
-                  probability = "value") %>%
-    tidyr::pivot_wider(names_from = "attr", values_from = "probability") %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id",
-                  dplyr::all_of(all_attributes))
+    dplyr::rename_with(~ all_attributes) %>%
+    tibble::rowid_to_column(var = "resp_id")
+
+  mastery <- mastery %>%
+    tidyr::pivot_longer(cols = -"resp_id",
+                        names_to = "attribute",
+                        values_to = "probability")
 
   return(mastery)
 }
 
 summarize_probs <- function(x, probs, id, optim) {
-  summary_names <- colnames(x)[!grepl(glue::glue("{id}|chain|iteration|draw"),
-                                      colnames(x))]
-  type <- dplyr::if_else(all(grepl("\\[[0-1,]+\\]", summary_names)),
-                         "class", "attribute")
+  type <- colnames(x)[!grepl(glue::glue("{id}|probability"), colnames(x))]
 
   sum_frame <- x %>%
-    dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
-    tidyr::pivot_longer(cols = -!!id, names_to = type, values_to = "prob") %>%
-    dplyr::summarize(probability = mean(.data$prob, na.rm = TRUE),
-                     bounds = list(
-                       tibble::as_tibble_row(
-                         stats::quantile(.data$prob, probs = probs,
-                                         na.rm = TRUE)
-                       )
-                     ),
-                     .by = c(!!id, !!type)) %>%
-    tidyr::unnest("bounds")
+    dplyr::mutate(bounds = lapply(.data$probability, posterior::rvar_quantile,
+                                  probs = probs, names = TRUE),
+                  bounds = lapply(.data$bounds, tibble::as_tibble_row)) %>%
+    tidyr::unnest("bounds") %>%
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E))
 
   if (optim) {
     sum_frame <- sum_frame %>%

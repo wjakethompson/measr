@@ -217,7 +217,8 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
 
 #' @export
 #' @rdname model_evaluation
-add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
+add_respondent_estimates <- function(x, summary = FALSE,
+                                     probs = c(0.025, 0.975),
                                      overwrite = FALSE, save = TRUE) {
   model <- check_model(x, required_class = "measrfit", name = "x")
   overwrite <- check_logical(overwrite, name = "overwrite")
@@ -227,7 +228,8 @@ add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
   run_pred <- length(model$respondent_estimates) == 0 || overwrite
 
   if (run_pred) {
-    model$respondent_estimates <- stats::predict(model, probs = probs)
+    model$respondent_estimates <- stats::predict(model, summary = summary,
+                                                 probs = probs)
   }
 
   # re-save model object (if applicable)

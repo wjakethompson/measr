@@ -202,7 +202,8 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
 
   item_level_fit <- if (!is.null(item_fit)) {
     resp_prob <- extract_class_probs(model = gqs_model,
-                                     attr = ncol(clean_qmatrix))
+                                     attr = ncol(clean_qmatrix),
+                                     method = model$method)
     pi_draws <- posterior::subset_draws(stan_draws, variable = "pi")
 
     ppmc_item_fit(model = model,
@@ -323,8 +324,14 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
   all_profiles <- profile_labels(attributes = attr)
 
   obs_class <- resp_prob %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw", "resp_id"),
-                        names_to = "class_label", values_to = "prob") %>%
+    dplyr::mutate(probability = lapply(.data$probability,
+                                       function(x) {
+                                         posterior::as_draws_df(x) %>%
+                                           tibble::as_tibble()
+                                       })) %>%
+    tidyr::unnest("probability") %>%
+    dplyr::select(".chain", ".iteration", ".draw", "resp_id",
+                  class_label = "class", prob = "x") %>%
     dplyr::mutate(max_class = .data$prob == max(.data$prob),
                   .by = c(".draw", "resp_id")) %>%
     dplyr::filter(.data$max_class) %>%
