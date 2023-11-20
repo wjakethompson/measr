@@ -63,7 +63,7 @@ Thus, with measr, users get the power of Bayesian methods for model evaluation, 
 However, models estimated with measr also include the fitted Stan object, so users can access it if they are familiar with Stan and prefer to work with that object.
 Additionally, the Stan code used to estimate the model is also returned so that users familiar with the Stan language can use that code as a starting point for writing their own customized models.
 
-# Acknowledgements
+# Acknowledgments
 
 The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant [R305D210045](https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546) to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the Institute or the U.S. Department of Education.
 
