@@ -53,11 +53,6 @@ extract_class_probs <- function(model, attr, method) {
     dplyr::rename_with(~ profile_labels(attributes = attr)$class) %>%
     tibble::rowid_to_column(var = "resp_id")
 
-  mastery <- mastery %>%
-    tidyr::pivot_longer(cols = -"resp_id",
-                        names_to = "class",
-                        values_to = "probability")
-
   return(mastery)
 }
 
@@ -69,23 +64,22 @@ extract_attr_probs <- function(model, qmat, method) {
     dplyr::rename_with(~ colnames(qmat)) %>%
     tibble::rowid_to_column(var = "resp_id")
 
-  mastery <- mastery %>%
-    tidyr::pivot_longer(cols = -"resp_id",
-                        names_to = "attribute",
-                        values_to = "probability")
-
   return(mastery)
 }
 
 summarize_probs <- function(x, probs, id, optim) {
-  type <- colnames(x)[!grepl(glue::glue("{id}|probability"), colnames(x))]
+  summary_names <- colnames(x)[!grepl(glue::glue("{id}|chain|iteration|draw"),
+                                      colnames(x))]
+  type <- dplyr::if_else(all(grepl("\\[[0-1,]+\\]", summary_names)),
+                         "class", "attribute")
 
   sum_frame <- x %>%
-    dplyr::mutate(bounds = lapply(.data$probability, posterior::rvar_quantile,
-                                  probs = probs, names = TRUE),
-                  bounds = lapply(.data$bounds, tibble::as_tibble_row)) %>%
-    tidyr::unnest("bounds") %>%
-    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E))
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar),
+                                ~lapply(.x, summarize_rvar, probs = probs))) %>%
+    tidyr::pivot_longer(cols = dplyr::all_of(summary_names),
+                        names_to = type,
+                        values_to = "summary") %>%
+    tidyr::unnest("summary")
 
   if (optim) {
     sum_frame <- sum_frame %>%
@@ -93,4 +87,13 @@ summarize_probs <- function(x, probs, id, optim) {
   }
 
   return(sum_frame)
+}
+
+summarize_rvar <- function(rv, probs) {
+  tibble::tibble(probability = E(rv),
+                 bounds = tibble::as_tibble_row(
+                   quantile(rv, probs = probs, names = TRUE),
+                   .name_repair = ~paste0(probs * 100, "%")
+                 )) %>%
+    tidyr::unnest("bounds")
 }

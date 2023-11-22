@@ -41,13 +41,13 @@
 #'   `probs`.
 #' @export
 predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
-                             missing = NA, summary = FALSE,
+                             missing = NA, summary = TRUE,
                              probs = c(0.025, 0.975), force = FALSE, ...) {
   model <- check_model(object, required_class = "measrdcm", name = "object")
 
   if ((!is.null(model$respondent_estimates) &&
        length(model$respondent_estimates) > 0) &&
-      !force) {
+      !force & summary) {
     return(model$respondent_estimates)
   }
 
@@ -112,12 +112,11 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     dplyr::rename(!!model$data$resp_id := "resp_id")
 
   attr_probs <- attr_probs %>%
+    dplyr::rename_with(~ c("resp_id", attr_lookup$real_names)) %>%
     dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
-    dplyr::left_join(attr_lookup, by = c("attribute" = "att_id")) %>%
     dplyr::mutate(resp_id = .data$orig_resp) %>%
     dplyr::select(-"orig_resp") %>%
-    dplyr::rename(!!model$data$resp_id := "resp_id") %>%
-    dplyr::select(!!model$data$resp_id, attribute = "real_names", "probability")
+    dplyr::rename(!!model$data$resp_id := "resp_id")
 
   ret_list <- list(class_probabilities = class_probs,
                    attribute_probabilities = attr_probs)

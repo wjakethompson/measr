@@ -324,14 +324,25 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
   all_profiles <- profile_labels(attributes = attr)
 
   obs_class <- resp_prob %>%
-    dplyr::mutate(probability = lapply(.data$probability,
-                                       function(x) {
-                                         posterior::as_draws_df(x) %>%
-                                           tibble::as_tibble()
-                                       })) %>%
-    tidyr::unnest("probability") %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id",
-                  class_label = "class", prob = "x") %>%
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar),
+                                ~lapply(.x,
+                                        function(x) {
+                                          posterior::as_draws_df(x) %>%
+                                            tibble::as_tibble()
+                                        })
+                                )) %>%
+    tidyr::unnest(-"resp_id", names_sep = "_") %>%
+    dplyr::select("resp_id",
+                  dplyr::all_of(paste0(all_profiles$class[1], "_",
+                                       c(".chain", ".iteration", ".draw"))),
+                  dplyr::ends_with("_x")) %>%
+    dplyr::rename_with(function(x) {
+      x <- sub("_x", "", x)
+      x <- sub("\\[[0-9,]*\\]_", "", x)
+    }) %>%
+    tidyr::pivot_longer(cols = -c("resp_id", ".chain", ".iteration", ".draw"),
+                        names_to = "class_label",
+                        values_to = "prob") %>%
     dplyr::mutate(max_class = .data$prob == max(.data$prob),
                   .by = c(".draw", "resp_id")) %>%
     dplyr::filter(.data$max_class) %>%

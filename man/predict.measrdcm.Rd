@@ -9,7 +9,7 @@
   newdata = NULL,
   resp_id = NULL,
   missing = NA,
-  summary = FALSE,
+  summary = TRUE,
   probs = c(0.025, 0.975),
   force = FALSE,
   ...

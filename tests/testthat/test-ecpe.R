@@ -106,7 +106,7 @@ test_that("extract ecpe", {
 
 test_that("ecpe probabilities are accurate", {
   ecpe_preds <- predict(cmds_ecpe_lcdm, newdata = ecpe_data,
-                        resp_id = "resp_id", summary = TRUE)
+                        resp_id = "resp_id")
 
   # dimensions are correct
   expect_equal(names(ecpe_preds), c("class_probabilities",

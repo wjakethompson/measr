@@ -345,7 +345,7 @@ test_that("respondent probabilities are correct", {
   expect_match(err$message,
                "added to a model object before attribute probabilities")
 
-  cmds_mdm_lcdm <- add_respondent_estimates(cmds_mdm_lcdm, summary = TRUE)
+  cmds_mdm_lcdm <- add_respondent_estimates(cmds_mdm_lcdm)
   expect_equal(cmds_mdm_lcdm$respondent_estimates, mdm_preds)
   expect_equal(measr_extract(cmds_mdm_lcdm, "class_prob"),
                mdm_preds$class_probabilities %>%

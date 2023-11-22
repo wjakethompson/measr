@@ -1,7 +1,5 @@
 clean_predicted_probs <- function(x, resp_id) {
   x %>%
-    tidyr::pivot_wider(names_from = 2,
-                       values_from = "probability") %>%
     dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E)) %>%
     dplyr::arrange(!!resp_id) %>%
     dplyr::select(-!!resp_id)
@@ -154,7 +152,7 @@ reli_list <- function(model) {
     as.vector()
   class_att <- double(n_class * n_att)
 
-  probs <- lapply(stats::predict(model, summary = FALSE),
+  probs <- lapply(stats::predict(model, summary = FALSE, force = TRUE),
                   clean_predicted_probs, resp_id = model$data$resp_id)
   class_probs <- probs$class_probabilities
   attr_probs <- probs$attribute_probabilities
