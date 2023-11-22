@@ -30,7 +30,6 @@ add_fit(
 
 add_respondent_estimates(
   x,
-  summary = FALSE,
   probs = c(0.025, 0.975),
   overwrite = FALSE,
   save = TRUE
@@ -69,11 +68,6 @@ not specified can be disabled by setting \code{r_eff} to \code{NA}. See the
 object.}
 
 \item{ci}{The confidence interval for the RMSEA, computed from the M2}
-
-\item{summary}{Logical. For respondent estimates, should posteriors be
-summarized (i.e., mean and quantiles defined by \code{probs}). If \code{FALSE}
-(the default), the full posterior distribution is returned for each
-estimate.}
 
 \item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
 function to summarize the posterior distributions of each person parameter.
