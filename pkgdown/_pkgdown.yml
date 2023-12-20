@@ -25,6 +25,9 @@ template:
       google: "Fira Code"
     bg: "#FFFFFF"
     fg: "#333"
+  includes:
+    after_body: >
+      <script data-goatcounter="https://wjakethompson.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 authors:
   footer:
