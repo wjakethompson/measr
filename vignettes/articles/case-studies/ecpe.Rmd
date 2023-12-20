@@ -350,21 +350,23 @@ resp_probs
 ```
 
 ```{r example-resp, echo = FALSE}
-class73 <- resp_probs$class_probabilities %>% 
+class73 <- resp_probs$class_probabilities %>%
  filter(resp_id == 73)
 
 max_class <- slice_max(class73, probability)
 
-att73 <- resp_probs$attribute_probabilities %>% 
+att73 <- resp_probs$attribute_probabilities %>%
   filter(resp_id == 73)
 
-att73_text <- att73 %>% 
-  glue_data("a {fmt_prop_pct(probability)}% chance the respondent is proficient on {attribute} rules") %>% 
+att73_text <- att73 %>%
+  glue_data("a {fmt_prop_pct(probability)}% chance the respondent is ",
+            "proficient on {attribute} rules") %>%
   combine_words()
 
-att73_morpho <- att73 %>% 
-  filter(attribute == "morphosyntactic") %>% 
-  glue_data("as low as {fmt_prop_pct(`2.5%`)}% or as high as {fmt_prop_pct(`97.5%`)}%")
+att73_morpho <- att73 %>%
+  filter(attribute == "morphosyntactic") %>%
+  glue_data("as low as {fmt_prop_pct(`2.5%`)}% or as high as ",
+            "{fmt_prop_pct(`97.5%`)}%")
 ```
 
 The `class_probabilites` are the probabilities that the respondent belongs to each of the 8 possible classes (i.e., profiles of proficiency).
@@ -375,7 +377,7 @@ However, there is only a `r fmt_prop_pct(max_class$probability)`% chance that th
 They also have a greater than 10% chance of belonging to the `r combine_words(pull(filter(class73, probability > .1, probability != max(probability)), class))` classes.
 
 ```{r class-73}
-resp_probs$class_probabilities %>% 
+resp_probs$class_probabilities %>%
  filter(resp_id == 73)
 ```
 
@@ -390,7 +392,7 @@ Either way, both profiles differ from the overall most likely profile indicated 
 Thus, it is important to give careful consideration to how results are determined before they are reported.
 
 ```{r att-73}
-resp_probs$attribute_probabilities %>% 
+resp_probs$attribute_probabilities %>%
   filter(resp_id == 73)
 ```
 
@@ -633,7 +635,7 @@ It's not surprising that the EAP reliability is lower than MAP reliability, as i
 For example, let's return to our example of respondent 73.
 
 ```{r revisit-att73}
-resp_probs$attribute_probabilities %>% 
+resp_probs$attribute_probabilities %>%
   filter(resp_id == 73)
 ```
 

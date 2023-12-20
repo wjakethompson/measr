@@ -67,6 +67,34 @@ extract_attr_probs <- function(model, qmat, method) {
   return(mastery)
 }
 
+calculate_probs <- function(model, qmat, method, resp_lookup, attr_lookup,
+                            resp_id) {
+  class_probs <- extract_class_probs(model = model,
+                                     attr = ncol(qmat),
+                                     method = method)
+  attr_probs <- extract_attr_probs(model = model,
+                                   qmat = qmat,
+                                   method = method)
+
+  class_probs <- class_probs %>%
+    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
+    dplyr::mutate(resp_id = .data$orig_resp) %>%
+    dplyr::select(-"orig_resp") %>%
+    dplyr::rename(!!resp_id := "resp_id")
+
+  attr_probs <- attr_probs %>%
+    dplyr::rename_with(~ c("resp_id", attr_lookup$real_names)) %>%
+    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
+    dplyr::mutate(resp_id = .data$orig_resp) %>%
+    dplyr::select(-"orig_resp") %>%
+    dplyr::rename(!!resp_id := "resp_id")
+
+  ret_list <- list(class_probabilities = class_probs,
+                   attribute_probabilities = attr_probs)
+
+  return(ret_list)
+}
+
 summarize_probs <- function(x, probs, id, optim) {
   summary_names <- colnames(x)[!grepl(glue::glue("{id}|chain|iteration|draw"),
                                       colnames(x))]
@@ -96,4 +124,27 @@ summarize_rvar <- function(rv, probs) {
                    .name_repair = ~paste0(probs * 100, "%")
                  )) %>%
     tidyr::unnest("bounds")
+}
+
+calculate_probs_no_summary <- function(ret_list, method) {
+  if (method == "optim") {
+    ret_list <- lapply(ret_list,
+                       function(.x) {
+                         dplyr::mutate(
+                           .x,
+                           dplyr::across(dplyr::where(posterior::is_rvar),
+                                         posterior::E)
+                         )
+                       })
+    return(ret_list)
+  } else {
+    return(ret_list)
+  }
+}
+
+calculate_probs_summary <- function(ret_list, probs, id, method) {
+  summary_list <- lapply(ret_list, summarize_probs, probs = probs,
+                         id = id,
+                         optim = method == "optim")
+  return(summary_list)
 }

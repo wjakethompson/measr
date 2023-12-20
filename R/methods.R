@@ -47,7 +47,7 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
 
   if ((!is.null(model$respondent_estimates) &&
        length(model$respondent_estimates) > 0) &&
-      !force & summary) {
+      !force && summary) {
     return(model$respondent_estimates)
   }
 
@@ -68,6 +68,9 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
       dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
       dplyr::distinct(.data$orig_resp, .data$resp_id)
   }
+  attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
+    dplyr::filter(.data$real_names != "item_id") %>%
+    dplyr::mutate(att_id = paste0("att", seq_len(dplyr::n())))
 
   clean_qmatrix <- model$data$qmatrix %>%
     dplyr::select(-"item_id") %>%
@@ -94,50 +97,22 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
   )
 
   # get mastery information -----
-  class_probs <- extract_class_probs(model = gqs_model,
-                                     attr = ncol(clean_qmatrix),
-                                     method = model$method)
-  attr_probs <- extract_attr_probs(model = gqs_model,
-                                   qmat = clean_qmatrix,
-                                   method = model$method)
+  ret_list <- calculate_probs(model = gqs_model,
+                              qmat = clean_qmatrix,
+                              method = model$method,
+                              resp_lookup = resp_lookup,
+                              attr_lookup = attr_lookup,
+                              resp_id = model$data$resp_id)
 
-  attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
-    dplyr::filter(.data$real_names != "item_id") %>%
-    dplyr::mutate(att_id = paste0("att", seq_len(dplyr::n())))
-
-  class_probs <- class_probs %>%
-    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
-    dplyr::mutate(resp_id = .data$orig_resp) %>%
-    dplyr::select(-"orig_resp") %>%
-    dplyr::rename(!!model$data$resp_id := "resp_id")
-
-  attr_probs <- attr_probs %>%
-    dplyr::rename_with(~ c("resp_id", attr_lookup$real_names)) %>%
-    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
-    dplyr::mutate(resp_id = .data$orig_resp) %>%
-    dplyr::select(-"orig_resp") %>%
-    dplyr::rename(!!model$data$resp_id := "resp_id")
-
-  ret_list <- list(class_probabilities = class_probs,
-                   attribute_probabilities = attr_probs)
-
-  if (!summary && model$method == "optim") {
-    ret_list <- lapply(ret_list,
-                       function(.x) {
-                         dplyr::mutate(
-                           .x,
-                           dplyr::across(dplyr::where(posterior::is_rvar),
-                                         posterior::E)
-                         )
-                       })
-    return(ret_list)
-  } else if (!summary) {
-    return(ret_list)
+  if (!summary) {
+    no_summary_list <- calculate_probs_no_summary(ret_list = ret_list,
+                                                  method = model$method)
+    return(no_summary_list)
   }
 
-  summary_list <- lapply(ret_list, summarize_probs, probs = probs,
-                         id = model$data$resp_id,
-                         optim = model$method == "optim")
-
+  summary_list <- calculate_probs_summary(ret_list = ret_list,
+                                          probs = probs,
+                                          id = model$data$resp_id,
+                                          method = model$method)
   return(summary_list)
 }
