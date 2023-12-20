@@ -55,6 +55,9 @@ test_that("dina probabilities are accurate", {
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "probability"))
 
+  check_dina_predict <- predict(rstn_dina)
+  expect_equal(check_dina_predict, rstn_dina$respondent_estimates)
+
   prof_labs <- profile_labels(ncol(rstn_dina$data$qmatrix) - 1)
 
   measr_class <- dina_preds$class_probabilities %>%

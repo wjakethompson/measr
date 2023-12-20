@@ -142,6 +142,9 @@ test_that("ecpe probabilities are accurate", {
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "probability"))
 
+  check_preds <- predict(cmds_ecpe_lcdm)
+  expect_equal(check_preds, cmds_ecpe_lcdm$respondent_estimates)
+
   measr_class <- ecpe_preds$class_probabilities %>%
     dplyr::select("resp_id", "class", "probability") %>%
     tidyr::pivot_wider(names_from = "class", values_from = "probability") %>%

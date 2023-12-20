@@ -323,6 +323,7 @@ test_that("model fit can be added", {
 test_that("respondent probabilities are correct", {
   mdm_preds <- predict(cmds_mdm_lcdm, newdata = mdm_data,
                        resp_id = "respondent", summary = TRUE)
+  mdm_full_preds <- predict(cmds_mdm_lcdm, summary = FALSE)
 
   # dimensions are correct
   expect_equal(names(mdm_preds), c("class_probabilities",
@@ -335,6 +336,17 @@ test_that("respondent probabilities are correct", {
                nrow(mdm_data) * (2 ^ 1))
   expect_equal(nrow(mdm_preds$attribute_probabilities),
                nrow(mdm_data) * 1)
+
+  expect_equal(names(mdm_full_preds), c("class_probabilities",
+                                        "attribute_probabilities"))
+  expect_equal(colnames(mdm_full_preds$class_probabilities),
+               c("respondent", "[0]", "[1]"))
+  expect_equal(colnames(mdm_full_preds$attribute_probabilities),
+               c("respondent", "multiplication"))
+  expect_equal(nrow(mdm_full_preds$class_probabilities),
+               nrow(mdm_data))
+  expect_equal(nrow(mdm_full_preds$attribute_probabilities),
+               nrow(mdm_data))
 
   # extract works
   expect_equal(cmds_mdm_lcdm$respondent_estimates, list())
