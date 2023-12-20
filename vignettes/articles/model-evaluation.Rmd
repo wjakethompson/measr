@@ -1,7 +1,7 @@
 ---
 title: "Evaluating diagnostic classification models"
 output: rmarkdown::html_vignette
-bibliography: bib/references.bib
+bibliography: ../bib/references.bib
 csl: ../bib/apa.csl
 link-citations: true
 vignette: >

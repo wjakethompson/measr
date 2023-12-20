@@ -1,7 +1,7 @@
 ---
 title: "Estimating diagnostic classification models"
 output: rmarkdown::html_vignette
-bibliography: bib/references.bib
+bibliography: ../bib/references.bib
 csl: ../bib/apa.csl
 link-citations: true
 vignette: >
@@ -247,7 +247,7 @@ measr_extract(new_lcdm, "prior")
 ### Other DCM Sub-Types {#subtype}
 
 Although a primary motivation for measr is to provide researchers with software that makes the LCDM readily accessible, a few other popular DCM subtypes are also supported.
-For example, we can estimate the deterministic inputs, noisy "and" gate [DINA, @junker2001] or the deterministic inputs, noisy "or" gate [DINO, @templin2006] models by specifying a different `type` in the `measr_dcm()` function.
+For example, we can estimate the deterministic inputs, noisy "and" gate [DINA, @junker2001] or the deterministic inputs, noisy "or" gate [DINO, @dino] models by specifying a different `type` in the `measr_dcm()` function.
 
 Future development work will continue to add functionality for more DCM subtypes.
 If there is a specific subtype you are interested in, or would like to see supported, please open an issue on the [GitHub repository](https://github.com/wjakethompson/measr/issues).
