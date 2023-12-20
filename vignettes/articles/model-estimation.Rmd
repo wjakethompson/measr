@@ -200,7 +200,7 @@ prior(normal(0, 10), class = "maineffect")
 
 By default, the prior is applied to all parameters in the class (i.e., all main effects).
 However, we can also apply a prior to a specific parameter.
-For example, here we specify a $\chi^2$ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 on just item 7.
+For example, here we specify a &chi;^2^ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 on just item 7.
 To see all parameters (including `class` and `coef`) that can be specified, we can use `get_parameters()`.
 
 ```{r multi-prior}

@@ -86,19 +86,19 @@ Each of these are discussed in turn.
 ### Absolute Model Fit
 
 Absolute model fit measures how well the estimated model fits the observed data.
-One of the more popular methods for evaluating absolute model fit for DCMs is the $M_2$ statistic [@hansen2016; @liu2016].
-We can calculate the $M_2$ statistics with the `fit_m2()` function.
+One of the more popular methods for evaluating absolute model fit for DCMs is the M<sub>2</sub> statistic [@hansen2016; @liu2016].
+We can calculate the M<sub>2</sub> statistics with the `fit_m2()` function.
 
 ```{r fit-m2}
 fit_m2(lcdm)
 ```
 
-This function returns a data frame with the $M_2$ statistic (`m2`), and the degrees of freedom and *p*-value associated with the $M_2$ (`df` and `pval`, respectively).
+This function returns a data frame with the M<sub>2</sub> statistic (`m2`), and the degrees of freedom and *p*-value associated with the M<sub>2</sub> (`df` and `pval`, respectively).
 A *p*-value less than .05 would typically indicate poor model fit.
 As expected in this example, the estimated LCDM shows adequate model fit to our data (*p* > .05).
 The `fit_m2()` also return information on the RMSEA and SRMSR fit statistics.
-The $M_2$, RMSEA, and SRMSR are all considered limited-information fit indices.
-For example, the $M_2$ is based off of univariate item statistics and the bivariate relationships between items.
+The M<sub>2</sub>, RMSEA, and SRMSR are all considered limited-information fit indices.
+For example, the M<sub>2</sub> is based off of univariate item statistics and the bivariate relationships between items.
 Thus, it cannot capture aspects of model fit from higher-order relationships (e.g., triplets of items).
 
 Because we used a fully Bayesian estimation of our models, we can use the posterior distributions to provide another evaluation of model fit that can incorporate more information.
@@ -129,8 +129,8 @@ fit_ppmc(lcdm, model_fit = "raw_score", item_fit = NULL)
 
 `fit_ppmc()` returns a list, where each element is a different PPMC.
 Here, we only specified one PPMC, so we only get the `raw_score` element back.
-The `obs_chisq` is the raw score $\chi^2$ values from our observed data.
-We then see the mean of the posterior distribution for the $\chi^2$, quantiles of the posterior distribution, and the posterior predictive *p*-value (*ppp*).
+The `obs_chisq` is the raw score &chi;^2^ values from our observed data.
+We then see the mean of the posterior distribution for the &chi;^2^, quantiles of the posterior distribution, and the posterior predictive *p*-value (*ppp*).
 The *ppp* is the proportion of posterior draws that are greater than the observed value.
 Values close to 0 indicate poor fit.
 Values close to 1 may indicate overfitting.
