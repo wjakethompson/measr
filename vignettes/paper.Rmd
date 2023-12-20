@@ -21,6 +21,8 @@ affiliations:
     index: 2
 date: 6 November 2023
 bibliography: paper.bib
+csl: bib/apa.csl
+link-citations: true
 vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteIndexEntry{measr: Bayesian psychometric measurement using Stan}
