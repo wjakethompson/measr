@@ -63,7 +63,7 @@ Suggests:
     testthat (>= 3.0.0)
 Additional_repositories: https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
-Config/Needs/website: wjakethompson/wjake, showtext, ggdist
+Config/Needs/website: wjakethompson/wjake, showtext, ggdist, english
 Encoding: UTF-8
 Language: en-US
 LazyData: true

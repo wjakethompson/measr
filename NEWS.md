@@ -12,6 +12,7 @@
   * A new article on model evaluation has been added.
   * The model estimation article has been updated to use the same data set as the model evaluation article.
   * More detailed installation instructions have been added to the getting started vignette (#23).
+  * A case study demonstrating a full DCM-based analysis using data from the ECPE (`?ecpe_data`) has been added.
 
 * measr now reexports functions from [posterior](https://mc-stan.org/posterior/) for conducting mathematical operations on `posterior::rvar()` objects.
 
