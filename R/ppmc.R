@@ -93,14 +93,14 @@
 #'
 #' @export
 #' @examplesIf measr_examples()
-#' cmds_mdm_dina <- measr_dcm(
+#' mdm_dina <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
 #'   resp_id = "respondent", item_id = "item", type = "dina",
 #'   method = "mcmc", seed = 63277, backend = "rstan",
-#'   iter = 700, warmup = 500, chains = 2
+#'   iter = 700, warmup = 500, chains = 2, refresh = 0
 #' )
 #'
-#' fit_ppmc(cmds_mdm_dina, model_fit = "raw_score", item_fit = NULL)
+#' fit_ppmc(mdm_dina, model_fit = "raw_score", item_fit = NULL)
 fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                      return_draws = 0,
                      model_fit = c("raw_score"),
@@ -202,7 +202,8 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
 
   item_level_fit <- if (!is.null(item_fit)) {
     resp_prob <- extract_class_probs(model = gqs_model,
-                                     attr = ncol(clean_qmatrix))
+                                     attr = ncol(clean_qmatrix),
+                                     method = model$method)
     pi_draws <- posterior::subset_draws(stan_draws, variable = "pi")
 
     ppmc_item_fit(model = model,
@@ -283,7 +284,11 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
   if (return_draws > 0) {
     raw_score_res <- raw_score_res %>%
       dplyr::mutate(
-        samples = list(chisq_ppmc %>%
+        rawscore_samples = list(raw_score_post %>%
+                                  tidyr::nest(raw_scores = -".draw") %>%
+                                  dplyr::slice_sample(prop = return_draws) %>%
+                                  dplyr::select(-".draw")),
+        chisq_samples = list(chisq_ppmc %>%
                          dplyr::slice_sample(prop = return_draws) %>%
                          dplyr::pull("chisq")),
         .before = "ppp")
@@ -319,8 +324,25 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
   all_profiles <- profile_labels(attributes = attr)
 
   obs_class <- resp_prob %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw", "resp_id"),
-                        names_to = "class_label", values_to = "prob") %>%
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar),
+                                ~lapply(.x,
+                                        function(x) {
+                                          posterior::as_draws_df(x) %>%
+                                            tibble::as_tibble()
+                                        })
+                                )) %>%
+    tidyr::unnest(-"resp_id", names_sep = "_") %>%
+    dplyr::select("resp_id",
+                  dplyr::all_of(paste0(all_profiles$class[1], "_",
+                                       c(".chain", ".iteration", ".draw"))),
+                  dplyr::ends_with("_x")) %>%
+    dplyr::rename_with(function(x) {
+      x <- sub("_x", "", x)
+      x <- sub("\\[[0-9,]*\\]_", "", x)
+    }) %>%
+    tidyr::pivot_longer(cols = -c("resp_id", ".chain", ".iteration", ".draw"),
+                        names_to = "class_label",
+                        values_to = "prob") %>%
     dplyr::mutate(max_class = .data$prob == max(.data$prob),
                   .by = c(".draw", "resp_id")) %>%
     dplyr::filter(.data$max_class) %>%

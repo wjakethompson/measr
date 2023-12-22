@@ -106,7 +106,7 @@ test_that("extract ecpe", {
 
 test_that("ecpe probabilities are accurate", {
   ecpe_preds <- predict(cmds_ecpe_lcdm, newdata = ecpe_data,
-                        resp_id = "resp_id", summary = TRUE)
+                        resp_id = "resp_id")
 
   # dimensions are correct
   expect_equal(names(ecpe_preds), c("class_probabilities",
@@ -141,6 +141,9 @@ test_that("ecpe probabilities are accurate", {
                  dplyr::select("resp_id", "attribute", "probability") %>%
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "probability"))
+
+  check_preds <- predict(cmds_ecpe_lcdm)
+  expect_equal(check_preds, cmds_ecpe_lcdm$respondent_estimates)
 
   measr_class <- ecpe_preds$class_probabilities %>%
     dplyr::select("resp_id", "class", "probability") %>%

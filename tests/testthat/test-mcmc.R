@@ -159,8 +159,10 @@ test_that("ppmc works", {
   expect_s3_class(test_ppmc$model_fit$raw_score, "tbl_df")
   expect_equal(nrow(test_ppmc$model_fit$raw_score), 1L)
   expect_equal(colnames(test_ppmc$model_fit$raw_score),
-               c("obs_chisq", "ppmc_mean", "2.5%", "97.5%", "samples", "ppp"))
-  expect_equal(length(test_ppmc$model_fit$raw_score$samples[[1]]), 100)
+               c("obs_chisq", "ppmc_mean", "2.5%", "97.5%", "rawscore_samples",
+                 "chisq_samples", "ppp"))
+  expect_equal(nrow(test_ppmc$model_fit$raw_score$rawscore_samples[[1]]), 100)
+  expect_equal(length(test_ppmc$model_fit$raw_score$chisq_samples[[1]]), 100)
 
   expect_equal(names(test_ppmc$item_fit), "conditional_prob")
   expect_s3_class(test_ppmc$item_fit$conditional_prob, "tbl_df")
@@ -321,6 +323,7 @@ test_that("model fit can be added", {
 test_that("respondent probabilities are correct", {
   mdm_preds <- predict(cmds_mdm_lcdm, newdata = mdm_data,
                        resp_id = "respondent", summary = TRUE)
+  mdm_full_preds <- predict(cmds_mdm_lcdm, summary = FALSE)
 
   # dimensions are correct
   expect_equal(names(mdm_preds), c("class_probabilities",
@@ -333,6 +336,17 @@ test_that("respondent probabilities are correct", {
                nrow(mdm_data) * (2 ^ 1))
   expect_equal(nrow(mdm_preds$attribute_probabilities),
                nrow(mdm_data) * 1)
+
+  expect_equal(names(mdm_full_preds), c("class_probabilities",
+                                        "attribute_probabilities"))
+  expect_equal(colnames(mdm_full_preds$class_probabilities),
+               c("respondent", "[0]", "[1]"))
+  expect_equal(colnames(mdm_full_preds$attribute_probabilities),
+               c("respondent", "multiplication"))
+  expect_equal(nrow(mdm_full_preds$class_probabilities),
+               nrow(mdm_data))
+  expect_equal(nrow(mdm_full_preds$attribute_probabilities),
+               nrow(mdm_data))
 
   # extract works
   expect_equal(cmds_mdm_lcdm$respondent_estimates, list())

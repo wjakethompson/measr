@@ -115,10 +115,10 @@ library(measr)
 
 ## Model Estimation
 
-To illustrate, we'll fit a loglinear cognitive diagnostic model (LCDM) to an assessment of English language proficiency [see @templin2013].
+To illustrate, we'll fit a loglinear cognitive diagnostic model (LCDM) to an assessment of English language proficiency [see @templin-emip-2013].
 There are many different subtypes of DCMs that make different assumptions about how the attributes relate to each other.
 The LCDM is a general model that makes very few assumptions about the compensatory nature of the relationships between attributes.
-For details on the LCDM, see @henson2019.
+For details on the LCDM, see @lcdm-handbook.
 
 The data set we're using contains 29 items that together measure three attributes: morphosyntactic rules, cohesive rules, and lexical rules.
 The Q-matrix defines which attributes are measured by each item.

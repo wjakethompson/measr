@@ -18,10 +18,13 @@
 #'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
 #' @param summary Should summary statistics be returned instead of the raw
 #'   posterior draws? Only relevant if the model was estimated with
-#'   `method = "mcmc"`. Default is `TRUE`.
+#'   `method = "mcmc"`. Default is `FALSE`.
 #' @param probs The percentiles to be computed by the `[stats::quantile()]`
 #'   function. Only relevant if the model was estimated with `method = "mcmc"`.
 #'   Only used if `summary` is `TRUE`.
+#' @param force If respondent estimates have already been added to the model
+#'   object with [add_respondent_estimates()], should they be recalculated.
+#'   Default is `FALSE`.
 #' @param ... Unused.
 #'
 #' @return A list with two elements: `class_probabilities` and
@@ -39,8 +42,14 @@
 #' @export
 predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
                              missing = NA, summary = TRUE,
-                             probs = c(0.025, 0.975), ...) {
+                             probs = c(0.025, 0.975), force = FALSE, ...) {
   model <- check_model(object, required_class = "measrdcm", name = "object")
+
+  if ((!is.null(model$respondent_estimates) &&
+       length(model$respondent_estimates) > 0) &&
+      !force && summary) {
+    return(model$respondent_estimates)
+  }
 
   summary <- check_logical(summary, allow_na = FALSE, name = "summary")
   probs <- check_double(probs, lb = 0, ub = 1, inclusive = TRUE, name = "probs")
@@ -48,20 +57,29 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     resp_id <- check_character(resp_id, name = "resp_id", allow_null = TRUE)
     score_data <- check_newdata(newdata, identifier = resp_id, model = model,
                                 missing = missing, name = "newdata")
+    resp_lookup <- score_data %>%
+      dplyr::rename(orig_resp = "resp_id") %>%
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+      dplyr::distinct(.data$orig_resp, .data$resp_id)
   } else {
     score_data <- model$data$data
+    resp_lookup <- model$data$data %>%
+      dplyr::rename(orig_resp = "resp_id") %>%
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+      dplyr::distinct(.data$orig_resp, .data$resp_id)
   }
+  attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
+    dplyr::filter(.data$real_names != "item_id") %>%
+    dplyr::mutate(att_id = paste0("att", seq_len(dplyr::n())))
 
   clean_qmatrix <- model$data$qmatrix %>%
     dplyr::select(-"item_id") %>%
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
   stan_data <- create_stan_data(dat = score_data, qmat = clean_qmatrix,
                                 type = model$type)
-  stan_draws <- if (model$method == "mcmc") {
-    get_mcmc_draws(model)
-  } else if (model$method == "optim") {
-    get_optim_draws(model)
-  }
+  stan_draws <- switch(model$method,
+                       "mcmc" = get_mcmc_draws(model),
+                       "optim" = get_optim_draws(model))
 
   stan_pars <- create_stan_gqs_params(backend = model$backend,
                                       draws = stan_draws)
@@ -79,51 +97,22 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
   )
 
   # get mastery information -----
-  class_probs <- extract_class_probs(model = gqs_model,
-                                     attr = ncol(clean_qmatrix))
-  attr_probs <- extract_attr_probs(model = gqs_model, qmat = clean_qmatrix)
+  ret_list <- calculate_probs(model = gqs_model,
+                              qmat = clean_qmatrix,
+                              method = model$method,
+                              resp_lookup = resp_lookup,
+                              attr_lookup = attr_lookup,
+                              resp_id = model$data$resp_id)
 
-  if (!is.null(newdata)) {
-    resp_lookup <- score_data %>%
-      dplyr::rename(orig_resp = "resp_id") %>%
-      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
-      dplyr::distinct(.data$orig_resp, .data$resp_id)
-  } else {
-    resp_lookup <- model$data$data %>%
-      dplyr::rename(orig_resp = "resp_id") %>%
-      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
-      dplyr::distinct(.data$orig_resp, .data$resp_id)
+  if (!summary) {
+    no_summary_list <- calculate_probs_no_summary(ret_list = ret_list,
+                                                  method = model$method)
+    return(no_summary_list)
   }
-  attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
-    dplyr::filter(.data$real_names != "item_id") %>%
-    dplyr::mutate(att_id = paste0("att", seq_len(dplyr::n())))
 
-  class_probs <- class_probs %>%
-    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
-    dplyr::mutate(resp_id = .data$orig_resp) %>%
-    dplyr::select(-"orig_resp") %>%
-    dplyr::rename(!!model$data$resp_id := "resp_id")
-
-  attr_probs <- attr_probs %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw",
-                                  "resp_id")) %>%
-    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
-    dplyr::left_join(attr_lookup, by = c("name" = "att_id")) %>%
-    dplyr::mutate(resp_id = .data$orig_resp) %>%
-    dplyr::select(-"orig_resp") %>%
-    dplyr::rename(!!model$data$resp_id := "resp_id") %>%
-    dplyr::select(".chain", ".iteration", ".draw", !!model$data$resp_id,
-                  "real_names", "value") %>%
-    tidyr::pivot_wider(names_from = "real_names", values_from = "value")
-
-  ret_list <- list(class_probabilities = class_probs,
-                   attribute_probabilities = attr_probs)
-
-  if (!summary) return(ret_list)
-
-  summary_list <- lapply(ret_list, summarize_probs, probs = probs,
-                         id = model$data$resp_id,
-                         optim = model$method == "optim")
-
+  summary_list <- calculate_probs_summary(ret_list = ret_list,
+                                          probs = probs,
+                                          id = model$data$resp_id,
+                                          method = model$method)
   return(summary_list)
 }

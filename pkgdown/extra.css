@@ -32,15 +32,6 @@
   background-color: var(--nav-bkg) !important;
 }
 
-/* Color of links in navbar and hover links */
-.nav-link {
-  color: var(--nav-link) !important;
-}
-
-.navbar-light .navbar-nav .nav-link:hover {
-  color: var(--nav-higl) !important;
-}
-
 /* package name in navbar */
 .navbar-brand {
   font-family: Ubuntu;
@@ -53,6 +44,23 @@
 .badge-danger {
   color: #fff;
   background-color: var(--ver-devp);
+}
+
+/* Color of links in navbar and hover links */
+.nav-link {
+  color: var(--nav-link) !important;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  color: var(--nav-higl) !important;
+}
+
+.navbar-light .navbar-nav .nav-item>.nav-link:hover {
+  background: var(--nav-bkg);
+}
+
+.navbar-light .navbar-nav .active > .nav-link:hover {
+  color: var(--nav-higl) !important;
 }
 
 /* active navbar link */
@@ -82,6 +90,14 @@
 
 span.navbar-toggler-icon {
     filter: brightness(0) saturate(100%) invert(68%) sepia(34%) saturate(366%) hue-rotate(154deg) brightness(107%) contrast(88%);
+}
+
+h6.dropdown-header {
+  color: var(--nav-higl);
+}
+
+.dropdown-divider {
+  border-top: 1px solid var(--nav-link);
 }
 
 
@@ -206,3 +222,4 @@ nav[data-toggle="toc"] .nav-link.active + ul {
 nav[data-toggle="toc"] .nav .nav > li > a {
   margin-left: 0.5rem;
 }
+

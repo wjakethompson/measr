@@ -1,9 +1,6 @@
 clean_predicted_probs <- function(x, resp_id) {
   x %>%
-    dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
-    dplyr::summarize(dplyr::across(dplyr::where(is.double),
-                                   \(x) mean(x, na.rm = TRUE)),
-                     .by = !!resp_id) %>%
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E)) %>%
     dplyr::arrange(!!resp_id) %>%
     dplyr::select(-!!resp_id)
 }
@@ -155,7 +152,7 @@ reli_list <- function(model) {
     as.vector()
   class_att <- double(n_class * n_att)
 
-  probs <- lapply(stats::predict(model, summary = FALSE),
+  probs <- lapply(stats::predict(model, summary = FALSE, force = TRUE),
                   clean_predicted_probs, resp_id = model$data$resp_id)
   class_probs <- probs$class_probabilities
   attr_probs <- probs$attribute_probabilities

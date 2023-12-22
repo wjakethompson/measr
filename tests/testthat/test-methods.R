@@ -6,11 +6,9 @@ test_that("returned predictions have correct dimensions and names", {
   expect_equal(names(mod_preds), c("class_probabilities",
                                    "attribute_probabilities"))
   expect_equal(colnames(mod_preds$class_probabilities),
-               c(".chain", ".iteration", ".draw", "resp_id",
-                 prof_labs$class))
+               c("resp_id", prof_labs$class))
   expect_equal(colnames(mod_preds$attribute_probabilities),
-               c(".chain", ".iteration", ".draw", "resp_id",
-                 paste0("att", 1:5)))
+               c("resp_id", paste0("att", seq_len(num_att))))
   expect_equal(nrow(mod_preds$class_probabilities), nrow(dina_data))
   expect_equal(nrow(mod_preds$attribute_probabilities), nrow(dina_data))
 
@@ -25,6 +23,10 @@ test_that("returned predictions have correct dimensions and names", {
                nrow(dina_data) * (2 ^ num_att))
   expect_equal(nrow(mod_preds$attribute_probabilities),
                nrow(dina_data) * num_att)
+  expect_true(all(mod_preds$class_probabilities$class %in% prof_labs$class))
+  expect_true(all(mod_preds$attribute_probabilities$attribute %in%
+                    paste0("att", seq_len(num_att))))
+
 })
 
 test_that("dina probabilities are accurate", {
@@ -52,6 +54,9 @@ test_that("dina probabilities are accurate", {
                  dplyr::select("resp_id", "attribute", "probability") %>%
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "probability"))
+
+  check_dina_predict <- predict(rstn_dina)
+  expect_equal(check_dina_predict, rstn_dina$respondent_estimates)
 
   prof_labs <- profile_labels(ncol(rstn_dina$data$qmatrix) - 1)
 

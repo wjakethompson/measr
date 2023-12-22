@@ -1,3 +1,4 @@
+CDM
 CDMs
 CMD
 Cai
@@ -7,8 +8,10 @@ CmdStanR
 Cui
 DCM
 DCMs
+DOI
 EAP
 ECPE
+GDINA
 Gabry
 Gelman
 Gierl
@@ -18,11 +21,13 @@ LCDM
 Liu
 MDM
 MacReady
+Maydeu
 Metaprogramming
 Morphosyntactic
 Mplus
 Netlify
 ORCID
+Olivares
 PPMC
 PPMCs
 Psychometrika
@@ -44,6 +49,7 @@ Youden's
 al
 att
 biserial
+blatent
 cmdstanr
 codecov
 crum
@@ -56,8 +62,11 @@ et
 eval
 examinee
 extensibility
+frac
 funder
+generalizability
 ggplot
+hmcdm
 lcdm
 lifecycle
 magrittr
@@ -88,3 +97,4 @@ tunnelling
 warmup
 κ
 λ
+χ

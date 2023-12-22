@@ -45,51 +45,54 @@ get_optim_draws <- function(x) {
   return(final_matrix)
 }
 
-extract_class_probs <- function(model, attr) {
-  all_profiles <- profile_labels(attributes = attr)
+extract_class_probs <- function(model, attr, method) {
+  draws <- posterior::as_draws_rvars(model)
 
-  mastery <- posterior::as_draws_df(model) %>%
+  mastery <- draws$prob_resp_class %>%
     tibble::as_tibble() %>%
-    dplyr::select(".chain", ".iteration", ".draw",
-                  dplyr::matches("prob_resp_class")) %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
-    tidyr::separate_wider_regex(
-      cols = "name",
-      patterns = c("prob_resp_class\\[", r = "\\d+", ",", c = "\\d+", "\\]")
-    ) %>%
-    dplyr::mutate(resp_id = as.integer(.data$r),
-                  class_id = as.integer(.data$c)) %>%
-    dplyr::left_join(all_profiles, by = "class_id") %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id", "class",
-                  probability = "value") %>%
-    tidyr::pivot_wider(names_from = "class", values_from = "probability") %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id",
-                  dplyr::all_of(all_profiles$class))
+    dplyr::rename_with(~ profile_labels(attributes = attr)$class) %>%
+    tibble::rowid_to_column(var = "resp_id")
 
   return(mastery)
 }
 
-extract_attr_probs <- function(model, qmat) {
-  all_attributes <- colnames(qmat)
+extract_attr_probs <- function(model, qmat, method) {
+  draws <- posterior::as_draws_rvars(model)
 
-  mastery <- posterior::as_draws_df(model) %>%
+  mastery <- draws$prob_resp_attr %>%
     tibble::as_tibble() %>%
-    dplyr::select(".chain", ".iteration", ".draw",
-                  dplyr::matches("prob_resp_attr")) %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
-    tidyr::separate_wider_regex(
-      cols = "name",
-      patterns = c("prob_resp_attr\\[", r = "\\d+", ",", a = "\\d+", "\\]")
-    ) %>%
-    dplyr::mutate(resp_id = as.integer(.data$r),
-                  attr = paste0("att", .data$a)) %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id", "attr",
-                  probability = "value") %>%
-    tidyr::pivot_wider(names_from = "attr", values_from = "probability") %>%
-    dplyr::select(".chain", ".iteration", ".draw", "resp_id",
-                  dplyr::all_of(all_attributes))
+    dplyr::rename_with(~ colnames(qmat)) %>%
+    tibble::rowid_to_column(var = "resp_id")
 
   return(mastery)
+}
+
+calculate_probs <- function(model, qmat, method, resp_lookup, attr_lookup,
+                            resp_id) {
+  class_probs <- extract_class_probs(model = model,
+                                     attr = ncol(qmat),
+                                     method = method)
+  attr_probs <- extract_attr_probs(model = model,
+                                   qmat = qmat,
+                                   method = method)
+
+  class_probs <- class_probs %>%
+    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
+    dplyr::mutate(resp_id = .data$orig_resp) %>%
+    dplyr::select(-"orig_resp") %>%
+    dplyr::rename(!!resp_id := "resp_id")
+
+  attr_probs <- attr_probs %>%
+    dplyr::rename_with(~ c("resp_id", attr_lookup$real_names)) %>%
+    dplyr::left_join(resp_lookup, by = c("resp_id")) %>%
+    dplyr::mutate(resp_id = .data$orig_resp) %>%
+    dplyr::select(-"orig_resp") %>%
+    dplyr::rename(!!resp_id := "resp_id")
+
+  ret_list <- list(class_probabilities = class_probs,
+                   attribute_probabilities = attr_probs)
+
+  return(ret_list)
 }
 
 summarize_probs <- function(x, probs, id, optim) {
@@ -99,17 +102,12 @@ summarize_probs <- function(x, probs, id, optim) {
                          "class", "attribute")
 
   sum_frame <- x %>%
-    dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
-    tidyr::pivot_longer(cols = -!!id, names_to = type, values_to = "prob") %>%
-    dplyr::summarize(probability = mean(.data$prob, na.rm = TRUE),
-                     bounds = list(
-                       tibble::as_tibble_row(
-                         stats::quantile(.data$prob, probs = probs,
-                                         na.rm = TRUE)
-                       )
-                     ),
-                     .by = c(!!id, !!type)) %>%
-    tidyr::unnest("bounds")
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar),
+                                ~lapply(.x, summarize_rvar, probs = probs))) %>%
+    tidyr::pivot_longer(cols = dplyr::all_of(summary_names),
+                        names_to = type,
+                        values_to = "summary") %>%
+    tidyr::unnest("summary")
 
   if (optim) {
     sum_frame <- sum_frame %>%
@@ -117,4 +115,36 @@ summarize_probs <- function(x, probs, id, optim) {
   }
 
   return(sum_frame)
+}
+
+summarize_rvar <- function(rv, probs) {
+  tibble::tibble(probability = E(rv),
+                 bounds = tibble::as_tibble_row(
+                   quantile(rv, probs = probs, names = TRUE),
+                   .name_repair = ~paste0(probs * 100, "%")
+                 )) %>%
+    tidyr::unnest("bounds")
+}
+
+calculate_probs_no_summary <- function(ret_list, method) {
+  if (method == "optim") {
+    ret_list <- lapply(ret_list,
+                       function(.x) {
+                         dplyr::mutate(
+                           .x,
+                           dplyr::across(dplyr::where(posterior::is_rvar),
+                                         posterior::E)
+                         )
+                       })
+    return(ret_list)
+  } else {
+    return(ret_list)
+  }
+}
+
+calculate_probs_summary <- function(ret_list, probs, id, method) {
+  summary_list <- lapply(ret_list, summarize_probs, probs = probs,
+                         id = id,
+                         optim = method == "optim")
+  return(summary_list)
 }

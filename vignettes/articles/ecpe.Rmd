@@ -1,0 +1,658 @@
+---
+title: "Examination for the Certificate of Proficiency in English"
+output: rmarkdown::html_vignette
+bibliography: ../bib/references.bib
+csl: ../bib/apa.csl
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Examination for the Certificate of Proficiency in English}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(wjake)
+library(showtext)
+library(english)
+
+set_theme(base_family = "Open Sans",
+          plot_margin = ggplot2::margin(10, 10, 10, 10))
+
+font_add_google("Open Sans")
+showtext_auto()
+showtext_opts(dpi = 192)
+
+msr_colors <- c("#8ECAE6", "#023047", "#D7263D")
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7.2916667,
+  fig.align = "center",
+  out.width = "90%"
+)
+
+options(mc.cores = 4,
+        tidyverse.quiet = TRUE)
+```
+
+The *Examination for the Certificate of Proficiency in English* (ECPE) is an assessment that measures advanced English skills for individuals for whom English is not the primary language.
+In this case study, we'll use data from the grammar section of the ECPE, which uses 28 items to measure 3 skills: morphosyntactic rules, cohesive rules, and lexical rules.
+This data set has previously been used by @templin-emip-2013 and @mcmc-handbook to demonstrate how to estimate diagnostic classification models (DCMs) with Mplus and Markov chain Monte Carlo (MCMC), respectively.
+Additionally, @hdcm used this ECPE data as a motivating example for developing a hierarchical DCM, and @chen2018 used the ECPE data to evaluate the effectiveness of the *M<sub>2</sub>* statistic for assessing model fit in the presence of attribute hierarchies.
+
+
+## Explore the Data
+
+The ECPE data is built into measr and can be accessed by loading the package.
+A complete description of the data can be viewed using `?ecpe_data`.
+
+```{r view-data}
+library(measr)
+
+ecpe_data
+```
+
+We can see that the data set has one row for each respondent, and that `r fmt_count(nrow(ecpe_data))` respondents completed this section of the ECPE.
+We also see that the data has `r fmt_count(ncol(ecpe_data))` columns.
+The first column contains respondent identifiers, and the remaining `r fmt_count(ncol(ecpe_data) - 1)` columns contain dichotomous item responses for each items.
+The item responses are coded as 0 for an incorrect response and 1 for a correct response.
+
+In addition to the data, we also have a Q-matrix that define which attributes are measured by each item.
+The Q-matrix has `r fmt_count(nrow(ecpe_qmatrix))` rows, which corresponds to the total number of items.
+The first column of the Q-matrix contains item identifiers, which are the same as the column names in `ecpe_data` that contain item responses.
+The remaining columns define the attributes measured by the ECPE.
+A value of 0 indicates that the item does not measure that attribute, whereas a value of 1 indicates that the attribute is measured by that item.
+For example, item E1 measures both morphosyntactic rules and cohesive rules, and item E4 measures only lexical rules.
+
+```{r view-qmatrix}
+ecpe_qmatrix
+```
+
+For a quick summary of the data, we can calculate the proportion of respondents that answered each question correctly (i.e., the item *p*-values).
+
+```{r pvalues}
+library(tidyverse)
+
+ecpe_data %>%
+  summarize(across(-resp_id, mean)) %>%
+  pivot_longer(everything(), names_to = "item_id", values_to = "pvalue")
+```
+
+We can then join the item *p*-values with the Q-matrix to get a sense of which attributes are the most difficult.
+Overall, most of the items have relatively high *p*-values, with most items having a *p*-value between .6 and .9.
+Note that in general, items measuring morphosyntactic rules tend to be the most difficult (i.e., lower *p*-values), followed by items measuring cohesive rules, and finally items measuring lexical rules.
+
+<details><summary>Plot code</summary>
+
+```{r pvalue-plot, eval = FALSE}
+ecpe_data %>%
+  summarize(across(-resp_id, mean)) %>%
+  pivot_longer(everything(), names_to = "item_id", values_to = "pvalue") %>%
+  left_join(ecpe_qmatrix, join_by(item_id)) %>%
+  pivot_longer(c(morphosyntactic, cohesive, lexical),
+               names_to = "attribute",
+               values_to = "measured") %>%
+  filter(measured == 1) %>%
+  summarize(measures = paste(str_to_title(attribute), collapse = "/<br>"),
+            .by = c(item_id, pvalue)) %>%
+  mutate(measures = fct_reorder(measures, pvalue, mean)) %>%
+  ggplot(aes(x = pvalue, y = measures)) +
+  geom_point(aes(color = measures),
+             position = position_jitter(height = 0.2, width = 0,
+                                        seed = 1213),
+             size = 4, show.legend = FALSE) +
+  scale_color_manual(values = c("#023047", "#D7263D", "#8ECAE6", "#219EBC",
+                                "#F3D3BD", "#000000")) +
+  expand_limits(x = c(0, 1)) +
+  scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+  labs(x = "Item *p*-value", y = "Measured attributes")
+```
+
+</details>
+
+```{r pvalue-plot, echo = FALSE}
+#| fig.asp: 0.618
+#| fig.alt: >
+#|   Scatter plot showing item p-values on the x-axis and attribute combinations
+#|   from the Q-matrix on the y-axis.
+```
+
+
+## DCM Estimation
+
+Now that we have a feel for our data, we will estimate a DCM.
+Following the original analysis of the ECPE data by @templin-emip-2013, we'll estimate a loglinear cognitive diagnostic model (LCDM).
+The LCDM is a general diagnostic model that allows for different attribute relationships on items (e.g., compensatory, non-compensatory) and subsumes many other types of DCMs [@lcdm; @lcdm-handbook].
+
+The following code will estimate an LCDM.
+In the first two lines, we specify our data, Q-matrix, and the respondent and item identifiers.
+We then specify the type of DCM we want to estimate and define how the model should be estimated.
+In this case, we want to estimate the model using MCMC with the [rstan](https://mc-stan.org/rstan) package as the estimation engine.
+Finally, we can customize how the MCMC process is executed.
+For this example, we specified 4 chains, each with 1,000 warmup iterations and 500 retained iterations for 1,500 iterations total.
+This results in a total posterior distribution of 2,000 samples for each parameter (i.e., 500 iterations from each of the 4 chains).
+We also specified a file so that the estimated model will be saved once it is estimated.
+
+```{r estimate-lcdm}
+ecpe_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
+                       resp_id = "resp_id", item_id = "item_id",
+                       type = "lcdm", method = "mcmc", backend = "rstan",
+                       chains = 4, iter = 1500, warmup = 1000,
+                       file = "fits/ecpe-lcdm")
+```
+
+Now that we’ve estimated a model, let’s examine the output.
+There are three types of information we'll examine: structural parameters, item parameters, and respondent proficiency.
+
+### Structural Parameters
+
+```{r extract-strc, echo = FALSE, results = "hide"}
+structural_parameters <- measr_extract(ecpe_lcdm, "strc_param")
+structural_parameters
+```
+
+```{r example-class, echo = FALSE}
+class_prob <- structural_parameters %>%
+  mutate(mean = map_dbl(estimate, mean))
+
+no_prof <- pull(filter(class_prob, class == "[0,0,0]"), mean)
+not_last <- pull(filter(class_prob, class == "[0,1,1]"), mean)
+```
+
+The structural parameters define the base rate of membership in each of attribute profiles.
+Because the ECPE data consists of 3 dichotomous attributes, there are a total of 2^3^ = 8 possible profiles, or classes.
+We can view the possible profiles using `measr_extract()`.
+This function extracts different aspects of a model estimated with measr.
+The order of the attributes in the profiles corresponds to the order the attributes were listed in the Q-matrix used to estimate the model.
+This means that attributes 1, 2, and 3 correspond to morphosyntactic, cohesive, and lexical rules, respectively.
+
+```{r extract-profiles}
+ecpe_classes <- measr_extract(ecpe_lcdm, "classes")
+ecpe_classes
+```
+
+We can extract the structural parameters also using `measr_extract()`.
+For structural parameters, we see the `class`, or the attribute profile, and the estimated proportion of respondents in that class with a measure of error (the standard deviation of the posterior).
+For example, nearly `r fmt_prop_pct(no_prof)`% of respondents are estimated to not be proficient on any of the attributes (class 1), and `r fmt_prop_pct(not_last)`% are estimated to proficient on just attributes 2 and 3 (class 7).
+
+```{r extract-strc}
+```
+
+When looking at the structural parameters, we can see that respondents typically fall into only 4 of the 8 possible profiles.
+Specifically, respondents are typically proficient on no attributes, only attribute 3 (lexical rules), only attributes 2 and 3 (cohesive and lexical rules), or all attributes.
+This may indicate the presence of an attribute hierarchy, as suggested by @hdcm, where respondents must gain proficiency of lexical rules before they can gain proficiency of cohesive rules, and then finally morphosyntactic rules.
+
+<details><summary>Plot code</summary>
+
+```{r strc-plot, eval = FALSE}
+structural_parameters %>%
+  mutate(class = fct_inorder(class),
+         prob = map_dbl(estimate, mean)) %>%
+  ggplot(aes(x = class, y = prob)) +
+  geom_col(fill = msr_colors[2]) +
+  labs(x = "Class", y = "Base rate")
+```
+
+</details>
+
+```{r strc-plot, echo = FALSE}
+#| fig.asp: 0.618
+#| fig.alt: >
+#|   Bar graph showing the estimated proportion of respondents with each
+#|   attribute profile.
+```
+
+```{r calc-attribute-base-rate, echo = FALSE}
+library(knitr)
+library(glue)
+
+att_base_rate <- ecpe_classes %>%
+  left_join(structural_parameters, join_by(class)) %>%
+  summarize(morphosyntactic = rvar_sum(estimate[which(morphosyntactic == 1)]),
+            cohesive = rvar_sum(estimate[which(cohesive == 1)]),
+            lexical = rvar_sum(estimate[which(lexical == 1)]))
+
+att_summary <- att_base_rate %>%
+  pivot_longer(everything()) %>%
+  glue_data("{fmt_prop_pct(E(value))}% of respondents are proficient on ",
+            "{name} rules") %>%
+  combine_words()
+```
+
+We can also collapse across classes to calculate the base rate of proficiency for each individual attribute.
+Overall, the model estimates that `r att_summary`.
+
+```{r attribute-base-rate}
+ecpe_classes %>%
+  left_join(structural_parameters, join_by(class)) %>%
+  summarize(morphosyntactic = rvar_sum(estimate[which(morphosyntactic == 1)]),
+            cohesive = rvar_sum(estimate[which(cohesive == 1)]),
+            lexical = rvar_sum(estimate[which(lexical == 1)]))
+```
+
+In summary, both the profile- and attribute-level base rates tell a similar story.
+Respondents are most likely to be proficient on lexical rules and least likely to be proficient on morphosyntactic rules.
+This also mirrors our analysis of item *p*-values when we were exploring the data, which showed that items measuring morphosyntactic rules were more difficult than items measuring lexical or cohesive rules.
+
+### Item Parameters
+
+The item parameters define the log-odds of a respondent in each class providing a correct response.
+We can again extract our estimated item parameters using `measr_extract()`.
+Here, the `estimate` column reports estimated value for each parameter and a measure of the associated error (i.e., the standard deviation of the posterior distribution).
+For example, item E1 has four parameters, as it measures two attributes:
+
+1. An intercept, which represents the log-odds of providing a correct response for a respondent who is proficient in neither of the attributes this item measures (i.e., morphosyntactic rules and cohesive rules).
+2. A main effect for morphosyntactic rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+3. A main effect for cohesive rules, which represents the increase in the log-odds of providing a correct response for a respondent who is proficient in that attribute.
+4. An interaction between morphosyntactic and cohesive rules, which is the change in the log-odds for a respondent who is proficient in both attributes.
+
+```{r extract-items}
+item_parameters <- measr_extract(ecpe_lcdm, what = "item_param")
+item_parameters
+```
+
+We can compare these estimates to those that @templin-emip-2013 reported when using different software to estimate the same model.
+In the following figure, most parameters fall on or very close to the dashed line, which represents perfect agreement.
+
+<details><summary>Plot code</summary>
+
+```{r mplus-param-compare, echo = FALSE}
+library(glue)
+
+ecpe_templin <- read_csv("data/mplus-estimates-templin.csv",
+                         col_types = cols(.default = col_double()))
+
+param_compare <- item_parameters %>%
+  full_join(ecpe_templin %>%
+              pivot_longer(-item) %>%
+              mutate(param = glue("l{item}_{name}")) %>%
+              select(param, mplus_est = value) %>%
+              drop_na(everything()),
+            by = c("coef" = "param")) %>%
+  mutate(measr_est = map_dbl(estimate, mean),
+         type = case_when(str_detect(coef, "_0") ~ "Intercept",
+                          str_detect(coef, "_1") ~ "Main Effect",
+                          str_detect(coef, "_2") ~ "Interaction"),
+         type = factor(type, levels = c("Intercept", "Main Effect",
+                                        "Interaction")))
+```
+
+```{r lcdm-param-compare, eval = FALSE}
+param_compare %>%
+  ggplot(aes(x = measr_est, y = mplus_est)) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  geom_point(aes(color = type, shape = type), size = 3) +
+  scale_color_manual(values = msr_colors) +
+  expand_limits(x = c(-2, 3), y = c(-2, 3)) +
+  coord_fixed() +
+  labs(x = "measr", y = "Templin & Hoffman (2013)",
+       color = "Parameter Type", shape = "Parameter Type")
+```
+
+</details>
+
+```{r lcdm-param-compare, echo = FALSE}
+#| fig.asp: 0.7
+#| fig.alt: >
+#|   Figure shows a strong correlation between item parameters, with only a few
+#|   discrepancies off of the line of perfect agreement.
+```
+
+```{r example-item, echo = FALSE}
+example_item <- filter(param_compare, item_id == "E7")
+example_measr <- deframe(select(example_item, attributes, measr_est))
+example_mplus <- deframe(select(example_item, attributes, mplus_est))
+```
+
+There are some parameters that deviate from the line of perfect agreement, but these are expected.
+For example, take item E7, which measures morphosyntactic and lexical rules.
+Both measr and @templin-emip-2013 report values of approximately `r round(mean(c(example_measr[1], example_mplus[1])), 2)` for the intercept and `r round(mean(c(example_measr["lexical"], example_mplus["lexical"])), 2)` for the main effect of lexical rules.
+For the main effect of morphosyntactic rules, measr estimated a value of `r round(example_measr["morphosyntactic"], 2)`, compared to a value of `r round(example_mplus["morphosyntactic"], 2)` reported by @templin-emip-2013, a difference of `r round(example_measr["morphosyntactic"] - example_mplus["morphosyntactic"], 2)`.
+Similarly, the interaction term estimated by measr is `r round(example_measr["morphosyntactic__lexical"], 2)`, compared to a value of `r round(example_mplus["morphosyntactic__lexical"], 2)` reported by @templin-emip-2013, a difference of `r round(example_measr["morphosyntactic__lexical"] - example_mplus["morphosyntactic__lexical"], 2)`.
+This indicates that the log-odds of providing a correct response for an individual who has mastered both attributes is approximately the same, regardless of software.
+That is, for measr, we get a log-odds of `` `r knitr::combine_words(round(c(example_measr, sum(example_measr)), 2), sep = " + ", and = " = ", oxford_comma = FALSE)` ``, and from @templin-emip-2013, we get a log-odds of `` `r knitr::combine_words(round(c(example_mplus, sum(example_mplus)), 2), sep = " + ", and = " = ", oxford_comma = FALSE)` ``.
+This is true for all of the differences in the figure.
+There is a change to the main effect for morphosyntactic rules and corresponding change to the interaction term that "cancels out" the difference.
+
+```{r class-exam, echo = FALSE}
+bad_class <- structural_parameters %>%
+  slice(2, 5, 6)
+```
+
+Why is this happening? Let's revisit the proportion of respondents in each class.
+There are very few respondents who are proficient in morphosyntactic rules without also being proficient in both of the other attributes (classes 2, 5, and 6; less than `r ceiling(sum(mean(bad_class$estimate)) * 100)`% of all respondents).
+Therefore, there is less information for estimating the morphosyntactic main effects, which for items that measure multiple attributes, represent the increase in log-odds for proficiency in morphosyntactic rules *conditional on not being proficient* on the other attribute.
+
+```{r revisit-strc}
+structural_parameters
+```
+
+Because there is less information available for the morphosyntactic main effects, the prior will have more influence on these parameters.
+Note in the above figure that the main effect estimates that are off the diagonal are less extreme when using measr.
+For example, the triangle at the top right is a main effect that was estimated to be nearly 3 by @templin-emip-2013, but is just over 1.5 when the model is estimated with measr.
+Thus, there is a regularizing effect, where the prior is pulling in extreme values, which is an intended outcome.
+We did not discuss priors when estimating our model and instead used the default priors provided by measr.
+For more information on prior distributions, including information on how to specify your own prior distributions for the model parameters, see `?prior` and the [model estimation vignette](../model-estimation.html).
+
+### Respondent Proficiency
+
+```{r add-resp-estimates, echo = FALSE}
+ecpe_lcdm <- add_respondent_estimates(ecpe_lcdm)
+```
+
+The final piece of output from our model we will examine is the respondent probabilities.
+There are two types of probabilities that we can calculate, both of which are returned by the `predict()` function.
+
+```{r resp-probs}
+resp_probs <- predict(ecpe_lcdm)
+resp_probs
+```
+
+```{r example-resp, echo = FALSE}
+class73 <- resp_probs$class_probabilities %>%
+ filter(resp_id == 73)
+
+max_class <- slice_max(class73, probability)
+
+att73 <- resp_probs$attribute_probabilities %>%
+  filter(resp_id == 73)
+
+att73_text <- att73 %>%
+  glue_data("a {fmt_prop_pct(probability)}% chance the respondent is ",
+            "proficient on {attribute} rules") %>%
+  combine_words()
+
+att73_morpho <- att73 %>%
+  filter(attribute == "morphosyntactic") %>%
+  glue_data("as low as {fmt_prop_pct(`2.5%`)}% or as high as ",
+            "{fmt_prop_pct(`97.5%`)}%")
+```
+
+The `class_probabilites` are the probabilities that the respondent belongs to each of the 8 possible classes (i.e., profiles of proficiency).
+The `attribute_probabilites` are the probabilities that the respondent is proficient on each of the individual attributes.
+To better describe the difference between these two probabilities, let's look at the results for respondent 73.
+When looking at the class probabilities, the most likely profile is `r max_class$class[1]`, meaning that the respondent is proficient on all attributes.
+However, there is only a `r fmt_prop_pct(max_class$probability)`% chance that the respondent belongs to that class.
+They also have a greater than 10% chance of belonging to the `r combine_words(pull(filter(class73, probability > .1, probability != max(probability)), class))` classes.
+
+```{r class-73}
+resp_probs$class_probabilities %>%
+ filter(resp_id == 73)
+```
+
+The attribute probabilities for respondent 73 show a slightly different story.
+These probabilities indicate that there is `r att73_text`.
+That is, we're fairly confident respondent 73 is proficient lexical rules, somewhat confident they are proficient on cohesive rules, and not confident about whether or not the student is proficient on morphosyntactic rules (i.e., the proficiency probability could reasonably be `r att73_morpho`).
+These probabilities can be turned into classifications by setting proficiency thresholds.
+For example, we might decide that probabilities greater than .5 (i.e., more likely than not) indicate proficiency [e.g., @bradshaw-2019].
+On the other hand, we might want to be more confident that a respondent is proficient before reporting as such, and therefore might set a higher threshold [e.g., .8, @thompson-ame].
+For respondent 73, thresholds of .5 and .8 would result in proficiency profiles of [0,1,1] and [0,0,1], respectively.
+Either way, both profiles differ from the overall most likely profile indicated by the class probabilities.
+Thus, it is important to give careful consideration to how results are determined before they are reported.
+
+```{r att-73}
+resp_probs$attribute_probabilities %>%
+  filter(resp_id == 73)
+```
+
+By default, `predict()` only returns a summary of the posterior distribution for each probability (i.e., the mean and 95% credible interval).
+There are many class and attribute probabilities, and therefore the object containing the full posterior distributions would be quite large.
+You can change the percentiles that are returned in the posterior summary by setting the `probs` argument to quantiles other than the default of `probs = c(0.025, 0.975)`.
+Alternatively, if you do want the full posterior distribution for each probability, you can set `summary = FALSE`.
+This will return a `posterior::rvar()` object (the same as the structural and item parameter summaries) that contains all of the posterior draws for each probability, and is displayed as the mean of the posterior ±1 standard deviation. For more information on `rvar` objects, see the accompanying vignette (`vignette("rvar", package = "posterior")`).
+
+```{r full-probs}
+predict(ecpe_lcdm, summary = FALSE)
+```
+
+
+## DCM Evaluation
+
+There are several ways we might evaluate an estimate model.
+In this case study, we'll focus on two: absolute model fit and classification reliability.
+
+### Absolute Model Fit
+
+```{r calc-mod-fit, echo = FALSE}
+ecpe_lcdm <- add_fit(ecpe_lcdm, method = c("m2", "ppmc"), item_fit = NULL,
+                     return_draws = 1)
+```
+
+One of the most common measures of model fit for DCMs is the M<sub>2</sub> statistic.
+This index is a limited information goodness-of-fit measure originally described by Maydeu-Olivares & Joe [-@m2-2005; -@m2-2006] and adapted for DCMs by @liu2016.
+We can calculate the M<sub>2</sub> for a model estimated with measr with `fit_m2()`.
+In addition to the calculated M<sub>2</sub> statistic, `fit_m2()` also returns the root mean square error of approximation (RMSEA) with an associated confidence interval and the standardized root mean square residual (SRMSR).
+
+```{r ecpe-m2}
+fit_m2(ecpe_lcdm)
+```
+
+For our estimated LCDM, we see an M<sub>2</sub> value of `r fmt_digits(ecpe_lcdm$fit$m2$m2, digits = 1)`, which has a corresponding *p*-value of `r fmt_prop(ecpe_lcdm$fit$m2$pval, digits = 2)`.
+When interpreting the M<sub>2</sub> and its *p*-value, the null hypothesis is that the model fits.
+Thus, the *p*-value represents the probability of observing an M<sub>2</sub> value this large if the model fits.
+For our estimated LCDM, the *p*-value is extremely small, indicating that our model has poor fit.
+
+As described in the [model evaluation vignette](../model-evaluation.html), a fully Bayesian estimation allows us to evaluate model fit using posterior predictive model checks (PPMCs).
+Specifically, measr supports a PPMC of the overall raw score distribution as described by @park2015 and @thompson2019.
+For each of the replicated data sets, we calculate the number of students with each raw score (i.e., the number of correct responses).
+This can be done using `fit_ppmc()`.
+Note that we can also calculate item-level PPMCs. 
+However, because in this case study we are only interested in overall model fit, we'll set `item_fit = NULL` to save some computation time.
+
+```{r ecpe-ppmc-raw-score}
+rawscore_ppmc <- fit_ppmc(ecpe_lcdm, model_fit = "raw_score",
+                          item_fit = NULL, return_draws = 1)
+rawscore_ppmc
+```
+
+```{r ppmc-example, echo = FALSE}
+library(ggdist)
+
+example <- rawscore_ppmc$model_fit$raw_score %>%
+  dplyr::select(rawscore_samples) %>%
+  unnest(rawscore_samples) %>%
+  unnest(raw_scores) %>%
+  group_by(raw_score) %>%
+  mean_qi() %>%
+  filter(raw_score == 14)
+
+example_obs <- ecpe_data %>%
+  rowwise() %>%
+  mutate(total = sum(c_across(-resp_id))) %>%
+  ungroup() %>%
+  count(total) %>%
+  filter(total == 14)
+
+exp_min <- ecpe_lcdm$fit$ppmc$model_fit$raw_score$`2.5%`
+exp_max <- ecpe_lcdm$fit$ppmc$model_fit$raw_score$`97.5%`
+```
+
+In the output, the posterior predictive *p*-value (*ppp*) is very small, indicating poor fit.
+To unpack what this really means, let's visualize the PPMC.
+In the following figure, the blue bars show the credible intervals for the number of respondents we would expect to see at each raw score point, given our estimated model parameters.
+The red dots and line indicate the number of respondents that were observed at each raw score point in our observed data (`ecpe_data`).
+For example, the model expects there to be between about `r round_to(example$.lower, 10, direction = "down")` and `r round_to(example$.upper, 10, direction = "up")` respondents with a total score of 14.
+In the observed data, there were `r fmt_count(example_obs$n)` respondents with a total score of 14.
+In general, the model tends to overestimate the number of respondents with a raw score between 14--16 and 23--25.
+On the other hand, the model underestimates the number of respondents with a raw score between 6--10 and 27--28.
+
+<details><summary>Plot code</summary>
+
+```{r rawscore-dist, eval = FALSE}
+library(ggdist)
+
+obs_scores <- ecpe_data %>%
+  pivot_longer(cols = -"resp_id") %>%
+  summarize(raw_score = sum(value), .by = resp_id) %>%
+  count(raw_score) %>%
+  complete(raw_score = 0:28, fill = list(n = 0L))
+
+rawscore_ppmc$model_fit$raw_score %>%
+  dplyr::select(rawscore_samples) %>%
+  unnest(rawscore_samples) %>%
+  unnest(raw_scores) %>%
+  ggplot() +
+  stat_interval(aes(x = raw_score, y = n, color_ramp = after_stat(level)),
+                point_interval = "mean_qi",
+                color = msr_colors[2], linewidth = 5,
+                show.legend = c(color = FALSE)) +
+  geom_line(data = obs_scores,
+            aes(x = raw_score, y = n),
+            color = msr_colors[3]) +
+  geom_point(data = obs_scores,
+             aes(x = raw_score, y = n, fill = "Observed Data"),
+             shape = 21, color = msr_colors[3], size = 2) +
+  scale_color_ramp_discrete(from = "white", range = c(0.2, 1),
+                            breaks = c(0.5, 0.8, 0.95),
+                            labels = ~sprintf("%0.2f", as.numeric(.x))) +
+  scale_fill_manual(values = c(msr_colors[3])) +
+  scale_x_continuous(breaks = seq(0, 28, 2), expand = c(0, 0)) +
+  scale_y_comma() +
+  labs(x = "Raw score", y = "Respondents",
+       color_ramp = "Credible Interval", fill = NULL) +
+  guides(fill = guide_legend(override.aes = list(size = 3)))
+```
+
+</details>
+
+```{r rawscore-dist, echo = FALSE}
+#| fig.asp: 0.618
+#| fig.alt: >
+#|   Something...
+```
+
+We can quantify how different the observed raw score distribution is from the replicated data sets by calculating a &chi;^2^-like statistic.
+To do this, we first calculate the expected number of students at each raw score by taking the mean of the posterior distribution for each score point.
+Then, for each replicated data set, we calculate &chi;^2^-like statistic as
+
+$$
+\chi^2_{rep} = \sum_{s=0}^S \frac{[n_s - E(n_s)]^2}{E(n_s)},
+$$
+
+where *s* represents the raw score, *n<sub>s</sub>* is the number of respondents at score point *s*, and *E(n<sub>s</sub>)* is the expected number of respondents at score point *s* (i.e., the mean of the posterior distribution).
+This calculation is completed on each of the replicated data sets, creating a posterior distribution of &chi;^2^<sub>rep</sub> that represents the plausible values for the &chi;^2^-like statistic if our model is correct.
+This distribution is summarized in the `fit_ppmc()` output.
+Specifically, we expect the &chi;^2^-like statistic for our observed data to be between `r round_to(exp_min, 1)` and `r round_to(exp_max, 1)`, as shown in the following figure.
+However, when we calculate the statistic on our observed data, we get a value of `r round_to(ecpe_lcdm$fit$ppmc$model_fit$raw_score$obs_chisq, 1)`, way beyond our expected range.
+This is represented by the *ppp* value, which is the proportion of &chi;^2^<sub>rep</sub> values that are larger than our observed value.
+In this case, no values of &chi;^2^<sub>rep</sub> were larger than our observed value, leading to a *ppp* of 0.
+
+<details><summary>Plot code</summary>
+
+```{r chisq-dist, eval = FALSE}
+rawscore_ppmc$model_fit$raw_score %>%
+  dplyr::select(chisq_samples) %>%
+  unnest(chisq_samples) %>%
+  ggplot(aes(x = chisq_samples)) +
+  stat_dots(quantiles = 500, layout = "hex", stackratio = 0.9,
+            color = msr_colors[2], fill = msr_colors[2],
+            na.rm = TRUE) +
+  scale_x_continuous(limits = c(0, 100)) +
+  labs(y = NULL, x = "&chi;^2^<sub>rep</sub>") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+</details>
+
+```{r chisq-dist, echo = FALSE}
+#| fig.asp: 0.618
+#| fig.alt: >
+#|   Dot plot showing the distribution of chi-square values from the replicated
+#|   data sets.
+```
+
+In summary, both the M<sub>2</sub> and raw score PPMC indicate poor fit of our estimated LCDM to the observed data.
+This is not unexpected, given that some classes are very small.
+Recall from our discussion of the estimated structural parameters that there are three classes that combine to include less than 4% of all respondents.
+When classes are this small, parameter estimates can be unstable, leading to poor model fit [e.g., @hu2020; @ma2023; @martinez2023; @hdcm; @wang2021].
+
+
+### Classification Reliability
+
+```{r calc-reli, echo = FALSE}
+ecpe_lcdm <- add_reliability(ecpe_lcdm)
+```
+
+Depending on the intended uses of our assessment, we may be less concerned with overall model fit and more concerned with the consistency and accuracy of classifications.
+In other words, we may be focused on the reliability of the classifications produced by our model.
+There are several ways to evaluate the reliability evidence for DCMs.
+For a comprehensive summary of methods, see @reliability-handbook.
+Using measr, we can easily calculate a wide variety of reliability metrics for our estimated LCDM using `reliability()`.
+
+```{r ecpe-reliability}
+ecpe_reliability <- reliability(ecpe_lcdm)
+ecpe_reliability
+```
+
+By default, `reliability()` returns several different types of reliability evidence.
+For all types of evidence, the indices range from 0--1, with values close to 1 indicating high accuracy or consistency.
+Which information is most relevant will depend on how scores are determined and reported.
+For example, we could determine each respondent's scores by choosing the overall profile that is most consistent with their observed responses (i.e., the class probabilities returned by `predict()`).
+For this type of classification we would want to look at pattern reliability, as we are classifying responding into an overall pattern of proficiency on the attributes.
+
+```{r ecpe-pattern}
+ecpe_reliability$pattern_reliability
+```
+
+The values `p_a` and `p_c` are described by @cui2012.
+*P<sub>a</sub>* is the probability classifying a random respondent into the correct class, and *P<sub>c</sub>* is the probability of consistently classifying a random respondent into the same class across two test administrations.
+
+On the other hand, rather than basing results on the overall most likely profile, we could score each attribute individually (i.e., the attribute probabilities returned by `predict()`).
+This is accomplished by calculating the probability of proficiency on each attribute and creating classifications based on a given threshold (usually .5).
+This result is known as the *maximum a posteriori* (MAP) because it represents the most likely latent state for each respondent on each attribute.
+As with the pattern-level classifications, attribute level classifications can be evaluated through accuracy and consistency.
+@johnson2018 developed accuracy (`acc`) and consistency (`consist`) metrics for attribute level classifications, and also examined other agreement measures based on contingency tables such as Goodman & Kruskal's &lambda;, Cohen's &kappa;, Youden's *J*, the true positive rate, and the true negative rate.
+
+```{r ecpe-map}
+ecpe_reliability$map_reliability
+```
+
+Using the cutoffs recommended by @johnson2018, the cohesive rules attribute has *fair* accuracy while the morphosyntactic and lexical rules attributes have *good* accuracy.
+All attributes have *fair* classification consistency.
+
+Finally, results could be reported as probabilities of proficiency on each attribute, rather than a categorical classification.
+In this instance, because the probabilities themselves are reported, we would want to report the reliability or precision of that probability estimate.
+This type of result is known as the *expected a posteriori* (EAP) estimate because it is the expected value of the classification.
+@johnson2020 described four metrics for evaluating the reliability of the EAP estimates: (1) biserial, (2) informational, (3) parallel forms, and (4) a constrained parallel forms originally proposed by @templin2013.
+In their paper, @johnson2020 note that both types of parallel form reliability tend to over estimate the reliability, and therefore recommend using the biserial or informational reliability metrics.
+These metrics are available in the reliability output as `rho_bs` and `rho_i`.
+
+```{r ecpe-eap}
+ecpe_reliability$eap_reliability
+```
+
+```{r uncert73, echo = FALSE}
+lower73 <- pull(filter(att73, attribute == "lexical"), "2.5%")
+upper73 <- pull(filter(att73, attribute == "lexical"), "97.5%")
+
+diff73 <- round(upper73 * 100) - round(lower73 * 100)
+```
+
+Using the cutoffs suggested by @johnson2020, all three attributes have *poor* EAP reliability.
+It's not surprising that the EAP reliability is lower than MAP reliability, as it is harder to place respondents at a specific point on a scale (i.e., the probability scale) than it is to place respondents into a category.
+For example, let's return to our example of respondent 73.
+
+```{r revisit-att73}
+resp_probs$attribute_probabilities %>%
+  filter(resp_id == 73)
+```
+
+We estimated that there is a `r fmt_prop_pct(pull(filter(att73, attribute == "lexical"), probability))`% chance that this respondent was proficient on lexical rules.
+However, the credible interval tells us this probability could be anywhere from `r fmt_prop_pct(lower73)`% to `r fmt_prop_pct(upper73)`%.
+There's `r indefinite(diff73)` percentage point range that is plausible.
+We don't have a great deal of certainty for the specific probability that the respondent is proficient in lexical rules; however, the entire plausible range is high, so we would make a classification of "proficient" regardless of where in the range the true probability of proficiency is.
+That is, we would consistently make the same classification decision, regardless of the uncertainty in the probability itself.
+
+## Summary
+
+In this case study, we estimated an LCDM to analyze the ECPE data.
+From the model estimation, we saw that the estimates provided by measr were highly consistent with previously reported parameters estimates for the ECPE.
+However, model fit indices indicated that the LCDM does not do a great job of represented the observed data.
+This is likely due to dependencies among the attributes.
+To further analyze this data, we might consider a model with a different attribute structure, such as the hierarchical diagnostic classification model [@hdcm].
+Despite the poor model fit, reliability indices showed that classification consistency and accuracy were generally in the fair to good range, and therefore, depending on our intended uses, this model may be sufficient for reporting respondent proficiency of the three attributes.
+
+
+## References

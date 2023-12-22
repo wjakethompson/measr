@@ -227,7 +227,8 @@ add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
   run_pred <- length(model$respondent_estimates) == 0 || overwrite
 
   if (run_pred) {
-    model$respondent_estimates <- stats::predict(model, probs = probs)
+    model$respondent_estimates <- stats::predict(model, summary = TRUE,
+                                                 probs = probs)
   }
 
   # re-save model object (if applicable)
