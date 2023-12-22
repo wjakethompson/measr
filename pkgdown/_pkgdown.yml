@@ -135,7 +135,7 @@ articles:
 - title: Case Studies
   navbar: Case Studies
   contents:
-  - articles/case-studies/ecpe
+  - articles/ecpe
 
 news:
   releases:

@@ -1,11 +1,8 @@
 ---
 title: "Examination for the Certificate of Proficiency in English"
 output: rmarkdown::html_vignette
-resource_files:
-  - ../../bib/references.bib
-  - ../../bib/apa.csl
-bibliography: ../../bib/references.bib
-csl: ../../bib/apa.csl
+bibliography: ../bib/references.bib
+csl: ../bib/apa.csl
 link-citations: true
 vignette: >
   %\VignetteIndexEntry{Examination for the Certificate of Proficiency in English}
