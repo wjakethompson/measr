@@ -14,10 +14,10 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.7/font.css" rel="stylesheet">
-<link href="../deps/Fira_Code-0.4.7/font.css" rel="stylesheet">
-<link href="../deps/Playfair_Display-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Playfair_Display-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -63,6 +63,9 @@
     <a class="dropdown-item" href="../articles/paper.html">measr: Bayesian psychometric measurement using Stan</a>
     <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
     <a class="dropdown-item" href="../articles/model-evaluation.html">Evaluating diagnostic classification models</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
+    <a class="dropdown-item" href="../articles/ecpe.html">Examination for the Certificate of Proficiency in English</a>
   </div>
 </li>
 <li class="nav-item dropdown">
@@ -170,40 +173,51 @@ measr.</p>
 </h3>
 <p>Absolute model fit measures how well the estimated model fits the
 observed data. One of the more popular methods for evaluating absolute
-model fit for DCMs is the <span class="math inline">\(M_2\)</span>
-statistic <span class="citation">(<a href="#ref-hansen2016" role="doc-biblioref">Hansen et al., 2016</a>; <a href="#ref-liu2016" role="doc-biblioref">Liu et al., 2016</a>)</span>. We can calculate the
-<span class="math inline">\(M_2\)</span> statistics with the
-<code><a href="https://rdrr.io/pkg/dcm2/man/fit_m2.html" class="external-link">fit_m2()</a></code> function.</p>
+model fit for DCMs is the M<sub>2</sub> statistic <span class="citation">(<a href="#ref-hansen2016" role="doc-biblioref">Hansen
+et al., 2016</a>; <a href="#ref-liu2016" role="doc-biblioref">Liu et
+al., 2016</a>)</span>. We can calculate the M<sub>2</sub> statistics
+with the <code><a href="https://rdrr.io/pkg/dcm2/man/fit_m2.html" class="external-link">fit_m2()</a></code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/dcm2/man/fit_m2.html" class="external-link">fit_m2</a></span><span class="op">(</span><span class="va">lcdm</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 8</span></span></span>
 <span><span class="co">#&gt;      m2    df  pval rmsea ci_lower ci_upper `90% CI`     srmsr</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  121.   129 0.670     0        0   0.009<span style="text-decoration: underline;">1</span> [0, 0.0091] 0.016<span style="text-decoration: underline;">6</span></span></span></code></pre></div>
-<p>This function returns a data frame with the <span class="math inline">\(M_2\)</span> statistic (<code>m2</code>), and the
-degrees of freedom and <em>p</em>-value associated with the <span class="math inline">\(M_2\)</span> (<code>df</code> and
+<p>This function returns a data frame with the M<sub>2</sub> statistic
+(<code>m2</code>), and the degrees of freedom and <em>p</em>-value
+associated with the M<sub>2</sub> (<code>df</code> and
 <code>pval</code>, respectively). A <em>p</em>-value less than .05 would
 typically indicate poor model fit. As expected in this example, the
 estimated LCDM shows adequate model fit to our data (<em>p</em> &gt;
 .05). The <code><a href="https://rdrr.io/pkg/dcm2/man/fit_m2.html" class="external-link">fit_m2()</a></code> also return information on the RMSEA and
-SRMSR fit statistics. The <span class="math inline">\(M_2\)</span>,
-RMSEA, and SRMSR are all considered limited-information fit indices. For
-example, the <span class="math inline">\(M_2\)</span> is based off of
-univariate item statistics and the bivariate relationships between
-items. Thus, it cannot capture aspects of model fit from higher-order
-relationships (e.g., triplets of items).</p>
+SRMSR fit statistics. The M<sub>2</sub>, RMSEA, and SRMSR are all
+considered limited-information fit indices. For example, the
+M<sub>2</sub> is based off of univariate item statistics and the
+bivariate relationships between items. Thus, it cannot capture aspects
+of model fit from higher-order relationships (e.g., triplets of
+items).</p>
 <p>Because we used a fully Bayesian estimation of our models, we can use
-posterior predictive model checks (PPMCs) to get a more comprehensive
-evaluation of model fit. Conceptually, PPMCs are generating a new data
-set at each iteration of the Markov chain. We can then calculate
-summaries of the replicated data sets to get a posterior distribution
-for different characteristics of our data <em>if the estimated model
-were correct</em>. We can then compare the observed values of the
-summaries from our actual data to the calculate posteriors. If the
-observed value falls within the posterior, this is evidence that our
-estimated model is consistent with the observed data. On the other hand,
-discrepancies between the observed value and posteriors indicates
-inconsistencies.</p>
+the posterior distributions to provide another evaluation of model fit
+that can incorporate more information. This method is known as a
+posterior predictive model check (PPMC). The general process for PPMCs
+is as follows:</p>
+<ol style="list-style-type: decimal">
+<li>For each draw of the posterior distribution, generate a synthetic
+data set using the parameters values for that draw.</li>
+<li>For each synthetic data set calculate a summary of the data. This
+process creates a posterior distribution of the summary. Because the
+synthetic data sets are generated from the parameter values in the
+posterior distribution, the distribution of the data summary represents
+what we would expect the summary to look like, if the estimated model is
+correct or true.</li>
+<li>Calculate the same data summary for the observed data set.</li>
+<li>Compare the summary from the observed data to the posterior
+distribution.</li>
+</ol>
+<p>If the observed value falls within the posterior distribution of the
+summary, this is evidence that our estimated model is consistent with
+the observed data. On the other hand, discrepancies between the observed
+value and posteriors indicates inconsistencies.</p>
 <p>The PPMCs can be used to evaluate both model- and item-level fit. At
 the model level, fit is evaluated by the expected raw score
 distribution, as described by <span class="citation">Park et al. (<a href="#ref-park2015" role="doc-biblioref">2015</a>)</span> and <span class="citation">Thompson (<a href="#ref-thompson2019" role="doc-biblioref">2019</a>)</span>. At the item level, we can
@@ -226,16 +240,15 @@ setting <code>item_fit = NULL</code>.</p>
 <p><code><a href="../reference/fit_ppmc.html">fit_ppmc()</a></code> returns a list, where each element is a
 different PPMC. Here, we only specified one PPMC, so we only get the
 <code>raw_score</code> element back. The <code>obs_chisq</code> is the
-raw score <span class="math inline">\(\chi^2\)</span> values from our
-observed data. We then see the mean of the posterior distribution for
-the <span class="math inline">\(\chi^2\)</span>, quantiles of the
-posterior distribution, and the posterior predictive <em>p</em>-value
-(<em>ppp</em>). The <em>ppp</em> is the proportion of posterior draws
-that are greater than the observed value. Values close to 0 indicate
-poor fit. Values close to 1 may indicate overfitting. Because the LCDM
-was used to generate this data, it’s not surprising that the
-<em>ppp</em> is approaching 1 for our estimated model, as the model is
-perfectly capturing the data generating process.</p>
+raw score χ<sup>2</sup> values from our observed data. We then see the
+mean of the posterior distribution for the χ<sup>2</sup>, quantiles of
+the posterior distribution, and the posterior predictive
+<em>p</em>-value (<em>ppp</em>). The <em>ppp</em> is the proportion of
+posterior draws that are greater than the observed value. Values close
+to 0 indicate poor fit. Values close to 1 may indicate overfitting.
+Because the LCDM was used to generate this data, it’s not surprising
+that the <em>ppp</em> is approaching 1 for our estimated model, as the
+model is perfectly capturing the data generating process.</p>
 <p>We can also specify the posterior quantiles that are returned. For
 example, we can calculate the item-level odds ratios and request
 quantiles that will result in a 90% credible interval.</p>
@@ -564,8 +577,8 @@ item response models. <em>British Journal of Mahtematical and
 Statistical Psychology</em>, <em>69</em>(3), 225–252. <a href="https://doi.org/10.1111/bmsp.12074" class="external-link">https://doi.org/10.1111/bmsp.12074</a>
 </div>
 <div id="ref-lcdm" class="csl-entry">
-Henson, R., Templin, J. L., &amp; Willse, J. T. (2009). Defining a
-family of cognitive diagnosis models using log-linear models with latent
+Henson, R., Templin, J., &amp; Willse, J. T. (2009). Defining a family
+of cognitive diagnosis models using log-linear models with latent
 variables. <em>Psychometrika</em>, <em>74</em>(2), 191–210. <a href="https://doi.org/10.1007/s11336-008-9089-5" class="external-link">https://doi.org/10.1007/s11336-008-9089-5</a>
 </div>
 <div id="ref-johnson2018" class="csl-entry">
@@ -651,7 +664,6 @@ learning theory. <em>Journal of Machine Learning Research</em>,
 
   
 
-  
-
-  </body>
+  <script data-goatcounter="https://wjakethompson.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
 </html>
