@@ -1,5 +1,17 @@
 # measr (development version)
 
+## New documentation
+
+* A new article on model evaluation has been added to the project website (https://measr.info).
+
+* The model estimation article has been updated to use the same (simulated) data set as the model evaluation article.
+
+* More detailed installation instructions have been added to the getting started vignette (#23).
+
+* A case study demonstrating a full DCM-based analysis using data from the ECPE (`?ecpe_data`) has been added to the project website.
+
+## Minor improvements and fixes
+
 * Fixed bug in the LCDM specification of constraints for level-3 and above interaction terms.
 
 * Functions for evaluating estimated models (e.g., `fit_ppmc()`, `reliability()`) no longer recalculate indices if they have previously been saved to the model object. This behavior can be overwritten with `force = TRUE`.
@@ -7,12 +19,6 @@
 * Updated *Stan* syntax to be compatible with the new array syntax (@andrjohns, #36)
 
 * `get_parameters()` now preserves item identifiers by default. Items can be renamed with numbers (e.g., 1, 2, 3, ...) by setting `rename_item = TRUE`.
-
-* Updates to documentation
-  * A new article on model evaluation has been added.
-  * The model estimation article has been updated to use the same data set as the model evaluation article.
-  * More detailed installation instructions have been added to the getting started vignette (#23).
-  * A case study demonstrating a full DCM-based analysis using data from the ECPE (`?ecpe_data`) has been added.
 
 * measr now reexports functions from [posterior](https://mc-stan.org/posterior/) for conducting mathematical operations on `posterior::rvar()` objects.
 
