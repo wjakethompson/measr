@@ -120,7 +120,7 @@ summarize_probs <- function(x, probs, id, optim) {
 summarize_rvar <- function(rv, probs) {
   tibble::tibble(probability = E(rv),
                  bounds = tibble::as_tibble_row(
-                   quantile(rv, probs = probs, names = TRUE),
+                   stats::quantile(rv, probs = probs, names = TRUE),
                    .name_repair = ~paste0(probs * 100, "%")
                  )) %>%
     tidyr::unnest("bounds")
