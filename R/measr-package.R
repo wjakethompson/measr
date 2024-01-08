@@ -13,8 +13,5 @@
 NULL
 
 release_bullets <- function() {
-  c("Run `data-raw/stan-scripts.R` to update precompiled Stan code",
-    paste0("Update rstan and StanHeaders versions in ",
-           "`.github/workflows/R-CMD-check.yaml` and ",
-           "`.github/workflows/test-coverage.yaml`"))
+  c("Run `data-raw/stan-scripts.R` to update precompiled Stan code")
 }
