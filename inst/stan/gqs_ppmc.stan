@@ -44,7 +44,7 @@ generated quantities {
       }
       prob_resp_attr[r,a] = sum(prob_attr_class);
     }
-  }
+  } 
 
   for (r in 1:R) {
     vector[C] r_probs = exp(log_Vc) / exp(log_sum_exp(log_Vc));

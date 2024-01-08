@@ -13,7 +13,7 @@ data {
   matrix[I,C] Xi;                      // class attribute mastery indicator
 }
 parameters {
-  simplex[C] Vc;                       // base rates of class membership
+  simplex[C] Vc;                  // base rates of class membership
 
   ////////////////////////////////// item parameters
   array[I] real<lower=0,upper=1> slip;
@@ -30,7 +30,6 @@ transformed parameters {
   }
 }
 model {
-  array[C] real ps;
 
   ////////////////////////////////// priors
   Vc ~ dirichlet(rep_vector(1, C));
@@ -107,6 +106,7 @@ model {
 
   ////////////////////////////////// likelihood
   for (r in 1:R) {
+    row_vector[C] ps;
     for (c in 1:C) {
       array[num[r]] real log_items;
       for (m in 1:num[r]) {
