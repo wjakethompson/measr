@@ -30,7 +30,7 @@ Evaluation functions can then be applied to the fitted model to assess how well 
 
 ## Installation
 
-Because measr uses *Stan* as a backend for estimating DCMs, an installation of [rstan](https://mc-stan.org/rstan) or [cmdstanr](https://mc-stan.org/cmdstanr) is required.
+Because measr uses *Stan* as a backend for estimating DCMs, an installation of [rstan](https://mc-stan.org/rstan/) or [cmdstanr](https://mc-stan.org/cmdstanr/) is required.
 
 ### rstan
 

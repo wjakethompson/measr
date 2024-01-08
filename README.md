@@ -110,7 +110,7 @@ measr_extract(model, "m2")
 ------------------------------------------------------------------------
 
 Contributions are welcome. To ensure a smooth process, please review the
-[Contributing Guide](https://measr.info/CONTRIBUTING.html). Please note
-that the measr project is released with a [Contributor Code of
+[Contributing Guide](https://measr.info/dev/CONTRIBUTING.html). Please
+note that the measr project is released with a [Contributor Code of
 Conduct](https://measr.info/CODE_OF_CONDUCT.html). By contributing to
 this project, you agree to abide by its terms.
