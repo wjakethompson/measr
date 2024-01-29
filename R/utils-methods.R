@@ -103,27 +103,29 @@ summarize_probs <- function(x, probs, id, optim) {
 
   sum_frame <- x %>%
     dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar),
-                                ~lapply(.x, summarize_rvar, probs = probs))) %>%
+                                ~lapply(.x, summarize_rvar, probs = probs,
+                                        optim = optim))) %>%
     tidyr::pivot_longer(cols = dplyr::all_of(summary_names),
                         names_to = type,
                         values_to = "summary") %>%
     tidyr::unnest("summary")
 
-  if (optim) {
-    sum_frame <- sum_frame %>%
-      dplyr::select(!!id, !!type, "probability")
-  }
-
   return(sum_frame)
 }
 
-summarize_rvar <- function(rv, probs) {
-  tibble::tibble(probability = E(rv),
-                 bounds = tibble::as_tibble_row(
-                   stats::quantile(rv, probs = probs, names = TRUE),
-                   .name_repair = ~paste0(probs * 100, "%")
-                 )) %>%
-    tidyr::unnest("bounds")
+summarize_rvar <- function(rv, probs, optim) {
+  ret_frame <- if (optim) {
+    tibble::tibble(probability = E(rv))
+  } else {
+    tibble::tibble(probability = E(rv),
+                   bounds = tibble::as_tibble_row(
+                     stats::quantile(rv, probs = probs, names = TRUE),
+                     .name_repair = ~paste0(probs * 100, "%")
+                   )) %>%
+      tidyr::unnest("bounds")
+  }
+
+  return(ret_frame)
 }
 
 calculate_probs_no_summary <- function(ret_list, method) {
