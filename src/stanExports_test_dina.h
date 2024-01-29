@@ -85,79 +85,79 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'test_dina', line 25, column 4 to line 27, column 5)",
                                                       " (in 'test_dina', line 24, column 17 to line 28, column 3)",
                                                       " (in 'test_dina', line 24, column 2 to line 28, column 3)",
-                                                      " (in 'test_dina', line 31, column 8 to column 9)",
-                                                      " (in 'test_dina', line 31, column 2 to column 19)",
-                                                      " (in 'test_dina', line 33, column 2 to column 35)",
-                                                      " (in 'test_dina', line 34, column 2 to column 24)",
-                                                      " (in 'test_dina', line 35, column 2 to column 25)",
-                                                      " (in 'test_dina', line 36, column 2 to column 24)",
-                                                      " (in 'test_dina', line 37, column 2 to column 25)",
-                                                      " (in 'test_dina', line 38, column 2 to column 24)",
-                                                      " (in 'test_dina', line 39, column 2 to column 25)",
-                                                      " (in 'test_dina', line 40, column 2 to column 24)",
-                                                      " (in 'test_dina', line 41, column 2 to column 25)",
-                                                      " (in 'test_dina', line 42, column 2 to column 24)",
-                                                      " (in 'test_dina', line 43, column 2 to column 25)",
-                                                      " (in 'test_dina', line 44, column 2 to column 24)",
-                                                      " (in 'test_dina', line 45, column 2 to column 25)",
-                                                      " (in 'test_dina', line 46, column 2 to column 24)",
-                                                      " (in 'test_dina', line 47, column 2 to column 25)",
-                                                      " (in 'test_dina', line 48, column 2 to column 24)",
-                                                      " (in 'test_dina', line 49, column 2 to column 25)",
-                                                      " (in 'test_dina', line 50, column 2 to column 24)",
+                                                      " (in 'test_dina', line 32, column 2 to column 35)",
+                                                      " (in 'test_dina', line 33, column 2 to column 24)",
+                                                      " (in 'test_dina', line 34, column 2 to column 25)",
+                                                      " (in 'test_dina', line 35, column 2 to column 24)",
+                                                      " (in 'test_dina', line 36, column 2 to column 25)",
+                                                      " (in 'test_dina', line 37, column 2 to column 24)",
+                                                      " (in 'test_dina', line 38, column 2 to column 25)",
+                                                      " (in 'test_dina', line 39, column 2 to column 24)",
+                                                      " (in 'test_dina', line 40, column 2 to column 25)",
+                                                      " (in 'test_dina', line 41, column 2 to column 24)",
+                                                      " (in 'test_dina', line 42, column 2 to column 25)",
+                                                      " (in 'test_dina', line 43, column 2 to column 24)",
+                                                      " (in 'test_dina', line 44, column 2 to column 25)",
+                                                      " (in 'test_dina', line 45, column 2 to column 24)",
+                                                      " (in 'test_dina', line 46, column 2 to column 25)",
+                                                      " (in 'test_dina', line 47, column 2 to column 24)",
+                                                      " (in 'test_dina', line 48, column 2 to column 25)",
+                                                      " (in 'test_dina', line 49, column 2 to column 24)",
+                                                      " (in 'test_dina', line 50, column 2 to column 25)",
                                                       " (in 'test_dina', line 51, column 2 to column 25)",
-                                                      " (in 'test_dina', line 52, column 2 to column 25)",
-                                                      " (in 'test_dina', line 53, column 2 to column 26)",
-                                                      " (in 'test_dina', line 54, column 2 to column 25)",
-                                                      " (in 'test_dina', line 55, column 2 to column 26)",
-                                                      " (in 'test_dina', line 56, column 2 to column 25)",
-                                                      " (in 'test_dina', line 57, column 2 to column 26)",
-                                                      " (in 'test_dina', line 58, column 2 to column 25)",
-                                                      " (in 'test_dina', line 59, column 2 to column 26)",
-                                                      " (in 'test_dina', line 60, column 2 to column 25)",
-                                                      " (in 'test_dina', line 61, column 2 to column 26)",
-                                                      " (in 'test_dina', line 62, column 2 to column 25)",
-                                                      " (in 'test_dina', line 63, column 2 to column 26)",
-                                                      " (in 'test_dina', line 64, column 2 to column 25)",
-                                                      " (in 'test_dina', line 65, column 2 to column 26)",
-                                                      " (in 'test_dina', line 66, column 2 to column 25)",
-                                                      " (in 'test_dina', line 67, column 2 to column 26)",
-                                                      " (in 'test_dina', line 68, column 2 to column 25)",
-                                                      " (in 'test_dina', line 69, column 2 to column 26)",
-                                                      " (in 'test_dina', line 70, column 2 to column 25)",
-                                                      " (in 'test_dina', line 71, column 2 to column 26)",
-                                                      " (in 'test_dina', line 72, column 2 to column 25)",
-                                                      " (in 'test_dina', line 73, column 2 to column 26)",
-                                                      " (in 'test_dina', line 74, column 2 to column 25)",
-                                                      " (in 'test_dina', line 75, column 2 to column 26)",
-                                                      " (in 'test_dina', line 76, column 2 to column 25)",
-                                                      " (in 'test_dina', line 77, column 2 to column 26)",
-                                                      " (in 'test_dina', line 78, column 2 to column 25)",
-                                                      " (in 'test_dina', line 79, column 2 to column 26)",
-                                                      " (in 'test_dina', line 80, column 2 to column 25)",
-                                                      " (in 'test_dina', line 81, column 2 to column 26)",
-                                                      " (in 'test_dina', line 82, column 2 to column 25)",
-                                                      " (in 'test_dina', line 83, column 2 to column 26)",
-                                                      " (in 'test_dina', line 84, column 2 to column 25)",
-                                                      " (in 'test_dina', line 85, column 2 to column 26)",
-                                                      " (in 'test_dina', line 86, column 2 to column 25)",
-                                                      " (in 'test_dina', line 87, column 2 to column 26)",
-                                                      " (in 'test_dina', line 88, column 2 to column 25)",
-                                                      " (in 'test_dina', line 89, column 2 to column 26)",
-                                                      " (in 'test_dina', line 90, column 2 to column 25)",
-                                                      " (in 'test_dina', line 91, column 2 to column 26)",
-                                                      " (in 'test_dina', line 92, column 2 to column 25)",
-                                                      " (in 'test_dina', line 93, column 2 to column 26)",
-                                                      " (in 'test_dina', line 94, column 2 to column 25)",
-                                                      " (in 'test_dina', line 95, column 2 to column 26)",
-                                                      " (in 'test_dina', line 96, column 2 to column 25)",
-                                                      " (in 'test_dina', line 97, column 2 to column 26)",
-                                                      " (in 'test_dina', line 98, column 2 to column 25)",
-                                                      " (in 'test_dina', line 99, column 2 to column 26)",
-                                                      " (in 'test_dina', line 100, column 2 to column 25)",
-                                                      " (in 'test_dina', line 101, column 2 to column 26)",
-                                                      " (in 'test_dina', line 102, column 2 to column 25)",
-                                                      " (in 'test_dina', line 103, column 2 to column 26)",
+                                                      " (in 'test_dina', line 52, column 2 to column 26)",
+                                                      " (in 'test_dina', line 53, column 2 to column 25)",
+                                                      " (in 'test_dina', line 54, column 2 to column 26)",
+                                                      " (in 'test_dina', line 55, column 2 to column 25)",
+                                                      " (in 'test_dina', line 56, column 2 to column 26)",
+                                                      " (in 'test_dina', line 57, column 2 to column 25)",
+                                                      " (in 'test_dina', line 58, column 2 to column 26)",
+                                                      " (in 'test_dina', line 59, column 2 to column 25)",
+                                                      " (in 'test_dina', line 60, column 2 to column 26)",
+                                                      " (in 'test_dina', line 61, column 2 to column 25)",
+                                                      " (in 'test_dina', line 62, column 2 to column 26)",
+                                                      " (in 'test_dina', line 63, column 2 to column 25)",
+                                                      " (in 'test_dina', line 64, column 2 to column 26)",
+                                                      " (in 'test_dina', line 65, column 2 to column 25)",
+                                                      " (in 'test_dina', line 66, column 2 to column 26)",
+                                                      " (in 'test_dina', line 67, column 2 to column 25)",
+                                                      " (in 'test_dina', line 68, column 2 to column 26)",
+                                                      " (in 'test_dina', line 69, column 2 to column 25)",
+                                                      " (in 'test_dina', line 70, column 2 to column 26)",
+                                                      " (in 'test_dina', line 71, column 2 to column 25)",
+                                                      " (in 'test_dina', line 72, column 2 to column 26)",
+                                                      " (in 'test_dina', line 73, column 2 to column 25)",
+                                                      " (in 'test_dina', line 74, column 2 to column 26)",
+                                                      " (in 'test_dina', line 75, column 2 to column 25)",
+                                                      " (in 'test_dina', line 76, column 2 to column 26)",
+                                                      " (in 'test_dina', line 77, column 2 to column 25)",
+                                                      " (in 'test_dina', line 78, column 2 to column 26)",
+                                                      " (in 'test_dina', line 79, column 2 to column 25)",
+                                                      " (in 'test_dina', line 80, column 2 to column 26)",
+                                                      " (in 'test_dina', line 81, column 2 to column 25)",
+                                                      " (in 'test_dina', line 82, column 2 to column 26)",
+                                                      " (in 'test_dina', line 83, column 2 to column 25)",
+                                                      " (in 'test_dina', line 84, column 2 to column 26)",
+                                                      " (in 'test_dina', line 85, column 2 to column 25)",
+                                                      " (in 'test_dina', line 86, column 2 to column 26)",
+                                                      " (in 'test_dina', line 87, column 2 to column 25)",
+                                                      " (in 'test_dina', line 88, column 2 to column 26)",
+                                                      " (in 'test_dina', line 89, column 2 to column 25)",
+                                                      " (in 'test_dina', line 90, column 2 to column 26)",
+                                                      " (in 'test_dina', line 91, column 2 to column 25)",
+                                                      " (in 'test_dina', line 92, column 2 to column 26)",
+                                                      " (in 'test_dina', line 93, column 2 to column 25)",
+                                                      " (in 'test_dina', line 94, column 2 to column 26)",
+                                                      " (in 'test_dina', line 95, column 2 to column 25)",
+                                                      " (in 'test_dina', line 96, column 2 to column 26)",
+                                                      " (in 'test_dina', line 97, column 2 to column 25)",
+                                                      " (in 'test_dina', line 98, column 2 to column 26)",
+                                                      " (in 'test_dina', line 99, column 2 to column 25)",
+                                                      " (in 'test_dina', line 100, column 2 to column 26)",
+                                                      " (in 'test_dina', line 101, column 2 to column 25)",
+                                                      " (in 'test_dina', line 102, column 2 to column 26)",
+                                                      " (in 'test_dina', line 105, column 15 to column 16)",
+                                                      " (in 'test_dina', line 105, column 4 to column 21)",
                                                       " (in 'test_dina', line 107, column 12 to column 18)",
                                                       " (in 'test_dina', line 107, column 6 to column 35)",
                                                       " (in 'test_dina', line 109, column 8 to column 37)",
@@ -168,8 +168,8 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'test_dina', line 106, column 19 to line 114, column 5)",
                                                       " (in 'test_dina', line 106, column 4 to line 114, column 5)",
                                                       " (in 'test_dina', line 115, column 4 to column 30)",
-                                                      " (in 'test_dina', line 105, column 17 to line 116, column 3)",
-                                                      " (in 'test_dina', line 105, column 2 to line 116, column 3)",
+                                                      " (in 'test_dina', line 104, column 17 to line 116, column 3)",
+                                                      " (in 'test_dina', line 104, column 2 to line 116, column 3)",
                                                       " (in 'test_dina', line 2, column 2 to column 17)",
                                                       " (in 'test_dina', line 3, column 2 to column 17)",
                                                       " (in 'test_dina', line 4, column 2 to column 17)",
@@ -593,154 +593,155 @@ public:
             "assigning variable pi");}}
       {
         current_statement__ = 11;
-        validate_non_negative_index("ps", "C", C);
-        std::vector<local_scalar_t__> ps;
-        ps = std::vector<local_scalar_t__>(C, DUMMY_VAR__);
-        
-        current_statement__ = 13;
         lp_accum__.add(dirichlet_lpdf<propto__>(Vc, rep_vector(1, C)));
-        current_statement__ = 14;
+        current_statement__ = 12;
         lp_accum__.add(beta_lpdf<propto__>(slip[(1 - 1)], 5, 25));
-        current_statement__ = 15;
+        current_statement__ = 13;
         lp_accum__.add(beta_lpdf<propto__>(guess[(1 - 1)], 5, 25));
-        current_statement__ = 16;
+        current_statement__ = 14;
         lp_accum__.add(beta_lpdf<propto__>(slip[(2 - 1)], 5, 25));
-        current_statement__ = 17;
+        current_statement__ = 15;
         lp_accum__.add(beta_lpdf<propto__>(guess[(2 - 1)], 5, 25));
-        current_statement__ = 18;
+        current_statement__ = 16;
         lp_accum__.add(beta_lpdf<propto__>(slip[(3 - 1)], 5, 25));
-        current_statement__ = 19;
+        current_statement__ = 17;
         lp_accum__.add(beta_lpdf<propto__>(guess[(3 - 1)], 5, 25));
-        current_statement__ = 20;
+        current_statement__ = 18;
         lp_accum__.add(beta_lpdf<propto__>(slip[(4 - 1)], 5, 25));
-        current_statement__ = 21;
+        current_statement__ = 19;
         lp_accum__.add(beta_lpdf<propto__>(guess[(4 - 1)], 5, 25));
-        current_statement__ = 22;
+        current_statement__ = 20;
         lp_accum__.add(beta_lpdf<propto__>(slip[(5 - 1)], 5, 25));
-        current_statement__ = 23;
+        current_statement__ = 21;
         lp_accum__.add(beta_lpdf<propto__>(guess[(5 - 1)], 5, 25));
-        current_statement__ = 24;
+        current_statement__ = 22;
         lp_accum__.add(beta_lpdf<propto__>(slip[(6 - 1)], 5, 25));
-        current_statement__ = 25;
+        current_statement__ = 23;
         lp_accum__.add(beta_lpdf<propto__>(guess[(6 - 1)], 5, 25));
-        current_statement__ = 26;
+        current_statement__ = 24;
         lp_accum__.add(beta_lpdf<propto__>(slip[(7 - 1)], 5, 25));
-        current_statement__ = 27;
+        current_statement__ = 25;
         lp_accum__.add(beta_lpdf<propto__>(guess[(7 - 1)], 5, 25));
-        current_statement__ = 28;
+        current_statement__ = 26;
         lp_accum__.add(beta_lpdf<propto__>(slip[(8 - 1)], 5, 25));
-        current_statement__ = 29;
+        current_statement__ = 27;
         lp_accum__.add(beta_lpdf<propto__>(guess[(8 - 1)], 5, 25));
-        current_statement__ = 30;
+        current_statement__ = 28;
         lp_accum__.add(beta_lpdf<propto__>(slip[(9 - 1)], 5, 25));
-        current_statement__ = 31;
+        current_statement__ = 29;
         lp_accum__.add(beta_lpdf<propto__>(guess[(9 - 1)], 5, 25));
-        current_statement__ = 32;
+        current_statement__ = 30;
         lp_accum__.add(beta_lpdf<propto__>(slip[(10 - 1)], 5, 25));
-        current_statement__ = 33;
+        current_statement__ = 31;
         lp_accum__.add(beta_lpdf<propto__>(guess[(10 - 1)], 5, 25));
-        current_statement__ = 34;
+        current_statement__ = 32;
         lp_accum__.add(beta_lpdf<propto__>(slip[(11 - 1)], 5, 25));
-        current_statement__ = 35;
+        current_statement__ = 33;
         lp_accum__.add(beta_lpdf<propto__>(guess[(11 - 1)], 5, 25));
-        current_statement__ = 36;
+        current_statement__ = 34;
         lp_accum__.add(beta_lpdf<propto__>(slip[(12 - 1)], 5, 25));
-        current_statement__ = 37;
+        current_statement__ = 35;
         lp_accum__.add(beta_lpdf<propto__>(guess[(12 - 1)], 5, 25));
-        current_statement__ = 38;
+        current_statement__ = 36;
         lp_accum__.add(beta_lpdf<propto__>(slip[(13 - 1)], 5, 25));
-        current_statement__ = 39;
+        current_statement__ = 37;
         lp_accum__.add(beta_lpdf<propto__>(guess[(13 - 1)], 5, 25));
-        current_statement__ = 40;
+        current_statement__ = 38;
         lp_accum__.add(beta_lpdf<propto__>(slip[(14 - 1)], 5, 25));
-        current_statement__ = 41;
+        current_statement__ = 39;
         lp_accum__.add(beta_lpdf<propto__>(guess[(14 - 1)], 5, 25));
-        current_statement__ = 42;
+        current_statement__ = 40;
         lp_accum__.add(beta_lpdf<propto__>(slip[(15 - 1)], 5, 25));
-        current_statement__ = 43;
+        current_statement__ = 41;
         lp_accum__.add(beta_lpdf<propto__>(guess[(15 - 1)], 5, 25));
-        current_statement__ = 44;
+        current_statement__ = 42;
         lp_accum__.add(beta_lpdf<propto__>(slip[(16 - 1)], 5, 25));
-        current_statement__ = 45;
+        current_statement__ = 43;
         lp_accum__.add(beta_lpdf<propto__>(guess[(16 - 1)], 5, 25));
-        current_statement__ = 46;
+        current_statement__ = 44;
         lp_accum__.add(beta_lpdf<propto__>(slip[(17 - 1)], 5, 25));
-        current_statement__ = 47;
+        current_statement__ = 45;
         lp_accum__.add(beta_lpdf<propto__>(guess[(17 - 1)], 5, 25));
-        current_statement__ = 48;
+        current_statement__ = 46;
         lp_accum__.add(beta_lpdf<propto__>(slip[(18 - 1)], 5, 25));
-        current_statement__ = 49;
+        current_statement__ = 47;
         lp_accum__.add(beta_lpdf<propto__>(guess[(18 - 1)], 5, 25));
-        current_statement__ = 50;
+        current_statement__ = 48;
         lp_accum__.add(beta_lpdf<propto__>(slip[(19 - 1)], 5, 25));
-        current_statement__ = 51;
+        current_statement__ = 49;
         lp_accum__.add(beta_lpdf<propto__>(guess[(19 - 1)], 5, 25));
-        current_statement__ = 52;
+        current_statement__ = 50;
         lp_accum__.add(beta_lpdf<propto__>(slip[(20 - 1)], 5, 25));
-        current_statement__ = 53;
+        current_statement__ = 51;
         lp_accum__.add(beta_lpdf<propto__>(guess[(20 - 1)], 5, 25));
-        current_statement__ = 54;
+        current_statement__ = 52;
         lp_accum__.add(beta_lpdf<propto__>(slip[(21 - 1)], 5, 25));
-        current_statement__ = 55;
+        current_statement__ = 53;
         lp_accum__.add(beta_lpdf<propto__>(guess[(21 - 1)], 5, 25));
-        current_statement__ = 56;
+        current_statement__ = 54;
         lp_accum__.add(beta_lpdf<propto__>(slip[(22 - 1)], 5, 25));
-        current_statement__ = 57;
+        current_statement__ = 55;
         lp_accum__.add(beta_lpdf<propto__>(guess[(22 - 1)], 5, 25));
-        current_statement__ = 58;
+        current_statement__ = 56;
         lp_accum__.add(beta_lpdf<propto__>(slip[(23 - 1)], 5, 25));
-        current_statement__ = 59;
+        current_statement__ = 57;
         lp_accum__.add(beta_lpdf<propto__>(guess[(23 - 1)], 5, 25));
-        current_statement__ = 60;
+        current_statement__ = 58;
         lp_accum__.add(beta_lpdf<propto__>(slip[(24 - 1)], 5, 25));
-        current_statement__ = 61;
+        current_statement__ = 59;
         lp_accum__.add(beta_lpdf<propto__>(guess[(24 - 1)], 5, 25));
-        current_statement__ = 62;
+        current_statement__ = 60;
         lp_accum__.add(beta_lpdf<propto__>(slip[(25 - 1)], 5, 25));
-        current_statement__ = 63;
+        current_statement__ = 61;
         lp_accum__.add(beta_lpdf<propto__>(guess[(25 - 1)], 5, 25));
-        current_statement__ = 64;
+        current_statement__ = 62;
         lp_accum__.add(beta_lpdf<propto__>(slip[(26 - 1)], 5, 25));
-        current_statement__ = 65;
+        current_statement__ = 63;
         lp_accum__.add(beta_lpdf<propto__>(guess[(26 - 1)], 5, 25));
-        current_statement__ = 66;
+        current_statement__ = 64;
         lp_accum__.add(beta_lpdf<propto__>(slip[(27 - 1)], 5, 25));
-        current_statement__ = 67;
+        current_statement__ = 65;
         lp_accum__.add(beta_lpdf<propto__>(guess[(27 - 1)], 5, 25));
-        current_statement__ = 68;
+        current_statement__ = 66;
         lp_accum__.add(beta_lpdf<propto__>(slip[(28 - 1)], 5, 25));
-        current_statement__ = 69;
+        current_statement__ = 67;
         lp_accum__.add(beta_lpdf<propto__>(guess[(28 - 1)], 5, 25));
-        current_statement__ = 70;
+        current_statement__ = 68;
         lp_accum__.add(beta_lpdf<propto__>(slip[(29 - 1)], 5, 25));
-        current_statement__ = 71;
+        current_statement__ = 69;
         lp_accum__.add(beta_lpdf<propto__>(guess[(29 - 1)], 5, 25));
-        current_statement__ = 72;
+        current_statement__ = 70;
         lp_accum__.add(beta_lpdf<propto__>(slip[(30 - 1)], 5, 25));
-        current_statement__ = 73;
+        current_statement__ = 71;
         lp_accum__.add(beta_lpdf<propto__>(guess[(30 - 1)], 5, 25));
-        current_statement__ = 74;
+        current_statement__ = 72;
         lp_accum__.add(beta_lpdf<propto__>(slip[(31 - 1)], 5, 25));
-        current_statement__ = 75;
+        current_statement__ = 73;
         lp_accum__.add(beta_lpdf<propto__>(guess[(31 - 1)], 5, 25));
-        current_statement__ = 76;
+        current_statement__ = 74;
         lp_accum__.add(beta_lpdf<propto__>(slip[(32 - 1)], 5, 25));
-        current_statement__ = 77;
+        current_statement__ = 75;
         lp_accum__.add(beta_lpdf<propto__>(guess[(32 - 1)], 5, 25));
-        current_statement__ = 78;
+        current_statement__ = 76;
         lp_accum__.add(beta_lpdf<propto__>(slip[(33 - 1)], 5, 25));
-        current_statement__ = 79;
+        current_statement__ = 77;
         lp_accum__.add(beta_lpdf<propto__>(guess[(33 - 1)], 5, 25));
-        current_statement__ = 80;
+        current_statement__ = 78;
         lp_accum__.add(beta_lpdf<propto__>(slip[(34 - 1)], 5, 25));
-        current_statement__ = 81;
+        current_statement__ = 79;
         lp_accum__.add(beta_lpdf<propto__>(guess[(34 - 1)], 5, 25));
-        current_statement__ = 82;
+        current_statement__ = 80;
         lp_accum__.add(beta_lpdf<propto__>(slip[(35 - 1)], 5, 25));
-        current_statement__ = 83;
+        current_statement__ = 81;
         lp_accum__.add(beta_lpdf<propto__>(guess[(35 - 1)], 5, 25));
         current_statement__ = 95;
         for (int r = 1; r <= R; ++r) {
+          current_statement__ = 82;
+          validate_non_negative_index("ps", "C", C);
+          Eigen::Matrix<local_scalar_t__, 1, -1> ps;
+          ps = Eigen::Matrix<local_scalar_t__, 1, -1>(C);
+          stan::math::fill(ps, DUMMY_VAR__);
+          
           current_statement__ = 92;
           for (int c = 1; c <= C; ++c) {
             current_statement__ = 84;
