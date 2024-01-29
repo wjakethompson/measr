@@ -1,5 +1,7 @@
 ## Release summary
 
+This is a resubmission to address issues with total check time in the original.
+
 This is a minor release to add some additional functionality.
 
 ## Test environments
