@@ -27,7 +27,7 @@ template:
     fg: "#333"
   includes:
     after_body: >
-      <script data-goatcounter="https://wjakethompson.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+      <script data-goatcounter="https://measr.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 authors:
   footer:
@@ -74,7 +74,8 @@ reference:
   - get_parameters
 
 - subtitle: Model fitting
-  desc: Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
+  desc: >
+    Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
 - contents:
   - measr_dcm
   - measrfit-class
