@@ -1,4 +1,4 @@
-if (!identical(Sys.getenv("NOT_CRAN"), "true")) return()
+if (!identical(Sys.getenv("NOT_CRAN"), "true")) skip("No MCMC on CRAN")
 
 out <- capture.output(
   suppressMessages(
