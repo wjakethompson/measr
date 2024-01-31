@@ -1,3 +1,5 @@
+# measr (development version)
+
 # measr 1.0.0
 
 ## New documentation
