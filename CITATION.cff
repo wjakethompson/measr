@@ -8,7 +8,7 @@ message: 'To cite package "measr" in publications use:'
 type: software
 license: GPL-3.0-or-later
 title: 'measr: Bayesian Psychometric Measurement Using ''Stan'''
-version: 0.3.1.9000
+version: 1.0.0
 doi: 10.21105/joss.05742
 abstract: 'Estimate diagnostic classification models (also called cognitive diagnostic
   models) with ''Stan''. Diagnostic classification models are confirmatory latent
@@ -68,7 +68,7 @@ references:
   - name: R Core Team
   location:
     name: Vienna, Austria
-  year: '2023'
+  year: '2024'
   institution:
     name: R Foundation for Statistical Computing
   version: '>= 4.1.0'
@@ -88,7 +88,7 @@ references:
     given-names: W. Jake
     email: wjakethompson@gmail.com
     orcid: https://orcid.org/0000-0001-7339-0300
-  year: '2023'
+  year: '2024'
 - type: software
   title: dplyr
   abstract: 'dplyr: A Grammar of Data Manipulation'
@@ -112,7 +112,7 @@ references:
     given-names: Davis
     email: davis@posit.co
     orcid: https://orcid.org/0000-0003-4777-038X
-  year: '2023'
+  year: '2024'
   version: '>= 1.1.1'
 - type: software
   title: fs
@@ -129,7 +129,7 @@ references:
   - family-names: Csárdi
     given-names: Gábor
     email: csardi.gabor@gmail.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: glue
   abstract: 'glue: Interpreted String Literals'
@@ -142,9 +142,9 @@ references:
     orcid: https://orcid.org/0000-0002-2739-7082
   - family-names: Bryan
     given-names: Jennifer
-    email: jenny@rstudio.com
+    email: jenny@posit.co
     orcid: https://orcid.org/0000-0002-6983-2759
-  year: '2023'
+  year: '2024'
 - type: software
   title: loo
   abstract: 'loo: Efficient Leave-One-Out Cross-Validation and WAIC for Bayesian Models'
@@ -168,7 +168,7 @@ references:
     given-names: Topi
   - family-names: Gelman
     given-names: Andrew
-  year: '2023'
+  year: '2024'
 - type: software
   title: magrittr
   abstract: 'magrittr: A Forward-Pipe Operator for R'
@@ -182,7 +182,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: methods
   abstract: 'R: A Language and Environment for Statistical Computing'
@@ -191,7 +191,7 @@ references:
   - name: R Core Team
   location:
     name: Vienna, Austria
-  year: '2023'
+  year: '2024'
   institution:
     name: R Foundation for Statistical Computing
 - type: software
@@ -213,7 +213,7 @@ references:
   - family-names: Vehtari
     given-names: Aki
     email: Aki.Vehtari@aalto.fi
-  year: '2023'
+  year: '2024'
 - type: software
   title: psych
   abstract: 'psych: Procedures for Psychological, Psychometric, and Personality Research'
@@ -225,7 +225,7 @@ references:
     given-names: William
     email: revelle@northwestern.edu
     orcid: https://orcid.org/0000-0003-4880-9610
-  year: '2023'
+  year: '2024'
 - type: software
   title: Rcpp
   abstract: 'Rcpp: Seamless R and C++ Integration'
@@ -251,7 +251,7 @@ references:
     given-names: Douglas
   - family-names: Chambers
     given-names: John
-  year: '2023'
+  year: '2024'
   version: '>= 0.12.0'
 - type: software
   title: RcppParallel
@@ -273,7 +273,7 @@ references:
   - family-names: Geelnard
     given-names: Marcus
   - name: Intel
-  year: '2023'
+  year: '2024'
   version: '>= 5.0.1'
 - type: software
   title: rlang
@@ -288,7 +288,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@posit.co
-  year: '2023'
+  year: '2024'
   version: '>= 0.4.11'
 - type: software
   title: rstan
@@ -312,7 +312,11 @@ references:
   - family-names: Weber
     given-names: Sebastian
     email: sdw.post@waebers.de
-  year: '2023'
+  - family-names: Badr
+    given-names: Hamada S.
+    email: badr@jhu.edu
+    orcid: https://orcid.org/0000-0002-9808-2344
+  year: '2024'
   version: '>= 2.26.0'
 - type: software
   title: rstantools
@@ -332,7 +336,7 @@ references:
     email: mlysy@uwaterloo.ca
   - family-names: Johnson
     given-names: Andrew
-  year: '2023'
+  year: '2024'
   version: '>= 2.3.0'
 - type: software
   title: stats
@@ -342,7 +346,7 @@ references:
   - name: R Core Team
   location:
     name: Vienna, Austria
-  year: '2023'
+  year: '2024'
   institution:
     name: R Foundation for Statistical Computing
 - type: software
@@ -359,7 +363,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: tidyr
   abstract: 'tidyr: Tidy Messy Data'
@@ -375,7 +379,7 @@ references:
     email: davis@posit.co
   - family-names: Girlich
     given-names: Maximilian
-  year: '2023'
+  year: '2024'
   version: '>= 1.3.0'
 - type: software
   title: BH
@@ -390,7 +394,7 @@ references:
     given-names: John W.
   - family-names: Kane
     given-names: Michael J.
-  year: '2023'
+  year: '2024'
   version: '>= 1.66.0'
 - type: software
   title: RcppEigen
@@ -408,7 +412,7 @@ references:
     given-names: Romain
   - family-names: Eigen
     given-names: Yixuan Qiu; the authors of Eigen for the included version of
-  year: '2023'
+  year: '2024'
   version: '>= 0.3.3.3.0'
 - type: software
   title: StanHeaders
@@ -462,7 +466,7 @@ references:
     given-names: Michael
   - family-names: Gao
     given-names: Yuanjun
-  year: '2023'
+  year: '2024'
   version: '>= 2.26.0'
 - type: software
   title: cli
@@ -474,7 +478,7 @@ references:
   - family-names: Csárdi
     given-names: Gábor
     email: csardi.gabor@gmail.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: cmdstanr
   abstract: 'cmdstanr: R Interface to ''CmdStan'''
@@ -490,7 +494,7 @@ references:
   - family-names: Johnson
     given-names: Andrew
     orcid: https://orcid.org/0000-0001-7000-8065
-  year: '2023'
+  year: '2024'
   version: '>= 0.4.0'
 - type: software
   title: crayon
@@ -502,7 +506,7 @@ references:
   - family-names: Csárdi
     given-names: Gábor
     email: csardi.gabor@gmail.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
@@ -514,7 +518,7 @@ references:
     given-names: Yihui
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
-  year: '2023'
+  year: '2024'
 - type: software
   title: rmarkdown
   abstract: 'rmarkdown: Dynamic Documents for R'
@@ -557,7 +561,7 @@ references:
     given-names: Richard
     email: rich@posit.co
     orcid: https://orcid.org/0000-0003-3925-190X
-  year: '2023'
+  year: '2024'
 - type: software
   title: roxygen2
   abstract: 'roxygen2: In-Line Documentation for R'
@@ -577,7 +581,7 @@ references:
     email: csardi.gabor@gmail.com
   - family-names: Eugster
     given-names: Manuel
-  year: '2023'
+  year: '2024'
 - type: software
   title: spelling
   abstract: 'spelling: Tools for Spell Checking in R'
@@ -592,7 +596,7 @@ references:
   - family-names: Hester
     given-names: Jim
     email: james.hester@rstudio.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: testthat
   abstract: 'testthat: Unit Testing for R'
@@ -603,5 +607,5 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@posit.co
-  year: '2023'
+  year: '2024'
   version: '>= 3.0.0'
