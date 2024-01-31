@@ -14,10 +14,10 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Fira_Code-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Playfair_Display-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Playfair_Display-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -41,7 +41,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">measr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,13 +59,20 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/paper.html">measr: Bayesian psychometric measurement using Stan</a>
     <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+    <a class="dropdown-item" href="../articles/model-evaluation.html">Evaluating diagnostic classification models</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
+    <a class="dropdown-item" href="../articles/ecpe.html">Examination for the Certificate of Proficiency in English</a>
   </div>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-news">
     <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2024-02-measr-1.0.0/">Version 1.0.0</a>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-06-measr-0.3.1/">Version 0.3.1</a>
     <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/">Version 0.2.1</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../news/index.html">Changelog</a>
@@ -114,56 +121,63 @@ the measr package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://measr.info">measr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="examination-for-the-certificate-of-proficiency-in-english-data">Examination for the Certificate of Proficiency in English Data<a class="anchor" aria-label="anchor" href="#examination-for-the-certificate-of-proficiency-in-english-data"></a>
+<h2 id="example-data">Example Data<a class="anchor" aria-label="anchor" href="#example-data"></a>
 </h2>
-<p>To demonstrate how measr works, we will examine data from the grammar
-section of the Examination for the Certificate of Proficiency in English
-(ECPE). This section of the ECPE consists of 28 item multiple-choice
-items that together measure three attributes: morphosyntactic rules,
-cohesive rules, and lexical rules. In total, data is available for 2,922
-respondents. This data set has been widely studied in the DCM literature
-<span class="citation">(e.g., <a href="#ref-chen2018" role="doc-biblioref">Chen et al., 2018</a>; <a href="#ref-liu2019" role="doc-biblioref">Liu &amp; Johnson, 2019</a>; <a href="#ref-hdcm" role="doc-biblioref">Templin &amp; Bradshaw, 2014</a>)</span>.
-Additionally, parameter estimates from other software (Mplus) are
-readily available from <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, so we
-can compare the parameter estimates from measr to estimates derived from
-other software.</p>
-<p>The ECPE data is included within the measr package. For additional
-information on these data, see <code><a href="../reference/ecpe.html">?ecpe_data</a></code>.</p>
+<p>To demonstrate the model estimation functionality of measr, we’ll
+examine a simulated data set. This data set contains 2,000 respondents
+and 20 items that measure a total of 4 attributes, but no item measures
+more than 2 attributes. The data was generated from the loglinear
+cognitive diagnostic model (LCDM), which is a general model that
+subsumes many other DCM subtypes <span class="citation">(<a href="#ref-lcdm" role="doc-biblioref">Henson et al., 2009</a>)</span>.
+By using a simulated data set, we can compare the parameter estimates
+from measr to the true data generating parameters.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ecpe_data</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,922 × 29</span></span></span>
-<span><span class="co">#&gt;    resp_id    E1    E2    E3    E4    E5    E6    E7    E8    E9   E10   E11</span></span>
-<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1     1     1     1     0     1     1     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       2     1     1     1     1     1     1     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       3     1     1     1     1     1     1     0     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       4     1     1     1     1     1     1     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       5     1     1     1     1     1     1     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       6     1     1     1     1     1     1     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       7     1     1     1     1     1     1     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       8     0     1     1     1     1     1     0     1     1     1     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       9     1     1     1     1     1     1     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>      10     1     1     1     1     0     0     1     1     1     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,912 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 17 more variables: E12 &lt;int&gt;, E13 &lt;int&gt;, E14 &lt;int&gt;, E15 &lt;int&gt;, E16 &lt;int&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   E17 &lt;int&gt;, E18 &lt;int&gt;, E19 &lt;int&gt;, E20 &lt;int&gt;, E21 &lt;int&gt;, E22 &lt;int&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   E23 &lt;int&gt;, E24 &lt;int&gt;, E25 &lt;int&gt;, E26 &lt;int&gt;, E27 &lt;int&gt;, E28 &lt;int&gt;</span></span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ecpe_qmatrix</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 28 × 4</span></span></span>
-<span><span class="co">#&gt;    item_id morphosyntactic cohesive lexical</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1                    1        1       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E2                    0        1       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E3                    1        0       1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E4                    0        0       1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E5                    0        0       1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E6                    0        0       1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E7                    1        0       1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E8                    0        1       0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E9                    0        0       1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E10                   1        0       0</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 18 more rows</span></span></span></code></pre></div>
+<span><span class="va">sim_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_rds.html" class="external-link">read_rds</a></span><span class="op">(</span><span class="st">"data/simulated-data.rds"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sim_data</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,000 × 21</span></span></span>
+<span><span class="co">#&gt;    resp_id    A1    A2    A3    A4    A5    A6    A7    A8    A9   A10   A11</span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1     1     1     0     1     0     0     0     0     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       2     1     1     1     0     0     1     0     1     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       3     1     1     1     1     1     0     1     1     0     1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       4     1     0     1     0     0     1     0     1     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       5     1     1     0     0     0     0     0     1     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       6     1     1     1     0     1     0     0     1     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       7     1     0     1     0     0     1     0     1     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       8     0     1     1     0     0     1     0     1     1     0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       9     1     1     1     0     0     1     1     1     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>      10     1     1     1     0     1     1     0     1     1     1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1,990 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 more variables: A12 &lt;int&gt;, A13 &lt;int&gt;, A14 &lt;int&gt;, A15 &lt;int&gt;, A16 &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   A17 &lt;int&gt;, A18 &lt;int&gt;, A19 &lt;int&gt;, A20 &lt;int&gt;</span></span></span>
+<span></span>
+<span><span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 5</span></span></span>
+<span><span class="co">#&gt;    item_id  att1  att2  att3  att4</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> A1          0     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> A2          0     0     1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> A3          1     1     0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> A4          1     0     0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> A5          1     0     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> A6          0     1     0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> A7          1     0     0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> A8          0     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> A9          0     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> A10         1     0     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> A11         1     0     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> A12         0     0     1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> A13         0     0     1     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> A14         0     0     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> A15         0     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> A16         0     1     0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> A17         0     0     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> A18         1     0     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> A19         0     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> A20         0     0     0     1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="specifying-a-dcm-for-estimation">Specifying a DCM for Estimation<a class="anchor" aria-label="anchor" href="#specifying-a-dcm-for-estimation"></a>
@@ -209,108 +223,64 @@ the specified <code>file</code> already exists, then the fitted model
 will be read back into R, eliminating the need to re-estimate the
 model.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ecpe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ecpe_data</span>, qmatrix <span class="op">=</span> <span class="va">ecpe_qmatrix</span>,</span>
-<span>                  resp_id <span class="op">=</span> <span class="st">"resp_id"</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span>,</span>
-<span>                  method <span class="op">=</span> <span class="st">"mcmc"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
-<span>                  chains <span class="op">=</span> <span class="fl">4</span>, iter_warmup <span class="op">=</span> <span class="fl">1000</span>, iter_sampling <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>                  parallel_chains <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                  file <span class="op">=</span> <span class="st">"fits/ecpe-lcdm"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">data</span>, qmatrix <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span>,</span>
+<span>                  resp_id <span class="op">=</span> <span class="st">"resp_id"</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>,</span>
+<span>                  type <span class="op">=</span> <span class="st">"lcdm"</span>, method <span class="op">=</span> <span class="st">"mcmc"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
+<span>                  iter_warmup <span class="op">=</span> <span class="fl">1000</span>, iter_sampling <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>                  chains <span class="op">=</span> <span class="fl">4</span>, parallel_chains <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>                  file <span class="op">=</span> <span class="st">"fits/sim-lcdm"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="examining-parameter-estimates">Examining Parameter Estimates<a class="anchor" aria-label="anchor" href="#examining-parameter-estimates"></a>
 </h3>
 <p>Now that we’ve estimated a model, let’s compare our parameter
-estimates to those reported for the ECPE data by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>. We can start be looking at our
-estimates using <code><a href="../reference/measr_extract.html">measr_extract()</a></code>. This function extracts
-different aspects of a model estimated with measr. Here, the
-<code>estimate</code> column reports estimated value for each parameter
-and a measure of the associated error (i.e., the standard deviation of
-the posterior distribution). For example, item E1 has four parameters,
-as it measures two attributes:</p>
+estimates to the true values used to generate the data. We can start be
+looking at our estimates using <code><a href="../reference/measr_extract.html">measr_extract()</a></code>. This
+function extracts different aspects of a model estimated with measr.
+Here, the <code>estimate</code> column reports estimated value for each
+parameter and a measure of the associated error (i.e., the standard
+deviation of the posterior distribution). For example, item A1 measures
+two attributes and therefore has four parameters:</p>
 <ol style="list-style-type: decimal">
 <li>An intercept, which represents the log-odds of providing a correct
 response for a respondent who is proficient in neither of the attributes
-this item measures (i.e., morphosyntactic rules and cohesive
-rules).</li>
-<li>A main effect for morphosyntactic rules, which represents the
+this item measures (i.e., <code>att2</code> and <code>att4</code>).</li>
+<li>A main effect for the second attribute, which represents the
 increase in the log-odds of providing a correct response for a
 respondent who is proficient in that attribute.</li>
-<li>A main effect for cohesive rules, which represents the increase in
-the log-odds of providing a correct response for a respondent who is
-proficient in that attribute.</li>
-<li>An interaction between morphosyntactic and cohesive rules, which is
+<li>A main effect for the fourth attribute, which represents the
+increase in the log-odds of providing a correct response for a
+respondent who is proficient in that attribute.</li>
+<li>An interaction between the second and fourth attributes, which is
 the change in the log-odds for a respondent who is proficient in both
 attributes.</li>
 </ol>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">item_parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">ecpe</span>, what <span class="op">=</span> <span class="st">"item_param"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">item_parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">lcdm</span>, what <span class="op">=</span> <span class="st">"item_param"</span><span class="op">)</span></span>
 <span><span class="va">item_parameters</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 74 × 5</span></span></span>
-<span><span class="co">#&gt;    item_id class       attributes                coef         estimate</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E1      intercept   <span style="color: #BB0000;">NA</span>                        l1_0     0.82 <span style="color: #949494;">± 0.074</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E1      maineffect  morphosyntactic           l1_11    0.59 <span style="color: #949494;">± 0.356</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E1      maineffect  cohesive                  l1_12    0.64 <span style="color: #949494;">± 0.217</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E1      interaction morphosyntactic__cohesive l1_212   0.54 <span style="color: #949494;">± 0.481</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E2      intercept   <span style="color: #BB0000;">NA</span>                        l2_0     1.04 <span style="color: #949494;">± 0.077</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E2      maineffect  cohesive                  l2_12    1.24 <span style="color: #949494;">± 0.147</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E3      intercept   <span style="color: #BB0000;">NA</span>                        l3_0    -0.35 <span style="color: #949494;">± 0.073</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E3      maineffect  morphosyntactic           l3_11    0.74 <span style="color: #949494;">± 0.379</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E3      maineffect  lexical                   l3_13    0.36 <span style="color: #949494;">± 0.115</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E3      interaction morphosyntactic__lexical  l3_213   0.53 <span style="color: #949494;">± 0.395</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 64 more rows</span></span></span></code></pre></div>
-<p>We can compare these estimates to those that <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span> reported when using different
-software to estimate the same model. In the figure below, most
-parameters fall on or very close to the dashed line, which represents
-perfect agreement.</p>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 66 × 5</span></span></span>
+<span><span class="co">#&gt;    item_id class       attributes coef         estimate</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> A1      intercept   <span style="color: #BB0000;">NA</span>         l1_0    -0.98 <span style="color: #949494;">± 0.098</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> A1      maineffect  att2       l1_12    2.46 <span style="color: #949494;">± 0.158</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> A1      maineffect  att4       l1_14    4.46 <span style="color: #949494;">± 0.314</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> A1      interaction att2__att4 l1_224   0.15 <span style="color: #949494;">± 1.331</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> A2      intercept   <span style="color: #BB0000;">NA</span>         l2_0    -2.40 <span style="color: #949494;">± 0.301</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> A2      maineffect  att3       l2_13    3.99 <span style="color: #949494;">± 0.323</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> A2      maineffect  att4       l2_14    3.81 <span style="color: #949494;">± 0.339</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> A2      interaction att3__att4 l2_234  -3.58 <span style="color: #949494;">± 0.381</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> A3      intercept   <span style="color: #BB0000;">NA</span>         l3_0    -2.01 <span style="color: #949494;">± 0.160</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> A3      maineffect  att1       l3_11    2.22 <span style="color: #949494;">± 0.195</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 56 more rows</span></span></span></code></pre></div>
+<p>We can compare these estimates to those that were used to generate
+the data. In the figure below, most parameters fall on or very close to
+the dashed line, which represents perfect agreement, indicating that the
+estimated model is accurately estimating the parameter values.</p>
 <p><img src="model-estimation_files/figure-html/lcdm-param-compare-1.png" alt="Figure shows a strong correlation between item parameters, with only a few discrepancies off of the line of perfect agreement." width="90%" style="display: block; margin: auto;"></p>
-<p>There are some parameters that deviate from the line of perfect
-agreement, but these are expected. For example, take item E7, which
-measures morphosyntactic and lexical rules. Both measr and <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span> report values of approximately
--0.09 for the intercept and 0.93 for the main effect of lexical rules.
-For the main effect of morphosyntactic rules, measr estimated a value of
-1.59, compared to a value of 2.86 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a difference of -1.26. Similarly,
-the interaction term estimated by measr is 0.36, compared to a value of
--0.95 reported by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, a
-difference of 1.31. This indicates that the log-odds of providing a
-correct response for an individual who has mastered both attributes is
-approximately the same, regardless of software. That is, for measr, we
-get a log-odds of <code>-0.07 + 1.59 + 0.91 + 0.36 = 2.8</code>, and
-from <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, we get a
-log-odds of <code>-0.11 + 2.86 + 0.95 + -0.95 = 2.75</code>. This is
-true for all of the differences in the figure. There is a change to the
-main effect for morphosyntactic rules and corresponding change to the
-interaction term that “cancels out” the difference.</p>
-<p>So why is this happening? Let’s look at the proportion of respondents
-in each class. There are very few respondents who are proficient in
-morphosyntactic rules without also being proficient in the other
-attributes (classes 2, 5, and 6; less than 4% of all respondents).
-Therefore, there is less information for estimating the morphosyntactic
-main effects, which for items that measure multiple attributes,
-represent the increase in log-odds for proficiency in morphosyntactic
-rules <em>conditional on not being proficient</em> on the other
-attribute.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">ecpe</span>, <span class="st">"strc_param"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 2</span></span></span>
-<span><span class="co">#&gt;   class           estimate</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;rvar[1d]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> [0,0,0]  0.2981 <span style="color: #949494;">± 0.0165</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> [1,0,0]  0.0118 <span style="color: #949494;">± 0.0063</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> [0,1,0]  0.0164 <span style="color: #949494;">± 0.0109</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> [0,0,1]  0.1279 <span style="color: #949494;">± 0.0198</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> [1,1,0]  0.0093 <span style="color: #949494;">± 0.0057</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> [1,0,1]  0.0184 <span style="color: #949494;">± 0.0100</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> [0,1,1]  0.1730 <span style="color: #949494;">± 0.0203</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> [1,1,1]  0.3451 <span style="color: #949494;">± 0.0167</span></span></span></code></pre></div>
-<p>This means that the prior will have more influence on these
-parameters. Note in the above figure that the main effect estimates that
-are off the diagonal are less extreme when using measr. For example, the
-triangle at the top right is a main effect that is nearly 3 as reported
-by <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin2013a" role="doc-biblioref">2013</a>)</span>, but is
-just over 1.5 when using with measr. Thus, there is a regularizing
-effect, where the prior is pulling in extreme values, which is an
-intended outcome. Prior distributions for measr are discussed more in
-the following section.</p>
+<p>We can also examine the structural parameters, which represent the
+overall proportion of respondents in each class. Again, we see
+relatively strong agreement between the estimates from our model and the
+true generating values.</p>
+<p><img src="model-estimation_files/figure-html/lcdm-strc-compare-1.png" alt="Figure shows a strong correlation between item parameters, with only a few discrepancies off of the line of perfect agreement." width="90%" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -322,7 +292,7 @@ the following section.</p>
 <p>In the code to estimate the LCDM above, we did not specify any prior
 distributions in the call to <code><a href="../reference/measr_dcm.html">measr_dcm()</a></code>. By default, measr
 uses the following prior distributions for the LCDM:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/default_dcm_priors.html">default_dcm_priors</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
 <span><span class="co">#&gt;   class       coef  prior_def                  </span></span>
@@ -336,7 +306,7 @@ uses the following prior distributions for the LCDM:</p>
 distributions can be specified with the <code><a href="../reference/measrprior.html">prior()</a></code> function.
 For example, we can specify a <code>normal(0, 10)</code> prior for the
 main effects with:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">normal</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
 <span><span class="co">#&gt;   class      coef  prior_def    </span></span>
@@ -344,13 +314,13 @@ main effects with:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> maineffect <span style="color: #BB0000;">NA</span>    normal(0, 10)</span></span></code></pre></div>
 <p>By default, the prior is applied to all parameters in the class
 (i.e., all main effects). However, we can also apply a prior to a
-specific parameter. For example, here we specify a <span class="math inline">\(\chi^2\)</span> distribution with 2 degrees of
-freedom as the default prior for main effects, and an exponential
-distribution with a rate of 2 for the main effect of attribute 1
-(morphosyntactic rules) on item 7. To see all parameters (including
+specific parameter. For example, here we specify a χ<sup>2</sup>
+distribution with 2 degrees of freedom as the default prior for main
+effects, and an exponential distribution with a rate of 2 for the main
+effect of attribute 1 on just item 7. To see all parameters (including
 <code>class</code> and <code>coef</code>) that can be specified, we can
 use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">chi_square</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">exponential</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span>, coef <span class="op">=</span> <span class="st">"l7_11"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
@@ -359,21 +329,21 @@ use <code><a href="../reference/get_parameters.html">get_parameters()</a></code>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> maineffect <span style="color: #BB0000;">NA</span>    chi_square(2) </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> maineffect l7_11 exponential(2)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/get_parameters.html">get_parameters</a></span><span class="op">(</span><span class="va">ecpe_qmatrix</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 75 × 4</span></span></span>
-<span><span class="co">#&gt;    item_id class       attributes                coef  </span></span>
-<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1 intercept   <span style="color: #BB0000;">NA</span>                        l1_0  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       1 maineffect  morphosyntactic           l1_11 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       1 maineffect  cohesive                  l1_12 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       1 interaction morphosyntactic__cohesive l1_212</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       2 intercept   <span style="color: #BB0000;">NA</span>                        l2_0  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       2 maineffect  cohesive                  l2_12 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       3 intercept   <span style="color: #BB0000;">NA</span>                        l3_0  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       3 maineffect  morphosyntactic           l3_11 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       3 maineffect  lexical                   l3_13 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       3 interaction morphosyntactic__lexical  l3_213</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 65 more rows</span></span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/get_parameters.html">get_parameters</a></span><span class="op">(</span><span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 67 × 4</span></span></span>
+<span><span class="co">#&gt;    item_id class       attributes coef  </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> A1      intercept   <span style="color: #BB0000;">NA</span>         l1_0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> A1      maineffect  att2       l1_12 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> A1      maineffect  att4       l1_14 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> A1      interaction att2__att4 l1_224</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> A2      intercept   <span style="color: #BB0000;">NA</span>         l2_0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> A2      maineffect  att3       l2_13 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> A2      maineffect  att4       l2_14 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> A2      interaction att3__att4 l2_234</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> A3      intercept   <span style="color: #BB0000;">NA</span>         l3_0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> A3      maineffect  att1       l3_11 </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 57 more rows</span></span></span></code></pre></div>
 <p>Any distribution that is supported by the <em>Stan</em> language can
 be used as a prior. A list of all distributions is available in the
 <em>Stan</em> documentation, and are linked to from the
@@ -389,29 +359,27 @@ model using <em>Stan’s</em> optimizer, rather than using full Markov
 Chain Monte Carlo. Note that the prior still influences the model when
 using <code>method = "optim"</code>, just as they do when using
 <code>method = "mcmc"</code> (the default).</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_prior</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">normal</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span>, lb <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ecpe_data</span>, qmatrix <span class="op">=</span> <span class="va">ecpe_qmatrix</span>,</span>
+<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">data</span>, qmatrix <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span>,</span>
 <span>                      resp_id <span class="op">=</span> <span class="st">"resp_id"</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>,</span>
-<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
-<span>                      method <span class="op">=</span> <span class="st">"optim"</span>,</span>
+<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, method <span class="op">=</span> <span class="st">"optim"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
 <span>                      prior <span class="op">=</span> <span class="va">new_prior</span>,</span>
-<span>                      file <span class="op">=</span> <span class="st">"fits/ecpe-optim-lcdm"</span><span class="op">)</span></span>
+<span>                      file <span class="op">=</span> <span class="st">"fits/sim-lcdm-optim"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ecpe_data</span>, qmatrix <span class="op">=</span> <span class="va">ecpe_qmatrix</span>,</span>
+<span><span class="va">new_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">data</span>, qmatrix <span class="op">=</span> <span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span>,</span>
 <span>                      resp_id <span class="op">=</span> <span class="st">"resp_id"</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>,</span>
-<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
-<span>                      method <span class="op">=</span> <span class="st">"optim"</span>,</span>
+<span>                      type <span class="op">=</span> <span class="st">"lcdm"</span>, method <span class="op">=</span> <span class="st">"optim"</span>, backend <span class="op">=</span> <span class="st">"cmdstanr"</span>,</span>
 <span>                      prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/measrprior.html">prior</a></span><span class="op">(</span><span class="fu">normal</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"maineffect"</span>,</span>
 <span>                                      lb <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                      file <span class="op">=</span> <span class="st">"fits/ecpe-optim-lcdm"</span><span class="op">)</span></span></code></pre></div>
+<span>                      file <span class="op">=</span> <span class="st">"fits/sim-lcdm-optim"</span><span class="op">)</span></span></code></pre></div>
 <p>The priors used to estimate the model are saved in the returned model
 object, so we can always go back and see which priors were used if we
 are unsure. We can see that for the <code>new_lcdm</code> model, our
 specified normal prior was used for the main effects, but the default
 priors were still applied to the parameters for which we did not
 explicitly state a prior distribution.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">new_lcdm</span>, <span class="st">"prior"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
 <span><span class="co">#&gt;   class       coef  prior_def                  </span></span>
@@ -429,9 +397,9 @@ with software that makes the LCDM readily accessible, a few other
 popular DCM subtypes are also supported. For example, we can estimate
 the deterministic inputs, noisy “and” gate <span class="citation">(DINA,
 <a href="#ref-junker2001" role="doc-biblioref">Junker &amp; Sijtsma,
-2001</a>)</span> or the deterministic inputs, noisy “or” gate <span class="citation">(DINO, <a href="#ref-templin2006" role="doc-biblioref">Templin &amp; Henson, 2006</a>)</span> models by
-specifying a different <code>type</code> in the <code><a href="../reference/measr_dcm.html">measr_dcm()</a></code>
-function.</p>
+2001</a>)</span> or the deterministic inputs, noisy “or” gate <span class="citation">(DINO, <a href="#ref-dino" role="doc-biblioref">Templin
+&amp; Henson, 2006</a>)</span> models by specifying a different
+<code>type</code> in the <code><a href="../reference/measr_dcm.html">measr_dcm()</a></code> function.</p>
 <p>Future development work will continue to add functionality for more
 DCM subtypes. If there is a specific subtype you are interested in, or
 would like to see supported, please open an issue on the <a href="https://github.com/wjakethompson/measr/issues" class="external-link">GitHub
@@ -442,14 +410,9 @@ repository</a>.</p>
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
-<div id="ref-chen2018" class="csl-entry">
-Chen, F., Liu, Y., Xin, T., &amp; Cui, Y. (2018). Applying the <span class="math inline">\({M}_2\)</span> statistic to evaluate the fit of
-diagnostic classification models in the presence of attribute
-hierarchies. <em>Frontiers in Psychology</em>, <em>9</em>. <a href="https://doi.org/10.3389/fpsyg.2018.01875" class="external-link">https://doi.org/10.3389/fpsyg.2018.01875</a>
-</div>
 <div id="ref-lcdm" class="csl-entry">
-Henson, R., Templin, J. L., &amp; Willse, J. T. (2009). Defining a
-family of cognitive diagnosis models using log-linear models with latent
+Henson, R., Templin, J., &amp; Willse, J. T. (2009). Defining a family
+of cognitive diagnosis models using log-linear models with latent
 variables. <em>Psychometrika</em>, <em>74</em>(2), 191–210. <a href="https://doi.org/10.1007/s11336-008-9089-5" class="external-link">https://doi.org/10.1007/s11336-008-9089-5</a>
 </div>
 <div id="ref-junker2001" class="csl-entry">
@@ -458,27 +421,10 @@ with few assumptions, and connections with nonparametric item response
 theory. <em>Applied Psychological Measurement</em>, <em>25</em>(3),
 258–272. <a href="https://doi.org/10.1177/01466210122032064" class="external-link">https://doi.org/10.1177/01466210122032064</a>
 </div>
-<div id="ref-liu2019" class="csl-entry">
-Liu, X., &amp; Johnson, M. S. (2019). Estimating <span>CDMs</span> using
-<span>MCMC</span>. In M. von Davier &amp; Y.-S. Lee (Eds.), <em>Handbook
-of <span>Diagnostic Classification Models</span></em> (pp. 629–646).
-<span>Springer International Publishing</span>. <a href="https://doi.org/10.1007/978-3-030-05584-4_31" class="external-link">https://doi.org/10.1007/978-3-030-05584-4_31</a>
-</div>
-<div id="ref-hdcm" class="csl-entry">
-Templin, J., &amp; Bradshaw, L. (2014). Hierarchical diagnostic
-classification models: <span>A</span> family of models for estimating
-and testing attribute hierarchies. <em>Psychometrika</em>,
-<em>79</em>(2), 317–339. <a href="https://doi.org/10.1007/s11336-013-9362-0" class="external-link">https://doi.org/10.1007/s11336-013-9362-0</a>
-</div>
-<div id="ref-templin2006" class="csl-entry">
+<div id="ref-dino" class="csl-entry">
 Templin, J., &amp; Henson, R. A. (2006). Measurement of psychological
 disorders using cognitive diagnosis models. <em>Psychological
 Methods</em>, <em>11</em>(3), 287–305. <a href="https://doi.org/10.1037/1082-989X.11.3.287" class="external-link">https://doi.org/10.1037/1082-989X.11.3.287</a>
-</div>
-<div id="ref-templin2013a" class="csl-entry">
-Templin, J., &amp; Hoffman, L. (2013). Obtaining diagnostic
-classification model estimates using Mplus. <em>Educational Measurement:
-Issues and Practice</em>, <em>32</em>(2), 37–50. <a href="https://doi.org/10.1111/emip.12010" class="external-link">https://doi.org/10.1111/emip.12010</a>
 </div>
 </div>
 </div>
@@ -495,7 +441,7 @@ Issues and Practice</em>, <em>32</em>(2), 37–50. <a href="https://doi.org/10.1
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the the Institute or the U.S. Department of Education.</p>
+<p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the Institute or the U.S. Department of Education.</p>
 </div>
 
     </footer>
@@ -503,7 +449,6 @@ Issues and Practice</em>, <em>32</em>(2), 37–50. <a href="https://doi.org/10.1
 
   
 
-  
-
-  </body>
+  <script data-goatcounter="https://measr.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
 </html>

@@ -14,10 +14,10 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Fira_Code-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Playfair_Display-0.4.6/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Open_Sans-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.4.8/font.css" rel="stylesheet">
+<link href="../deps/Playfair_Display-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -41,7 +41,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">measr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,13 +59,20 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/paper.html">measr: Bayesian psychometric measurement using Stan</a>
     <a class="dropdown-item" href="../articles/model-estimation.html">Estimating diagnostic classification models</a>
+    <a class="dropdown-item" href="../articles/model-evaluation.html">Evaluating diagnostic classification models</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
+    <a class="dropdown-item" href="../articles/ecpe.html">Examination for the Certificate of Proficiency in English</a>
   </div>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-news">
     <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2024-02-measr-1.0.0/">Version 1.0.0</a>
+    <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-06-measr-0.3.1/">Version 0.3.1</a>
     <a class="external-link dropdown-item" href="https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/">Version 0.2.1</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../news/index.html">Changelog</a>
@@ -120,23 +127,94 @@ Estimation functions are used for building the DCM using the <a href="https://mc
 and getting estimates of respondent proficiency. Evaluation functions
 can then be applied to the fitted model to assess how well the estimates
 represent the observed data.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Because measr uses <em>Stan</em> as a backend for estimating DCMs, an
+installation of <a href="https://mc-stan.org/rstan/" class="external-link">rstan</a> or <a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a> is required.</p>
+<div class="section level3">
+<h3 id="rstan">rstan<a class="anchor" aria-label="anchor" href="#rstan"></a>
+</h3>
+<p>Before installing rstan, your system must be configured to compile
+C++ code. You can find instructions on the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">RStan
+Getting Started</a> guide for <a href="https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows" class="external-link">Windows</a>,
+<a href="https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Mac" class="external-link">Mac</a>,
+and <a href="https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux" class="external-link">Linux</a>.</p>
+<p>The rstan package can then be installed directly from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rstan"</span><span class="op">)</span></span></code></pre></div>
+<p>To verify the installation was successful, you can run a test model.
+If everything is set up correctly, the model should compile and sample.
+For additional troubleshooting help, see the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">RStan
+Getting Started</a> guide.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/example.html" class="external-link">example</a></span><span class="op">(</span><span class="va">stan_model</span>, package <span class="op">=</span> <span class="st">"rstan"</span>, run.dontrun <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="cmdstanr">cmdstanr<a class="anchor" aria-label="anchor" href="#cmdstanr"></a>
+</h3>
+<p>The cmdstanr package is not yet available on CRAN. The beta release
+can be installed from the <em>Stan</em> R package repository:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"cmdstanr"</span>,</span>
+<span>                 repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://mc-stan.org/r-packages/"</span>,</span>
+<span>                           <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"repos"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Or the development version can be installed from <a href="https://github.com/stan-dev/cmdstanr" class="external-link">GitHub</a>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"stan-dev/cmdstanr"</span><span class="op">)</span></span></code></pre></div>
+<p>The cmdstanr package requires a suitable C++ toolchain. Requirements
+and instructions for ensuring your toolchain is properly set up are
+described in the <a href="https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain" class="external-link">CmdStan
+User Guide</a>.</p>
+<p>You can verify that the C++ toolchain is set up correctly with:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://mc-stan.org/cmdstanr/reference/install_cmdstan.html" class="external-link">check_cmdstan_toolchain</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Finally, cmdstanr requires that CmdStan (the shell interface to
+<em>Stan</em>). Once the toolchain is properly set up, CmdStan can be
+installed with:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/cmdstanr/reference/install_cmdstan.html" class="external-link">install_cmdstan</a></span><span class="op">(</span>cores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p>For additional installation help, getting the <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html" class="external-link">Getting
+Started with CmdStanR</a> vignette.</p>
+</div>
+<div class="section level3">
+<h3 id="measr">measr<a class="anchor" aria-label="anchor" href="#measr"></a>
+</h3>
+<p>Once rstan and/or cmdstanr have been installed, we are ready to
+install measr. The released version of measr can be installed directly
+from CRAN:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"measr"</span><span class="op">)</span></span></code></pre></div>
+<p>Or, the development version can be installed from <a href="https://github.com/wjakethompson/measr" class="external-link">GitHub</a>:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"wjakethompson/measr"</span><span class="op">)</span></span></code></pre></div>
+<p>Once everything has been installed, we’re ready to start estimating
+and evaluating our DCMs.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://measr.info">measr</a></span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
 <div class="section level2">
 <h2 id="model-estimation">Model Estimation<a class="anchor" aria-label="anchor" href="#model-estimation"></a>
 </h2>
 <p>To illustrate, we’ll fit a loglinear cognitive diagnostic model
-(LCDM) to an assessment of English language proficiency <span class="citation">(see <a href="#ref-templin2013" role="doc-biblioref">Templin &amp; Hoffman, 2013</a>)</span>. There are
+(LCDM) to an assessment of English language proficiency <span class="citation">(see <a href="#ref-templin-emip-2013" role="doc-biblioref">Templin &amp; Hoffman, 2013</a>)</span>. There are
 many different subtypes of DCMs that make different assumptions about
 how the attributes relate to each other. The LCDM is a general model
 that makes very few assumptions about the compensatory nature of the
-relationships between attributes. For details on the LCDM, see <span class="citation">Henson &amp; Templin (<a href="#ref-henson2019" role="doc-biblioref">2019</a>)</span>.</p>
+relationships between attributes. For details on the LCDM, see <span class="citation">Henson &amp; Templin (<a href="#ref-lcdm-handbook" role="doc-biblioref">2019</a>)</span>.</p>
 <p>The data set we’re using contains 29 items that together measure
 three attributes: morphosyntactic rules, cohesive rules, and lexical
 rules. The Q-matrix defines which attributes are measured by each item.
 For example, item E1 measures morphosyntactic and cohesive rules. The
 data is further described in <code>?ecpe</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ecpe_data</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,922 × 29</span></span></span>
 <span><span class="co">#&gt;    resp_id    E1    E2    E3    E4    E5    E6    E7    E8    E9   E10   E11</span></span>
@@ -183,7 +261,7 @@ estimate. As previously discussed, we’re estimating an LCDM in this
 example. For more details and options for customizing the model
 specification and estimation, see the <a href="https://measr.info/articles/model-estimation.html">model
 estimation article</a> on the measr website.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ecpe_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/measr_dcm.html">measr_dcm</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ecpe_data</span>, qmatrix <span class="op">=</span> <span class="va">ecpe_qmatrix</span>,</span>
 <span>                       resp_id <span class="op">=</span> <span class="st">"resp_id"</span>, item_id <span class="op">=</span> <span class="st">"item_id"</span>,</span>
 <span>                       method <span class="op">=</span> <span class="st">"optim"</span>, type <span class="op">=</span> <span class="st">"lcdm"</span><span class="op">)</span></span></code></pre></div>
@@ -194,7 +272,7 @@ near 1 for all attributes, indicating a high degree of confidence that
 they are proficient in all attributes. On the other hand, respondent 8
 has relatively low probabilities for morphosyntactic and cohesive
 attributes, and is likely only proficient in lexical rules.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ecpe_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_evaluation.html">add_respondent_estimates</a></span><span class="op">(</span><span class="va">ecpe_lcdm</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">ecpe_lcdm</span>, <span class="st">"attribute_prob"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,922 × 4</span></span></span>
@@ -228,7 +306,7 @@ indices, numbers close to 1 indicate a high level of classification
 accuracy or consistency. These numbers are not amazing, but overall look
 pretty good. For guidance on cutoff values for “good,” “fair,” etc.
 reliability, see <span class="citation">Johnson &amp; Sinharay (<a href="#ref-johnson2018" role="doc-biblioref">2018</a>)</span>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ecpe_lcdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/model_evaluation.html">add_reliability</a></span><span class="op">(</span><span class="va">ecpe_lcdm</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/measr_extract.html">measr_extract</a></span><span class="op">(</span><span class="va">ecpe_lcdm</span>, <span class="st">"classification_reliability"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
@@ -242,8 +320,8 @@ reliability, see <span class="citation">Johnson &amp; Sinharay (<a href="#ref-jo
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
-<div id="ref-henson2019" class="csl-entry">
-Henson, R., &amp; Templin, J. L. (2019). Loglinear cognitive diagnostic
+<div id="ref-lcdm-handbook" class="csl-entry">
+Henson, R., &amp; Templin, J. (2019). Loglinear cognitive diagnostic
 model (<span>LCDM</span>). In M. von Davier &amp; Y.-S. Lee (Eds.),
 <em>Handbook of <span>Diagnostic Classification Models</span></em> (pp.
 171–185). <span>Springer International Publishing</span>. <a href="https://doi.org/10.1007/978-3-030-05584-4_8" class="external-link">https://doi.org/10.1007/978-3-030-05584-4_8</a>
@@ -254,9 +332,9 @@ assess attribute-level classification accuracy and consistency for
 cognitive diagnostic assessments. <em>Journal of Educational
 Measurement</em>, <em>55</em>(4), 635–664. <a href="https://doi.org/10.1111/jedm.12196" class="external-link">https://doi.org/10.1111/jedm.12196</a>
 </div>
-<div id="ref-templin2013" class="csl-entry">
+<div id="ref-templin-emip-2013" class="csl-entry">
 Templin, J., &amp; Hoffman, L. (2013). Obtaining diagnostic
-classification model estimates using mplus. <em>Educational Measurement:
+classification model estimates using Mplus. <em>Educational Measurement:
 Issues and Practice</em>, <em>32</em>(2), 37–50. <a href="https://doi.org/10.1111/emip.12010" class="external-link">https://doi.org/10.1111/emip.12010</a>
 </div>
 </div>
@@ -274,7 +352,7 @@ Issues and Practice</em>, <em>32</em>(2), 37–50. <a href="https://doi.org/10.1
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the the Institute or the U.S. Department of Education.</p>
+<p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the Institute or the U.S. Department of Education.</p>
 </div>
 
     </footer>
@@ -282,7 +360,6 @@ Issues and Practice</em>, <em>32</em>(2), 37–50. <a href="https://doi.org/10.1
 
   
 
-  
-
-  </body>
+  <script data-goatcounter="https://measr.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
 </html>
