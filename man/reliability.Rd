@@ -7,12 +7,16 @@
 \usage{
 reliability(model, ...)
 
-\method{reliability}{measrdcm}(model, ..., force = FALSE)
+\method{reliability}{measrdcm}(model, ..., threshold = 0.5, force = FALSE)
 }
 \arguments{
 \item{model}{The estimated model to be evaluated.}
 
 \item{...}{Unused. For future extensions.}
+
+\item{threshold}{For \code{map_reliability}, the threshold applied to the
+attribute-level probabilities for determining the binary attribute
+classifications.}
 
 \item{force}{If reliability information has already been added to the model
 object with \code{\link[=add_reliability]{add_reliability()}}, should it be recalculated. Default is

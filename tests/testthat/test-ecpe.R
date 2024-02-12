@@ -187,6 +187,7 @@ test_that("ecpe reliability", {
   skip_on_cran()
 
   ecpe_reli <- reliability(cmds_ecpe_lcdm)
+  ecpe_reli8 <- reliability(cmds_ecpe_lcdm, threshold = 0.8)
 
   # list naming
   expect_equal(names(ecpe_reli), c("pattern_reliability", "map_reliability",
@@ -254,6 +255,14 @@ test_that("ecpe reliability", {
                                "attribute", consistency = "consist"),
                  by = "attribute"
                ))
+
+  # reliability thresholds
+  expect_equal(ecpe_reli$pattern_reliability, ecpe_reli8$pattern_reliability)
+  expect_equal(ecpe_reli$eap_reliability, ecpe_reli$eap_reliability)
+  expect_false(identical(ecpe_reli$map_reliability$accuracy,
+                         ecpe_reli8$map_reliability$accuracy))
+  expect_false(identical(ecpe_reli$map_reliability$consistency,
+                         ecpe_reli8$map_reliability$consistency))
 })
 
 test_that("m2 calculation is correct", {
