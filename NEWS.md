@@ -1,5 +1,7 @@
 # measr (development version)
 
+* Updated reliability functionality to allow for the calculation of accuracy and consistency with different thresholds for determining attribute classifications.
+
 # measr 1.0.0
 
 ## New documentation

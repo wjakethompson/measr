@@ -142,7 +142,7 @@ create_reli_list <- function(n_resp, n_att, n_class, profile_vec, class_att,
   return(ret_list)
 }
 
-reli_list <- function(model) {
+reli_list <- function(model, threshold) {
   n_resp <- dplyr::n_distinct(model$data$data$resp_id)
   n_att <- ncol(model$data$qmatrix) - 1L
   n_class  <- 2 ^ n_att
@@ -160,7 +160,7 @@ reli_list <- function(model) {
   # map estimates
   binary_att <- attr_probs %>%
     dplyr::mutate(dplyr::across(dplyr::everything(),
-                                ~dplyr::case_when(.x >= 0.5 ~ 1L,
+                                ~dplyr::case_when(.x >= threshold ~ 1L,
                                                   TRUE ~ 0L))) %>%
     as.matrix() %>%
     unname() %>%

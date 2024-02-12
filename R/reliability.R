@@ -26,6 +26,10 @@ reliability <- function(model, ...) {
 #' probability should be reported. This is the *expected a posteriori* (EAP)
 #' reliability.
 #'
+#' @param threshold For `map_reliability`, the threshold applied to the
+#'  attribute-level probabilities for determining the binary attribute
+#'  classifications.
+#'
 #' @details The pattern-level reliability (`pattern_reliability`) statistics are
 #' described in Cui et al. (2012). Attribute-level classification reliability
 #' statistics (`map_reliability`) are described in Johnson & Sinharay (2018).
@@ -66,14 +70,14 @@ reliability <- function(model, ...) {
 #' )
 #'
 #' reliability(rstn_mdm_lcdm)
-reliability.measrdcm <- function(model, ..., force = FALSE) {
+reliability.measrdcm <- function(model, ..., threshold = 0.5, force = FALSE) {
   if ((!is.null(model$reliability) && length(model$reliability) > 0) &&
       !force) {
     return(model$reliability)
   }
 
   # coerce model into a list of values required for reliability
-  obj <- reli_list(model)
+  obj <- reli_list(model, threshold = threshold)
   att_names <- model$data$qmatrix %>%
     dplyr::select(-"item_id") %>%
     colnames()
