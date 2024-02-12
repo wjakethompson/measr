@@ -4,7 +4,7 @@
   --nav-bkg: #023047;     /* nav bar background */
   --nav-link: #8ecae6;    /* nav bar link color */
   --nav-higl: #219ebc;    /* nav active and highlight */
-  --ver-norm: #023047;    /* pkg version background - release version */
+  --ver-norm: #219ebc;    /* pkg version background - release version */
   --ver-devp: #d7263d;    /* pkg version background - dev version */
 
   --pg-header: #023047;   /* heading color & text links */
@@ -41,9 +41,12 @@
 }
 
 /* Package version */
-.badge-danger {
-  color: #fff;
-  background-color: var(--ver-devp);
+small.text-danger {
+  color: var(--ver-devp) !important;
+}
+
+small.text-muted {
+  color: var(--ver-norm) !important;
 }
 
 /* Color of links in navbar and hover links */
