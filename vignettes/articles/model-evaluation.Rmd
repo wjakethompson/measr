@@ -147,7 +147,7 @@ fit_ppmc(lcdm, model_fit = NULL, item_fit = "odds_ratio",
 We see similar output for the item-level indices: the observed odds ratio for each item pair (`obs_or`), the mean of the posterior distribution for each item pair (`ppmc_mean`), the quantiles of the posterior that we specified, and the *ppp*.
 As with the raw score distribution, here the *ppp* represents the proportion of posterior draws where the odds ratio is greater than the observed value.
 
-## Relative Model Fit
+### Relative Model Fit
 
 Relative fit measures are used to compare multiple competing models.
 In this case, we have estimate an LCDM and a DINA model and want to compare which model performs better.
@@ -187,7 +187,7 @@ For example, because the absolute value of the `elpd_diff` is greater than `r gl
 This is our expected outcome in this case, given the data generation process and the results of the absolute model fit analysis.
 If the difference were less than 2.5 standard errors, we would conclude that the models fit equally well.
 
-## Reliability
+### Reliability
 
 We can also evaluate DCMs through their reliability.
 That is, it's important to understand the accuracy and consistency of the classifications that are made by the model.
