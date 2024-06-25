@@ -17,7 +17,7 @@ add_criterion(
   r_eff = NA
 )
 
-add_reliability(x, threshold = 0.5, overwrite = FALSE, save = TRUE)
+add_reliability(x, overwrite = FALSE, save = TRUE, ...)
 
 add_fit(
   x,
@@ -108,7 +108,8 @@ For \code{add_reliability()}, reliability information is added to the
 \verb{$reliability} element of the fitted model. Pattern level reliability is
 described by Cui et al. (2012). Classification reliability and posterior
 probability reliability are described by Johnson & Sinharay (2018, 2020),
-respectively. This function wraps \code{\link[=reliability]{reliability()}}.
+respectively. This function wraps \code{\link[=reliability]{reliability()}}. Arguments supplied to
+\code{...} are passed to \code{\link[=reliability]{reliability()}}.
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
