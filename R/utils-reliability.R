@@ -159,9 +159,19 @@ reli_list <- function(model, threshold) {
 
   # map estimates
   binary_att <- attr_probs %>%
-    dplyr::mutate(dplyr::across(dplyr::everything(),
-                                ~dplyr::case_when(.x >= threshold ~ 1L,
-                                                  TRUE ~ 0L))) %>%
+    tibble::rowid_to_column(var = "resp_id") %>%
+    tidyr::pivot_longer(cols = -"resp_id",
+                        names_to = "attribute", values_to = "probability") %>%
+    dplyr::left_join(tibble::enframe(threshold, name = "attribute",
+                                     value = "threshold"),
+                     by = "attribute",
+                     relationship = "many-to-one") %>%
+    dplyr::mutate(class = dplyr::case_when(.data$probability >=
+                                             .data$threshold ~ 1L,
+                                           .default = 0L)) %>%
+    dplyr::select("resp_id", "attribute", "class") %>%
+    tidyr::pivot_wider(names_from = "attribute", values_from = "class") %>%
+    dplyr::select(dplyr::all_of(names(threshold))) %>%
     as.matrix() %>%
     unname() %>%
     as.vector()

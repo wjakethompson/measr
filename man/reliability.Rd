@@ -16,7 +16,11 @@ reliability(model, ...)
 
 \item{threshold}{For \code{map_reliability}, the threshold applied to the
 attribute-level probabilities for determining the binary attribute
-classifications.}
+classifications. Should be a numeric vector of length 1 (the same threshold
+is applied to all attributes), or length equal to the number of attributes.
+If a named vector is supplied, names should match the attribute names in the
+Q-matrix used to estimate the model. If unnamed, thresholds should be in the
+order the attributes were defined in the Q-matrix.}
 
 \item{force}{If reliability information has already been added to the model
 object with \code{\link[=add_reliability]{add_reliability()}}, should it be recalculated. Default is
