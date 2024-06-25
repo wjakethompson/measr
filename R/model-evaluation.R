@@ -159,7 +159,8 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
 
 #' @export
 #' @rdname model_evaluation
-add_reliability <- function(x, overwrite = FALSE, save = TRUE) {
+add_reliability <- function(x, threshold = 0.5, overwrite = FALSE,
+                            save = TRUE) {
   model <- check_model(x, required_class = "measrfit", name = "x")
   overwrite <- check_logical(overwrite, name = "overwrite")
   save <- check_logical(save, name = "force_save")
@@ -168,7 +169,7 @@ add_reliability <- function(x, overwrite = FALSE, save = TRUE) {
   run_reli <- length(model$reliability) == 0 || overwrite
 
   if (run_reli) {
-    model$reliability <- reliability(model)
+    model$reliability <- reliability(model, threshold = threshold, force = TRUE)
   }
 
   # re-save model object (if applicable)

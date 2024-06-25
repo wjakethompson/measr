@@ -17,7 +17,7 @@ add_criterion(
   r_eff = NA
 )
 
-add_reliability(x, overwrite = FALSE, save = TRUE)
+add_reliability(x, threshold = 0.5, overwrite = FALSE, save = TRUE)
 
 add_fit(
   x,
