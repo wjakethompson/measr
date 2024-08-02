@@ -23,11 +23,49 @@ measrfit(
 )
 }
 \arguments{
+\item{data}{The data and Q-matrix used to estimate the model.}
+
+\item{type}{The type of DCM that was estimated.}
+
+\item{prior}{A \link[=measrprior]{measrprior} object containing information on
+the priors used in the model.}
+
+\item{stancode}{The model code in \strong{Stan} language.}
+
+\item{method}{The method used to fit the model.}
+
+\item{algorithm}{The name of the algorithm used to fit the model.}
+
+\item{backend}{The name of the backend used to fit the model.}
+
+\item{model}{The fitted Stan model. This will object of class
+\link[rstan:stanfit-class]{rstan::stanfit} if \code{backend = "rstan"} and
+\href{https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html}{\code{CmdStanMCMC}}
+if \code{backend = "cmdstanr"} was specified when fitting the model.}
+
+\item{respondent_estimates}{An empty list for adding estimated person
+parameters after fitting the model.}
+
+\item{fit}{An empty list for adding model fit information after fitting the
+model.}
+
+\item{criteria}{An empty list for adding information criteria after fitting
+the model.}
+
+\item{reliability}{An empty list for adding reliability information after
+fitting the model.}
+
+\item{file}{Optional name of a file which the model objects was saved to
+or loaded from.}
+
+\item{version}{The versions of \strong{measr}, \strong{Stan}, \strong{rstan} and/or
+\strong{cmdstanr} that were used to fit the model.}
+
 \item{class}{Additional classes to be added (e.g., \code{measrdcm} for a
 diagnostic classification model).}
 }
 \value{
-A \href{measrfit-class}{measrfit} object.
+A \link[=measrfit-class]{measrfit} object.
 }
 \description{
 Models fitted with \strong{measr} are represented as a \code{measrfit} object. If a

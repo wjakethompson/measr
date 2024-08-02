@@ -5,11 +5,34 @@
 #' created in order to access other functionality in **measr** (e.g., model fit,
 #' reliability).
 #'
-#' @inheritParams measrfit-class
+#' @param data The data and Q-matrix used to estimate the model.
+#' @param type The type of DCM that was estimated.
+#' @param prior A [measrprior][measrprior()] object containing information on
+#'   the priors used in the model.
+#' @param stancode The model code in **Stan** language.
+#' @param method The method used to fit the model.
+#' @param algorithm The name of the algorithm used to fit the model.
+#' @param backend The name of the backend used to fit the model.
+#' @param model The fitted Stan model. This will object of class
+#'   [rstan::stanfit-class] if `backend = "rstan"` and
+#'   [`CmdStanMCMC`](https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html)
+#'   if `backend = "cmdstanr"` was specified when fitting the model.
+#' @param respondent_estimates An empty list for adding estimated person
+#'   parameters after fitting the model.
+#' @param fit An empty list for adding model fit information after fitting the
+#'   model.
+#' @param criteria An empty list for adding information criteria after fitting
+#'   the model.
+#' @param reliability An empty list for adding reliability information after
+#'   fitting the model.
+#' @param file Optional name of a file which the model objects was saved to
+#'   or loaded from.
+#' @param version The versions of **measr**, **Stan**, **rstan** and/or
+#'   **cmdstanr** that were used to fit the model.
 #' @param class Additional classes to be added (e.g., `measrdcm` for a
 #'   diagnostic classification model).
 #'
-#' @return A [measrfit](measrfit-class) object.
+#' @return A [measrfit][measrfit-class] object.
 #' @export
 #' @seealso [measrfit-class], [measr_dcm()]
 #' @examplesIf measr_examples()
