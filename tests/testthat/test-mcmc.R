@@ -29,6 +29,11 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
   )
 }
 
+test_that("validation works", {
+  expect_identical(validate_measrfit(cmds_mdm_lcdm), cmds_mdm_lcdm)
+  expect_identical(validate_measrfit(cmds_mdm_dina), cmds_mdm_dina)
+})
+
 test_that("as_draws works", {
   skip_on_cran()
 
