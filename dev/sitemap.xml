@@ -1,114 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://measr.info/dev/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/articles/ecpe.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/articles/measr.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/articles/model-estimation.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/articles/model-evaluation.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/articles/paper.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/index.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/c.measrprior.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/create_profiles.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/default_dcm_priors.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/ecpe.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/fit_m2.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/fit_ppmc.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/get_parameters.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/is.measrprior.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/loo.measrfit.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/loo_compare.measrfit.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/mdm.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/measr-package.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/measr_dcm.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/measr_examples.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/measr_extract.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/measrfit-class.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/measrprior.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/model_evaluation.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/predict.measrdcm.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/reliability.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/tidyeval.html</loc>
-  </url>
-  <url>
-    <loc>https://measr.info/dev/reference/waic.measrfit.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://measr.info/dev/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://measr.info/dev/CONTRIBUTING.html</loc></url>
+<url><loc>https://measr.info/dev/LICENSE.html</loc></url>
+<url><loc>https://measr.info/dev/articles/ecpe.html</loc></url>
+<url><loc>https://measr.info/dev/articles/index.html</loc></url>
+<url><loc>https://measr.info/dev/articles/measr.html</loc></url>
+<url><loc>https://measr.info/dev/articles/model-estimation.html</loc></url>
+<url><loc>https://measr.info/dev/articles/model-evaluation.html</loc></url>
+<url><loc>https://measr.info/dev/articles/paper.html</loc></url>
+<url><loc>https://measr.info/dev/authors.html</loc></url>
+<url><loc>https://measr.info/dev/index.html</loc></url>
+<url><loc>https://measr.info/dev/news/index.html</loc></url>
+<url><loc>https://measr.info/dev/reference/as_measrfit.html</loc></url>
+<url><loc>https://measr.info/dev/reference/c.measrprior.html</loc></url>
+<url><loc>https://measr.info/dev/reference/create_profiles.html</loc></url>
+<url><loc>https://measr.info/dev/reference/default_dcm_priors.html</loc></url>
+<url><loc>https://measr.info/dev/reference/ecpe.html</loc></url>
+<url><loc>https://measr.info/dev/reference/fit_m2.html</loc></url>
+<url><loc>https://measr.info/dev/reference/fit_ppmc.html</loc></url>
+<url><loc>https://measr.info/dev/reference/get_parameters.html</loc></url>
+<url><loc>https://measr.info/dev/reference/index.html</loc></url>
+<url><loc>https://measr.info/dev/reference/is.measrprior.html</loc></url>
+<url><loc>https://measr.info/dev/reference/loo.measrfit.html</loc></url>
+<url><loc>https://measr.info/dev/reference/loo_compare.measrfit.html</loc></url>
+<url><loc>https://measr.info/dev/reference/mdm.html</loc></url>
+<url><loc>https://measr.info/dev/reference/measr-package.html</loc></url>
+<url><loc>https://measr.info/dev/reference/measr_dcm.html</loc></url>
+<url><loc>https://measr.info/dev/reference/measr_examples.html</loc></url>
+<url><loc>https://measr.info/dev/reference/measr_extract.html</loc></url>
+<url><loc>https://measr.info/dev/reference/measrfit-class.html</loc></url>
+<url><loc>https://measr.info/dev/reference/measrfit.html</loc></url>
+<url><loc>https://measr.info/dev/reference/measrprior.html</loc></url>
+<url><loc>https://measr.info/dev/reference/model_evaluation.html</loc></url>
+<url><loc>https://measr.info/dev/reference/pipe.html</loc></url>
+<url><loc>https://measr.info/dev/reference/predict.measrdcm.html</loc></url>
+<url><loc>https://measr.info/dev/reference/reexports.html</loc></url>
+<url><loc>https://measr.info/dev/reference/reliability.html</loc></url>
+<url><loc>https://measr.info/dev/reference/tidyeval.html</loc></url>
+<url><loc>https://measr.info/dev/reference/waic.measrfit.html</loc></url>
 </urlset>
+
