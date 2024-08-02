@@ -25,3 +25,10 @@ test_that("creation works", {
     )
   )
 })
+
+test_that("coercion works", {
+  expect_identical(
+    rstn_dino,
+    as_measrfit(rstn_dino, class = "measrdcm")
+  )
+})

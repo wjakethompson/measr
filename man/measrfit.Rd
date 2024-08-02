@@ -27,7 +27,7 @@ measrfit(
 diagnostic classification model).}
 }
 \value{
-An \link{measrfit} object.
+A \href{measrfit-class}{measrfit} object.
 }
 \description{
 Models fitted with \strong{measr} are represented as a \code{measrfit} object. If a
@@ -35,6 +35,33 @@ model is estimated with \emph{Stan}, but not \strong{measr}, a \code{measrfit} o
 created in order to access other functionality in \strong{measr} (e.g., model fit,
 reliability).
 }
+\examples{
+\dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+rstn_mdm_lcdm <- measr_dcm(
+  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+  resp_id = "respondent", item_id = "item", type = "lcdm",
+  method = "optim", seed = 63277, backend = "rstan"
+)
+
+new_obj <- measrfit(
+  data = rstn_mdm_lcdm$data,
+  type = rstn_mdm_lcdm$type,
+  prior = rstn_mdm_lcdm$prior,
+  stancode = rstn_mdm_lcdm$stancode,
+  method = rstn_mdm_lcdm$method,
+  algorithm = rstn_mdm_lcdm$algorithm,
+  backend = rstn_mdm_lcdm$backend,
+  model = rstn_mdm_lcdm$model,
+  respondent_estimates = rstn_mdm_lcdm$respondent_estimates,
+  fit = rstn_mdm_lcdm$fit,
+  criteria = rstn_mdm_lcdm$criteria,
+  reliability = rstn_mdm_lcdm$reliability,
+  file = rstn_mdm_lcdm$file,
+  version = rstn_mdm_lcdm$version,
+  class = "measrdcm"
+)
+\dontshow{\}) # examplesIf}
+}
 \seealso{
-\link{measrfit} \code{\link[=measr_dcm]{measr_dcm()}}
+\linkS4class{measrfit}, \code{\link[=measr_dcm]{measr_dcm()}}
 }

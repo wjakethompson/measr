@@ -9,9 +9,9 @@
 #' @param class Additional classes to be added (e.g., `measrdcm` for a
 #'   diagnostic classification model).
 #'
-#' @return An [measrfit] object.
+#' @return A [measrfit](measrfit-class) object.
 #' @export
-#' @seealso [measrfit] [measr_dcm()]
+#' @seealso [measrfit-class], [measr_dcm()]
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
@@ -61,6 +61,50 @@ measrfit <- function(data = list(), type = character(),
   validate_measrfit(new_measrfit(obj, class = class))
 }
 
+#' Coerce objects to a `measrfit`
+#'
+#' @param x An object to be coerced to a `measrfit`.
+#' @param class Additional classes to be added (e.g., `measrdcm` for a
+#'   diagnostic classification model).
+#'
+#' @return An object of class [measrfit-class].
+#' @export
+#' @seealso [measrfit-class], [measrfit()]
+#'
+#' @examplesIf measr_examples()
+#' rstn_mdm_lcdm <- measr_dcm(
+#'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+#'   resp_id = "respondent", item_id = "item", type = "lcdm",
+#'   method = "optim", seed = 63277, backend = "rstan"
+#' )
+#'
+#' new_obj <- as_measrfit(rstn_mdm_lcdm, class = "measrdcm")
+as_measrfit <- function(x, class = character()) {
+  UseMethod("as_measrfit")
+}
+
+#' @export
+#' @rdname as_measrfit
+as_measrfit.default <- function(x, class = character()) {
+  measrfit(
+    data = x$data,
+    type = x$type,
+    prior = x$prior,
+    stancode = x$stancode,
+    method = x$method,
+    algorithm = x$algorithm,
+    backend = x$backend,
+    model = x$model,
+    respondent_estimates = x$respondent_estimates,
+    fit = x$fit,
+    criteria = x$criteria,
+    reliability = x$reliability,
+    file = x$file,
+    version = x$version,
+    class = class
+  )
+}
+
 
 #' Class `measrfit` of models fitted with the **measr** package
 #'
@@ -69,7 +113,6 @@ measrfit <- function(data = list(), type = character(),
 #' relevant information.
 #'
 #' @name measrfit-class
-#' @aliases measrfit
 #' @docType class
 #'
 #' @slot data The data and Q-matrix used to estimate the model.
