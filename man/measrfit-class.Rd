@@ -3,7 +3,6 @@
 \docType{class}
 \name{measrfit-class}
 \alias{measrfit-class}
-\alias{measrfit}
 \title{Class \code{measrfit} of models fitted with the \strong{measr} package}
 \description{
 Models fitted with the \strong{measr} package are represented as a \code{measrfit}

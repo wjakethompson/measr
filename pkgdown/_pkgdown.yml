@@ -79,6 +79,8 @@ reference:
 - contents:
   - measr_dcm
   - measrfit-class
+  - measrfit
+  - as_measrfit
 
 - title: Model evaluation
 

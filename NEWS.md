@@ -2,6 +2,8 @@
 
 * Updated reliability functionality to allow for the calculation of accuracy and consistency with different thresholds for determining attribute classifications.
 
+* Added new `measrfit()` function for creating measrfit objects from *Stan* models that were not originally created with measr.
+
 # measr 1.0.0
 
 ## New documentation
