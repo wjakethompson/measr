@@ -139,7 +139,7 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
   all_criteria <- c(new_criteria, redo_criteria)
 
   if (length(all_criteria) > 0) {
-    log_lik_array <- prep_loglik_array(model)
+    log_lik_array <- loglik_array(model)
   }
 
   if ("loo" %in% all_criteria) {

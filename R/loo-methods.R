@@ -38,7 +38,7 @@ loo.measrfit <- function(x, ..., r_eff = NA, force = FALSE) { #nolint
                                       "estimated with `method = \"mcmc\"`."))
   }
 
-  log_lik_array <- prep_loglik_array(model)
+  log_lik_array <- loglik_array(model)
 
   loo::loo(log_lik_array, r_eff = r_eff, ...)
 }
@@ -70,7 +70,7 @@ waic.measrfit <- function(x, ..., force = FALSE) { #nolint
                                       "estimated with `method = \"mcmc\"`."))
   }
 
-  log_lik_array <- prep_loglik_array(model)
+  log_lik_array <- loglik_array(model)
 
   loo::waic(log_lik_array, ...)
 }

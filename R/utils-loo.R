@@ -1,9 +1,21 @@
-prep_loglik_array <- function(model) {
-  UseMethod("prep_loglik_array")
+#' Extract the log-likelihood of an estimated model
+#'
+#' The `loglik_array()` methods for [measrfit] objects calculates the
+#' log-likelihood for an estimated model via the generated quantities
+#' functionality in *Stan* and returns the draws of the `log_lik` parameter.
+#'
+#' @param model A [measrfit] object.
+#'
+#' @return A "[`draws_array`][posterior::draws_array()]" object containing the
+#'   log-likelihood estimates for the model.
+#' @export
+loglik_array <- function(model) {
+  UseMethod("loglik_array")
 }
 
+#' @rdname loglik_array
 #' @export
-prep_loglik_array.measrdcm <- function(model) {
+loglik_array.measrdcm <- function(model) {
   score_data <- model$data$data
   clean_qmatrix <- model$data$qmatrix %>%
     dplyr::select(-"item_id") %>%

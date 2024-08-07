@@ -106,6 +106,7 @@ reference:
   - loo_compare.measrfit
   - loo.measrfit
   - waic.measrfit
+  - loglik_array
 
 - subtitle: Add evaluations to model objects
   desc: >

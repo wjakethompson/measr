@@ -73,7 +73,7 @@ test_that("get_mcmc_draws works as expected", {
 test_that("log_lik is calculated correctly", {
   skip_on_cran()
 
-  log_lik <- prep_loglik_array(cmds_mdm_lcdm)
+  log_lik <- loglik_array(cmds_mdm_lcdm)
 
   # expected value from 2-class LCA fit in Mplus
   expect_equal(sum(apply(log_lik, c(3), mean)), -331.764, tolerance = 1.000)
