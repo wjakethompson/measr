@@ -244,9 +244,9 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
   raw_score_post <- dtplyr::lazy_dt(post_data) %>%
     dplyr::summarize(raw_score = sum(.data$value), .by = c("resp", ".draw")) %>%
     dplyr::count(.data$.draw, .data$raw_score) %>%
+    tibble::as_tibble() %>%
     tidyr::complete(.data$.draw, raw_score = 0:nrow(model$data$qmatrix),
-                    fill = list(n = 0L)) %>%
-    tibble::as_tibble()
+                    fill = list(n = 0L))
 
   exp_raw_scores <- raw_score_post %>%
     dplyr::summarize(exp_resp = mean(.data$n), .by = "raw_score") %>%
