@@ -1,5 +1,18 @@
 test_that("dino reliability", {
-  dino_reli <- reliability(rstn_dino)
+  dino_reli <- reliability(rstn_dino, threshold = 0.5)
+
+  # threshold errors
+  err <- rlang::catch_cnd(reliability(rstn_dino,
+                                      threshold = c("att1" = 0.5,
+                                                    "asdf" = 0.8,
+                                                    "test" = 0.7,
+                                                    "att4" = 0.5,
+                                                    "att5" = 0.3)))
+  expect_match(err$message, "Unknown attribute names")
+  err <- rlang::catch_cnd(reliability(rstn_dino,
+                                      threshold = c("att1" = 0.5,
+                                                    "asdf" = 0.8)))
+  expect_match(err$message, "must be of length 1 or length 5")
 
   # list naming
   expect_equal(names(dino_reli), c("pattern_reliability", "map_reliability",
@@ -35,7 +48,7 @@ test_that("reliability can be added to model object", {
   err <- rlang::catch_cnd(measr_extract(dina_mod, "probability_reliability"))
   expect_match(err$message, "Reliability information must be added to a model")
 
-  dina_mod <- add_reliability(dina_mod)
+  dina_mod <- add_reliability(dina_mod, threshold = rep(0.5, 5))
   expect_equal(names(dina_mod$reliability),
                c("pattern_reliability", "map_reliability", "eap_reliability"))
 
