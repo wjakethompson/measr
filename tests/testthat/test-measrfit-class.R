@@ -32,3 +32,10 @@ test_that("coercion works", {
     as_measrfit(rstn_dino, class = "measrdcm")
   )
 })
+
+test_that("class check works", {
+  expect_true(is_measrfit(rstn_dina))
+  expect_true(is_measrfit(rstn_dino))
+  expect_false(is_measrfit("blue"))
+  expect_false(is_measrfit(list()))
+})

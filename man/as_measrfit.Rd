@@ -33,5 +33,5 @@ new_obj <- as_measrfit(rstn_mdm_lcdm, class = "measrdcm")
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\linkS4class{measrfit}, \code{\link[=measrfit]{measrfit()}}
+\linkS4class{measrfit}, \code{\link[=measrfit]{measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}
 }

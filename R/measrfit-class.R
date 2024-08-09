@@ -34,7 +34,7 @@
 #'
 #' @return A [measrfit][measrfit-class] object.
 #' @export
-#' @seealso [measrfit-class], [measr_dcm()]
+#' @seealso [measrfit-class], [as_measrfit()], [is_measrfit()]
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
@@ -92,7 +92,7 @@ measrfit <- function(data = list(), type = character(),
 #'
 #' @return An object of class [measrfit-class].
 #' @export
-#' @seealso [measrfit-class], [measrfit()]
+#' @seealso [measrfit-class], [measrfit()], [is_measrfit()]
 #'
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
@@ -163,7 +163,7 @@ as_measrfit.default <- function(x, class = character()) {
 #' @slot version The versions of **measr**, **Stan**, **rstan** and/or
 #'   **cmdstanr** that were used to fit the model.
 #'
-#' @seealso [measr_dcm()]
+#' @seealso [measrfit()], [as_measrfit()], [is_measrfit()]
 NULL
 
 
@@ -193,7 +193,7 @@ validate_measrfit <- function(x) {
   stopifnot(is.character(x$data$item_id))
   stopifnot(is.character(x$type))
   stopifnot(x$type %in% dcm_choices())
-  stopifnot(is.measrprior(x$prior))
+  stopifnot(is_measrprior(x$prior))
   stopifnot(is.character(x$stancode))
   stopifnot(is.character(x$method))
   stopifnot(x$method %in% c("mcmc", "optim"))
@@ -223,4 +223,25 @@ validate_measrfit <- function(x) {
   }
 
   x
+}
+
+
+#' Check if argument is a `measrfit` object
+#'
+#' @param x An object to be checked
+#'
+#' @return A logical indicating is `x` is a `measrfit` object.
+#' @export
+#' @seealso [measrfit-class], [measrfit()], [as_measrfit()]
+#'
+#' @examplesIf measr_examples()
+#' rstn_mdm_lcdm <- measr_dcm(
+#'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
+#'   resp_id = "respondent", item_id = "item", type = "lcdm",
+#'   method = "optim", seed = 63277, backend = "rstan"
+#' )
+#'
+#' is_measrfit(rstn_mdm_lcdm)
+is_measrfit <- function(x) {
+  inherits(x, "measrfit")
 }
