@@ -12,6 +12,7 @@
 ## usethis namespace: end
 NULL
 
+# nolint next
 .datatable.aware <- TRUE
 
 release_bullets <- function() {
