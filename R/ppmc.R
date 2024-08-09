@@ -241,11 +241,12 @@ ppmc_model_fit <- function(model, post_data, probs, return_draws, type) {
 }
 
 ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
-  raw_score_post <- post_data %>%
+  raw_score_post <- dtplyr::lazy_dt(post_data) %>%
     dplyr::summarize(raw_score = sum(.data$value), .by = c("resp", ".draw")) %>%
     dplyr::count(.data$.draw, .data$raw_score) %>%
     tidyr::complete(.data$.draw, raw_score = 0:nrow(model$data$qmatrix),
-                    fill = list(n = 0L))
+                    fill = list(n = 0L)) %>%
+    tibble::as_tibble()
 
   exp_raw_scores <- raw_score_post %>%
     dplyr::summarize(exp_resp = mean(.data$n), .by = "raw_score") %>%
@@ -343,6 +344,7 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
     tidyr::pivot_longer(cols = -c("resp_id", ".chain", ".iteration", ".draw"),
                         names_to = "class_label",
                         values_to = "prob") %>%
+    dtplyr::lazy_dt() %>%
     dplyr::mutate(max_class = .data$prob == max(.data$prob),
                   .by = c(".draw", "resp_id")) %>%
     dplyr::filter(.data$max_class) %>%
@@ -351,7 +353,8 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
     dplyr::ungroup() %>%
     dplyr::left_join(all_profiles, by = c("class_label" = "class"),
                      relationship = "many-to-one") %>%
-    dplyr::select(".draw", "resp_id", class = "class_id")
+    dplyr::select(".draw", "resp_id", class = "class_id") %>%
+    tibble::as_tibble()
 
   obs_cond_pval <- model$data$data %>%
     dplyr::mutate(resp_id = as.integer(.data$resp_id),
@@ -432,18 +435,12 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
     dplyr::rename(obs_or = "or")
 
   or_res <- post_data %>%
-    tidyr::nest(dat = c("obs", "value", "resp", "item")) %>%
-    dplyr::mutate(
-      dat = lapply(.data$dat,
-                   function(x) {
-                     x %>%
-                       dplyr::select(-"obs") %>%
-                       tidyr::pivot_wider(names_from = "item",
-                                          values_from = "value") %>%
-                       dplyr::select(-"resp")
-                   }),
-      dat = lapply(.data$dat, pw_or)
-    ) %>%
+    dplyr::select(-"obs") %>%
+    tidyr::pivot_wider(names_from = "item",
+                       values_from = "value") %>%
+    dplyr::select(-"resp") %>%
+    tidyr::nest(dat = !starts_with(".")) %>%
+    dplyr::mutate(dat = lapply(.data$dat, pw_or)) %>%
     tidyr::unnest("dat") %>%
     tidyr::nest(samples = -c("item_1", "item_2")) %>%
     dplyr::left_join(obs_or, by = c("item_1", "item_2"),
