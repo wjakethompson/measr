@@ -439,7 +439,7 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
     tidyr::pivot_wider(names_from = "item",
                        values_from = "value") %>%
     dplyr::select(-"resp") %>%
-    tidyr::nest(dat = !starts_with(".")) %>%
+    tidyr::nest(dat = !dplyr::starts_with(".")) %>%
     dplyr::mutate(dat = lapply(.data$dat, pw_or)) %>%
     tidyr::unnest("dat") %>%
     tidyr::nest(samples = -c("item_1", "item_2")) %>%
