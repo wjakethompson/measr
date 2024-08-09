@@ -68,7 +68,7 @@ reference:
   desc: Define prior distributions for the model parameters.
 - contents:
   - measrprior
-  - is.measrprior
+  - is_measrprior
   - c.measrprior
   - default_dcm_priors
   - get_parameters
