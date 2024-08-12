@@ -68,7 +68,7 @@ in the observed data.</p>
 <span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span>,</span>
 <span>  return_draws <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  model_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"raw_score"</span><span class="op">)</span>,</span>
-<span>  item_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"conditional_prob"</span>, <span class="st">"odds_ratio"</span><span class="op">)</span>,</span>
+<span>  item_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"conditional_prob"</span>, <span class="st">"odds_ratio"</span>, <span class="st">"pvalue"</span><span class="op">)</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -162,9 +162,10 @@ we calculate the expected raw score distribution (<code>model_fit = "raw_score"<
 as described by Thompson (2019) and Park et al. (2015).</p>
 <p>At the item level, we can calculate the conditional probability that a
 respondent in each class provides a correct response (<code>item_fit = "conditional_prob"</code>) as described by Thompson (2019) and Sinharay &amp; Almond
-(2007). We can also calculate the odds ratio for each pair of items
-(<code>item_fit = "odds_ratio"</code>) as described by Park et al. (2015) and Sinharay
-et al. (2006).</p>
+(2007) or the overall proportion correct for an item (<code>item_fit = "pvalue"</code>),
+as described by Thompson (2019). We can also calculate the odds ratio for
+each pair of items (<code>item_fit = "odds_ratio"</code>) as described by Park et al.
+(2015) and Sinharay et al. (2006).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

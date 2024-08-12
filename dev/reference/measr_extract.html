@@ -147,6 +147,10 @@ each item pair. See <code><a href="fit_ppmc.html">fit_ppmc()</a></code> for deta
 Model fit information must first be added to the model using <code><a href="model_evaluation.html">add_fit()</a></code>.</p></li>
 <li><p><code>ppmc_odds_ratio_flags</code>: A subset of the PPMC odds ratios where the <em>ppp</em>
 is outside the specified <code>ppmc_interval</code>.</p></li>
+<li><p><code>ppmc_pvalue</code>: The observed and posterior predicted proportion of correct
+responses to each item. See <code><a href="fit_ppmc.html">fit_ppmc()</a></code> for details.</p></li>
+<li><p><code>ppmc_pvalue_flags</code>: A subset of the PPMC proportion correct values where
+the <em>ppp</em> is outside the specified <code>ppmc_interval</code>.</p></li>
 <li><p><code>loo</code>: The leave-one-out cross validation results. See <code><a href="https://mc-stan.org/loo/reference/loo.html" class="external-link">loo::loo()</a></code> for
 details. The information criterion must first be added to the model using
 <code><a href="model_evaluation.html">add_criterion()</a></code>.</p></li>
