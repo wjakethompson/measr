@@ -77,6 +77,10 @@ measr_extract <- function(model, ...) {
 #'     Model fit information must first be added to the model using [add_fit()].
 #'   * `ppmc_odds_ratio_flags`: A subset of the PPMC odds ratios where the _ppp_
 #'     is outside the specified `ppmc_interval`.
+#'   * `ppmc_pvalue`: The observed and posterior predicted proportion of correct
+#'     responses to each item. See [fit_ppmc()] for details.
+#'   * `ppmc_pvalue_flags`: A subset of the PPMC proportion correct values where
+#'     the _ppp_ is outside the specified `ppmc_interval`.
 #'   * `loo`: The leave-one-out cross validation results. See [loo::loo()] for
 #'     details. The information criterion must first be added to the model using
 #'     [add_criterion()].
@@ -146,6 +150,8 @@ measr_extract.measrdcm <- function(model, what, ...) {
     ppmc_conditional_prob_flags = dcm_extract_ppmc_cond_prob(model, ...),
     ppmc_odds_ratio = extract_or(model, ppmc_interval = NULL),
     ppmc_odds_ratio_flags = extract_or(model, ...),
+    ppmc_pvalue = dcm_extract_ppmc_pvalue(model, ppmc_interval = NULL),
+    ppmc_pvalue_flags = dcm_extract_ppmc_pvalue(model, ...),
     loo = extract_info_crit(model, "loo"),
     waic = extract_info_crit(model, "waic"),
     pattern_reliability = dcm_extract_patt_reli(model),
