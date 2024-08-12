@@ -196,7 +196,7 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                    post_data = post_data,
                    probs = probs,
                    return_draws = return_draws,
-                   type = model_fit)
+                   type = check_ppmc$args$model_fit)
   } else {
     NULL
   }
@@ -214,13 +214,26 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                   pi_draws = pi_draws,
                   probs = probs,
                   return_draws = return_draws,
-                  type = item_fit)
+                  type = check_ppmc$args$item_fit)
   } else {
     NULL
   }
 
-  ret_list <- list(model_fit = model_level_fit,
-                   item_fit = item_level_fit)
+  ret_list <- if (is.null(model$fit$ppmc)) {
+    list(model_fit = model_level_fit,
+         item_fit = item_level_fit)
+  } else {
+    model$fit$ppmc$model_fit[names(model_level_fit)] <- NULL
+    model$fit$ppmc$item_fit[names(item_level_fit)] <- NULL
+
+    utils::modifyList(model$fit$ppmc,
+                      list(model_fit = model_level_fit,
+                           item_fit = item_level_fit))
+  }
+
+  ret_list <- list(model_fit = ret_list$model_fit[model_fit],
+                   item_fit = ret_list$item_fit[item_fit])
+
   ret_list[sapply(ret_list, is.null)] <- NULL
 
   return(ret_list)
@@ -427,7 +440,8 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
                        dplyr::mutate(item_id = as.integer(.data$item)),
                      by = "item_id", relationship = "many-to-one") %>%
     dplyr::select(-"item_id", -"class_id") %>%
-    dplyr::relocate("item", "class", .before = 1)
+    dplyr::relocate("item", "class", .before = 1) %>%
+    dplyr::rename(!!model$data$item_id := "item")
 
   return(cond_pval_res)
 }
