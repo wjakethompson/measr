@@ -187,6 +187,31 @@ dcm_extract_ppmc_cond_prob <- function(model, ppmc_interval = 0.95) {
   return(res)
 }
 
+dcm_extract_ppmc_pvalue <- function(model, ppmc_interval = 0.95) {
+  if (!is.null(ppmc_interval)) {
+    ppmc_interval <- check_double(ppmc_interval, lb = 0, ub = 1,
+                                  name = "ppmc_interval")
+  }
+
+  if (is.null(model$fit$ppmc$item_fit$pvalue)) {
+    rlang::abort(message = glue::glue("Model fit information must be ",
+                                      "added to a model object before ",
+                                      "p-values can be ",
+                                      "extracted. See `?add_fit()`."))
+  }
+
+  res <- if (is.null(ppmc_interval)) {
+    model$fit$ppmc$item_fit$pvalue
+  } else {
+    model$fit$ppmc$item_fit$pvalue %>%
+      dplyr::filter(!dplyr::between(.data$ppp,
+                                    (1 - ppmc_interval) / 2,
+                                    1 - ((1 - ppmc_interval) / 2)))
+  }
+
+  return(res)
+}
+
 dcm_extract_patt_reli <- function(model) {
   if (identical(model$reliability, list())) {
     rlang::abort(message = glue::glue("Reliability information must be ",

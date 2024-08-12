@@ -92,6 +92,10 @@ each item pair. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
 Model fit information must first be added to the model using \code{\link[=add_fit]{add_fit()}}.
 \item \code{ppmc_odds_ratio_flags}: A subset of the PPMC odds ratios where the \emph{ppp}
 is outside the specified \code{ppmc_interval}.
+\item \code{ppmc_pvalue}: The observed and posterior predicted proportion of correct
+responses to each item. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
+\item \code{ppmc_pvalue_flags}: A subset of the PPMC proportion correct values where
+the \emph{ppp} is outside the specified \code{ppmc_interval}.
 \item \code{loo}: The leave-one-out cross validation results. See \code{\link[loo:loo]{loo::loo()}} for
 details. The information criterion must first be added to the model using
 \code{\link[=add_criterion]{add_criterion()}}.
