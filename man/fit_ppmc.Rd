@@ -10,7 +10,7 @@ fit_ppmc(
   probs = c(0.025, 0.975),
   return_draws = 0,
   model_fit = c("raw_score"),
-  item_fit = c("conditional_prob", "odds_ratio"),
+  item_fit = c("conditional_prob", "odds_ratio", "pvalue"),
   force = FALSE
 )
 }
@@ -94,9 +94,10 @@ as described by Thompson (2019) and Park et al. (2015).
 
 At the item level, we can calculate the conditional probability that a
 respondent in each class provides a correct response (\code{item_fit = "conditional_prob"}) as described by Thompson (2019) and Sinharay & Almond
-(2007). We can also calculate the odds ratio for each pair of items
-(\code{item_fit = "odds_ratio"}) as described by Park et al. (2015) and Sinharay
-et al. (2006).
+(2007) or the overall proportion correct for an item (\code{item_fit = "pvalue"}),
+as described by Thompson (2019). We can also calculate the odds ratio for
+each pair of items (\code{item_fit = "odds_ratio"}) as described by Park et al.
+(2015) and Sinharay et al. (2006).
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
