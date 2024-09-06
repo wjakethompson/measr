@@ -28,7 +28,11 @@ reliability <- function(model, ...) {
 #'
 #' @param threshold For `map_reliability`, the threshold applied to the
 #'  attribute-level probabilities for determining the binary attribute
-#'  classifications.
+#'  classifications. Should be a numeric vector of length 1 (the same threshold
+#'  is applied to all attributes), or length equal to the number of attributes.
+#'  If a named vector is supplied, names should match the attribute names in the
+#'  Q-matrix used to estimate the model. If unnamed, thresholds should be in the
+#'  order the attributes were defined in the Q-matrix.
 #'
 #' @details The pattern-level reliability (`pattern_reliability`) statistics are
 #' described in Cui et al. (2012). Attribute-level classification reliability
@@ -71,6 +75,31 @@ reliability <- function(model, ...) {
 #'
 #' reliability(rstn_mdm_lcdm)
 reliability.measrdcm <- function(model, ..., threshold = 0.5, force = FALSE) {
+  threshold <- check_double(threshold, lb = 0, ub = 1, inclusive = FALSE,
+                            name = "threshold")
+  force <- check_logical(force, name = "force")
+
+  att_names <- colnames(dplyr::select(model$data$qmatrix, -"item_id"))
+  if (length(threshold) == 1) {
+    threshold <- rep(threshold, times = length(att_names)) %>%
+      rlang::set_names(att_names)
+  } else if (length(threshold) == length(att_names)) {
+    if (is.null(names(threshold))) {
+      threshold <- rlang::set_names(threshold, att_names)
+    } else if (!all(names(threshold) %in% att_names)) {
+      bad_names <- setdiff(names(threshold), att_names)
+      rlang::abort(
+        message = glue::glue("Unknown attribute names provided: ",
+                             "{paste(bad_names, collapse = ', ')}")
+      )
+    }
+  } else {
+    rlang::abort(
+      message = glue::glue("`threshold` must be of length 1 or length ",
+                           "{length(att_names)} (the number of attributes).")
+    )
+  }
+
   if ((!is.null(model$reliability) && length(model$reliability) > 0) &&
       !force) {
     return(model$reliability)
@@ -78,9 +107,6 @@ reliability.measrdcm <- function(model, ..., threshold = 0.5, force = FALSE) {
 
   # coerce model into a list of values required for reliability
   obj <- reli_list(model, threshold = threshold)
-  att_names <- model$data$qmatrix %>%
-    dplyr::select(-"item_id") %>%
-    colnames()
 
   tbl <- obj$acc
   p <- obj$prev
