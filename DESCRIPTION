@@ -65,10 +65,12 @@ Suggests:
 Additional_repositories: https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
 Config/Needs/website: wjakethompson/wjake, showtext, ggdist, english
+Config/Needs/documentation: roxylint
+Config/roxylint: list(linters = roxylint::tidy)
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = c("namespace", "rd", "roxylint::roxylint"))
 RoxygenNote: 7.3.1
 Biarch: true
 SystemRequirements: GNU make
