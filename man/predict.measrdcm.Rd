@@ -29,7 +29,7 @@ identifiers are present in the data, and row numbers will be used as
 identifiers. If \code{newdata} is not specified and the data used to estimate
 the model is scored, the \code{resp_id} is taken from the original data.}
 
-\item{missing}{An R expression specifying how missing data in \code{data} is coded
+\item{missing}{An expression specifying how missing data in \code{data} is coded
 (e.g., \code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.}
 
 \item{summary}{Should summary statistics be returned instead of the raw

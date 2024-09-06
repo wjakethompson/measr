@@ -1,4 +1,4 @@
-#' Extract components of a `measrfit` object.
+#' Extract components of a `measrfit` object
 #'
 #' @param model The estimated to extract information from.
 #' @param ... Additional arguments passed to specific methods.

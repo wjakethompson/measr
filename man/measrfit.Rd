@@ -101,5 +101,5 @@ new_obj <- measrfit(
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\linkS4class{measrfit}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}
+\linkS4class{measrfit}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}.
 }

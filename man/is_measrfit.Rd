@@ -7,7 +7,7 @@
 is_measrfit(x)
 }
 \arguments{
-\item{x}{An object to be checked}
+\item{x}{An object to be checked.}
 }
 \value{
 A logical indicating is \code{x} is a \code{measrfit} object.
@@ -27,5 +27,5 @@ is_measrfit(rstn_mdm_lcdm)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\linkS4class{measrfit}, \code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}
+\linkS4class{measrfit}, \code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}.
 }
