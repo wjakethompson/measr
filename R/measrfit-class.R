@@ -34,7 +34,7 @@
 #'
 #' @return A [measrfit][measrfit-class] object.
 #' @export
-#' @seealso [measrfit-class], [as_measrfit()], [is_measrfit()]
+#' @seealso [measrfit-class], [as_measrfit()], [is_measrfit()].
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
@@ -92,7 +92,7 @@ measrfit <- function(data = list(), type = character(),
 #'
 #' @return An object of class [measrfit-class].
 #' @export
-#' @seealso [measrfit-class], [measrfit()], [is_measrfit()]
+#' @seealso [measrfit-class], [measrfit()], [is_measrfit()].
 #'
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
@@ -163,7 +163,7 @@ as_measrfit.default <- function(x, class = character()) {
 #' @slot version The versions of **measr**, **Stan**, **rstan** and/or
 #'   **cmdstanr** that were used to fit the model.
 #'
-#' @seealso [measrfit()], [as_measrfit()], [is_measrfit()]
+#' @seealso [measrfit()], [as_measrfit()], [is_measrfit()].
 NULL
 
 
@@ -228,11 +228,11 @@ validate_measrfit <- function(x) {
 
 #' Check if argument is a `measrfit` object
 #'
-#' @param x An object to be checked
+#' @param x An object to be checked.
 #'
 #' @return A logical indicating is `x` is a `measrfit` object.
 #' @export
-#' @seealso [measrfit-class], [measrfit()], [as_measrfit()]
+#' @seealso [measrfit-class], [measrfit()], [as_measrfit()].
 #'
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(

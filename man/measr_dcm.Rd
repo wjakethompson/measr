@@ -25,7 +25,7 @@ measr_dcm(
 \item{data}{Response data. A data frame with 1 row per respondent and 1
 column per item.}
 
-\item{missing}{An R expression specifying how missing data in \code{data} is coded
+\item{missing}{An expression specifying how missing data in \code{data} is coded
 (e.g., \code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.}
 
 \item{qmatrix}{The Q-matrix. A data frame with 1 row per item and 1 column

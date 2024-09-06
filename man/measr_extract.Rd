@@ -3,7 +3,7 @@
 \name{measr_extract}
 \alias{measr_extract}
 \alias{measr_extract.measrdcm}
-\title{Extract components of a \code{measrfit} object.}
+\title{Extract components of a \code{measrfit} object}
 \usage{
 measr_extract(model, ...)
 
@@ -48,7 +48,7 @@ on what is being extracted, but usually the returned object is a
 \link[tibble:tibble-package]{tibble} with the requested information.
 }
 \description{
-Extract components of a \code{measrfit} object.
+Extract components of a \code{measrfit} object
 
 Extract components of an estimated diagnostic classification model
 }

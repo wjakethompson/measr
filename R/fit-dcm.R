@@ -6,7 +6,7 @@
 #'
 #' @param data Response data. A data frame with 1 row per respondent and 1
 #'   column per item.
-#' @param missing An R expression specifying how missing data in `data` is coded
+#' @param missing An expression specifying how missing data in `data` is coded
 #'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
 #' @param qmatrix The Q-matrix. A data frame with 1 row per item and 1 column
 #'   per attribute. All cells should be either 0 (item does not measure the
