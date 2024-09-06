@@ -193,18 +193,18 @@ validate_measrprior <- function(x) {
 
 #' Checks if argument is a `measrprior` object
 #'
-#' @param x An object
+#' @param x An object to be checked
 #'
 #' @return A logical indicating if `x` is a `measrprior` object.
 #'
 #' @export
 #' @examples
 #' prior1 <- prior(lognormal(0, 1), class = maineffect)
-#' is.measrprior(prior1)
+#' is_measrprior(prior1)
 #'
 #' prior2 <- 3
-#' is.measrprior(prior2)
-is.measrprior <- function(x) { #nolint
+#' is_measrprior(prior2)
+is_measrprior <- function(x) {
   inherits(x, "measrprior")
 }
 
@@ -222,7 +222,7 @@ c.measrprior <- function(x, ..., replace = FALSE) {
   replace <- check_logical(replace, allow_na = FALSE, name = "replace")
 
   dots <- list(...)
-  dots_class <- sapply(dots, is.measrprior)
+  dots_class <- sapply(dots, is_measrprior)
   if (length(dots) && all(dots_class)) {
     out <- do.call(dplyr::bind_rows, list(x, ...))
 

@@ -30,6 +30,7 @@ Depends:
 Imports:
     dcm2,
     dplyr (>= 1.1.1),
+    dtplyr,
     fs,
     glue,
     loo,
