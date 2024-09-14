@@ -7,7 +7,7 @@
 is_measrprior(x)
 }
 \arguments{
-\item{x}{An object to be checked}
+\item{x}{An object to be checked.}
 }
 \value{
 A logical indicating if \code{x} is a \code{measrprior} object.

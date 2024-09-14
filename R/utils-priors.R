@@ -28,7 +28,7 @@ as_string <- function(x) {
 #'
 #' Creates a named list using the object names.
 #'
-#' @param ...
+#' @param ... Additional arguments.
 #'
 #' @return A named list.
 #' @noRd

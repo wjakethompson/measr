@@ -14,8 +14,8 @@
 #'   identifiers are present in the data, and row numbers will be used as
 #'   identifiers. If `newdata` is not specified and the data used to estimate
 #'   the model is scored, the `resp_id` is taken from the original data.
-#' @param missing An expression specifying how missing data in `data` is coded
-#'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
+#' @param missing An `R` expression specifying how missing data in `data` is
+#'   coded (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
 #' @param summary Should summary statistics be returned instead of the raw
 #'   posterior draws? Only relevant if the model was estimated with
 #'   `method = "mcmc"`. Default is `FALSE`.

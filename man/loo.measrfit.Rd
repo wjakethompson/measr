@@ -2,7 +2,7 @@
 % Please edit documentation in R/loo-methods.R
 \name{loo.measrfit}
 \alias{loo.measrfit}
-\title{Efficient approximate leave-one-out cross-validation (LOO)}
+\title{Efficient approximate leave-one-out cross-validation (\acronym{LOO})}
 \usage{
 \method{loo}{measrfit}(x, ..., r_eff = NA, force = FALSE)
 }
@@ -23,8 +23,9 @@ for all observations) or a vector with length equal to the number of
 observations. The default value is 1. See the \code{\link[loo:relative_eff]{relative_eff()}} helper
 functions for help computing \code{r_eff}.}
 
-\item{force}{If the LOO criterion has already been added to the model object
-with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is \code{FALSE}.}
+\item{force}{If the \acronym{LOO} criterion has already been added to the
+model object with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is
+\code{FALSE}.}
 }
 \value{
 The object returned by \code{\link[loo:loo]{loo::loo.array()}}.

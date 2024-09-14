@@ -18,8 +18,8 @@ measr_extract <- function(model, ...) {
 #'     For `what = "odds_ratio_flags"` and
 #'     `what = "conditional_prob_flags"`, the compatibility interval used for
 #'     determining model fit flags to return. For example, a `ppmc_interval` of
-#'     0.95 (the default) will return any PPMCs where the posterior predictive
-#'     *p*-value (ppp) is less than 0.025 or greater than 0.975.
+#'     0.95 (the default) will return any \acronym{PPMC}s where the posterior
+#'     predictive *p*-value (ppp) is less than 0.025 or greater than 0.975.
 #'
 #'   * `agreement`:
 #'
@@ -106,6 +106,13 @@ measr_extract <- function(model, ...) {
 #'
 #' @describeIn measr_extract Extract components of an estimated diagnostic
 #'   classification model.
+#'
+#' @concept Goodman & Kruskal's lambda
+#' @concept Cohen's kappa
+#' @concept Youden's statistic
+#' @concept tetrachoric correlation
+#' @concept True positive rate
+#' @concept True negative rate
 #'
 #' @references Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
 #'   classification consistency and accuracy for cognitive diagnostic

@@ -28,8 +28,8 @@ Language Functions Reference} at
 \url{https://mc-stan.org/users/documentation/}.}
 
 \item{class}{The parameter class. Defaults to \code{"intercept"}. Must be one of
-\code{"intercept"}, \code{"maineffect"}, \code{"interaction"} for the LCDM, or one of
-\code{"slip"} or \code{"guess"} for DINA or DINO models.}
+\code{"intercept"}, \code{"maineffect"}, \code{"interaction"} for the \acronym{LCDM}, or
+one of \code{"slip"} or \code{"guess"} for \acronym{DINA} or \acronym{DINO} models.}
 
 \item{coef}{Name of a specific parameter within the defined class. If not
 defined, the prior is applied to all parameters within the class.}
@@ -77,3 +77,5 @@ prior(beta(5, 25), class = "slip")
 # Or for a specific item (e.g., just the slipping parameter for item 7)
 prior(beta(5, 25), class = "slip", coef = "slip[7]")
 }
+\concept{Stan}
+\concept{Stan Language Functions Reference}
