@@ -21,9 +21,9 @@
 #'   `FALSE`.
 #' @param save Logical. Only relevant if a file was specified in the
 #'   [measrfit] object passed to `x`. If `TRUE` (the default), the model is
-#'   re-saved to the specified file when new criteria are added to the R object.
-#'   If `FALSE`, the new criteria will be added to the R object, but the saved
-#'   file will not be updated.
+#'   re-saved to the specified file when new criteria are added to the `R`
+#'   object. If `FALSE`, the new criteria will be added to the `R` object, but
+#'   the saved file will not be updated.
 #' @param ... Additional arguments passed relevant methods. See Details.
 #'
 #' @details
@@ -41,9 +41,10 @@
 #' For `add_criterion()`, relative fit criteria are added to the `$criteria`
 #' element of the fitted model. This function wraps [loo()] and/or [waic()],
 #' depending on which criteria are specified, to calculate the leave-one-out
-#' (LOO; Vehtari et al., 2017) and/or widely applicable information criteria
-#' (WAIC; Watanabe, 2010) to fitted model objects. Additional arguments supplied
-#' to `...` are passed to [loo::loo.array()] or [loo::waic.array()].
+#' (\acronym{LOO}; Vehtari et al., 2017) and/or widely applicable information
+#' criteria (\acronym{WAIC}; Watanabe, 2010) to fitted model objects.
+#' Additional arguments supplied to `...` are passed to [loo::loo.array()] or
+#' [loo::waic.array()].
 #'
 #' For `add_reliability()`, reliability information is added to the
 #' `$reliability` element of the fitted model. Pattern level reliability is

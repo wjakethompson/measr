@@ -52,5 +52,5 @@ or loaded from.}
 }}
 
 \seealso{
-\code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}.
+See \code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}.
 }

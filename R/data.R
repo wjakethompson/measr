@@ -1,4 +1,5 @@
-#' Examination for the Certificate of Proficiency in English (ECPE)
+#' Examination for the \dfn{Certificate of Proficiency in English}
+#' (\acronym{ECPE})
 #'
 #' This is data from the grammar section of the ECPE, administered annually by
 #' the English Language Institute at the University of Michigan. This data
@@ -52,7 +53,7 @@
 "ecpe_qmatrix"
 
 
-#' MacReady & Dayton (1977) Multiplication Data
+#' MacReady & Dayton (1977) Multiplication Data  `r # nolint: sentence_case.`
 #'
 #' This is a small data set of multiplication item responses. This data contains
 #' responses to 4 items from 142 respondents, which ask respondents to complete

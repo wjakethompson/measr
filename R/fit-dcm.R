@@ -1,8 +1,8 @@
 #' Fit Bayesian diagnostic classification models
 #'
-#' Estimate diagnostic classification models (DCMs; also known as cognitive
+#' Estimate diagnostic classification models (\acronym{DCM}s; also known as cognitive
 #' diagnostic models) using 'Stan'. Models can be estimated using Stan's
-#' optimizer, or full Markov chain Monte Carlo (MCMC).
+#' optimizer, or full Markov chain Monte Carlo (\acronym{MCMC}).
 #'
 #' @param data Response data. A data frame with 1 row per respondent and 1
 #'   column per item.
@@ -22,7 +22,7 @@
 #'   identifiers. `NULL` also assumes that the order of the rows in the Q-matrix
 #'   is the same as the order of the columns in `data` (i.e., the item in row 1
 #'   of `qmatrix` is the item in column 1 of `data`, excluding `resp_id`).
-#' @param type Type of DCM to estimate. Must be one of
+#' @param type Type of \acronym{DCM} to estimate. Must be one of
 #'   `r glue::glue_collapse(dcm_choices(), sep = ", ", last = ", or ")`.
 #' @param max_interaction If `type = "lcdm"`, the highest level of interaction
 #'   to estimate. The default is to estimate all possible interactions. For
@@ -42,7 +42,7 @@
 #'   are used, as specified by [default_dcm_priors()].
 #' @param backend Character string naming the package to use as the backend for
 #'   fitting the Stan model. Options are `"rstan"` (the default) or
-#'   `"cmdstanr"`. Can be set globally for the current R session via the
+#'   `"cmdstanr"`. Can be set globally for the current `R` session via the
 #'   "measr.backend" option (see [options()]). Details on the **rstan** and
 #'   **cmdstanr** packages are available at \url{https://mc-stan.org/rstan/} and
 #'   \url{https://mc-stan.org/cmdstanr/}, respectively.
@@ -54,7 +54,7 @@
 #'   model will not be refit.
 #' @param file_refit Controls when a saved model is refit. Options are
 #'   `"never"`, `"always"`, and `"on_change"`. Can be set globally for the
-#'   current R session via the "measr.file_refit" option (see [options()]).
+#'   current `R` session via the "measr.file_refit" option (see [options()]).
 #'   * For `"never"` (the default), the fitted model is always loaded if the
 #'     `file` exists, and model fitting is skipped.
 #'   * For `"always"`, the model is always refitted, regardless of whether or
@@ -71,6 +71,10 @@
 #'     methods of the
 #'     [CmdStanModel](https://mc-stan.org/cmdstanr/reference/CmdStanModel.html)
 #'     class.
+#'
+#' @concept Bayesian
+#' @concept Stan
+#' @concept Q-matrix
 #'
 #' @return A [measrfit] object.
 #' @export

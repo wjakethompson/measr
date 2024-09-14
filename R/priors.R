@@ -7,8 +7,8 @@
 #'   Language Functions Reference* at
 #'   \url{https://mc-stan.org/users/documentation/}.
 #' @param class The parameter class. Defaults to `"intercept"`. Must be one of
-#'   `"intercept"`, `"maineffect"`, `"interaction"` for the LCDM, or one of
-#'   `"slip"` or `"guess"` for DINA or DINO models.
+#'   `"intercept"`, `"maineffect"`, `"interaction"` for the \acronym{LCDM}, or
+#'   one of `"slip"` or `"guess"` for \acronym{DINA} or \acronym{DINO} models.
 #' @param coef Name of a specific parameter within the defined class. If not
 #'   defined, the prior is applied to all parameters within the class.
 #' @param lb Lower bound for parameter restriction. Defaults to no restriction.
@@ -17,6 +17,9 @@
 #'
 #' @return A [tibble][tibble::tibble-package] of class `measrprior`.
 #' @export
+#'
+#' @concept Stan Language Functions Reference
+#' @concept Stan
 #'
 #' @examples
 #' # Use alias functions to define priors without quotes, as formulas,
@@ -193,7 +196,7 @@ validate_measrprior <- function(x) {
 
 #' Checks if argument is a `measrprior` object
 #'
-#' @param x An object to be checked
+#' @param x An object to be checked.
 #'
 #' @return A logical indicating if `x` is a `measrprior` object.
 #'

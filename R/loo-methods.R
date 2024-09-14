@@ -10,7 +10,7 @@ loo::waic
 #' @export
 loo::loo_compare
 
-#' Efficient approximate leave-one-out cross-validation (LOO)
+#' Efficient approximate leave-one-out cross-validation (\acronym{LOO})
 #'
 #' A [loo::loo()] method that is customized for `measrfit` objects. This is a
 #' simple wrapper around [loo::loo.array()]. See the **loo** package
@@ -19,8 +19,9 @@ loo::loo_compare
 #' @inheritParams loo::loo
 #' @param x A [measrfit] object.
 #' @param ... Additional arguments passed to [loo::loo.array()].
-#' @param force If the LOO criterion has already been added to the model object
-#'   with [add_criterion()], should it be recalculated. Default is `FALSE`.
+#' @param force If the \acronym{LOO} criterion has already been added to the
+#'   model object with [add_criterion()], should it be recalculated. Default is
+#'   `FALSE`.
 #'
 #' @return The object returned by [loo::loo.array()].
 #'
@@ -43,7 +44,7 @@ loo.measrfit <- function(x, ..., r_eff = NA, force = FALSE) { #nolint
   loo::loo(log_lik_array, r_eff = r_eff, ...)
 }
 
-#' Widely applicable information criterion (WAIC)
+#' Widely applicable information criterion (\acroynm{WAIC})
 #'
 #' A [loo::waic()] method that is customized for `measrfit` objects. This is a
 #' simple wrapper around [loo::waic.array()]. See the **loo** package
@@ -51,8 +52,9 @@ loo.measrfit <- function(x, ..., r_eff = NA, force = FALSE) { #nolint
 #'
 #' @param x A [measrfit] object.
 #' @param ... Additional arguments passed to [loo::waic.array()].
-#' @param force If the WAIC criterion has already been added to the model object
-#'   with [add_criterion()], should it be recalculated. Default is `FALSE`.
+#' @param force If the \acronym{WAIC} criterion has already been added to the
+#'   model object with [add_criterion()], should it be recalculated. Default is
+#'   `FALSE`.
 #'
 #' @return The object returned by [loo::waic.array()].
 #'

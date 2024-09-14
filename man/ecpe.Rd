@@ -4,7 +4,8 @@
 \name{ecpe_data}
 \alias{ecpe_data}
 \alias{ecpe_qmatrix}
-\title{Examination for the Certificate of Proficiency in English (ECPE)}
+\title{Examination for the \dfn{Certificate of Proficiency in English}
+(\acronym{ECPE})}
 \format{
 \code{ecpe_data} is a \link[tibble:tibble-package]{tibble} containing ECPE
 response data with 2,922 rows and 29 variables.

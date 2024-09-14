@@ -2,7 +2,7 @@
 % Please edit documentation in R/measrfit-class.R
 \name{is_measrfit}
 \alias{is_measrfit}
-\title{Check if argument is a \code{measrfit} object}
+\title{Check if argument is a \code{\link{measrfit}} object}
 \usage{
 is_measrfit(x)
 }
@@ -10,10 +10,10 @@ is_measrfit(x)
 \item{x}{An object to be checked.}
 }
 \value{
-A logical indicating is \code{x} is a \code{measrfit} object.
+A logical indicating is \code{x} is a \code{\link{measrfit}} object.
 }
 \description{
-Check if argument is a \code{measrfit} object
+Check if argument is a \code{\link{measrfit}} object
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -27,5 +27,5 @@ is_measrfit(rstn_mdm_lcdm)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\linkS4class{measrfit}, \code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}.
+See \linkS4class{measrfit}, \code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}.
 }

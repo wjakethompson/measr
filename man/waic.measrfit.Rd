@@ -2,7 +2,7 @@
 % Please edit documentation in R/loo-methods.R
 \name{waic.measrfit}
 \alias{waic.measrfit}
-\title{Widely applicable information criterion (WAIC)}
+\title{Widely applicable information criterion (\acroynm{WAIC})}
 \usage{
 \method{waic}{measrfit}(x, ..., force = FALSE)
 }
@@ -11,8 +11,9 @@
 
 \item{...}{Additional arguments passed to \code{\link[loo:waic]{loo::waic.array()}}.}
 
-\item{force}{If the WAIC criterion has already been added to the model object
-with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is \code{FALSE}.}
+\item{force}{If the \acronym{WAIC} criterion has already been added to the
+model object with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is
+\code{FALSE}.}
 }
 \value{
 The object returned by \code{\link[loo:waic]{loo::waic.array()}}.
