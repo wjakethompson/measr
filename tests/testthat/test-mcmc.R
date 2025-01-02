@@ -22,12 +22,17 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
         attribute_structure = "independent",
         method = "mcmc", seed = 63277, backend = "rstan",
         iter = 1500, warmup = 1000, chains = 2,
-        cores = 2,
+        cores = 2, refresh = 0,
         prior = c(prior(beta(5, 17), class = "slip"),
                   prior(beta(5, 17), class = "guess")))
     )
   )
 }
+
+test_that("validation works", {
+  expect_identical(validate_measrfit(cmds_mdm_lcdm), cmds_mdm_lcdm)
+  expect_identical(validate_measrfit(cmds_mdm_dina), cmds_mdm_dina)
+})
 
 test_that("as_draws works", {
   skip_on_cran()
@@ -68,7 +73,7 @@ test_that("get_mcmc_draws works as expected", {
 test_that("log_lik is calculated correctly", {
   skip_on_cran()
 
-  log_lik <- prep_loglik_array(cmds_mdm_lcdm)
+  log_lik <- loglik_array(cmds_mdm_lcdm)
 
   # expected value from 2-class LCA fit in Mplus
   expect_equal(sum(apply(log_lik, c(3), mean)), -331.764, tolerance = 1.000)
@@ -197,9 +202,9 @@ test_that("ppmc works", {
 
   test_ppmc <- fit_ppmc(cmds_mdm_lcdm, ndraws = 200, return_draws = 0.9,
                         probs = c(0.055, 0.945),
-                        model_fit = NULL, item_fit = "odds_ratio")
+                        model_fit = NULL, item_fit = c("odds_ratio", "pvalue"))
   expect_equal(names(test_ppmc), c("item_fit"))
-  expect_equal(names(test_ppmc$item_fit), "odds_ratio")
+  expect_equal(names(test_ppmc$item_fit), c("odds_ratio", "pvalue"))
   expect_s3_class(test_ppmc$item_fit$odds_ratio, "tbl_df")
   expect_equal(nrow(test_ppmc$item_fit$odds_ratio), 6L)
   expect_equal(colnames(test_ppmc$item_fit$odds_ratio),
@@ -213,20 +218,35 @@ test_that("ppmc works", {
                       length, integer(1)),
                rep(180, 6))
 
+  expect_s3_class(test_ppmc$item_fit$pvalue, "tbl_df")
+  expect_equal(nrow(test_ppmc$item_fit$pvalue), 4)
+  expect_equal(colnames(test_ppmc$item_fit$pvalue),
+               c("item", "obs_pvalue", "ppmc_mean", "5.5%", "94.5%",
+                 "samples", "ppp"))
+  expect_equal(as.character(test_ppmc$item_fit$pvalue$item),
+               paste0("mdm", 1:4))
+  expect_equal(vapply(test_ppmc$item_fit$pvalue$samples,
+                      length, double(1)),
+               rep(180, 4))
+
   test_ppmc <- fit_ppmc(cmds_mdm_lcdm, ndraws = 1, return_draws = 0,
                         model_fit = "raw_score",
-                        item_fit = c("conditional_prob", "odds_ratio"))
+                        item_fit = c("conditional_prob", "odds_ratio",
+                                     "pvalue"))
   expect_equal(names(test_ppmc), c("model_fit", "item_fit"))
   expect_equal(names(test_ppmc$model_fit), "raw_score")
   expect_equal(colnames(test_ppmc$model_fit$raw_score),
                c("obs_chisq", "ppmc_mean", "2.5%", "97.5%", "ppp"))
-  expect_equal(names(test_ppmc$item_fit), c("conditional_prob", "odds_ratio"))
+  expect_equal(names(test_ppmc$item_fit),
+               c("conditional_prob", "odds_ratio", "pvalue"))
   expect_equal(colnames(test_ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "2.5%", "97.5%",
                  "ppp"))
   expect_equal(colnames(test_ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "ppp"))
+  expect_equal(colnames(test_ppmc$item_fit$pvalue),
+               c("item", "obs_pvalue", "ppmc_mean", "2.5%", "97.5%", "ppp"))
 })
 
 test_that("ppmc extraction errors", {
@@ -297,9 +317,22 @@ test_that("model fit can be added", {
                c("item", "class", "obs_cond_pval", "ppmc_mean", "5.5%", "94.5%",
                  "ppp"))
 
+  # now calculate conditional probs and overall pvalue - overall is new, but
+  # conditional prob should use stored value
+  test_ppmc <- fit_ppmc(test_model, model_fit = NULL,
+                        item_fit = c("conditional_prob", "pvalue"))
+  expect_equal(names(test_ppmc), "item_fit")
+  expect_equal(names(test_ppmc$item_fit), c("conditional_prob", "pvalue"))
+  expect_identical(test_model$fit$ppmc$item_fit$conditional_prob,
+                   test_ppmc$item_fit$conditional_prob)
+  expect_equal(names(test_ppmc$item_fit$pvalue),
+               c("item", "obs_pvalue", "ppmc_mean", "2.5%", "97.5%", "ppp"))
+
   # overwrite just conditional prob with samples and new probs
+  # add overall p-values
   test_model <- add_fit(test_model, method = "ppmc", overwrite = TRUE,
-                        model_fit = NULL, item_fit = "conditional_prob",
+                        model_fit = NULL,
+                        item_fit = c("conditional_prob", "pvalue"),
                         return_draws = 0.2, probs = c(.1, .9))
   expect_equal(names(test_model$fit), c("m2", "ppmc"))
   expect_equal(names(test_model$fit$ppmc), c("item_fit", "model_fit"))
@@ -307,12 +340,15 @@ test_that("model fit can be added", {
   expect_equal(names(test_model$fit$ppmc$model_fit$raw_score),
                c("obs_chisq", "ppmc_mean", "5.5%", "94.5%", "ppp"))
   expect_equal(names(test_model$fit$ppmc$item_fit),
-               c("odds_ratio", "conditional_prob"))
+               c("odds_ratio", "conditional_prob", "pvalue"))
   expect_equal(names(test_model$fit$ppmc$item_fit$odds_ratio),
                c("item_1", "item_2", "obs_or", "ppmc_mean", "2.5%", "97.5%",
                  "samples", "ppp"))
   expect_equal(names(test_model$fit$ppmc$item_fit$conditional_prob),
                c("item", "class", "obs_cond_pval", "ppmc_mean", "10%", "90%",
+                 "samples", "ppp"))
+  expect_equal(names(test_model$fit$ppmc$item_fit$pvalue),
+               c("item", "obs_pvalue", "ppmc_mean", "10%", "90%",
                  "samples", "ppp"))
 
   # test extraction
@@ -338,6 +374,16 @@ test_that("model fit can be added", {
   expect_equal(measr_extract(test_model, "ppmc_odds_ratio_flags",
                              ppmc_interval = 0.8),
                dplyr::filter(or_check, ppp <= 0.1 | ppp >= 0.9))
+
+  pval_check <- measr_extract(test_model, "ppmc_pvalue")
+  expect_equal(pval_check,
+               test_model$fit$ppmc$item_fit$pvalue)
+  expect_equal(measr_extract(test_model, "ppmc_pvalue_flags",
+                             ppmc_interval = 0.95),
+               dplyr::filter(pval_check, ppp <= 0.025 | ppp >= 0.975))
+  expect_equal(measr_extract(test_model, "ppmc_pvalue_flags",
+                             ppmc_interval = 0.6),
+               dplyr::filter(pval_check, ppp <= 0.2 | ppp >= 0.8))
 })
 
 test_that("respondent probabilities are correct", {

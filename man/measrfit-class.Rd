@@ -3,7 +3,6 @@
 \docType{class}
 \name{measrfit-class}
 \alias{measrfit-class}
-\alias{measrfit}
 \title{Class \code{measrfit} of models fitted with the \strong{measr} package}
 \description{
 Models fitted with the \strong{measr} package are represented as a \code{measrfit}
@@ -53,5 +52,5 @@ or loaded from.}
 }}
 
 \seealso{
-\code{\link[=measr_dcm]{measr_dcm()}}
+\code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}
 }

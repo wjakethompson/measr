@@ -136,25 +136,25 @@ test_that("validator works", {
 
 test_that("class check works", {
   prior1 <- prior(normal(0, 1))
-  expect_true(is.measrprior(prior1))
+  expect_true(is_measrprior(prior1))
 
   prior2 <- prior_string("beta(5,17)", class = "maineffect")
-  expect_true(is.measrprior(prior2))
+  expect_true(is_measrprior(prior2))
 
   prior3 <- prior_(~lognormal(0, 1), class = "interaction", coef = "l1_212")
-  expect_true(is.measrprior(prior3))
+  expect_true(is_measrprior(prior3))
 
-  expect_false(is.measrprior(3))
-  expect_false(is.measrprior("normal(0, 1)"))
-  expect_false(is.measrprior(tibble::tibble()))
-  expect_false(is.measrprior(tibble::tibble(class = "intercept",
+  expect_false(is_measrprior(3))
+  expect_false(is_measrprior("normal(0, 1)"))
+  expect_false(is_measrprior(tibble::tibble()))
+  expect_false(is_measrprior(tibble::tibble(class = "intercept",
                                             coef = NA_character_,
                                             param_def = "normal(0, 1)")))
 })
 
 test_that("default priors", {
   all_default <- lapply(dcm_choices(), default_dcm_priors)
-  expect_true(all(vapply(all_default, is.measrprior, logical(1))))
+  expect_true(all(vapply(all_default, is_measrprior, logical(1))))
 
   # lcdm defaults
   expect_equal(unclass(default_dcm_priors(type = "lcdm")),

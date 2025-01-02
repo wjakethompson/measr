@@ -12,6 +12,9 @@
 ## usethis namespace: end
 NULL
 
+# nolint next
+.datatable.aware <- TRUE
+
 release_bullets <- function() {
   c("Run `data-raw/stan-scripts.R` to update precompiled Stan code")
 }

@@ -47,9 +47,10 @@
 #' At the item level, we can calculate the conditional probability that a
 #' respondent in each class provides a correct response (`item_fit =
 #' "conditional_prob"`) as described by Thompson (2019) and Sinharay & Almond
-#' (2007). We can also calculate the odds ratio for each pair of items
-#' (`item_fit = "odds_ratio"`) as described by Park et al. (2015) and Sinharay
-#' et al. (2006).
+#' (2007) or the overall proportion correct for an item (`item_fit = "pvalue"`),
+#' as described by Thompson (2019). We can also calculate the odds ratio for
+#' each pair of items (`item_fit = "odds_ratio"`) as described by Park et al.
+#' (2015) and Sinharay et al. (2006).
 #'
 #' @return A list with two elements, "model_fit" and "item_fit". If either
 #'   `model_fit = NULL` or `item_fit = NULL` in the function call, this will be
@@ -104,7 +105,7 @@
 fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                      return_draws = 0,
                      model_fit = c("raw_score"),
-                     item_fit = c("conditional_prob", "odds_ratio"),
+                     item_fit = c("conditional_prob", "odds_ratio", "pvalue"),
                      force = FALSE) {
   model <- check_model(model, required_class = "measrdcm", name = "object")
   total_draws <- posterior::ndraws(posterior::as_draws(model))
@@ -195,7 +196,7 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                    post_data = post_data,
                    probs = probs,
                    return_draws = return_draws,
-                   type = model_fit)
+                   type = check_ppmc$args$model_fit)
   } else {
     NULL
   }
@@ -213,13 +214,26 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
                   pi_draws = pi_draws,
                   probs = probs,
                   return_draws = return_draws,
-                  type = item_fit)
+                  type = check_ppmc$args$item_fit)
   } else {
     NULL
   }
 
-  ret_list <- list(model_fit = model_level_fit,
-                   item_fit = item_level_fit)
+  ret_list <- if (is.null(model$fit$ppmc)) {
+    list(model_fit = model_level_fit,
+         item_fit = item_level_fit)
+  } else {
+    model$fit$ppmc$model_fit[names(model_level_fit)] <- NULL
+    model$fit$ppmc$item_fit[names(item_level_fit)] <- NULL
+
+    utils::modifyList(model$fit$ppmc,
+                      list(model_fit = model_level_fit,
+                           item_fit = item_level_fit))
+  }
+
+  ret_list <- list(model_fit = ret_list$model_fit[model_fit],
+                   item_fit = ret_list$item_fit[item_fit])
+
   ret_list[sapply(ret_list, is.null)] <- NULL
 
   return(ret_list)
@@ -241,9 +255,10 @@ ppmc_model_fit <- function(model, post_data, probs, return_draws, type) {
 }
 
 ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
-  raw_score_post <- post_data %>%
+  raw_score_post <- dtplyr::lazy_dt(post_data) %>%
     dplyr::summarize(raw_score = sum(.data$value), .by = c("resp", ".draw")) %>%
     dplyr::count(.data$.draw, .data$raw_score) %>%
+    tibble::as_tibble() %>%
     tidyr::complete(.data$.draw, raw_score = 0:nrow(model$data$qmatrix),
                     fill = list(n = 0L))
 
@@ -311,9 +326,15 @@ ppmc_item_fit <- function(model, post_data, attr, resp_prob, pi_draws, probs,
   } else {
     NULL
   }
+  pvalue <- if ("pvalue" %in% type) {
+    ppmc_item_pvalue(model = model, post_data = post_data, probs, return_draws)
+  } else {
+    NULL
+  }
 
   item_res <- list(conditional_prob = cond_prob,
-                   odds_ratio = odds_ratio)
+                   odds_ratio = odds_ratio,
+                   pvalue = pvalue)
   item_res[sapply(item_res, is.null)] <- NULL
 
   return(item_res)
@@ -343,6 +364,7 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
     tidyr::pivot_longer(cols = -c("resp_id", ".chain", ".iteration", ".draw"),
                         names_to = "class_label",
                         values_to = "prob") %>%
+    dtplyr::lazy_dt() %>%
     dplyr::mutate(max_class = .data$prob == max(.data$prob),
                   .by = c(".draw", "resp_id")) %>%
     dplyr::filter(.data$max_class) %>%
@@ -351,7 +373,8 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
     dplyr::ungroup() %>%
     dplyr::left_join(all_profiles, by = c("class_label" = "class"),
                      relationship = "many-to-one") %>%
-    dplyr::select(".draw", "resp_id", class = "class_id")
+    dplyr::select(".draw", "resp_id", class = "class_id") %>%
+    tibble::as_tibble()
 
   obs_cond_pval <- model$data$data %>%
     dplyr::mutate(resp_id = as.integer(.data$resp_id),
@@ -417,7 +440,8 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
                        dplyr::mutate(item_id = as.integer(.data$item)),
                      by = "item_id", relationship = "many-to-one") %>%
     dplyr::select(-"item_id", -"class_id") %>%
-    dplyr::relocate("item", "class", .before = 1)
+    dplyr::relocate("item", "class", .before = 1) %>%
+    dplyr::rename(!!model$data$item_id := "item")
 
   return(cond_pval_res)
 }
@@ -432,18 +456,12 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
     dplyr::rename(obs_or = "or")
 
   or_res <- post_data %>%
-    tidyr::nest(dat = c("obs", "value", "resp", "item")) %>%
-    dplyr::mutate(
-      dat = lapply(.data$dat,
-                   function(x) {
-                     x %>%
-                       dplyr::select(-"obs") %>%
-                       tidyr::pivot_wider(names_from = "item",
-                                          values_from = "value") %>%
-                       dplyr::select(-"resp")
-                   }),
-      dat = lapply(.data$dat, pw_or)
-    ) %>%
+    dplyr::select(-"obs") %>%
+    tidyr::pivot_wider(names_from = "item",
+                       values_from = "value") %>%
+    dplyr::select(-"resp") %>%
+    tidyr::nest(dat = !dplyr::starts_with(".")) %>%
+    dplyr::mutate(dat = lapply(.data$dat, pw_or)) %>%
     tidyr::unnest("dat") %>%
     tidyr::nest(samples = -c("item_1", "item_2")) %>%
     dplyr::left_join(obs_or, by = c("item_1", "item_2"),
@@ -515,4 +533,52 @@ pw_or <- function(dat) {
   pwor <- tibble::as_tibble(ind, .name_repair = ~c("item_1", "item_2")) %>%
     dplyr::mutate(or = or)
   return(pwor)
+}
+
+ppmc_item_pvalue <- function(model, post_data, probs, return_draws) {
+  obs_pvalue <- model$data$data %>%
+    dplyr::mutate(item = as.numeric(.data$item_id)) %>%
+    dplyr::summarize(obs_pvalue = mean(.data$score),
+                     .by = c("item", "item_id"))
+
+  pval_res <- post_data %>%
+    dplyr::summarize(pvalue = mean(.data$value),
+                     .by = c(".chain", ".iteration", ".draw", "item")) %>%
+    tidyr::nest(samples = -"item") %>%
+    dplyr::left_join(obs_pvalue, by = "item", relationship = "one-to-one") %>%
+    dplyr::mutate(ppmc_mean = vapply(.data$samples,
+                                     function(.x) mean(.x$pvalue),
+                                     double(1)),
+                  bounds = lapply(.data$samples,
+                                  function(.x, probs) {
+                                    tibble::as_tibble_row(
+                                      stats::quantile(.x$pvalue,
+                                                      probs = probs,
+                                                      na.rm = TRUE)
+                                    )
+                                  },
+                                  probs = probs),
+                  ppp = mapply(function(exp, obs) {
+                    mean(exp$pvalue > obs)
+                  },
+                  .data$samples, .data$obs_pvalue)) %>%
+    tidyr::unnest("bounds")
+
+  if (return_draws > 0) {
+    pval_res <- pval_res %>%
+      dplyr::relocate("samples", .before = "ppp") %>%
+      dplyr::mutate(
+        samples = lapply(.data$samples,
+                         function(x) {
+                           x %>%
+                             dplyr::slice_sample(prop = return_draws) %>%
+                             dplyr::pull("pvalue")
+                         }))
+  } else {
+    pval_res <- dplyr::select(pval_res, -"samples")
+  }
+
+  pval_res %>%
+    dplyr::select(-"item") %>%
+    dplyr::rename(!!model$data$item_id := "item_id")
 }

@@ -188,7 +188,7 @@ check_item_levels <- function(x, identifier, item_levels, name) {
 check_prior <- function(x, type, qmatrix, strc, name, allow_null = FALSE) {
   if (allow_null && is.null(x)) return(x)
 
-  if (!is.measrprior(x)) {
+  if (!is_measrprior(x)) {
     abort_bad_argument(name, must = "be a measrprior object")
   }
 
