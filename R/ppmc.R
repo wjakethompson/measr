@@ -64,21 +64,21 @@
 #'   structure:
 #'
 #'   \itemize{
-#'   \item{`obs_{ppmc}`: }{The value of the relevant statistic in the observed
-#'     data.}
-#'   \item{`ppmc_mean`: }{The mean of the `ndraws` posterior samples calculated
-#'     for the given statistic.}
-#'   \item{Quantile columns: }{1 column for each value of `probs`, providing the
+#'   \item `obs_{ppmc}`: The value of the relevant statistic in the observed
+#'     data.
+#'   \item `ppmc_mean`: The mean of the `ndraws` posterior samples calculated
+#'     for the given statistic.
+#'   \item Quantile columns: 1 column for each value of `probs`, providing the
 #'     corresponding quantiles of the `ndraws` posterior samples calculated for
-#'     the given statistic.}
-#'   \item{`samples`: }{A list column, where each element contains a vector of
+#'     the given statistic.
+#'   \item `samples`: A list column, where each element contains a vector of
 #'     length `(ndraws * return_draws)`, representing samples from the
 #'     posterior distribution of the calculated statistic. This column is
-#'     excluded if `return_draws = 0`.}
-#'   \item{`ppp`: }{The posterior predictive p-value. This is the proportion of
+#'     excluded if `return_draws = 0`.
+#'   \item `ppp`: The posterior predictive p-value. This is the proportion of
 #'     posterior samples for calculated statistic that are greater than the
 #'     observed value. Values very close to 0 or 1 indicate incompatibility
-#'     between the fitted model and the observed data.}
+#'     between the fitted model and the observed data.
 #'   }
 #'
 #' @references Park, J. Y., Johnson, M. S., Lee, Y-S. (2015). Posterior

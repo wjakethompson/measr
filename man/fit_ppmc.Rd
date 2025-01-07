@@ -61,21 +61,21 @@ results of the \acronym{PPMC}. All tibbles follow the same general
 structure:
 
 \itemize{
-\item{\verb{obs_\{ppmc\}}: }{The value of the relevant statistic in the observed
-data.}
-\item{\code{ppmc_mean}: }{The mean of the \code{ndraws} posterior samples calculated
-for the given statistic.}
-\item{Quantile columns: }{1 column for each value of \code{probs}, providing the
+\item \verb{obs_\{ppmc\}}: The value of the relevant statistic in the observed
+data.
+\item \code{ppmc_mean}: The mean of the \code{ndraws} posterior samples calculated
+for the given statistic.
+\item Quantile columns: 1 column for each value of \code{probs}, providing the
 corresponding quantiles of the \code{ndraws} posterior samples calculated for
-the given statistic.}
-\item{\code{samples}: }{A list column, where each element contains a vector of
+the given statistic.
+\item \code{samples}: A list column, where each element contains a vector of
 length \code{(ndraws * return_draws)}, representing samples from the
 posterior distribution of the calculated statistic. This column is
-excluded if \code{return_draws = 0}.}
-\item{\code{ppp}: }{The posterior predictive p-value. This is the proportion of
+excluded if \code{return_draws = 0}.
+\item \code{ppp}: The posterior predictive p-value. This is the proportion of
 posterior samples for calculated statistic that are greater than the
 observed value. Values very close to 0 or 1 indicate incompatibility
-between the fitted model and the observed data.}
+between the fitted model and the observed data.
 }
 }
 \description{
