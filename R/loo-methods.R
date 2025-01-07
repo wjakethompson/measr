@@ -44,7 +44,7 @@ loo.measrfit <- function(x, ..., r_eff = NA, force = FALSE) { #nolint
   loo::loo(log_lik_array, r_eff = r_eff, ...)
 }
 
-#' Widely applicable information criterion (\acroynm{WAIC})
+#' Widely applicable information criterion (\acronym{WAIC})
 #'
 #' A [loo::waic()] method that is customized for `measrfit` objects. This is a
 #' simple wrapper around [loo::waic.array()]. See the **loo** package

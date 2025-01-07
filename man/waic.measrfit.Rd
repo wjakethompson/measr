@@ -2,7 +2,7 @@
 % Please edit documentation in R/loo-methods.R
 \name{waic.measrfit}
 \alias{waic.measrfit}
-\title{Widely applicable information criterion (\acroynm{WAIC})}
+\title{Widely applicable information criterion (\acronym{WAIC})}
 \usage{
 \method{waic}{measrfit}(x, ..., force = FALSE)
 }
