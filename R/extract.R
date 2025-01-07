@@ -18,8 +18,8 @@ measr_extract <- function(model, ...) {
 #'     For `what = "odds_ratio_flags"` and
 #'     `what = "conditional_prob_flags"`, the compatibility interval used for
 #'     determining model fit flags to return. For example, a `ppmc_interval` of
-#'     0.95 (the default) will return any PPMCs where the posterior predictive
-#'     *p*-value (ppp) is less than 0.025 or greater than 0.975.
+#'     0.95 (the default) will return any \acronym{PPMC}s where the posterior
+#'     predictive *p*-value (ppp) is less than 0.025 or greater than 0.975.
 #'
 #'   * `agreement`:
 #'
@@ -99,6 +99,11 @@ measr_extract <- function(model, ...) {
 #'     proficiency on each attribute, as described by Johnson & Sinharay (2020).
 #'     Reliability information must first be added to the model using
 #'     [add_reliability()].
+#'
+#' @concept Sinharay
+#' @concept Goodman
+#' @concept Templin
+#' @concept Bradshaw
 #'
 #' @return The extracted information. The specific structure will vary depending
 #'   on what is being extracted, but usually the returned object is a

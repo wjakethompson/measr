@@ -7,7 +7,7 @@
 default_dcm_priors(type = "lcdm", attribute_structure = "unconstrained")
 }
 \arguments{
-\item{type}{Type of DCM to estimate. Must be one of
+\item{type}{Type of \acronym{DCM} to estimate. Must be one of
 lcdm, dina, dino, or crum.}
 
 \item{attribute_structure}{Structural model specification. Must be one of

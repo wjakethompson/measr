@@ -19,8 +19,8 @@ measr_extract(model, ...)
 For \code{what = "odds_ratio_flags"} and
 \code{what = "conditional_prob_flags"}, the compatibility interval used for
 determining model fit flags to return. For example, a \code{ppmc_interval} of
-0.95 (the default) will return any PPMCs where the posterior predictive
-\emph{p}-value (ppp) is less than 0.025 or greater than 0.975.
+0.95 (the default) will return any \acronym{PPMC}s where the posterior
+predictive \emph{p}-value (ppp) is less than 0.025 or greater than 0.975.
 \item \code{agreement}:
 
 For \code{what = "classification_reliability"}, additional
@@ -153,3 +153,7 @@ Templin, J., & Bradshaw, L. (2013). Measuring the reliability of
 diagnostic classification model examinee estimates. \emph{Journal of
 Classification, 30}(2), 251-275. \doi{10.1007/s00357-013-9129-4}
 }
+\concept{Bradshaw}
+\concept{Goodman}
+\concept{Sinharay}
+\concept{Templin}

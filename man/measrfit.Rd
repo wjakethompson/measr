@@ -25,7 +25,7 @@ measrfit(
 \arguments{
 \item{data}{The data and Q-matrix used to estimate the model.}
 
-\item{type}{The type of DCM that was estimated.}
+\item{type}{The type of \acronym{DCM} that was estimated.}
 
 \item{prior}{A \link[=measrprior]{measrprior} object containing information on
 the priors used in the model.}
@@ -58,18 +58,18 @@ fitting the model.}
 \item{file}{Optional name of a file which the model objects was saved to
 or loaded from.}
 
-\item{version}{The versions of \strong{measr}, \strong{Stan}, \strong{rstan} and/or
-\strong{cmdstanr} that were used to fit the model.}
+\item{version}{The versions of \code{\link{measr}}, \strong{Stan}, \code{\link{rstan}} and/or
+\code{\link{cmdstanr}} that were used to fit the model.}
 
 \item{class}{Additional classes to be added (e.g., \code{measrdcm} for a
 diagnostic classification model).}
 }
 \value{
-A \link[=measrfit-class]{measrfit} object.
+A \code{\link[=measrfit-class]{measrfit}} object.
 }
 \description{
-Models fitted with \strong{measr} are represented as a \code{measrfit} object. If a
-model is estimated with \emph{Stan}, but not \strong{measr}, a \code{measrfit} object can be
+Models fitted with \code{\link{measr}} are represented as a \code{measrfit} object. If a
+model is estimated with \emph{Stan}, but not \code{\link{measr}}, a \code{measrfit} object can be
 created in order to access other functionality in \strong{measr} (e.g., model fit,
 reliability).
 }
@@ -101,5 +101,6 @@ new_obj <- measrfit(
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\linkS4class{measrfit}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}.
+See \code{\linkS4class{measrfit}}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}.
 }
+\concept{Stan}

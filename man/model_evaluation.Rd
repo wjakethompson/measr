@@ -47,9 +47,9 @@ already been added to the estimated model should be overwritten. Default is
 
 \item{save}{Logical. Only relevant if a file was specified in the
 \link{measrfit} object passed to \code{x}. If \code{TRUE} (the default), the model is
-re-saved to the specified file when new criteria are added to the R object.
-If \code{FALSE}, the new criteria will be added to the R object, but the saved
-file will not be updated.}
+re-saved to the specified file when new criteria are added to the \code{R}
+object. If \code{FALSE}, the new criteria will be added to the \code{R} object, but
+the saved file will not be updated.}
 
 \item{...}{Additional arguments passed relevant methods. See Details.}
 
@@ -70,7 +70,7 @@ object.}
 
 \item{ci}{The confidence interval for the RMSEA, computed from the M2}
 
-\item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
+\item{probs}{The percentiles to be computed by the \code{\link[stats:quantile]{stats::quantile()}}
 function to summarize the posterior distributions of each person parameter.
 Only relevant if \code{method = "mcmc"} was used to estimate the model.}
 }
@@ -100,9 +100,10 @@ arguments supplied to \code{...} are passed to \code{\link[=fit_ppmc]{fit_ppmc()
 For \code{add_criterion()}, relative fit criteria are added to the \verb{$criteria}
 element of the fitted model. This function wraps \code{\link[=loo]{loo()}} and/or \code{\link[=waic]{waic()}},
 depending on which criteria are specified, to calculate the leave-one-out
-(LOO; Vehtari et al., 2017) and/or widely applicable information criteria
-(WAIC; Watanabe, 2010) to fitted model objects. Additional arguments supplied
-to \code{...} are passed to \code{\link[loo:loo]{loo::loo.array()}} or \code{\link[loo:waic]{loo::waic.array()}}.
+(\acronym{LOO}; Vehtari et al., 2017) and/or widely applicable information
+criteria (\acronym{WAIC}; Watanabe, 2010) to fitted model objects.
+Additional arguments supplied to \code{...} are passed to \code{\link[loo:loo]{loo::loo.array()}} or
+\code{\link[loo:waic]{loo::waic.array()}}.
 
 For \code{add_reliability()}, reliability information is added to the
 \verb{$reliability} element of the fitted model. Pattern level reliability is
