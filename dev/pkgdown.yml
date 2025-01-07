@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   articles/ecpe: ecpe.html
@@ -7,7 +7,7 @@ articles:
   articles/model-estimation: model-estimation.html
   articles/model-evaluation: model-evaluation.html
   paper: paper.html
-last_built: 2024-08-12T20:50Z
+last_built: 2025-01-07T16:18Z
 urls:
   reference: https://measr.info/reference
   article: https://measr.info/articles
