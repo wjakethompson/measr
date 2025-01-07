@@ -1,10 +1,10 @@
 #' Item, attribute, and test-level discrimination indices
 #'
-#' The cognitive diagnostic index (CDI) is a measure of how well an assessment
-#' is able to distinguish between attribute profiles. The index was originally
-#' proposed by Henson & Douglas (2005) for item- and test-level discrimination,
-#' and then expanded by Henson et al. (2008) to include attribute-level
-#' discrimination indices.
+#' The cognitive diagnostic index (\acronym{CDI}) is a measure of how well an
+#' assessment is able to distinguish between attribute profiles.
+#' The index was originally proposed by Henson & Douglas (2005) for item- and
+#' test-level discrimination, and then expanded by Henson et al. (2008) to
+#' include attribute-level discrimination indices.
 #'
 #' @param model The estimated model to be evaluated.
 #' @param weight_prevalence Logical indicating whether the discrimination
@@ -29,9 +29,11 @@
 #'
 #' @return A list with two elements:
 #'   * `item_discrimination`: A [tibble][tibble::tibble-package] with one row
-#'     per item containing the CDI for the item and any relevant attributes.
+#'     per item containing the \acronym{CDI} for the item and any relevant
+#'     attributes.
 #'   * `test_discrimination`: A [tibble][tibble::tibble-package] with one row
-#'     containing the total CDI for the assessment and for each attribute.
+#'     containing the total \acronym{CDI} for the assessment and for each
+#'     attribute.
 #' @export
 #'
 #' @references Henson, R., & Douglas, J. (2005). Test construction for cognitive

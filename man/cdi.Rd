@@ -17,17 +17,19 @@ details for additional information.}
 A list with two elements:
 \itemize{
 \item \code{item_discrimination}: A \link[tibble:tibble-package]{tibble} with one row
-per item containing the CDI for the item and any relevant attributes.
+per item containing the \acronym{CDI} for the item and any relevant
+attributes.
 \item \code{test_discrimination}: A \link[tibble:tibble-package]{tibble} with one row
-containing the total CDI for the assessment and for each attribute.
+containing the total \acronym{CDI} for the assessment and for each
+attribute.
 }
 }
 \description{
-The cognitive diagnostic index (CDI) is a measure of how well an assessment
-is able to distinguish between attribute profiles. The index was originally
-proposed by Henson & Douglas (2005) for item- and test-level discrimination,
-and then expanded by Henson et al. (2008) to include attribute-level
-discrimination indices.
+The cognitive diagnostic index (\acronym{CDI}) is a measure of how well an
+assessment is able to distinguish between attribute profiles.
+The index was originally proposed by Henson & Douglas (2005) for item- and
+test-level discrimination, and then expanded by Henson et al. (2008) to
+include attribute-level discrimination indices.
 }
 \details{
 Henson et al. (2008) described two attribute-level discrimination indices,
