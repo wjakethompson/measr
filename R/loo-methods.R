@@ -13,7 +13,7 @@ loo::loo_compare
 #' Efficient approximate leave-one-out cross-validation (\acronym{LOO})
 #'
 #' A [loo::loo()] method that is customized for `measrfit` objects. This is a
-#' simple wrapper around [loo::loo.array()]. See the **loo** package
+#' simple wrapper around [loo::loo.array()]. See the loo package
 #' [vignettes](https://mc-stan.org/loo/articles/) for details.
 #'
 #' @inheritParams loo::loo
@@ -47,7 +47,7 @@ loo.measrfit <- function(x, ..., r_eff = NA, force = FALSE) { #nolint
 #' Widely applicable information criterion (\acronym{WAIC})
 #'
 #' A [loo::waic()] method that is customized for `measrfit` objects. This is a
-#' simple wrapper around [loo::waic.array()]. See the **loo** package
+#' simple wrapper around [loo::waic.array()]. See the loo package
 #' [vignettes](https://mc-stan.org/loo/articles/) for details.
 #'
 #' @param x A [measrfit] object.
@@ -80,7 +80,7 @@ waic.measrfit <- function(x, ..., force = FALSE) { #nolint
 #' Relative model fit comparisons
 #'
 #' A [loo::loo_compare()] method that is customized for `measrfit` objects. See
-#' the **loo** package [vignettes](https://mc-stan.org/loo/articles/) for
+#' the loo package [vignettes](https://mc-stan.org/loo/articles/) for
 #' details.
 #'
 #' @param x A [measrfit] object.

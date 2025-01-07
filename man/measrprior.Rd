@@ -5,7 +5,7 @@
 \alias{prior}
 \alias{prior_}
 \alias{prior_string}
-\title{Prior definitions for \strong{measr} models}
+\title{Prior definitions for measr models}
 \usage{
 measrprior(
   prior,
@@ -22,8 +22,8 @@ prior_(prior, ...)
 prior_string(prior, ...)
 }
 \arguments{
-\item{prior}{A character string defining a distribution in \strong{Stan} language.
-A list of all distributions supported by \strong{Stan} can be found in \emph{Stan
+\item{prior}{A character string defining a distribution in \emph{Stan} language.
+A list of all distributions supported by \emph{Stan} can be found in \emph{Stan
 Language Functions Reference} at
 \url{https://mc-stan.org/users/documentation/}.}
 

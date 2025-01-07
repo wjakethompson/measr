@@ -32,6 +32,6 @@ The object returned by \code{\link[loo:loo]{loo::loo.array()}}.
 }
 \description{
 A \code{\link[loo:loo]{loo::loo()}} method that is customized for \code{measrfit} objects. This is a
-simple wrapper around \code{\link[loo:loo]{loo::loo.array()}}. See the \strong{loo} package
+simple wrapper around \code{\link[loo:loo]{loo::loo.array()}}. See the loo package
 \href{https://mc-stan.org/loo/articles/}{vignettes} for details.
 }

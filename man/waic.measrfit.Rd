@@ -20,6 +20,6 @@ The object returned by \code{\link[loo:waic]{loo::waic.array()}}.
 }
 \description{
 A \code{\link[loo:waic]{loo::waic()}} method that is customized for \code{measrfit} objects. This is a
-simple wrapper around \code{\link[loo:waic]{loo::waic.array()}}. See the \strong{loo} package
+simple wrapper around \code{\link[loo:waic]{loo::waic.array()}}. See the loo package
 \href{https://mc-stan.org/loo/articles/}{vignettes} for details.
 }

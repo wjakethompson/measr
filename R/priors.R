@@ -1,9 +1,9 @@
-#' Prior definitions for **measr** models
+#' Prior definitions for measr models
 #'
 #' Create prior definitions for classes of parameters, or specific parameters.
 #'
-#' @param prior A character string defining a distribution in **Stan** language.
-#'   A list of all distributions supported by **Stan** can be found in *Stan
+#' @param prior A character string defining a distribution in *Stan* language.
+#'   A list of all distributions supported by *Stan* can be found in *Stan
 #'   Language Functions Reference* at
 #'   \url{https://mc-stan.org/users/documentation/}.
 #' @param class The parameter class. Defaults to `"intercept"`. Must be one of

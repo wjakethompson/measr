@@ -30,7 +30,7 @@ measrfit(
 \item{prior}{A \link[=measrprior]{measrprior} object containing information on
 the priors used in the model.}
 
-\item{stancode}{The model code in \strong{Stan} language.}
+\item{stancode}{The model code in \emph{Stan} language.}
 
 \item{method}{The method used to fit the model.}
 
@@ -58,8 +58,8 @@ fitting the model.}
 \item{file}{Optional name of a file which the model objects was saved to
 or loaded from.}
 
-\item{version}{The versions of \code{\link{measr}}, \strong{Stan}, \code{\link{rstan}} and/or
-\code{\link{cmdstanr}} that were used to fit the model.}
+\item{version}{The versions of measr, \emph{Stan}, and rstan or cmdstanr that were
+used to fit the model.}
 
 \item{class}{Additional classes to be added (e.g., \code{measrdcm} for a
 diagnostic classification model).}
@@ -70,7 +70,7 @@ A \code{\link[=measrfit-class]{measrfit}} object.
 \description{
 Models fitted with \code{\link{measr}} are represented as a \code{measrfit} object. If a
 model is estimated with \emph{Stan}, but not \code{\link{measr}}, a \code{measrfit} object can be
-created in order to access other functionality in \strong{measr} (e.g., model fit,
+created in order to access other functionality in measr (e.g., model fit,
 reliability).
 }
 \examples{

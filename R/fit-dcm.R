@@ -43,13 +43,13 @@
 #' @param backend Character string naming the package to use as the backend for
 #'   fitting the Stan model. Options are `"rstan"` (the default) or
 #'   `"cmdstanr"`. Can be set globally for the current `R` session via the
-#'   "measr.backend" option (see [options()]). Details on the **rstan** and
-#'   **cmdstanr** packages are available at \url{https://mc-stan.org/rstan/} and
+#'   "measr.backend" option (see [options()]). Details on the rstan and
+#'   cmdstanr packages are available at \url{https://mc-stan.org/rstan/} and
 #'   \url{https://mc-stan.org/cmdstanr/}, respectively.
 #' @param file Either `NULL` (the default) or a character string. If a character
 #'   string, the fitted model object is saved as an `.rds` object using
 #'   [saveRDS()] using the supplied character string. The `.rds` extension
-#'   is automatically added. If the specified file already exists, **measr**
+#'   is automatically added. If the specified file already exists, measr
 #'   will load the previously saved model. Unless `file_refit` is specified, the
 #'   model will not be refit.
 #' @param file_refit Controls when a saved model is refit. Options are

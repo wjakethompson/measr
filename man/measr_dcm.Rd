@@ -71,14 +71,14 @@ are used, as specified by \code{\link[=default_dcm_priors]{default_dcm_priors()}
 \item{backend}{Character string naming the package to use as the backend for
 fitting the Stan model. Options are \code{"rstan"} (the default) or
 \code{"cmdstanr"}. Can be set globally for the current \code{R} session via the
-"measr.backend" option (see \code{\link[=options]{options()}}). Details on the \strong{rstan} and
-\strong{cmdstanr} packages are available at \url{https://mc-stan.org/rstan/} and
+"measr.backend" option (see \code{\link[=options]{options()}}). Details on the rstan and
+cmdstanr packages are available at \url{https://mc-stan.org/rstan/} and
 \url{https://mc-stan.org/cmdstanr/}, respectively.}
 
 \item{file}{Either \code{NULL} (the default) or a character string. If a character
 string, the fitted model object is saved as an \code{.rds} object using
 \code{\link[=saveRDS]{saveRDS()}} using the supplied character string. The \code{.rds} extension
-is automatically added. If the specified file already exists, \strong{measr}
+is automatically added. If the specified file already exists, measr
 will load the previously saved model. Unless \code{file_refit} is specified, the
 model will not be refit.}
 
