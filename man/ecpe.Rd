@@ -4,8 +4,7 @@
 \name{ecpe_data}
 \alias{ecpe_data}
 \alias{ecpe_qmatrix}
-\title{Examination for the \dfn{Certificate of Proficiency in English}
-(\acronym{ECPE})}
+\title{Examination for the Certificate of Proficiency in English}
 \format{
 \code{ecpe_data} is a \link[tibble:tibble-package]{tibble} containing ECPE
 response data with 2,922 rows and 29 variables.
@@ -32,7 +31,8 @@ ecpe_data
 ecpe_qmatrix
 }
 \description{
-This is data from the grammar section of the ECPE, administered annually by
+This is data from the grammar section of the Examination for the Certificate
+of Proficiency in English (\acronym{ECPE}), administered annually by
 the English Language Institute at the University of Michigan. This data
 contains responses to 28 questions from 2,922 respondents, which ask
 respondents to complete a sentence with the correct word. This data set has
@@ -70,4 +70,5 @@ classification models: A family of models for estimating and testing
 attribute hierarchies. \emph{Psychometrika, 79}(2), 317-339.
 \doi{10.1007/s11336-013-9362-0}
 }
+\concept{Examination for the Certificate of Proficiency in English}
 \keyword{datasets}

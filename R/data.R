@@ -1,7 +1,7 @@
-#' Examination for the \dfn{Certificate of Proficiency in English}
-#' (\acronym{ECPE})
+#' Examination for the Certificate of Proficiency in English
 #'
-#' This is data from the grammar section of the ECPE, administered annually by
+#' This is data from the grammar section of the Examination for the Certificate
+#' of Proficiency in English (\acronym{ECPE}), administered annually by
 #' the English Language Institute at the University of Michigan. This data
 #' contains responses to 28 questions from 2,922 respondents, which ask
 #' respondents to complete a sentence with the correct word. This data set has
@@ -21,6 +21,8 @@
 #' response data with 2,922 rows and 29 variables.
 #' * `resp_id`: Respondent identifier
 #' * `E1`-`E28`: Dichotomous item responses to the 28 ECPE items
+#'
+#' @concept Examination for the Certificate of Proficiency in English
 #'
 #' @references Buck, G., & Tatsuoka, K. K. (1998). Application of the rule-space
 #'   procedure to language testing: Examining attributes of a free response
@@ -53,7 +55,7 @@
 "ecpe_qmatrix"
 
 
-#' MacReady & Dayton (1977) Multiplication Data  `r # nolint: sentence_case.`
+#' MacReady & Dayton (1977) multiplication data
 #'
 #' This is a small data set of multiplication item responses. This data contains
 #' responses to 4 items from 142 respondents, which ask respondents to complete
@@ -64,6 +66,9 @@
 #' 142 rows and 5 variables.
 #' * `respondent`: Respondent identifier
 #' * `mdm1`-`mdm4`: Dichotomous item responses to the 4 multiplication items
+#'
+#' @concept MacReady
+#' @concept Dayton
 #'
 #' @references MacReady, G. B., & Dayton, C. M. (1977). The use of probabilistic
 #'   models in the assessment of mastery. *Journal of Educational Statistics,
