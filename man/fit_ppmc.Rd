@@ -22,7 +22,7 @@ less than or equal to the total number of posterior draws retained in the
 estimated model. If \code{NULL} (the default) the total number from the
 estimated model is used.}
 
-\item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
+\item{probs}{The percentiles to be computed by the \code{\link[stats:quantile]{stats::quantile()}}
 function for summarizing the posterior distributions of the specified fit
 statistics.}
 

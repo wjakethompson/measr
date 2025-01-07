@@ -36,7 +36,7 @@ coded (e.g., \code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.
 posterior draws? Only relevant if the model was estimated with
 \code{method = "mcmc"}. Default is \code{FALSE}.}
 
-\item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
+\item{probs}{The percentiles to be computed by the \code{\link[stats:quantile]{stats::quantile()}}
 function. Only relevant if the model was estimated with \code{method = "mcmc"}.
 Only used if \code{summary} is \code{TRUE}.}
 

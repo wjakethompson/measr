@@ -19,7 +19,7 @@
 #' @param summary Should summary statistics be returned instead of the raw
 #'   posterior draws? Only relevant if the model was estimated with
 #'   `method = "mcmc"`. Default is `FALSE`.
-#' @param probs The percentiles to be computed by the `[stats::quantile()]`
+#' @param probs The percentiles to be computed by the [stats::quantile()]
 #'   function. Only relevant if the model was estimated with `method = "mcmc"`.
 #'   Only used if `summary` is `TRUE`.
 #' @param force If respondent estimates have already been added to the model

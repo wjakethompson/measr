@@ -9,7 +9,7 @@
 #'   less than or equal to the total number of posterior draws retained in the
 #'   estimated model. If `NULL` (the default) the total number from the
 #'   estimated model is used.
-#' @param probs The percentiles to be computed by the `[stats::quantile()]`
+#' @param probs The percentiles to be computed by the [stats::quantile()]
 #'   function for summarizing the posterior distributions of the specified fit
 #'   statistics.
 #' @param return_draws Proportion of posterior draws for each specified fit

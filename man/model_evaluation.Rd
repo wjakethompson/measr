@@ -70,7 +70,7 @@ object.}
 
 \item{ci}{The confidence interval for the RMSEA, computed from the M2}
 
-\item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
+\item{probs}{The percentiles to be computed by the \code{\link[stats:quantile]{stats::quantile()}}
 function to summarize the posterior distributions of each person parameter.
 Only relevant if \code{method = "mcmc"} was used to estimate the model.}
 }

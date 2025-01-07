@@ -13,7 +13,7 @@
 #'   object.
 #' @param method A vector of model fit methods to evaluate and add to the model
 #'   object.
-#' @param probs The percentiles to be computed by the `[stats::quantile()]`
+#' @param probs The percentiles to be computed by the [stats::quantile()]
 #'   function to summarize the posterior distributions of each person parameter.
 #'   Only relevant if `method = "mcmc"` was used to estimate the model.
 #' @param overwrite Logical. Indicates whether specified elements that have
