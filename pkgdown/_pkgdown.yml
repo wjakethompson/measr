@@ -90,6 +90,7 @@ reference:
     consistency.
   contents:
   - reliability
+  - cdi
 
 - subtitle: Model fit
   desc: >

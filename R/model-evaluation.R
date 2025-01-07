@@ -50,7 +50,8 @@
 #' `$reliability` element of the fitted model. Pattern level reliability is
 #' described by Cui et al. (2012). Classification reliability and posterior
 #' probability reliability are described by Johnson & Sinharay (2018, 2020),
-#' respectively. This function wraps [reliability()].
+#' respectively. This function wraps [reliability()]. Arguments supplied to
+#' `...` are passed to [reliability()].
 #'
 #' @return A modified [measrfit] object with the corresponding slot populated
 #'   with the specified information.
@@ -160,7 +161,7 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
 
 #' @export
 #' @rdname model_evaluation
-add_reliability <- function(x, overwrite = FALSE, save = TRUE) {
+add_reliability <- function(x, overwrite = FALSE, save = TRUE, ...) {
   model <- check_model(x, required_class = "measrfit", name = "x")
   overwrite <- check_logical(overwrite, name = "overwrite")
   save <- check_logical(save, name = "force_save")
@@ -169,7 +170,7 @@ add_reliability <- function(x, overwrite = FALSE, save = TRUE) {
   run_reli <- length(model$reliability) == 0 || overwrite
 
   if (run_reli) {
-    model$reliability <- reliability(model)
+    model$reliability <- reliability(model, force = TRUE, ...)
   }
 
   # re-save model object (if applicable)
