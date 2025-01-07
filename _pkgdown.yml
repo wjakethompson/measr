@@ -3,10 +3,8 @@ url: https://measr.info
 home:
   title: Estimate Diagnostic Classification Models with Stan
 
-development:
-  mode: auto
-
 template:
+  package: rdcmtemplate
   bootstrap: 5
   opengraph:
     image:
@@ -16,43 +14,6 @@ template:
       creator: "@wjakethompson"
       site: "@atlas4learning"
       card: summary_large_image
-  bslib:
-    base_font:
-      google: "Open Sans"
-    heading_font:
-      google: "Playfair Display"
-    code_font:
-      google: "Fira Code"
-    bg: "#FFFFFF"
-    fg: "#333"
-  includes:
-    after_body: >
-      <script data-goatcounter="https://measr.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
-
-authors:
-  footer:
-    roles: [cre]
-  sidebar:
-    roles: [aut]
-  W. Jake Thompson:
-    href: https://wjakethompson.com
-  University of Kansas:
-    href: https://ku.edu
-  Institute of Education Sciences:
-    href: https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546
-
-footer:
-  structure:
-    left: developed_by
-    right: [ies]
-  components:
-      ies: |
-        The research reported here was supported by the Institute of Education
-        Sciences, U.S. Department of Education, through Grant
-        [R305D210045](https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546)
-        to the University of Kansas. The opinions expressed are those of the
-        authors and do not represent the views of the Institute or the U.S.
-        Department of Education.
 
 reference:
 - title: Data sets

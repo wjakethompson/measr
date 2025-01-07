@@ -66,8 +66,8 @@ Remotes:
 	openpharma/roxylint
 Additional_repositories: https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
-Config/Needs/website: wjakethompson/wjake, showtext, ggdist, english
 Config/Needs/documentation: roxylint
+Config/Needs/website: r-dcm/rdcmtemplate, wjakethompson/wjake, showtext, ggdist, english
 Config/roxylint: list(linters = roxylint::tidy)	
 Encoding: UTF-8
 Language: en-US
