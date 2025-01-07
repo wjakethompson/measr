@@ -74,7 +74,6 @@
 #'
 #' @concept Bayesian
 #' @concept Stan
-#' @concept Q-matrix
 #'
 #' @return A [measrfit] object.
 #' @export

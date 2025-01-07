@@ -100,19 +100,17 @@ measr_extract <- function(model, ...) {
 #'     Reliability information must first be added to the model using
 #'     [add_reliability()].
 #'
+#' @concept Sinharay
+#' @concept Goodman
+#' @concept Templin
+#' @concept Bradshaw
+#'
 #' @return The extracted information. The specific structure will vary depending
 #'   on what is being extracted, but usually the returned object is a
 #'   [tibble][tibble::tibble-package] with the requested information.
 #'
 #' @describeIn measr_extract Extract components of an estimated diagnostic
 #'   classification model.
-#'
-#' @concept Goodman & Kruskal's lambda
-#' @concept Cohen's kappa
-#' @concept Youden's statistic
-#' @concept tetrachoric correlation
-#' @concept True positive rate
-#' @concept True negative rate
 #'
 #' @references Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
 #'   classification consistency and accuracy for cognitive diagnostic

@@ -15,11 +15,11 @@
 #' @param ub Upper bound for parameter restriction. Defaults to no restriction.
 #' @param ... Additional arguments passed to `measrprior()`.
 #'
+#' @concept Stan
+#' @concept Stan Language Functions Reference
+#'
 #' @return A [tibble][tibble::tibble-package] of class `measrprior`.
 #' @export
-#'
-#' @concept Stan Language Functions Reference
-#' @concept Stan
 #'
 #' @examples
 #' # Use alias functions to define priors without quotes, as formulas,

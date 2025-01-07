@@ -153,9 +153,7 @@ Templin, J., & Bradshaw, L. (2013). Measuring the reliability of
 diagnostic classification model examinee estimates. \emph{Journal of
 Classification, 30}(2), 251-275. \doi{10.1007/s00357-013-9129-4}
 }
-\concept{Cohen's kappa}
-\concept{Goodman & Kruskal's lambda}
-\concept{True negative rate}
-\concept{True positive rate}
-\concept{Youden's statistic}
-\concept{tetrachoric correlation}
+\concept{Bradshaw}
+\concept{Goodman}
+\concept{Sinharay}
+\concept{Templin}

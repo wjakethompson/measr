@@ -52,4 +52,3 @@ get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
 get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm",
                rename_att = TRUE)
 }
-\concept{Q-matrix}

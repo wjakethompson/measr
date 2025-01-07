@@ -60,7 +60,6 @@ profile_labels <- function(attributes) {
 #' @return A [tibble][tibble::tibble-package] with one row per parameter.
 #' @export
 #'
-#' @concept Q-matrix
 #' @examples
 #' get_parameters(ecpe_qmatrix, item_id = "item_id", type = "lcdm")
 #'

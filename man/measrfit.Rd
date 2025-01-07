@@ -103,5 +103,4 @@ new_obj <- measrfit(
 \seealso{
 See \code{\linkS4class{measrfit}}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}.
 }
-\concept{Q-matrix}
 \concept{Stan}

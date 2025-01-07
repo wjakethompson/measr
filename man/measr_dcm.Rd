@@ -125,5 +125,4 @@ rstn_mdm_lcdm <- measr_dcm(
 \dontshow{\}) # examplesIf}
 }
 \concept{Bayesian}
-\concept{Q-matrix}
 \concept{Stan}

@@ -32,11 +32,11 @@
 #' @param class Additional classes to be added (e.g., `measrdcm` for a
 #'   diagnostic classification model).
 #'
+#' @concept Stan
+#'
 #' @return A [`measrfit`][`measrfit-class`] object.
 #' @export
 #'
-#' @concept Stan
-#' @concept Q-matrix
 #' @seealso See [`measrfit-class`], [`as_measrfit()`], [`is_measrfit()`].
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
