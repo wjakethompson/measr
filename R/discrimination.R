@@ -1,9 +1,46 @@
-#' Title
+#' Item, attribute, and test-level discrimination indices
+#'
+#' The cognitive diagnostic index (CDI) is a measure of how well an assessment
+#' is able to distinguish between attribute profiles. The index was originally
+#' proposed by Henson & Douglas (2005) for item- and test-level discrimination,
+#' and then expanded by Henson et al. (2008) to include attribute-level
+#' discrimination indices.
 #'
 #' @param model The estimated model to be evaluated.
+#' @param weight_prevalence Logical indicating whether the discrimination
+#'   indices should be weighted by the prevalence of the attribute profiles. See
+#'   details for additional information.
 #'
-#' @return
+#' @details
+#' Henson et al. (2008) described two attribute-level discrimination indices,
+#' \eqn{\mathbf{d}_{(A)\mathbf{\cdot}}} (Equation 8) and
+#' \eqn{\mathbf{d}_{(B)\mathbf{\cdot}}} (Equation 13), which are similar in that
+#' both are the sum of item-level discrimination indices.
+#' In both cases, item-level discrimination indices are calculated as the
+#' average of Kullback-Leibler information for all pairs of attributes profiles
+#' for the item.
+#' The item-level indices are then summed to achieve the test-level
+#' discrimination index for each attribute, or the test overall.
+#' However, whereas \eqn{\mathbf{d}_{(A)\mathbf{\cdot}}} is an unweighted
+#' average of the Kullback-Leibler information,
+#' \eqn{\mathbf{d}_{(B)\mathbf{\cdot}}} is a weighted average, where the weight
+#' is defined by the prevalence of each profile (i.e.,
+#' [`measr_extract(model, what = "strc_param")`][measr_extract()]).
+#'
+#' @return A list with two elements:
+#'   * `item_discrimination`: A [tibble][tibble::tibble-package] with one row
+#'     per item containing the CDI for the item and any relevant attributes.
+#'   * `test_discrimination`: A [tibble][tibble::tibble-package] with one row
+#'     containing the total CDI for the assessment and for each attribute.
 #' @export
+#'
+#' @references Henson, R., & Douglas, J. (2005). Test construction for cognitive
+#'   diagnosis. *Applied Psychological Measurement, 29*(4), 262-277.
+#'   \doi{10.1177/0146621604272623}
+#' @references Henson, R., Roussos, L., Douglas, J., & Xuming, H. (2008).
+#'   Cognitive diagnostic attribute-level discrimination indices.
+#'   *Applied Psychological Measurement, 32*(4), 275-288.
+#'   \doi{10.1177/0146621607302478}
 #' @examplesIf measr_examples()
 #' rstn_ecpe_lcdm <- measr_dcm(
 #'   data = ecpe_data, missing = NA, qmatrix = ecpe_qmatrix,
@@ -12,7 +49,11 @@
 #' )
 #'
 #' cdi(rstn_ecpe_lcdm)
-cdi <- function(model) {
+cdi <- function(model, weight_prevalence = TRUE) {
+  model <- check_model(model, required_class = "measrfit", name = "model")
+  weight_prevalence <- check_logical(weight_prevalence,
+                                     name = "weight_prevalence")
+
   stan_draws <- switch(model$method,
                        "mcmc" = get_mcmc_draws(model),
                        "optim" = get_optim_draws(model))
@@ -22,12 +63,13 @@ cdi <- function(model) {
     posterior::as_draws_df() %>%
     tibble::as_tibble() %>%
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
-    dplyr::summarize(value = mean(value), .by = "name") %>%
+    dplyr::summarize(value = mean(.data$value), .by = "name") %>%
     tidyr::separate_wider_regex(
       cols = "name",
       patterns = c("pi\\[", item = "[0-9]*", ",", class = "[0-9]*", "\\]")
     ) %>%
-    dplyr::mutate(item = as.integer(item), class = as.integer(class))
+    dplyr::mutate(item = as.integer(.data$item),
+                  class = as.integer(.data$class))
 
   hamming <- profile_hamming(
     dplyr::select(measr_extract(model, "classes"), -"class")
@@ -60,14 +102,45 @@ cdi <- function(model) {
                   dplyr::across(dplyr::where(is.logical),
                                 \(x) as.integer(x) * .data$kli)) %>%
     dplyr::filter(.data$hamming > 0) %>%
-    dplyr::summarize(overall = sum(.data$kli * (1 / .data$hamming)) /
-                       sum((1 / hamming)),
-                     dplyr::across(dplyr::all_of(att_names),
-                                   \(x) mean(x, na.rm = TRUE)),
-                     .by = "item")
+    dplyr::mutate(weight = 1 / .data$hamming)
 
-  test_descrim <- item_discrim %>%
+  if (weight_prevalence) {
+    vc <- stan_draws %>%
+      posterior::subset_draws(variable = "log_Vc") %>%
+      posterior::as_draws_df() %>%
+      tibble::as_tibble() %>%
+      tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
+      dplyr::summarize(value = mean(.data$value), .by = "name") %>%
+      dplyr::mutate(value = exp(.data$value)) %>%
+      tidyr::separate_wider_regex(
+        cols = "name",
+        patterns = c("log_Vc\\[", class = "[0-9]*", "\\]")
+      ) %>%
+      dplyr::mutate(class = as.integer(.data$class))
+
+    item_discrim <- item_discrim %>%
+      dplyr::left_join(vc, by = c("profile_1" = "class")) %>%
+      dplyr::mutate(weight = .data$weight * .data$value) %>%
+      dplyr::select(-"value")
+  }
+
+  item_discrim <- item_discrim %>%
+    dplyr::summarize(
+      overall = stats::weighted.mean(.data$kli, w = .data$weight),
+      dplyr::across(
+        dplyr::all_of(att_names),
+        \(x) stats::weighted.mean(x, w = .data$weight, na.rm = TRUE)
+      ),
+      .by = "item"
+    )
+
+  test_discrim <- item_discrim %>%
     dplyr::summarize(dplyr::across(-"item", sum))
+
+  return(
+    list(item_discrimination = item_discrim,
+         test_discrimination = test_discrim)
+  )
 }
 
 profile_hamming <- function(profiles) {

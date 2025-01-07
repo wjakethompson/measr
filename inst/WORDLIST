@@ -1,3 +1,4 @@
+CDI
 CDM
 CDMs
 CMD
@@ -17,7 +18,9 @@ Gelman
 Gierl
 HDCM
 Kruskal's
+Kullback
 LCDM
+Leibler
 Liu
 MDM
 MacReady
@@ -33,6 +36,7 @@ PPMCs
 Psychometrika
 RMSEA
 RStan
+Roussos
 Rtools
 Rupp
 SRMSR
@@ -45,6 +49,7 @@ WAIC
 Watanabe
 Xcode
 Xin
+Xuming
 Youden's
 al
 att
