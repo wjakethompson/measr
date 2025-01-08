@@ -8,15 +8,15 @@ test_that("dina model works", {
   expect_equal(names(rstn_dina$data),
                c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_dina$data$data,
-               dina_data %>%
+               dina_data |>
                  tidyr::pivot_longer(-resp_id, names_to = "item_id",
-                                     values_to = "score") %>%
+                                     values_to = "score") |>
                  dplyr::mutate(resp_id = factor(resp_id),
                                item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(rstn_dina$data$qmatrix,
-               q_matrix %>%
-                 dplyr::rename(item_id = item) %>%
+               q_matrix |>
+                 dplyr::rename(item_id = item) |>
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(rstn_dina$type, "dina")
@@ -35,9 +35,9 @@ test_that("dina model works", {
   expect_equal(names(rstn_dina$version),
                c("R", "measr", "rstan", "StanHeaders"))
 
-  dina_comp <- tibble::enframe(rstn_dina$model$par) %>%
-    dplyr::filter(grepl("^Vc|slip|guess", .data$name)) %>%
-    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
+  dina_comp <- tibble::enframe(rstn_dina$model$par) |>
+    dplyr::filter(grepl("^Vc|slip|guess", .data$name)) |>
+    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) |>
     dplyr::left_join(true_dinoa, by = c("name" = "param"))
 
   comp_cor <- cor(dina_comp$value, dina_comp$true)
@@ -57,15 +57,15 @@ test_that("dino model works", {
   expect_equal(names(rstn_dino$data),
                c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(rstn_dino$data$data,
-               dino_data %>%
+               dino_data |>
                  tidyr::pivot_longer(-resp_id, names_to = "item_id",
-                                     values_to = "score") %>%
+                                     values_to = "score") |>
                  dplyr::mutate(resp_id = factor(resp_id),
                                item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(rstn_dino$data$qmatrix,
-               q_matrix %>%
-                 dplyr::rename(item_id = item) %>%
+               q_matrix |>
+                 dplyr::rename(item_id = item) |>
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(rstn_dino$type, "dino")
@@ -84,9 +84,9 @@ test_that("dino model works", {
   expect_equal(names(rstn_dino$version),
                c("R", "measr", "rstan", "StanHeaders"))
 
-  dino_comp <- tibble::enframe(rstn_dino$model$par) %>%
-    dplyr::filter(grepl("^Vc|slip|guess", .data$name)) %>%
-    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
+  dino_comp <- tibble::enframe(rstn_dino$model$par) |>
+    dplyr::filter(grepl("^Vc|slip|guess", .data$name)) |>
+    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) |>
     dplyr::left_join(true_dinoa, by = c("name" = "param"))
 
   comp_cor <- cor(dino_comp$value, dino_comp$true)

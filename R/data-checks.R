@@ -48,11 +48,11 @@ check_newdata <- function(x, name, identifier, model, missing) {
 
   # ensure that factor levels match in original and new data so item parameters
   # are pulled correctly
-  x <- x %>%
+  x <- x |>
     dplyr::mutate(
       item_id = as.character(.data$item_id),
       item_id = factor(.data$item_id, levels = levels(model$data$data$item_id))
-    ) %>%
+    ) |>
     dplyr::arrange(.data$resp_id, .data$item_id)
 
   x
@@ -66,7 +66,7 @@ check_data <- function(x, name, identifier, missing) {
   }
 
   # replace missing values with NA
-  x <- x %>%
+  x <- x |>
     dplyr::mutate(dplyr::across(!dplyr::all_of(!!identifier),
                                 ~dplyr::na_if(.x, missing)),
                   dplyr::across(!dplyr::all_of(!!identifier), as.character))
@@ -84,27 +84,27 @@ check_data <- function(x, name, identifier, missing) {
 
   # move to long format for Stan
   if (is.null(identifier)) {
-    x <- x %>%
-      tibble::rowid_to_column(var = "resp_id") %>%
+    x <- x |>
+      tibble::rowid_to_column(var = "resp_id") |>
       tidyr::pivot_longer(cols = -"resp_id", names_to = "item_id",
-                          values_to = "score") %>%
-      dplyr::filter(!is.na(.data$score)) %>%
+                          values_to = "score") |>
+      dplyr::filter(!is.na(.data$score)) |>
       dplyr::mutate(score = as.integer(.data$score),
                     resp_id = factor(.data$resp_id),
                     item_id = factor(.data$item_id, levels = item_names))
   } else {
     resp_names <- dplyr::pull(x, !!identifier)
-    x <- x %>%
+    x <- x |>
       tidyr::pivot_longer(cols = -!!identifier, names_to = "item_id",
-                          values_to = "score") %>%
-      dplyr::filter(!is.na(.data$score)) %>%
-      dplyr::rename(resp_id = !!identifier) %>%
+                          values_to = "score") |>
+      dplyr::filter(!is.na(.data$score)) |>
+      dplyr::rename(resp_id = !!identifier) |>
       dplyr::mutate(score = as.integer(.data$score),
                     resp_id = factor(.data$resp_id, levels = resp_names),
                     item_id = factor(.data$item_id, levels = item_names))
   }
 
-  x <- x %>%
+  x <- x |>
     dplyr::arrange(.data$resp_id, .data$item_id)
 
   x
@@ -144,7 +144,7 @@ check_qmatrix <- function(x, identifier, item_levels, name) {
 
 check_item_levels <- function(x, identifier, item_levels, name) {
   if (is.null(identifier) && !is.null(item_levels)) {
-    x <- x %>%
+    x <- x |>
       dplyr::mutate(item_id = item_levels,
                     item_id = factor(.data$item_id, levels = item_levels),
                     .before = 1)
@@ -165,20 +165,20 @@ check_item_levels <- function(x, identifier, item_levels, name) {
                                                   collapse = ', ')}")
       )
     }
-    x <- x %>%
-      dplyr::rename(item_id = !!identifier) %>%
-      dplyr::mutate(item_id = factor(.data$item_id, levels = item_levels)) %>%
+    x <- x |>
+      dplyr::rename(item_id = !!identifier) |>
+      dplyr::mutate(item_id = factor(.data$item_id, levels = item_levels)) |>
       dplyr::arrange(.data$item_id)
   } else if (is.null(identifier) && is.null(item_levels)) {
-    x <- x %>%
+    x <- x |>
       dplyr::mutate(item_id = seq_len(dplyr::n()),
                     item_id = factor(.data$item_id, levels = .data$item_id),
-                    .before = 1) %>%
+                    .before = 1) |>
       dplyr::arrange(.data$item_id)
   } else if (!is.null(identifier) && is.null(item_levels)) {
-    x <- x %>%
-      dplyr::rename(item_id = !!identifier) %>%
-      dplyr::mutate(item_id = factor(.data$item_id, levels = .data$item_id)) %>%
+    x <- x |>
+      dplyr::rename(item_id = !!identifier) |>
+      dplyr::mutate(item_id = factor(.data$item_id, levels = .data$item_id)) |>
       dplyr::arrange(.data$item_id)
   }
 
@@ -195,7 +195,7 @@ check_prior <- function(x, type, qmatrix, strc, name, allow_null = FALSE) {
   mod_param <- get_parameters(qmatrix = qmatrix, type = type,
                               attribute_structure = strc)
 
-  bad_class <- dplyr::anti_join(x, mod_param, by = "class") %>%
+  bad_class <- dplyr::anti_join(x, mod_param, by = "class") |>
     dplyr::pull(class)
 
   if (length(bad_class) > 0) {
@@ -206,8 +206,8 @@ check_prior <- function(x, type, qmatrix, strc, name, allow_null = FALSE) {
     abort_bad_argument(name, must = NULL, custom = msg)
   }
 
-  bad_param <- x %>%
-    dplyr::filter(!is.na(.data$coef)) %>%
+  bad_param <- x |>
+    dplyr::filter(!is.na(.data$coef)) |>
     dplyr::anti_join(mod_param, by = c("class", "coef"))
 
   if (nrow(bad_param) > 0) {

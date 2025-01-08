@@ -7,7 +7,7 @@ create_id <- function(length, num_prop = 0.2) {
   char <- sample(x = letters, size = round(length * (1 - num_prop)))
   numr <- sample(x = 0:9, size = round(length * num_prop))
 
-  sample(x = c(char, numr), size = length) %>%
+  sample(x = c(char, numr), size = length) |>
     paste(collapse = "")
 }
 many_id <- function(number, length = 5, num_prop = 0.2) {
@@ -19,8 +19,8 @@ many_id <- function(number, length = 5, num_prop = 0.2) {
 
 mdm_data <- read_csv(here("data-raw", "csv", "mdm-data.csv"),
                      col_types = cols(.default =  col_integer()),
-                     col_names = FALSE) %>%
-  rename(mdm1 = X1, mdm2 = X2, mdm3 = X3, mdm4 = X4) %>%
+                     col_names = FALSE) |>
+  rename(mdm1 = X1, mdm2 = X2, mdm3 = X3, mdm4 = X4) |>
   mutate(respondent = many_id(n(), length = 5, num_prop = 0.2),
          .before = 1)
 

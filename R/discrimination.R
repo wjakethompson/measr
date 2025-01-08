@@ -60,40 +60,40 @@ cdi <- function(model, weight_prevalence = TRUE) {
                        "mcmc" = get_mcmc_draws(model),
                        "optim" = get_optim_draws(model))
 
-  pi_matrix <- stan_draws %>%
-    posterior::subset_draws(variable = "pi") %>%
-    posterior::as_draws_df() %>%
-    tibble::as_tibble() %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
-    dplyr::summarize(value = mean(.data$value), .by = "name") %>%
+  pi_matrix <- stan_draws |>
+    posterior::subset_draws(variable = "pi") |>
+    posterior::as_draws_df() |>
+    tibble::as_tibble() |>
+    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) |>
+    dplyr::summarize(value = mean(.data$value), .by = "name") |>
     tidyr::separate_wider_regex(
       cols = "name",
       patterns = c("pi\\[", item = "[0-9]*", ",", class = "[0-9]*", "\\]")
-    ) %>%
+    ) |>
     dplyr::mutate(item = as.integer(.data$item),
                   class = as.integer(.data$class))
 
   hamming <- profile_hamming(
     dplyr::select(measr_extract(model, "classes"), -"class")
   )
-  att_names <- hamming %>%
-    dplyr::select(-c("profile_1", "profile_2", "hamming")) %>%
+  att_names <- hamming |>
+    dplyr::select(-c("profile_1", "profile_2", "hamming")) |>
     colnames()
 
   item_discrim <- tidyr::crossing(item = unique(pi_matrix$item),
                                   profile_1 = unique(pi_matrix$class),
-                                  profile_2 = unique(pi_matrix$class)) %>%
+                                  profile_2 = unique(pi_matrix$class)) |>
     dplyr::left_join(pi_matrix, by = c("item", "profile_1" = "class"),
-                     relationship = "many-to-one") %>%
-    dplyr::rename("prob_1" = "value") %>%
+                     relationship = "many-to-one") |>
+    dplyr::rename("prob_1" = "value") |>
     dplyr::left_join(pi_matrix, by = c("item", "profile_2" = "class"),
-                     relationship = "many-to-one") %>%
-    dplyr::rename("prob_2" = "value") %>%
+                     relationship = "many-to-one") |>
+    dplyr::rename("prob_2" = "value") |>
     dplyr::mutate(kli = (.data$prob_1 * log(.data$prob_1 / .data$prob_2)) +
                     ((1 - .data$prob_1) *
-                       log((1 - .data$prob_1) / (1 - .data$prob_2)))) %>%
+                       log((1 - .data$prob_1) / (1 - .data$prob_2)))) |>
     dplyr::left_join(hamming, by = c("profile_1", "profile_2"),
-                     relationship = "many-to-one") %>%
+                     relationship = "many-to-one") |>
     dplyr::mutate(dplyr::across(dplyr::where(is.logical),
                                 \(x) {
                                   dplyr::case_when(
@@ -102,31 +102,31 @@ cdi <- function(model, weight_prevalence = TRUE) {
                                   )
                                 }),
                   dplyr::across(dplyr::where(is.logical),
-                                \(x) as.integer(x) * .data$kli)) %>%
-    dplyr::filter(.data$hamming > 0) %>%
+                                \(x) as.integer(x) * .data$kli)) |>
+    dplyr::filter(.data$hamming > 0) |>
     dplyr::mutate(weight = 1 / .data$hamming)
 
   if (weight_prevalence) {
-    vc <- stan_draws %>%
-      posterior::subset_draws(variable = "log_Vc") %>%
-      posterior::as_draws_df() %>%
-      tibble::as_tibble() %>%
-      tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
-      dplyr::summarize(value = mean(.data$value), .by = "name") %>%
-      dplyr::mutate(value = exp(.data$value)) %>%
+    vc <- stan_draws |>
+      posterior::subset_draws(variable = "log_Vc") |>
+      posterior::as_draws_df() |>
+      tibble::as_tibble() |>
+      tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) |>
+      dplyr::summarize(value = mean(.data$value), .by = "name") |>
+      dplyr::mutate(value = exp(.data$value)) |>
       tidyr::separate_wider_regex(
         cols = "name",
         patterns = c("log_Vc\\[", class = "[0-9]*", "\\]")
-      ) %>%
+      ) |>
       dplyr::mutate(class = as.integer(.data$class))
 
-    item_discrim <- item_discrim %>%
-      dplyr::left_join(vc, by = c("profile_1" = "class")) %>%
-      dplyr::mutate(weight = .data$weight * .data$value) %>%
+    item_discrim <- item_discrim |>
+      dplyr::left_join(vc, by = c("profile_1" = "class")) |>
+      dplyr::mutate(weight = .data$weight * .data$value) |>
       dplyr::select(-"value")
   }
 
-  item_discrim <- item_discrim %>%
+  item_discrim <- item_discrim |>
     dplyr::summarize(
       overall = stats::weighted.mean(.data$kli, w = .data$weight),
       dplyr::across(
@@ -136,7 +136,7 @@ cdi <- function(model, weight_prevalence = TRUE) {
       .by = "item"
     )
 
-  test_discrim <- item_discrim %>%
+  test_discrim <- item_discrim |>
     dplyr::summarize(dplyr::across(-"item", sum))
 
   return(
@@ -153,7 +153,7 @@ profile_hamming <- function(profiles) {
   hamming <- mapply(hamming_distance, profile_combos$profile_1,
                     profile_combos$profile_2,
                     MoreArgs = list(profiles = profiles),
-                    SIMPLIFY = FALSE, USE.NAMES = FALSE) %>%
+                    SIMPLIFY = FALSE, USE.NAMES = FALSE) |>
     dplyr::bind_rows()
 
   dplyr::bind_cols(profile_combos, hamming)
@@ -163,14 +163,14 @@ hamming_distance <- function(prof1, prof2, profiles) {
   pattern1 <- profiles[prof1, ]
   pattern2 <- profiles[prof2, ]
 
-  pattern1 %>%
+  pattern1 |>
     tidyr::pivot_longer(cols = dplyr::everything(),
-                        names_to = "att", values_to = "patt1") %>%
+                        names_to = "att", values_to = "patt1") |>
     dplyr::left_join(tidyr::pivot_longer(pattern2, cols = dplyr::everything(),
                                          names_to = "att", values_to = "patt2"),
-                     by = "att", relationship = "one-to-one") %>%
+                     by = "att", relationship = "one-to-one") |>
     dplyr::mutate(mismatch = .data$patt1 != .data$patt2,
-                  hamming = sum(.data$mismatch)) %>%
-    dplyr::select("att", "mismatch", "hamming") %>%
+                  hamming = sum(.data$mismatch)) |>
+    dplyr::select("att", "mismatch", "hamming") |>
     tidyr::pivot_wider(names_from = "att", values_from = "mismatch")
 }

@@ -428,13 +428,13 @@ test_that("respondent probabilities are correct", {
   cmds_mdm_lcdm <- add_respondent_estimates(cmds_mdm_lcdm)
   expect_equal(cmds_mdm_lcdm$respondent_estimates, mdm_preds)
   expect_equal(measr_extract(cmds_mdm_lcdm, "class_prob"),
-               mdm_preds$class_probabilities %>%
-                 dplyr::select("respondent", "class", "probability") %>%
+               mdm_preds$class_probabilities |>
+                 dplyr::select("respondent", "class", "probability") |>
                  tidyr::pivot_wider(names_from = "class",
                                     values_from = "probability"))
   expect_equal(measr_extract(cmds_mdm_lcdm, "attribute_prob"),
-               mdm_preds$attribute_prob %>%
-                 dplyr::select("respondent", "attribute", "probability") %>%
+               mdm_preds$attribute_prob |>
+                 dplyr::select("respondent", "attribute", "probability") |>
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "probability"))
 })

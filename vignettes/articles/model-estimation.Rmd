@@ -124,10 +124,10 @@ In the figure below, most parameters fall on or very close to the dashed line, w
 library(tidyverse)
 library(glue)
 
-param_compare <- item_parameters %>%
+param_compare <- item_parameters |>
   left_join(sim_data$true_items,
             by = c("item_id", "class", "attributes", "coef"),
-            relationship = "one-to-one") %>%
+            relationship = "one-to-one") |>
   mutate(measr_est = map_dbl(estimate, mean),
          type = case_when(str_detect(coef, "_0") ~ "Intercept",
                           str_detect(coef, "_1") ~ "Main Effect",
@@ -141,7 +141,7 @@ example_true <- deframe(select(example_item, attributes, value))
 
 msr_colors <- c("#8ECAE6", "#023047", "#D7263D")
 
-param_compare %>%
+param_compare |>
   ggplot(aes(x = measr_est, y = value)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
   geom_point(aes(color = type, shape = type), size = 3) +
@@ -159,19 +159,19 @@ Again, we see relatively strong agreement between the estimates from our model a
 #|   Figure shows a strong correlation between item parameters, with only a few
 #|   discrepancies off of the line of perfect agreement.
 
-true_strc <- create_profiles(4) %>%
-  rowwise() %>%
-  mutate(label = glue("[{att1},{att2},{att3},{att4}]")) %>%
-  ungroup() %>%
-  select(label) %>%
+true_strc <- create_profiles(4) |>
+  rowwise() |>
+  mutate(label = glue("[{att1},{att2},{att3},{att4}]")) |>
+  ungroup() |>
+  select(label) |>
   mutate(value = sim_data$true_strc)
 
-strc_compare <- measr_extract(lcdm, "strc_param") %>%
+strc_compare <- measr_extract(lcdm, "strc_param") |>
   left_join(true_strc, join_by(class == label),
-            relationship = "one-to-one") %>%
+            relationship = "one-to-one") |>
   mutate(measr_est = map_dbl(estimate, mean))
 
-strc_compare %>%
+strc_compare |>
   ggplot(aes(x = measr_est, y = value)) +
   geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
   geom_point(size = 3, color = msr_colors[2]) +

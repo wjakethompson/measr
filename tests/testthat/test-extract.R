@@ -13,8 +13,8 @@ test_that("extract item parameters", {
   expect_equal(dina_param$class,
                rep(c("slip", "guess"), 35))
   expect_equal(dina_param$coef,
-               get_parameters(q_matrix, item_id = "item", type = "dina") %>%
-                 dplyr::filter(class != "structural") %>%
+               get_parameters(q_matrix, item_id = "item", type = "dina") |>
+                 dplyr::filter(class != "structural") |>
                  dplyr::pull("coef"))
   expect_s3_class(dina_param$estimate, "rvar")
   expect_true(all(!is.na(dina_param$estimate)))
@@ -38,9 +38,9 @@ test_that("extract classes", {
   expect_equal(colnames(dino_param), c("class", paste0("att", 1:5)))
   expect_equal(dino_param$class, dplyr::pull(profile_labels(5), "class"))
 
-  exp_label <- dino_param %>%
+  exp_label <- dino_param |>
     dplyr::mutate(new_label = paste0("[", att1, ",", att2, ",", att3, ",",
-                                     att4, ",", att5, "]")) %>%
+                                     att4, ",", att5, "]")) |>
     dplyr::pull("new_label")
   expect_equal(dino_param$class, exp_label)
 })

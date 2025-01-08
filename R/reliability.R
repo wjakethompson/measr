@@ -81,7 +81,7 @@ reliability.measrdcm <- function(model, ..., threshold = 0.5, force = FALSE) {
 
   att_names <- colnames(dplyr::select(model$data$qmatrix, -"item_id"))
   if (length(threshold) == 1) {
-    threshold <- rep(threshold, times = length(att_names)) %>%
+    threshold <- rep(threshold, times = length(att_names)) |>
       rlang::set_names(att_names)
   } else if (length(threshold) == length(att_names)) {
     if (is.null(names(threshold))) {
@@ -175,52 +175,52 @@ reliability.measrdcm <- function(model, ..., threshold = 0.5, force = FALSE) {
   pc_prime <- as.vector(pc1 * pc1 * p + pc0 * pc0 * (1 - p))
   pa <- mean(apply(obj$posterior, 1, max))
 
-  res_map_acc <- tibble::enframe(acc, name = "attribute", value = "acc") %>%
+  res_map_acc <- tibble::enframe(acc, name = "attribute", value = "acc") |>
     dplyr::full_join(tibble::enframe(lambda_a, name = "attribute",
                                      value = "lambda_a"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(kappa_a, name = "attribute",
                                      value = "kappa_a"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(youden_a, name = "attribute",
                                      value = "youden_a"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(tetra_a, name = "attribute",
                                      value = "tetra_a"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(tp_a, name = "attribute", value = "tp_a"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(tn_a, name = "attribute", value = "tn_a"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     tibble::remove_rownames()
 
   gammak <- rlang::set_names(obj$gamma, att_names)
   pc_prime <- rlang::set_names(pc_prime, att_names)
 
   res_map_con <- tibble::enframe(consist, name = "attribute",
-                                 value = "consist") %>%
+                                 value = "consist") |>
     dplyr::full_join(tibble::enframe(lambda_c, name = "attribute",
                                      value = "lambda_c"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(kappa_c, name = "attribute",
                                      value = "kappa_c"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(youden_c, name = "attribute",
                                      value = "youden_c"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(tetra_c, name = "attribute",
                                      value = "tetra_c"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(tp_c, name = "attribute", value = "tp_c"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(tn_c, name = "attribute", value = "tn_c"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(gammak, name = "attribute",
                                      value = "gammak"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     dplyr::full_join(tibble::enframe(pc_prime, name = "attribute",
                                      value = "pc_prime"),
-                     by = "attribute") %>%
+                     by = "attribute") |>
     tibble::remove_rownames()
 
   ## Reliability for EAP  ##
@@ -243,9 +243,9 @@ reliability.measrdcm <- function(model, ..., threshold = 0.5, force = FALSE) {
   res_eap <- apply(obj$eap, 2, tmp_fun)
   res_eap <- t(res_eap)
 
-  res_eap <- as.data.frame(res_eap) %>%
-    tibble::as_tibble() %>%
-    magrittr::set_colnames(c("rho_pf", "rho_bs", "rho_i", "rho_tb")) %>%
+  res_eap <- as.data.frame(res_eap) |>
+    tibble::as_tibble() |>
+    magrittr::set_colnames(c("rho_pf", "rho_bs", "rho_i", "rho_tb")) |>
     tibble::add_column(attribute = att_names, .before = 1)
 
   list(pattern_reliability = c(p_a = pa, p_c = pc),

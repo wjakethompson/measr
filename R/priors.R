@@ -53,7 +53,7 @@ measrprior <- function(prior,
                  class = class,
                  coef = coef,
                  lb = lb,
-                 ub = ub) %>%
+                 ub = ub) |>
     dplyr::mutate(
       coef = as.character(coef),
       bounds = dplyr::case_when(
@@ -63,7 +63,7 @@ measrprior <- function(prior,
       ),
       prior_def = glue::glue("{prior}{bounds}"),
       prior_def = as.character(.data$prior_def)
-    ) %>%
+    ) |>
     dplyr::select("class", "coef", "prior_def")
 
   validate_measrprior(new_measrprior(prior_spec))

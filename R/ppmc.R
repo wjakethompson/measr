@@ -155,8 +155,8 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
 
   if (length(model_fit) == 0 && length(item_fit) == 0) return(list())
 
-  clean_qmatrix <- model$data$qmatrix %>%
-    dplyr::select(-"item_id") %>%
+  clean_qmatrix <- model$data$qmatrix |>
+    dplyr::select(-"item_id") |>
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
   stan_data <- create_stan_data(dat = model$data$data, qmat = clean_qmatrix,
                                 type = model$type)
@@ -180,18 +180,18 @@ fit_ppmc <- function(model, ndraws = NULL, probs = c(0.025, 0.975),
   all_draws <- posterior::as_draws_array(gqs_model)
 
   # organize ppmc data
-  post_data <- posterior::subset_draws(all_draws, variable = "y_rep") %>%
-    posterior::as_draws_df() %>%
-    tibble::as_tibble() %>%
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) %>%
+  post_data <- posterior::subset_draws(all_draws, variable = "y_rep") |>
+    posterior::as_draws_df() |>
+    tibble::as_tibble() |>
+    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) |>
     tidyr::separate_wider_regex(
       cols = "name",
-      patterns = c("y_rep\\[", obs = "\\d+", "\\]")) %>%
-    dplyr::mutate(obs = as.integer(.data$obs)) %>%
-    dplyr::left_join(model$data$data %>%
+      patterns = c("y_rep\\[", obs = "\\d+", "\\]")) |>
+    dplyr::mutate(obs = as.integer(.data$obs)) |>
+    dplyr::left_join(model$data$data |>
                        dplyr::mutate(obs = seq_len(dplyr::n()),
                                      resp = as.integer(.data$resp_id),
-                                     item = as.integer(.data$item_id)) %>%
+                                     item = as.integer(.data$item_id)) |>
                        dplyr::select("obs", "resp", "item"),
                      by = "obs", relationship = "many-to-one")
 
@@ -260,33 +260,33 @@ ppmc_model_fit <- function(model, post_data, probs, return_draws, type) {
 }
 
 ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
-  raw_score_post <- dtplyr::lazy_dt(post_data) %>%
-    dplyr::summarize(raw_score = sum(.data$value), .by = c("resp", ".draw")) %>%
-    dplyr::count(.data$.draw, .data$raw_score) %>%
-    tibble::as_tibble() %>%
+  raw_score_post <- dtplyr::lazy_dt(post_data) |>
+    dplyr::summarize(raw_score = sum(.data$value), .by = c("resp", ".draw")) |>
+    dplyr::count(.data$.draw, .data$raw_score) |>
+    tibble::as_tibble() |>
     tidyr::complete(.data$.draw, raw_score = 0:nrow(model$data$qmatrix),
                     fill = list(n = 0L))
 
-  exp_raw_scores <- raw_score_post %>%
-    dplyr::summarize(exp_resp = mean(.data$n), .by = "raw_score") %>%
+  exp_raw_scores <- raw_score_post |>
+    dplyr::summarize(exp_resp = mean(.data$n), .by = "raw_score") |>
     dplyr::mutate(exp_resp = sapply(.data$exp_resp,
                                     function(.x) max(.x, 0.0001)))
 
-  chisq_ppmc <- raw_score_post %>%
+  chisq_ppmc <- raw_score_post |>
     dplyr::left_join(exp_raw_scores, by = c("raw_score"),
-                     relationship = "many-to-one") %>%
-    dplyr::mutate(piece = ((.data$n - .data$exp_resp) ^ 2) / .data$exp_resp) %>%
+                     relationship = "many-to-one") |>
+    dplyr::mutate(piece = ((.data$n - .data$exp_resp) ^ 2) / .data$exp_resp) |>
     dplyr::summarize(chisq = sum(.data$piece), .by = ".draw")
 
-  chisq_obs <- model$data$data %>%
-    dplyr::summarize(raw_score = sum(.data$score), .by = "resp_id") %>%
-    dplyr::count(.data$raw_score) %>%
+  chisq_obs <- model$data$data |>
+    dplyr::summarize(raw_score = sum(.data$score), .by = "resp_id") |>
+    dplyr::count(.data$raw_score) |>
     tidyr::complete(raw_score = 0:nrow(model$data$qmatrix),
-                    fill = list(n = 0L)) %>%
+                    fill = list(n = 0L)) |>
     dplyr::left_join(exp_raw_scores, by = "raw_score",
-                     relationship = "one-to-one") %>%
-    dplyr::mutate(piece = ((.data$n - .data$exp_resp) ^ 2) / .data$exp_resp) %>%
-    dplyr::summarize(chisq = sum(.data$piece)) %>%
+                     relationship = "one-to-one") |>
+    dplyr::mutate(piece = ((.data$n - .data$exp_resp) ^ 2) / .data$exp_resp) |>
+    dplyr::summarize(chisq = sum(.data$piece)) |>
     dplyr::pull("chisq")
 
   raw_score_res <- tibble::tibble(obs_chisq = chisq_obs,
@@ -298,18 +298,18 @@ ppmc_rawscore_chisq <- function(model, post_data, probs, return_draws) {
                                                       na.rm = TRUE)
                                     )
                                   ),
-                                  ppp = mean(chisq_ppmc$chisq > chisq_obs)) %>%
+                                  ppp = mean(chisq_ppmc$chisq > chisq_obs)) |>
     tidyr::unnest("bounds")
 
   if (return_draws > 0) {
-    raw_score_res <- raw_score_res %>%
+    raw_score_res <- raw_score_res |>
       dplyr::mutate(
-        rawscore_samples = list(raw_score_post %>%
-                                  tidyr::nest(raw_scores = -".draw") %>%
-                                  dplyr::slice_sample(prop = return_draws) %>%
+        rawscore_samples = list(raw_score_post |>
+                                  tidyr::nest(raw_scores = -".draw") |>
+                                  dplyr::slice_sample(prop = return_draws) |>
                                   dplyr::select(-".draw")),
-        chisq_samples = list(chisq_ppmc %>%
-                         dplyr::slice_sample(prop = return_draws) %>%
+        chisq_samples = list(chisq_ppmc |>
+                         dplyr::slice_sample(prop = return_draws) |>
                          dplyr::pull("chisq")),
         .before = "ppp")
   }
@@ -349,63 +349,63 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
                                    return_draws) {
   all_profiles <- profile_labels(attributes = attr)
 
-  obs_class <- resp_prob %>%
+  obs_class <- resp_prob |>
     dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar),
                                 ~lapply(.x,
                                         function(x) {
-                                          posterior::as_draws_df(x) %>%
+                                          posterior::as_draws_df(x) |>
                                             tibble::as_tibble()
                                         })
-                                )) %>%
-    tidyr::unnest(-"resp_id", names_sep = "_") %>%
+                                )) |>
+    tidyr::unnest(-"resp_id", names_sep = "_") |>
     dplyr::select("resp_id",
                   dplyr::all_of(paste0(all_profiles$class[1], "_",
                                        c(".chain", ".iteration", ".draw"))),
-                  dplyr::ends_with("_x")) %>%
+                  dplyr::ends_with("_x")) |>
     dplyr::rename_with(function(x) {
       x <- sub("_x", "", x)
       x <- sub("\\[[0-9,]*\\]_", "", x)
-    }) %>%
+    }) |>
     tidyr::pivot_longer(cols = -c("resp_id", ".chain", ".iteration", ".draw"),
                         names_to = "class_label",
-                        values_to = "prob") %>%
-    dtplyr::lazy_dt() %>%
+                        values_to = "prob") |>
+    dtplyr::lazy_dt() |>
     dplyr::mutate(max_class = .data$prob == max(.data$prob),
-                  .by = c(".draw", "resp_id")) %>%
-    dplyr::filter(.data$max_class) %>%
-    dplyr::group_by(.data$.draw, .data$resp_id) %>%
-    dplyr::slice_sample(n = 1) %>%
-    dplyr::ungroup() %>%
+                  .by = c(".draw", "resp_id")) |>
+    dplyr::filter(.data$max_class) |>
+    dplyr::group_by(.data$.draw, .data$resp_id) |>
+    dplyr::slice_sample(n = 1) |>
+    dplyr::ungroup() |>
     dplyr::left_join(all_profiles, by = c("class_label" = "class"),
-                     relationship = "many-to-one") %>%
-    dplyr::select(".draw", "resp_id", class = "class_id") %>%
+                     relationship = "many-to-one") |>
+    dplyr::select(".draw", "resp_id", class = "class_id") |>
     tibble::as_tibble()
 
-  obs_cond_pval <- model$data$data %>%
+  obs_cond_pval <- model$data$data |>
     dplyr::mutate(resp_id = as.integer(.data$resp_id),
-                  item_id = as.integer(.data$item_id)) %>%
+                  item_id = as.integer(.data$item_id)) |>
     dplyr::left_join(obs_class, by = "resp_id",
-                     relationship = "many-to-many") %>%
+                     relationship = "many-to-many") |>
     dplyr::summarize(obs_cond_pval = mean(.data$score),
-                     .by = c("item_id", "class")) %>%
+                     .by = c("item_id", "class")) |>
     dplyr::arrange(.data$item_id, .data$class)
 
-  cond_pval_res <- pi_draws %>%
-    posterior::as_draws_df() %>%
-    tibble::as_tibble() %>%
+  cond_pval_res <- pi_draws |>
+    posterior::as_draws_df() |>
+    tibble::as_tibble() |>
     tidyr::pivot_longer(-c(".chain", ".iteration", ".draw"),
                         names_to = c("i", "c"), values_to = "pi",
                         names_pattern = "pi\\[([0-9]*),([0-9]*)\\]",
                         names_transform = list(
                           i = ~as.integer(.x),
                           c = ~as.integer(.x)
-                        )) %>%
-    dplyr::select(-c(".chain", ".iteration", ".draw")) %>%
-    tidyr::nest(cond_pval = "pi") %>%
-    dplyr::arrange(.data$i, .data$c) %>%
+                        )) |>
+    dplyr::select(-c(".chain", ".iteration", ".draw")) |>
+    tidyr::nest(cond_pval = "pi") |>
+    dplyr::arrange(.data$i, .data$c) |>
     dplyr::left_join(obs_cond_pval, by = c("i" = "item_id",
                                            "c" = "class"),
-                     relationship = "one-to-one") %>%
+                     relationship = "one-to-one") |>
     dplyr::mutate(ppmc_mean = vapply(.data$cond_pval, function(.x) mean(.x$pi),
                                      double(1)),
                   bounds = lapply(.data$cond_pval,
@@ -420,57 +420,57 @@ ppmc_conditional_probs <- function(model, attr, resp_prob, pi_draws, probs,
                   ppp = mapply(function(exp, obs) {
                                  mean(exp$pi > obs)
                                },
-                               .data$cond_pval, .data$obs_cond_pval)) %>%
+                               .data$cond_pval, .data$obs_cond_pval)) |>
     tidyr::unnest("bounds")
 
   if (return_draws > 0) {
-    cond_pval_res <- cond_pval_res %>%
+    cond_pval_res <- cond_pval_res |>
       dplyr::mutate(
         samples = lapply(.data$cond_pval,
                          function(.x) {
-                           .x %>%
-                             dplyr::slice_sample(prop = return_draws) %>%
+                           .x |>
+                             dplyr::slice_sample(prop = return_draws) |>
                              dplyr::pull("pi")
                          }),
         .before = "ppp")
   }
 
-  cond_pval_res <- cond_pval_res %>%
-    dplyr::select(-"cond_pval") %>%
-    dplyr::rename(item_id = "i", class_id = "c") %>%
+  cond_pval_res <- cond_pval_res |>
+    dplyr::select(-"cond_pval") |>
+    dplyr::rename(item_id = "i", class_id = "c") |>
     dplyr::left_join(all_profiles, by = "class_id",
-                     relationship = "many-to-one") %>%
-    dplyr::left_join(model$data$qmatrix %>%
-                       dplyr::select(item = "item_id") %>%
+                     relationship = "many-to-one") |>
+    dplyr::left_join(model$data$qmatrix |>
+                       dplyr::select(item = "item_id") |>
                        dplyr::mutate(item_id = as.integer(.data$item)),
-                     by = "item_id", relationship = "many-to-one") %>%
-    dplyr::select(-"item_id", -"class_id") %>%
-    dplyr::relocate("item", "class", .before = 1) %>%
+                     by = "item_id", relationship = "many-to-one") |>
+    dplyr::select(-"item_id", -"class_id") |>
+    dplyr::relocate("item", "class", .before = 1) |>
     dplyr::rename(!!model$data$item_id := "item")
 
   return(cond_pval_res)
 }
 
 ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
-  obs_or <- model$data$data %>%
+  obs_or <- model$data$data |>
     dplyr::mutate(resp_id = as.integer(.data$resp_id),
-                  item_id = as.integer(.data$item_id)) %>%
-    tidyr::pivot_wider(names_from = "item_id", values_from = "score") %>%
-    dplyr::select(-"resp_id") %>%
-    pw_or() %>%
+                  item_id = as.integer(.data$item_id)) |>
+    tidyr::pivot_wider(names_from = "item_id", values_from = "score") |>
+    dplyr::select(-"resp_id") |>
+    pw_or() |>
     dplyr::rename(obs_or = "or")
 
-  or_res <- post_data %>%
-    dplyr::select(-"obs") %>%
+  or_res <- post_data |>
+    dplyr::select(-"obs") |>
     tidyr::pivot_wider(names_from = "item",
-                       values_from = "value") %>%
-    dplyr::select(-"resp") %>%
-    tidyr::nest(dat = !dplyr::starts_with(".")) %>%
-    dplyr::mutate(dat = lapply(.data$dat, pw_or)) %>%
-    tidyr::unnest("dat") %>%
-    tidyr::nest(samples = -c("item_1", "item_2")) %>%
+                       values_from = "value") |>
+    dplyr::select(-"resp") |>
+    tidyr::nest(dat = !dplyr::starts_with(".")) |>
+    dplyr::mutate(dat = lapply(.data$dat, pw_or)) |>
+    tidyr::unnest("dat") |>
+    tidyr::nest(samples = -c("item_1", "item_2")) |>
     dplyr::left_join(obs_or, by = c("item_1", "item_2"),
-                     relationship = "one-to-one") %>%
+                     relationship = "one-to-one") |>
     dplyr::mutate(ppmc_mean = vapply(.data$samples, function(.x) mean(.x$or),
                                      double(1)),
                   bounds = lapply(.data$samples,
@@ -485,36 +485,36 @@ ppmc_odds_ratio <- function(model, post_data, probs, return_draws) {
                   ppp = mapply(function(exp, obs) {
                     mean(exp$or > obs)
                   },
-                  .data$samples, .data$obs_or)) %>%
+                  .data$samples, .data$obs_or)) |>
     tidyr::unnest("bounds")
 
   if (return_draws > 0) {
-    or_res <- or_res %>%
-      dplyr::relocate("samples", .before = "ppp") %>%
+    or_res <- or_res |>
+      dplyr::relocate("samples", .before = "ppp") |>
       dplyr::mutate(
         samples = lapply(.data$samples,
                          function(x) {
-                           x %>%
-                             dplyr::slice_sample(prop = return_draws) %>%
+                           x |>
+                             dplyr::slice_sample(prop = return_draws) |>
                              dplyr::pull("or")
                          }))
   } else {
     or_res <- dplyr::select(or_res, -"samples")
   }
 
-  or_res <- or_res %>%
-    dplyr::left_join(model$data$qmatrix %>%
-                       dplyr::select(item = "item_id") %>%
+  or_res <- or_res |>
+    dplyr::left_join(model$data$qmatrix |>
+                       dplyr::select(item = "item_id") |>
                        dplyr::mutate(item_id = as.integer(.data$item)),
                      by = c("item_1" = "item_id"),
-                     relationship = "many-to-one") %>%
-    dplyr::left_join(model$data$qmatrix %>%
-                       dplyr::select(item = "item_id") %>%
+                     relationship = "many-to-one") |>
+    dplyr::left_join(model$data$qmatrix |>
+                       dplyr::select(item = "item_id") |>
                        dplyr::mutate(item_id = as.integer(.data$item)),
                      by = c("item_2" = "item_id"),
-                     relationship = "many-to-one") %>%
-    dplyr::select(-"item_1", -"item_2") %>%
-    dplyr::rename(item_1 = "item.x", item_2 = "item.y") %>%
+                     relationship = "many-to-one") |>
+    dplyr::select(-"item_1", -"item_2") |>
+    dplyr::rename(item_1 = "item.x", item_2 = "item.y") |>
     dplyr::relocate("item_1", "item_2", .before = 1)
 
   return(or_res)
@@ -535,22 +535,22 @@ pw_or <- function(dat) {
     n11 <- xtab[2, 2]
     or[i] <- (n00 * n11) / (n01 * n10)
   }
-  pwor <- tibble::as_tibble(ind, .name_repair = ~c("item_1", "item_2")) %>%
+  pwor <- tibble::as_tibble(ind, .name_repair = ~c("item_1", "item_2")) |>
     dplyr::mutate(or = or)
   return(pwor)
 }
 
 ppmc_item_pvalue <- function(model, post_data, probs, return_draws) {
-  obs_pvalue <- model$data$data %>%
-    dplyr::mutate(item = as.numeric(.data$item_id)) %>%
+  obs_pvalue <- model$data$data |>
+    dplyr::mutate(item = as.numeric(.data$item_id)) |>
     dplyr::summarize(obs_pvalue = mean(.data$score),
                      .by = c("item", "item_id"))
 
-  pval_res <- post_data %>%
+  pval_res <- post_data |>
     dplyr::summarize(pvalue = mean(.data$value),
-                     .by = c(".chain", ".iteration", ".draw", "item")) %>%
-    tidyr::nest(samples = -"item") %>%
-    dplyr::left_join(obs_pvalue, by = "item", relationship = "one-to-one") %>%
+                     .by = c(".chain", ".iteration", ".draw", "item")) |>
+    tidyr::nest(samples = -"item") |>
+    dplyr::left_join(obs_pvalue, by = "item", relationship = "one-to-one") |>
     dplyr::mutate(ppmc_mean = vapply(.data$samples,
                                      function(.x) mean(.x$pvalue),
                                      double(1)),
@@ -566,24 +566,24 @@ ppmc_item_pvalue <- function(model, post_data, probs, return_draws) {
                   ppp = mapply(function(exp, obs) {
                     mean(exp$pvalue > obs)
                   },
-                  .data$samples, .data$obs_pvalue)) %>%
+                  .data$samples, .data$obs_pvalue)) |>
     tidyr::unnest("bounds")
 
   if (return_draws > 0) {
-    pval_res <- pval_res %>%
-      dplyr::relocate("samples", .before = "ppp") %>%
+    pval_res <- pval_res |>
+      dplyr::relocate("samples", .before = "ppp") |>
       dplyr::mutate(
         samples = lapply(.data$samples,
                          function(x) {
-                           x %>%
-                             dplyr::slice_sample(prop = return_draws) %>%
+                           x |>
+                             dplyr::slice_sample(prop = return_draws) |>
                              dplyr::pull("pvalue")
                          }))
   } else {
     pval_res <- dplyr::select(pval_res, -"samples")
   }
 
-  pval_res %>%
-    dplyr::select(-"item") %>%
+  pval_res |>
+    dplyr::select(-"item") |>
     dplyr::rename(!!model$data$item_id := "item_id")
 }

@@ -57,23 +57,23 @@ predict.measrdcm <- function(object, newdata = NULL, resp_id = NULL,
     resp_id <- check_character(resp_id, name = "resp_id", allow_null = TRUE)
     score_data <- check_newdata(newdata, identifier = resp_id, model = model,
                                 missing = missing, name = "newdata")
-    resp_lookup <- score_data %>%
-      dplyr::rename(orig_resp = "resp_id") %>%
-      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+    resp_lookup <- score_data |>
+      dplyr::rename(orig_resp = "resp_id") |>
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) |>
       dplyr::distinct(.data$orig_resp, .data$resp_id)
   } else {
     score_data <- model$data$data
-    resp_lookup <- model$data$data %>%
-      dplyr::rename(orig_resp = "resp_id") %>%
-      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) %>%
+    resp_lookup <- model$data$data |>
+      dplyr::rename(orig_resp = "resp_id") |>
+      dplyr::mutate(resp_id = as.integer(.data$orig_resp)) |>
       dplyr::distinct(.data$orig_resp, .data$resp_id)
   }
-  attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) %>%
-    dplyr::filter(.data$real_names != "item_id") %>%
+  attr_lookup <- tibble::tibble(real_names = colnames(model$data$qmatrix)) |>
+    dplyr::filter(.data$real_names != "item_id") |>
     dplyr::mutate(att_id = paste0("att", seq_len(dplyr::n())))
 
-  clean_qmatrix <- model$data$qmatrix %>%
-    dplyr::select(-"item_id") %>%
+  clean_qmatrix <- model$data$qmatrix |>
+    dplyr::select(-"item_id") |>
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
   stan_data <- create_stan_data(dat = score_data, qmat = clean_qmatrix,
                                 type = model$type)

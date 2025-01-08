@@ -37,16 +37,16 @@ test_that("check_model", {
 })
 
 test_that("check_data", {
-  dat <- utils::combn(letters, m = 3) %>%
-    as.data.frame() %>%
-    tidyr::pivot_longer(cols = everything()) %>%
-    dplyr::group_by(name) %>%
-    dplyr::summarize(student = paste(value, collapse = "")) %>%
-    dplyr::select(-name) %>%
-    dplyr::mutate(item = 1) %>%
-    tidyr::complete(student, item = 1:20) %>%
+  dat <- utils::combn(letters, m = 3) |>
+    as.data.frame() |>
+    tidyr::pivot_longer(cols = everything()) |>
+    dplyr::group_by(name) |>
+    dplyr::summarize(student = paste(value, collapse = "")) |>
+    dplyr::select(-name) |>
+    dplyr::mutate(item = 1) |>
+    tidyr::complete(student, item = 1:20) |>
     dplyr::mutate(score = sample(c(0, 1), size = dplyr::n(),
-                                 replace = TRUE)) %>%
+                                 replace = TRUE)) |>
     tidyr::pivot_wider(names_from = item, values_from = score)
 
   err <- rlang::catch_cnd(check_data("a", identifier = NULL,
@@ -69,11 +69,11 @@ test_that("check_data", {
   expect_equal(err$arg, "check1")
   expect_match(err$message, "only 0 or 1 for non-missing scores")
 
-  dat_check <- dat %>%
-    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") %>%
+  dat_check <- dat |>
+    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") |>
     dplyr::mutate(resp_id = factor(student, levels = unique(student)),
                   item_id = factor(item_id, levels = 1:20),
-                  score = as.integer(score)) %>%
+                  score = as.integer(score)) |>
     dplyr::select(resp_id, item_id, score)
   expect_equal(check_data(dat, identifier = "student", missing = NA,
                           name = "x"),
@@ -82,41 +82,41 @@ test_that("check_data", {
                           missing = NA, name = "x"),
                dat_check)
 
-  dat_check <- dat_check %>%
+  dat_check <- dat_check |>
     dplyr::mutate(resp_id = as.integer(resp_id),
                   resp_id = factor(resp_id, levels = unique(resp_id)))
   expect_equal(check_data(dplyr::select(dat, -student), identifier = NULL,
                           missing = NA, name = "x"),
                dat_check)
 
-  missing_dat <- dat %>%
+  missing_dat <- dat |>
     dplyr::mutate(dplyr::across(dplyr::where(is.double),
                                 ~sample(c(0, 1, NA_real_), size = dplyr::n(),
                                         replace = TRUE,
                                         prob = c(.45, .45, 0.1))))
-  check_missing <- missing_dat %>%
-    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") %>%
+  check_missing <- missing_dat |>
+    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") |>
     dplyr::mutate(resp_id = factor(student, levels = unique(student)),
                   item_id = factor(item_id, levels = 1:20),
-                  score = as.integer(score)) %>%
-    dplyr::select(resp_id, item_id, score) %>%
+                  score = as.integer(score)) |>
+    dplyr::select(resp_id, item_id, score) |>
     dplyr::filter(!is.na(score))
   expect_equal(check_data(missing_dat, identifier = "student", missing = NA,
                           name = "x"),
                check_missing)
 
-  missing_dat <- dat %>%
+  missing_dat <- dat |>
     dplyr::mutate(dplyr::across(dplyr::where(is.double),
                                 ~sample(c(0, 1, "."),
                                         size = dplyr::n(),
                                         replace = TRUE,
                                         prob = c(.45, .45, 0.1))))
-  check_missing <- missing_dat %>%
-    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") %>%
-    dplyr::filter(!is.na(score), score != ".") %>%
+  check_missing <- missing_dat |>
+    tidyr::pivot_longer(-student, names_to = "item_id", values_to = "score") |>
+    dplyr::filter(!is.na(score), score != ".") |>
     dplyr::mutate(resp_id = factor(student, levels = unique(student)),
                   item_id = factor(item_id, levels = 1:20),
-                  score = as.integer(score)) %>%
+                  score = as.integer(score)) |>
     dplyr::select(resp_id, item_id, score)
   expect_equal(check_data(missing_dat, identifier = "student", missing = ".",
                           name = "x"),
@@ -142,15 +142,15 @@ test_that("check_newdata", {
                          Item_9 = sample(0:1, size = 10, replace = TRUE),
                          Item_3 = sample(0:1, size = 10, replace = TRUE),
                          Item_5 = sample(0:1, size = 10, replace = TRUE))
-  check_dat <- test_dat %>%
+  check_dat <- test_dat |>
     dplyr::mutate(resp_id = factor(.data$resp_id,
-                                   levels = unique(test_dat$resp_id))) %>%
+                                   levels = unique(test_dat$resp_id))) |>
     tidyr::pivot_longer(cols = -"resp_id", names_to = "item_id",
-                        values_to = "score") %>%
+                        values_to = "score") |>
     dplyr::mutate(
       item_id = factor(.data$item_id,
                        levels = levels(model$data$data$item_id))
-      ) %>%
+      ) |>
     dplyr::arrange(.data$resp_id, .data$item_id)
   new_data <- check_newdata(test_dat, name = "check1", identifier = "resp_id",
                             model = model, missing = NA)

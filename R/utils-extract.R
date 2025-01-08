@@ -57,7 +57,7 @@ extract_or <- function(model, ppmc_interval = 0.95) {
   res <- if (is.null(ppmc_interval)) {
     model$fit$ppmc$item_fit$odds_ratio
   } else {
-    model$fit$ppmc$item_fit$odds_ratio %>%
+    model$fit$ppmc$item_fit$odds_ratio |>
       dplyr::filter(!dplyr::between(.data$ppp,
                                     (1 - ppmc_interval) / 2,
                                     1 - ((1 - ppmc_interval) / 2)))
@@ -78,35 +78,35 @@ extract_info_crit <- function(model, criterion) {
 
 # DCM-specific extracts --------------------------------------------------------
 dcm_extract_item_param <- function(model) {
-  items <- model$data$qmatrix %>%
-    dplyr::select(item = "item_id") %>%
+  items <- model$data$qmatrix |>
+    dplyr::select(item = "item_id") |>
     dplyr::mutate(item_id = as.integer(.data$item))
   params <- get_parameters(dplyr::select(model$data$qmatrix, -"item_id"),
                            type = model$type,
-                           rename_item = TRUE) %>%
-    dplyr::filter(.data$class != "structural") %>%
-    dplyr::left_join(items, by = "item_id", multiple = "all") %>%
+                           rename_item = TRUE) |>
+    dplyr::filter(.data$class != "structural") |>
+    dplyr::left_join(items, by = "item_id", multiple = "all") |>
     dplyr::select("item", dplyr::everything(), -"item_id")
-  draws <- as_draws(model) %>%
-    posterior::subset_draws(variable = dplyr::pull(params, "coef")) %>%
-    posterior::as_draws_rvars() %>%
+  draws <- as_draws(model) |>
+    posterior::subset_draws(variable = dplyr::pull(params, "coef")) |>
+    posterior::as_draws_rvars() |>
     tibble::as_tibble()
 
 
   if (model$type %in% c("lcdm", "crum")) {
-    draws <- draws %>%
+    draws <- draws |>
       tidyr::pivot_longer(cols = dplyr::everything(),
                           names_to = "coef", values_to = "estimate")
-    dplyr::left_join(params, draws, by = c("coef")) %>%
+    dplyr::left_join(params, draws, by = c("coef")) |>
       dplyr::rename(!!model$dat$item_id := "item")
   } else if (model$type %in% c("dina", "dino")) {
-    draws <- draws %>%
-      dplyr::mutate(item = items$item) %>%
+    draws <- draws |>
+      dplyr::mutate(item = items$item) |>
       tidyr::pivot_longer(cols = -"item",
                           names_to = "coef", values_to = "estimate")
 
     dplyr::left_join(params, draws, by = c("item", "class" = "coef"),
-                     relationship = "one-to-one") %>%
+                     relationship = "one-to-one") |>
       dplyr::rename(!!model$dat$item_id := "item")
   }
 }
@@ -114,23 +114,23 @@ dcm_extract_item_param <- function(model) {
 dcm_extract_strc_param <- function(model) {
   profiles <- profile_labels(ncol(model$data$qmatrix) - 1)
 
-  as_draws(model) %>%
-    posterior::subset_draws(variable = "Vc") %>%
-    posterior::as_draws_rvars() %>%
-    tibble::as_tibble() %>%
+  as_draws(model) |>
+    posterior::subset_draws(variable = "Vc") |>
+    posterior::as_draws_rvars() |>
+    tibble::as_tibble() |>
     tidyr::pivot_longer(cols = dplyr::everything(),
-                        names_to = "coef", values_to = "estimate") %>%
-    tibble::rowid_to_column(var = "class_id") %>%
-    dplyr::left_join(profiles, by = "class_id") %>%
+                        names_to = "coef", values_to = "estimate") |>
+    tibble::rowid_to_column(var = "class_id") |>
+    dplyr::left_join(profiles, by = "class_id") |>
     dplyr::select("class", "estimate")
 }
 
 dcm_extract_classes <- function(model) {
-  create_profiles(ncol(model$data$qmatrix) - 1) %>%
-    rlang::set_names(colnames(model$data$qmatrix)[-1]) %>%
-    tibble::rowid_to_column(var = "class_id") %>%
+  create_profiles(ncol(model$data$qmatrix) - 1) |>
+    rlang::set_names(colnames(model$data$qmatrix)[-1]) |>
+    tibble::rowid_to_column(var = "class_id") |>
     dplyr::left_join(profile_labels(ncol(model$data$qmatrix) - 1),
-                     by = "class_id", relationship = "one-to-one") %>%
+                     by = "class_id", relationship = "one-to-one") |>
     dplyr::select("class", dplyr::everything(), -"class_id")
 }
 
@@ -142,8 +142,8 @@ dcm_extract_class_prob <- function(model) {
                                       "can be extracted. See ",
                                       "`?add_respondent_estimates()`."))
   }
-  model$respondent_estimates$class_probabilities %>%
-    dplyr::select(!!model$data$resp_id, "class", "probability") %>%
+  model$respondent_estimates$class_probabilities |>
+    dplyr::select(!!model$data$resp_id, "class", "probability") |>
     tidyr::pivot_wider(names_from = "class",
                        values_from = "probability")
 }
@@ -156,8 +156,8 @@ dcm_extract_attr_prob <- function(model) {
                                       "can be extracted. See ",
                                       "`?add_respondent_estimates()`."))
   }
-  model$respondent_estimates$attribute_probabilities %>%
-    dplyr::select(!!model$data$resp_id, "attribute", "probability") %>%
+  model$respondent_estimates$attribute_probabilities |>
+    dplyr::select(!!model$data$resp_id, "attribute", "probability") |>
     tidyr::pivot_wider(names_from = "attribute",
                        values_from = "probability")
 }
@@ -178,7 +178,7 @@ dcm_extract_ppmc_cond_prob <- function(model, ppmc_interval = 0.95) {
   res <- if (is.null(ppmc_interval)) {
     model$fit$ppmc$item_fit$conditional_prob
   } else {
-    model$fit$ppmc$item_fit$conditional_prob %>%
+    model$fit$ppmc$item_fit$conditional_prob |>
       dplyr::filter(!dplyr::between(.data$ppp,
                                     (1 - ppmc_interval) / 2,
                                     1 - ((1 - ppmc_interval) / 2)))
@@ -203,7 +203,7 @@ dcm_extract_ppmc_pvalue <- function(model, ppmc_interval = 0.95) {
   res <- if (is.null(ppmc_interval)) {
     model$fit$ppmc$item_fit$pvalue
   } else {
-    model$fit$ppmc$item_fit$pvalue %>%
+    model$fit$ppmc$item_fit$pvalue |>
       dplyr::filter(!dplyr::between(.data$ppp,
                                     (1 - ppmc_interval) / 2,
                                     1 - ((1 - ppmc_interval) / 2)))
@@ -220,9 +220,9 @@ dcm_extract_patt_reli <- function(model) {
                                       "`?add_reliability()`."))
   }
 
-  model$reliability$pattern_reliability %>%
-    tibble::enframe() %>%
-    tidyr::pivot_wider(names_from = "name", values_from = "value") %>%
+  model$reliability$pattern_reliability |>
+    tibble::enframe() |>
+    tidyr::pivot_wider(names_from = "name", values_from = "value") |>
     dplyr::rename(accuracy = "p_a", consistency = "p_c")
 }
 
@@ -246,7 +246,7 @@ dcm_extract_map_reli <- function(model, agreement = NULL) {
     dplyr::select(model$reliability$map_reliability$consistency,
                   "attribute", dplyr::any_of(dplyr::matches(agreement))),
     by = "attribute"
-  ) %>%
+  ) |>
     dplyr::rename(accuracy = "acc", consistency = "consist")
 }
 
@@ -265,6 +265,6 @@ dcm_extract_eap_reli <- function(model, agreement = NULL) {
   }
 
   dplyr::select(model$reliability$eap_reliability,
-                "attribute", dplyr::any_of(dplyr::matches(agreement))) %>%
+                "attribute", dplyr::any_of(dplyr::matches(agreement))) |>
     dplyr::rename(informational = "rho_i")
 }

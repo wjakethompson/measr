@@ -26,14 +26,14 @@ test_that("lcdm model works for ecpe", {
   expect_equal(names(cmds_ecpe_lcdm$data),
                c("data", "qmatrix", "resp_id", "item_id"))
   expect_equal(cmds_ecpe_lcdm$data$data,
-               ecpe_data %>%
+               ecpe_data |>
                  tidyr::pivot_longer(-resp_id, names_to = "item_id",
-                                     values_to = "score") %>%
+                                     values_to = "score") |>
                  dplyr::mutate(resp_id = factor(resp_id),
                                item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(cmds_ecpe_lcdm$data$qmatrix,
-               ecpe_qmatrix %>%
+               ecpe_qmatrix |>
                  dplyr::mutate(item_id = factor(item_id,
                                                 levels = unique(item_id))))
   expect_equal(cmds_ecpe_lcdm$type, "lcdm")
@@ -58,9 +58,9 @@ test_that("lcdm model works for ecpe", {
 
   expect_equal(cmds_ecpe_lcdm$model$lp(), ecpe_lldcm$logLik, tolerance = 0.01)
 
-  lcdm_comp <- tibble::enframe(cmds_ecpe_lcdm$model$mle()) %>%
-    dplyr::filter(grepl("^Vc|^l[0-9]*_[0-9]*$", .data$name)) %>%
-    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) %>%
+  lcdm_comp <- tibble::enframe(cmds_ecpe_lcdm$model$mle()) |>
+    dplyr::filter(grepl("^Vc|^l[0-9]*_[0-9]*$", .data$name)) |>
+    dplyr::mutate(name = gsub("Vc", "nu", .data$name)) |>
     dplyr::full_join(true_lcdm, by = c("name" = "parameter"))
 
   comp_cor <- cor(lcdm_comp$value, lcdm_comp$true)
@@ -72,7 +72,7 @@ test_that("extract ecpe", {
 
   lcdm_param <- measr_extract(cmds_ecpe_lcdm, "item_param")
   all_param <- get_parameters(ecpe_qmatrix, item_id = "item_id",
-                              type = "lcdm") %>%
+                              type = "lcdm") |>
     dplyr::filter(class != "structural")
 
   expect_equal(nrow(lcdm_param), nrow(all_param))
@@ -103,9 +103,9 @@ test_that("extract ecpe", {
   expect_equal(colnames(lcdm_param), c("class", "morphosyntactic", "cohesive",
                                        "lexical"))
   expect_equal(lcdm_param$class, dplyr::pull(profile_labels(3), "class"))
-  exp_label <- lcdm_param %>%
+  exp_label <- lcdm_param |>
     dplyr::mutate(new_label = paste0("[", morphosyntactic, ",", cohesive, ",",
-                                     lexical, "]")) %>%
+                                     lexical, "]")) |>
     dplyr::pull("new_label")
   expect_equal(lcdm_param$class, exp_label)
 })
@@ -140,24 +140,24 @@ test_that("ecpe probabilities are accurate", {
   cmds_ecpe_lcdm <- add_respondent_estimates(cmds_ecpe_lcdm)
   expect_equal(cmds_ecpe_lcdm$respondent_estimates, ecpe_preds)
   expect_equal(measr_extract(cmds_ecpe_lcdm, "class_prob"),
-               ecpe_preds$class_probabilities %>%
-                 dplyr::select("resp_id", "class", "probability") %>%
+               ecpe_preds$class_probabilities |>
+                 dplyr::select("resp_id", "class", "probability") |>
                  tidyr::pivot_wider(names_from = "class",
                                     values_from = "probability"))
   expect_equal(measr_extract(cmds_ecpe_lcdm, "attribute_prob"),
-               ecpe_preds$attribute_prob %>%
-                 dplyr::select("resp_id", "attribute", "probability") %>%
+               ecpe_preds$attribute_prob |>
+                 dplyr::select("resp_id", "attribute", "probability") |>
                  tidyr::pivot_wider(names_from = "attribute",
                                     values_from = "probability"))
 
   check_preds <- predict(cmds_ecpe_lcdm)
   expect_equal(check_preds, cmds_ecpe_lcdm$respondent_estimates)
 
-  measr_class <- ecpe_preds$class_probabilities %>%
-    dplyr::select("resp_id", "class", "probability") %>%
-    tidyr::pivot_wider(names_from = "class", values_from = "probability") %>%
-    dplyr::select(-"resp_id") %>%
-    as.matrix() %>%
+  measr_class <- ecpe_preds$class_probabilities |>
+    dplyr::select("resp_id", "class", "probability") |>
+    tidyr::pivot_wider(names_from = "class", values_from = "probability") |>
+    dplyr::select(-"resp_id") |>
+    as.matrix() |>
     unname()
 
   class_diff <- abs(
@@ -168,12 +168,12 @@ test_that("ecpe probabilities are accurate", {
   expect_lt(median(class_diff), .02)
 
 
-  measr_attr <- ecpe_preds$attribute_probabilities %>%
-    dplyr::select("resp_id", "attribute", "probability") %>%
+  measr_attr <- ecpe_preds$attribute_probabilities |>
+    dplyr::select("resp_id", "attribute", "probability") |>
     tidyr::pivot_wider(names_from = "attribute",
-                       values_from = "probability") %>%
-    dplyr::select(-"resp_id") %>%
-    as.matrix() %>%
+                       values_from = "probability") |>
+    dplyr::select(-"resp_id") |>
+    as.matrix() |>
     unname()
 
   attr_diff <- abs(round(measr_attr, digits = 4) -

@@ -13,8 +13,8 @@ test_that("discrimination works", {
                c("overall", paste0("att", 1:5)))
   expect_equal(nrow(dina_discrim$test_discrimination), 1L)
   expect_equal(
-    dina_discrim$test_discrimination %>%
-      tidyr::pivot_longer(dplyr::everything()) %>%
+    dina_discrim$test_discrimination |>
+      tidyr::pivot_longer(dplyr::everything()) |>
       tibble::deframe(),
     colSums(dplyr::select(dina_discrim$item_discrimination, -"item"))
   )
@@ -37,8 +37,8 @@ test_that("discrimination works", {
                c("overall", paste0("att", 1:5)))
   expect_equal(nrow(dina_no_weight$test_discrimination), 1L)
   expect_equal(
-    dina_no_weight$test_discrimination %>%
-      tidyr::pivot_longer(dplyr::everything()) %>%
+    dina_no_weight$test_discrimination |>
+      tidyr::pivot_longer(dplyr::everything()) |>
       tibble::deframe(),
     colSums(dplyr::select(dina_no_weight$item_discrimination, -"item"))
   )

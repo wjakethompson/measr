@@ -52,23 +52,23 @@ dina_script <- function(qmatrix, prior = NULL, strc = "unconstrained", ...) {
 
   item_priors <- get_parameters(qmatrix = qmatrix, item_id = NULL,
                                rename_att = TRUE, rename_item = TRUE,
-                               type = "dina") %>%
-    dplyr::filter(.data$class != "structural") %>%
-    dplyr::left_join(mod_prior, by = c("class", "coef")) %>%
-    dplyr::rename(coef_def = "prior_def") %>%
-    dplyr::left_join(mod_prior %>%
-                       dplyr::filter(is.na(.data$coef)) %>%
+                               type = "dina") |>
+    dplyr::filter(.data$class != "structural") |>
+    dplyr::left_join(mod_prior, by = c("class", "coef")) |>
+    dplyr::rename(coef_def = "prior_def") |>
+    dplyr::left_join(mod_prior |>
+                       dplyr::filter(is.na(.data$coef)) |>
                        dplyr::select(-"coef"),
-                     by = c("class")) %>%
-    dplyr::rename(class_def = "prior_def") %>%
+                     by = c("class")) |>
+    dplyr::rename(class_def = "prior_def") |>
     dplyr::mutate(
       prior = dplyr::case_when(!is.na(.data$coef_def) ~ .data$coef_def,
                                is.na(.data$coef_def) ~ .data$class_def),
-      prior_def = glue::glue("{coef} ~ {prior};")) %>%
+      prior_def = glue::glue("{coef} ~ {prior};")) |>
     dplyr::pull("prior_def")
 
-  strc_prior <- mod_prior %>%
-    dplyr::filter(.data$class == "structural") %>%
+  strc_prior <- mod_prior |>
+    dplyr::filter(.data$class == "structural") |>
     glue::glue_data("Vc ~ {prior_def};")
 
   all_priors <- glue::as_glue(c(strc_prior, item_priors))

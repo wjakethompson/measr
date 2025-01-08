@@ -17,8 +17,8 @@ loglik_array <- function(model) {
 #' @export
 loglik_array.measrdcm <- function(model) {
   score_data <- model$data$data
-  clean_qmatrix <- model$data$qmatrix %>%
-    dplyr::select(-"item_id") %>%
+  clean_qmatrix <- model$data$qmatrix |>
+    dplyr::select(-"item_id") |>
     dplyr::rename_with(~glue::glue("att{1:(ncol(model$data$qmatrix) - 1)}"))
   stan_data <- create_stan_data(dat = score_data, qmat = clean_qmatrix,
                                 type = model$type)

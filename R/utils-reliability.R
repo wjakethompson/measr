@@ -1,7 +1,7 @@
 clean_predicted_probs <- function(x, resp_id) {
-  x %>%
-    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E)) %>%
-    dplyr::arrange(!!resp_id) %>%
+  x |>
+    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E)) |>
+    dplyr::arrange(!!resp_id) |>
     dplyr::select(-!!resp_id)
 }
 
@@ -127,11 +127,11 @@ create_reli_list <- function(n_resp, n_att, n_class, profile_vec, class_att,
 
   ### Final List -----
   ret_list <- list(
-    posterior = class_probs %>%
-      as.matrix() %>%
+    posterior = class_probs |>
+      as.matrix() |>
       unname(),
-    eap = attr_probs %>%
-      as.matrix() %>%
+    eap = attr_probs |>
+      as.matrix() |>
       unname(),
     acc = new_acc,
     consist = new_consist,
@@ -146,9 +146,9 @@ reli_list <- function(model, threshold) {
   n_resp <- dplyr::n_distinct(model$data$data$resp_id)
   n_att <- ncol(model$data$qmatrix) - 1L
   n_class  <- 2 ^ n_att
-  profile_vec <- create_profiles(n_att) %>%
-    as.matrix() %>%
-    t() %>%
+  profile_vec <- create_profiles(n_att) |>
+    as.matrix() |>
+    t() |>
     as.vector()
   class_att <- double(n_class * n_att)
 
@@ -158,54 +158,54 @@ reli_list <- function(model, threshold) {
   attr_probs <- probs$attribute_probabilities
 
   # map estimates
-  binary_att <- attr_probs %>%
-    tibble::rowid_to_column(var = "resp_id") %>%
+  binary_att <- attr_probs |>
+    tibble::rowid_to_column(var = "resp_id") |>
     tidyr::pivot_longer(cols = -"resp_id",
-                        names_to = "attribute", values_to = "probability") %>%
+                        names_to = "attribute", values_to = "probability") |>
     dplyr::left_join(tibble::enframe(threshold, name = "attribute",
                                      value = "threshold"),
                      by = "attribute",
-                     relationship = "many-to-one") %>%
+                     relationship = "many-to-one") |>
     dplyr::mutate(class = dplyr::case_when(.data$probability >=
                                              .data$threshold ~ 1L,
-                                           .default = 0L)) %>%
-    dplyr::select("resp_id", "attribute", "class") %>%
-    tidyr::pivot_wider(names_from = "attribute", values_from = "class") %>%
-    dplyr::select(dplyr::all_of(names(threshold))) %>%
-    as.matrix() %>%
-    unname() %>%
+                                           .default = 0L)) |>
+    dplyr::select("resp_id", "attribute", "class") |>
+    tidyr::pivot_wider(names_from = "attribute", values_from = "class") |>
+    dplyr::select(dplyr::all_of(names(threshold))) |>
+    as.matrix() |>
+    unname() |>
     as.vector()
 
   # eap estimates
-  prob_att <- attr_probs %>%
-    as.matrix() %>%
-    unname() %>%
+  prob_att <- attr_probs |>
+    as.matrix() |>
+    unname() |>
     as.vector()
 
   # class probs
-  prob_class <- class_probs %>%
-    as.matrix() %>%
-    unname() %>%
-    t() %>%
+  prob_class <- class_probs |>
+    as.matrix() |>
+    unname() |>
+    t() |>
     as.vector()
 
   # structural parameters
   strc <- if (model$backend == "rstan" && model$method == "optim") {
-    model$model$par %>%
-      tibble::enframe() %>%
-      dplyr::filter(grepl("^Vc", .data$name)) %>%
+    model$model$par |>
+      tibble::enframe() |>
+      dplyr::filter(grepl("^Vc", .data$name)) |>
       dplyr::pull(.data$value)
   } else {
-    posterior::as_draws_df(model$model) %>%
-      tibble::as_tibble() %>%
-      dplyr::select(dplyr::matches("^Vc")) %>%
+    posterior::as_draws_df(model$model) |>
+      tibble::as_tibble() |>
+      dplyr::select(dplyr::matches("^Vc")) |>
       dplyr::summarize(dplyr::across(dplyr::everything(),
-                                     \(x) mean(x, na.rm = TRUE))) %>%
+                                     \(x) mean(x, na.rm = TRUE))) |>
       as.numeric()
   }
 
-  att_names <- model$data$qmatrix %>%
-    dplyr::select(-"item_id") %>%
+  att_names <- model$data$qmatrix |>
+    dplyr::select(-"item_id") |>
     colnames()
 
   res <- create_reli_list(n_resp = n_resp, n_att = n_att, n_class = n_class,

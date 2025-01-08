@@ -17,27 +17,27 @@
 create_profiles <- function(attributes) {
   attributes <- check_integer(attributes, name = "attributes")
 
-  rep(list(c(0L, 1L)), times = attributes) %>%
-    stats::setNames(glue::glue("att{seq_len(attributes)}")) %>%
-    expand.grid() %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(total = sum(dplyr::c_across(dplyr::everything()))) %>%
-    dplyr::select("total", dplyr::everything()) %>%
+  rep(list(c(0L, 1L)), times = attributes) |>
+    stats::setNames(glue::glue("att{seq_len(attributes)}")) |>
+    expand.grid() |>
+    dplyr::rowwise() |>
+    dplyr::mutate(total = sum(dplyr::c_across(dplyr::everything()))) |>
+    dplyr::select("total", dplyr::everything()) |>
     dplyr::arrange(.data$total,
-                   dplyr::desc(dplyr::across(dplyr::everything()))) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(-"total") %>%
+                   dplyr::desc(dplyr::across(dplyr::everything()))) |>
+    dplyr::ungroup() |>
+    dplyr::select(-"total") |>
     tibble::as_tibble()
 }
 
 profile_labels <- function(attributes) {
-  create_profiles(attributes) %>%
-    tibble::rowid_to_column(var = "class_id") %>%
-    tidyr::pivot_longer(cols = -"class_id") %>%
+  create_profiles(attributes) |>
+    tibble::rowid_to_column(var = "class_id") |>
+    tidyr::pivot_longer(cols = -"class_id") |>
     dplyr::summarize(
       class = paste0("[", paste(.data$value, collapse = ","), "]"),
       .by = "class_id"
-    ) %>%
+    ) |>
     dplyr::arrange("class_id")
 }
 
@@ -75,12 +75,12 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
                            name = "qmatrix")
   att_names <- colnames(qmatrix)[which(!(colnames(qmatrix) == "item_id"))]
 
-  item_ids <- qmatrix %>%
-    dplyr::select("item_id") %>%
+  item_ids <- qmatrix |>
+    dplyr::select("item_id") |>
     tibble::rowid_to_column(var = "item_number")
 
-  qmatrix <- qmatrix %>%
-    dplyr::select(-"item_id") %>%
+  qmatrix <- qmatrix |>
+    dplyr::select(-"item_id") |>
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"),
                        .cols = dplyr::everything())
 
@@ -90,20 +90,20 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
 
   all_params <- if (type %in% c("dina", "dino")) {
     tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
-                       class = c("slip", "guess")) %>%
+                       class = c("slip", "guess")) |>
       dplyr::mutate(
         coef = glue::glue("{.data$class}[{.data$item_id}]")
       )
   } else if (type %in% c("lcdm", "crum")) {
     stats::model.matrix(stats::as.formula(paste0("~ .^",
                                                  max(ncol(qmatrix), 2L))),
-                        qmatrix) %>%
-      tibble::as_tibble(.name_repair = model_matrix_name_repair) %>%
-      dplyr::select(dplyr::where(~ sum(.x) > 0)) %>%
-      tibble::rowid_to_column(var = "item_id") %>%
+                        qmatrix) |>
+      tibble::as_tibble(.name_repair = model_matrix_name_repair) |>
+      dplyr::select(dplyr::where(~ sum(.x) > 0)) |>
+      tibble::rowid_to_column(var = "item_id") |>
       tidyr::pivot_longer(cols = -"item_id", names_to = "parameter",
-                          values_to = "value") %>%
-      dplyr::filter(.data$value == 1) %>%
+                          values_to = "value") |>
+      dplyr::filter(.data$value == 1) |>
       dplyr::mutate(
         param_level = dplyr::case_when(
           .data$parameter == "intercept" ~ 0,
@@ -119,8 +119,8 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
                                  .data$param_level >= 2 ~ "interaction"),
         attributes = dplyr::case_when(.data$param_level == 0 ~ NA_character_,
                                       .data$param_level >= 1 ~ .data$parameter)
-      ) %>%
-      dplyr::filter(.data$param_level <= max_interaction) %>%
+      ) |>
+      dplyr::filter(.data$param_level <= max_interaction) |>
       dplyr::select("item_id", "class", "attributes", "coef")
   }
 
@@ -134,9 +134,9 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
   }
 
   if (!rename_item) {
-    all_params <- all_params %>%
-      dplyr::left_join(item_ids, by = c("item_id" = "item_number")) %>%
-      dplyr::mutate(item_id = .data$item_id.y) %>%
+    all_params <- all_params |>
+      dplyr::left_join(item_ids, by = c("item_id" = "item_number")) |>
+      dplyr::mutate(item_id = .data$item_id.y) |>
       dplyr::select(-"item_id.y")
   }
 

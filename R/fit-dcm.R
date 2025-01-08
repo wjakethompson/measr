@@ -105,8 +105,8 @@ measr_dcm <- function(data,
   qmatrix <- check_qmatrix(qmatrix, identifier = item_id,
                            item_levels = levels(clean_data$item_id),
                            name = "qmatrix")
-  clean_qmatrix <- qmatrix %>%
-    dplyr::select(-"item_id") %>%
+  clean_qmatrix <- qmatrix |>
+    dplyr::select(-"item_id") |>
     dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
   type <- rlang::arg_match(type, dcm_choices())
   max_interaction <- check_integer(

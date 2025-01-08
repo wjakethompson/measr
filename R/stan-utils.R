@@ -1,9 +1,9 @@
 create_stan_data <- function(dat, qmat, type) {
-  ragged_array <- dat %>%
-    tibble::rowid_to_column() %>%
-    dplyr::group_by(.data$resp_id) %>%
+  ragged_array <- dat |>
+    tibble::rowid_to_column() |>
+    dplyr::group_by(.data$resp_id) |>
     dplyr::summarize(start = min(.data$rowid),
-                     num = dplyr::n()) %>%
+                     num = dplyr::n()) |>
     dplyr::arrange(.data$resp_id)
 
   profiles <- create_profiles(ncol(qmat))
@@ -148,10 +148,10 @@ one_down_params <- Vectorize(one_down_params, USE.NAMES = FALSE)
 
 
 define_interactions <- function(param_level, param_info) {
-  vector_def <- param_info %>% #nolint
+  vector_def <- param_info |> #nolint
     glue::glue_data("vector[{num_comp}] {gsub('l', 'v', param_name)} = ",
                     "[{comp_atts}]';")
-  interaction_constrain <- param_info %>% #nolint
+  interaction_constrain <- param_info |> #nolint
     glue::glue_data("real {param_name} = exp({param_name}_raw) - ",
                     "min({gsub('l', 'v', param_name)});")
 

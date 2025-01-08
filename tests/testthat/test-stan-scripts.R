@@ -1,8 +1,8 @@
-ecpe_q <- ecpe_qmatrix %>%
-  dplyr::select(-"item_id") %>%
+ecpe_q <- ecpe_qmatrix |>
+  dplyr::select(-"item_id") |>
   rlang::set_names(nm = paste0("att", 1:(ncol(ecpe_qmatrix) - 1)))
-mdm_q <- mdm_qmatrix %>%
-  dplyr::select(-"item") %>%
+mdm_q <- mdm_qmatrix |>
+  dplyr::select(-"item") |>
   rlang::set_names(nm = paste0("att", 1:(ncol(mdm_qmatrix) - 1)))
 dtmr_q <- tibble::tibble(
   att1 = c(1L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 1L, 1L,
