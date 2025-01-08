@@ -3,9 +3,9 @@
 \docType{class}
 \name{measrfit-class}
 \alias{measrfit-class}
-\title{Class \code{measrfit} of models fitted with the \strong{measr} package}
+\title{Class \code{measrfit} of models fitted with the measr package}
 \description{
-Models fitted with the \strong{measr} package are represented as a \code{measrfit}
+Models fitted with the measr package are represented as a \code{measrfit}
 object, which contains the posterior draws, Stan code, priors, and other
 relevant information.
 }
@@ -19,7 +19,7 @@ relevant information.
 \item{\code{prior}}{A \link[=measrprior]{measrprior} object containing information on the
 priors used in the model.}
 
-\item{\code{stancode}}{The model code in \strong{Stan} language.}
+\item{\code{stancode}}{The model code in \emph{Stan} language.}
 
 \item{\code{method}}{The method used to fit the model.}
 
@@ -47,10 +47,10 @@ fitting the model.}
 \item{\code{file}}{Optional name of a file which the model objects was saved to
 or loaded from.}
 
-\item{\code{version}}{The versions of \strong{measr}, \strong{Stan}, \strong{rstan} and/or
-\strong{cmdstanr} that were used to fit the model.}
+\item{\code{version}}{The versions of measr, \emph{Stan}, and rstan or cmdstanr that were
+used to fit the model.}
 }}
 
 \seealso{
-\code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}
+See \code{\link[=measrfit]{measrfit()}}, \code{\link[=as_measrfit]{as_measrfit()}}, \code{\link[=is_measrfit]{is_measrfit()}}.
 }

@@ -1,13 +1,13 @@
 #' Fit Bayesian diagnostic classification models
 #'
-#' Estimate diagnostic classification models (DCMs; also known as cognitive
+#' Estimate diagnostic classification models (\acronym{DCM}s; also known as cognitive
 #' diagnostic models) using 'Stan'. Models can be estimated using Stan's
-#' optimizer, or full Markov chain Monte Carlo (MCMC).
+#' optimizer, or full Markov chain Monte Carlo (\acronym{MCMC}).
 #'
 #' @param data Response data. A data frame with 1 row per respondent and 1
 #'   column per item.
-#' @param missing An R expression specifying how missing data in `data` is coded
-#'   (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
+#' @param missing An `R` expression specifying how missing data in `data` is
+#'   coded (e.g., `NA`, `"."`, `-99`, etc.). The default is `NA`.
 #' @param qmatrix The Q-matrix. A data frame with 1 row per item and 1 column
 #'   per attribute. All cells should be either 0 (item does not measure the
 #'   attribute) or 1 (item does measure the attribute).
@@ -22,7 +22,7 @@
 #'   identifiers. `NULL` also assumes that the order of the rows in the Q-matrix
 #'   is the same as the order of the columns in `data` (i.e., the item in row 1
 #'   of `qmatrix` is the item in column 1 of `data`, excluding `resp_id`).
-#' @param type Type of DCM to estimate. Must be one of
+#' @param type Type of \acronym{DCM} to estimate. Must be one of
 #'   `r glue::glue_collapse(dcm_choices(), sep = ", ", last = ", or ")`.
 #' @param max_interaction If `type = "lcdm"`, the highest level of interaction
 #'   to estimate. The default is to estimate all possible interactions. For
@@ -42,19 +42,19 @@
 #'   are used, as specified by [default_dcm_priors()].
 #' @param backend Character string naming the package to use as the backend for
 #'   fitting the Stan model. Options are `"rstan"` (the default) or
-#'   `"cmdstanr"`. Can be set globally for the current R session via the
-#'   "measr.backend" option (see [options()]). Details on the **rstan** and
-#'   **cmdstanr** packages are available at \url{https://mc-stan.org/rstan/} and
+#'   `"cmdstanr"`. Can be set globally for the current `R` session via the
+#'   "measr.backend" option (see [options()]). Details on the rstan and
+#'   cmdstanr packages are available at \url{https://mc-stan.org/rstan/} and
 #'   \url{https://mc-stan.org/cmdstanr/}, respectively.
 #' @param file Either `NULL` (the default) or a character string. If a character
 #'   string, the fitted model object is saved as an `.rds` object using
 #'   [saveRDS()] using the supplied character string. The `.rds` extension
-#'   is automatically added. If the specified file already exists, **measr**
+#'   is automatically added. If the specified file already exists, measr
 #'   will load the previously saved model. Unless `file_refit` is specified, the
 #'   model will not be refit.
 #' @param file_refit Controls when a saved model is refit. Options are
 #'   `"never"`, `"always"`, and `"on_change"`. Can be set globally for the
-#'   current R session via the "measr.file_refit" option (see [options()]).
+#'   current `R` session via the "measr.file_refit" option (see [options()]).
 #'   * For `"never"` (the default), the fitted model is always loaded if the
 #'     `file` exists, and model fitting is skipped.
 #'   * For `"always"`, the model is always refitted, regardless of whether or
@@ -71,6 +71,9 @@
 #'     methods of the
 #'     [CmdStanModel](https://mc-stan.org/cmdstanr/reference/CmdStanModel.html)
 #'     class.
+#'
+#' @concept Bayesian
+#' @concept Stan
 #'
 #' @return A [measrfit] object.
 #' @export

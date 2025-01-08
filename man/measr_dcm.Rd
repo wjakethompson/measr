@@ -25,8 +25,8 @@ measr_dcm(
 \item{data}{Response data. A data frame with 1 row per respondent and 1
 column per item.}
 
-\item{missing}{An R expression specifying how missing data in \code{data} is coded
-(e.g., \code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.}
+\item{missing}{An \code{R} expression specifying how missing data in \code{data} is
+coded (e.g., \code{NA}, \code{"."}, \code{-99}, etc.). The default is \code{NA}.}
 
 \item{qmatrix}{The Q-matrix. A data frame with 1 row per item and 1 column
 per attribute. All cells should be either 0 (item does not measure the
@@ -45,7 +45,7 @@ identifiers. \code{NULL} also assumes that the order of the rows in the Q-matrix
 is the same as the order of the columns in \code{data} (i.e., the item in row 1
 of \code{qmatrix} is the item in column 1 of \code{data}, excluding \code{resp_id}).}
 
-\item{type}{Type of DCM to estimate. Must be one of
+\item{type}{Type of \acronym{DCM} to estimate. Must be one of
 lcdm, dina, dino, or crum.}
 
 \item{max_interaction}{If \code{type = "lcdm"}, the highest level of interaction
@@ -70,21 +70,21 @@ are used, as specified by \code{\link[=default_dcm_priors]{default_dcm_priors()}
 
 \item{backend}{Character string naming the package to use as the backend for
 fitting the Stan model. Options are \code{"rstan"} (the default) or
-\code{"cmdstanr"}. Can be set globally for the current R session via the
-"measr.backend" option (see \code{\link[=options]{options()}}). Details on the \strong{rstan} and
-\strong{cmdstanr} packages are available at \url{https://mc-stan.org/rstan/} and
+\code{"cmdstanr"}. Can be set globally for the current \code{R} session via the
+"measr.backend" option (see \code{\link[=options]{options()}}). Details on the rstan and
+cmdstanr packages are available at \url{https://mc-stan.org/rstan/} and
 \url{https://mc-stan.org/cmdstanr/}, respectively.}
 
 \item{file}{Either \code{NULL} (the default) or a character string. If a character
 string, the fitted model object is saved as an \code{.rds} object using
 \code{\link[=saveRDS]{saveRDS()}} using the supplied character string. The \code{.rds} extension
-is automatically added. If the specified file already exists, \strong{measr}
+is automatically added. If the specified file already exists, measr
 will load the previously saved model. Unless \code{file_refit} is specified, the
 model will not be refit.}
 
 \item{file_refit}{Controls when a saved model is refit. Options are
 \code{"never"}, \code{"always"}, and \code{"on_change"}. Can be set globally for the
-current R session via the "measr.file_refit" option (see \code{\link[=options]{options()}}).
+current \code{R} session via the "measr.file_refit" option (see \code{\link[=options]{options()}}).
 \itemize{
 \item For \code{"never"} (the default), the fitted model is always loaded if the
 \code{file} exists, and model fitting is skipped.
@@ -111,9 +111,9 @@ class.
 A \link{measrfit} object.
 }
 \description{
-Estimate diagnostic classification models (DCMs; also known as cognitive
+Estimate diagnostic classification models (\acronym{DCM}s; also known as cognitive
 diagnostic models) using 'Stan'. Models can be estimated using Stan's
-optimizer, or full Markov chain Monte Carlo (MCMC).
+optimizer, or full Markov chain Monte Carlo (\acronym{MCMC}).
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -124,3 +124,5 @@ rstn_mdm_lcdm <- measr_dcm(
 )
 \dontshow{\}) # examplesIf}
 }
+\concept{Bayesian}
+\concept{Stan}

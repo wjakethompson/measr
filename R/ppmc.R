@@ -9,7 +9,7 @@
 #'   less than or equal to the total number of posterior draws retained in the
 #'   estimated model. If `NULL` (the default) the total number from the
 #'   estimated model is used.
-#' @param probs The percentiles to be computed by the `[stats::quantile()]`
+#' @param probs The percentiles to be computed by the [stats::quantile()]
 #'   function for summarizing the posterior distributions of the specified fit
 #'   statistics.
 #' @param return_draws Proportion of posterior draws for each specified fit
@@ -28,8 +28,9 @@
 #'   Multiple checks can be provided in order to calculate more than one check
 #'   simultaneously (e.g., `item_fit = c("conditional_prob", "odds_ratio")`).
 #'   See details.
-#' @param force If all requested PPMCs have already been added to the model
-#'   object using [add_fit()], should they be recalculated. Default is `FALSE`.
+#' @param force If all requested \acronym{PPMC}s have already been added to the
+#'   model object using [add_fit()], should they be recalculated. Default is
+#'   `FALSE`.
 #'
 #' @details
 #' Posterior predictive model checks (PPMCs) use the posterior distribution of
@@ -55,26 +56,30 @@
 #' @return A list with two elements, "model_fit" and "item_fit". If either
 #'   `model_fit = NULL` or `item_fit = NULL` in the function call, this will be
 #'   a one-element list, with the null criteria excluded. Each list element, is
-#'   itself a list with one element for each specified PPMC containing a
-#'   [tibble][tibble::tibble-package]. For example if
+#'   itself a list with one element for each specified \acronym{PPMC} containing
+#'   a [tibble][tibble::tibble-package]. For example if
 #'   `item_fit = c("conditional_prob", "odds_ratio")`, the "item_fit" element
 #'   will be a list of length two, where each element is a tibble containing the
-#'   results of the PPMC. All tibbles follow the same general structure:
+#'   results of the \acronym{PPMC}. All tibbles follow the same general
+#'   structure:
 #'
-#'   * `obs_{ppmc}`: The value of the relevant statistic in the observed data.
-#'   * `ppmc_mean`: The mean of the `ndraws` posterior samples calculated for
-#'     the given statistic.
-#'   * Quantile columns: 1 column for each value of `probs`, providing the
+#'   \itemize{
+#'   \item `obs_{ppmc}`: The value of the relevant statistic in the observed
+#'     data.
+#'   \item `ppmc_mean`: The mean of the `ndraws` posterior samples calculated
+#'     for the given statistic.
+#'   \item Quantile columns: 1 column for each value of `probs`, providing the
 #'     corresponding quantiles of the `ndraws` posterior samples calculated for
 #'     the given statistic.
-#'   * `samples`: A list column, where each element contains a vector of length
-#'     `(ndraws * return_draws)`, representing samples from the posterior
-#'     distribution of the calculated statistic. This column is excluded if
-#'     `return_draws = 0`.
-#'   * `ppp`: The posterior predictive p-value. This is the proportion of
+#'   \item `samples`: A list column, where each element contains a vector of
+#'     length `(ndraws * return_draws)`, representing samples from the
+#'     posterior distribution of the calculated statistic. This column is
+#'     excluded if `return_draws = 0`.
+#'   \item `ppp`: The posterior predictive p-value. This is the proportion of
 #'     posterior samples for calculated statistic that are greater than the
 #'     observed value. Values very close to 0 or 1 indicate incompatibility
 #'     between the fitted model and the observed data.
+#'   }
 #'
 #' @references Park, J. Y., Johnson, M. S., Lee, Y-S. (2015). Posterior
 #'   predictive model checks for cognitive diagnostic models. *International

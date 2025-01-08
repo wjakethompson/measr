@@ -155,11 +155,11 @@ get_parameters <- function(qmatrix, item_id = NULL, rename_att = FALSE,
 
 #' Evaluate an expression without printing output or messages
 #'
-#' @param expr expression to be evaluated
-#' @param type type of output to be suppressed (see ?sink)
-#' @param try wrap evaluation of expr in 'try' and
+#' @param expr Expression to be evaluated.
+#' @param type Type of output to be suppressed (see ?sink).
+#' @param try Wrap evaluation of expr in 'try' and
 #'   not suppress outputs if evaluation fails?
-#' @param silent actually evaluate silently?
+#' @param silent Actually evaluate silently?.
 #'
 #' @noRd
 eval_silent <- function(expr, type = "output", try = FALSE,

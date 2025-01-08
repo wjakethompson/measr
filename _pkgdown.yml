@@ -1,0 +1,114 @@
+url: https://measr.info
+
+home:
+  title: Estimate Diagnostic Classification Models with Stan
+
+template:
+  package: rdcmtemplate
+  bootstrap: 5
+  opengraph:
+    image:
+      src: man/figures/card.png
+      alt: ""
+    twitter:
+      creator: "@wjakethompson"
+      site: "@atlas4learning"
+      card: summary_large_image
+
+reference:
+- title: Data sets
+  contents:
+  - ecpe_data
+  - ecpe_qmatrix
+  - mdm_data
+  - mdm_qmatrix
+
+- title: Model estimation
+
+- subtitle: Priors
+  desc: Define prior distributions for the model parameters.
+  contents:
+  - measrprior
+  - is_measrprior
+  - default_dcm_priors
+  - get_parameters
+
+- subtitle: Model fitting
+  desc: >
+    Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
+  contents:
+  - measr_dcm
+  - measrfit-class
+  - measrfit
+  - as_measrfit
+  - is_measrfit
+
+- title: Model evaluation
+
+- subtitle: Reliability
+  desc: >
+    Estimate the pattern- or attribute-level classification accuracy and
+    consistency.
+  contents:
+  - reliability
+  - cdi
+
+- subtitle: Model fit
+  desc: >
+    Evaluate the fit of the estimated model to the observed data.
+  contents:
+  - fit_m2.measrdcm
+  - fit_ppmc
+
+- subtitle: Model comparisons
+  desc: >
+    Assess the relative fit of two competing models.
+  contents:
+  - loo_compare.measrfit
+  - loo.measrfit
+  - waic.measrfit
+  - loglik_array
+
+- subtitle: Add evaluations to model objects
+  desc: >
+    Add reliability, model fit, and model comparison information to an estimated
+    model object.
+  contents:
+  - model_evaluation
+
+- title: Model applications
+  desc: View and use an estimated model.
+  contents:
+  - measr_extract
+  - predict.measrdcm
+
+- title: Miscellaneous
+  contents:
+  - create_profiles
+
+- title: internal
+  contents:
+  - measr_examples
+  - c.measrprior
+
+articles:
+- title: Get started
+  navbar: ~
+  contents:
+  - paper
+  - articles/model-estimation
+  - articles/model-evaluation
+
+- title: Case Studies
+  navbar: Case Studies
+  contents:
+  - articles/ecpe
+
+news:
+  releases:
+  - text: "Version 1.0.0"
+    href: https://www.wjakethompson.com/blog/measr/2024-02-measr-1.0.0/
+  - text: "Version 0.3.1"
+    href: https://www.wjakethompson.com/blog/measr/2023-06-measr-0.3.1/
+  - text: "Version 0.2.1"
+    href: https://www.wjakethompson.com/blog/measr/2023-04-measr-0.2.1/

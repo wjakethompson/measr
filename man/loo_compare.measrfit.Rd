@@ -23,6 +23,6 @@ The object returned by \code{\link[loo:loo_compare]{loo::loo_compare()}}.
 }
 \description{
 A \code{\link[loo:loo_compare]{loo::loo_compare()}} method that is customized for \code{measrfit} objects. See
-the \strong{loo} package \href{https://mc-stan.org/loo/articles/}{vignettes} for
+the loo package \href{https://mc-stan.org/loo/articles/}{vignettes} for
 details.
 }

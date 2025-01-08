@@ -22,7 +22,7 @@ less than or equal to the total number of posterior draws retained in the
 estimated model. If \code{NULL} (the default) the total number from the
 estimated model is used.}
 
-\item{probs}{The percentiles to be computed by the \verb{[stats::quantile()]}
+\item{probs}{The percentiles to be computed by the \code{\link[stats:quantile]{stats::quantile()}}
 function for summarizing the posterior distributions of the specified fit
 statistics.}
 
@@ -45,29 +45,33 @@ Multiple checks can be provided in order to calculate more than one check
 simultaneously (e.g., \code{item_fit = c("conditional_prob", "odds_ratio")}).
 See details.}
 
-\item{force}{If all requested PPMCs have already been added to the model
-object using \code{\link[=add_fit]{add_fit()}}, should they be recalculated. Default is \code{FALSE}.}
+\item{force}{If all requested \acronym{PPMC}s have already been added to the
+model object using \code{\link[=add_fit]{add_fit()}}, should they be recalculated. Default is
+\code{FALSE}.}
 }
 \value{
 A list with two elements, "model_fit" and "item_fit". If either
 \code{model_fit = NULL} or \code{item_fit = NULL} in the function call, this will be
 a one-element list, with the null criteria excluded. Each list element, is
-itself a list with one element for each specified PPMC containing a
-\link[tibble:tibble-package]{tibble}. For example if
+itself a list with one element for each specified \acronym{PPMC} containing
+a \link[tibble:tibble-package]{tibble}. For example if
 \code{item_fit = c("conditional_prob", "odds_ratio")}, the "item_fit" element
 will be a list of length two, where each element is a tibble containing the
-results of the PPMC. All tibbles follow the same general structure:
+results of the \acronym{PPMC}. All tibbles follow the same general
+structure:
+
 \itemize{
-\item \verb{obs_\{ppmc\}}: The value of the relevant statistic in the observed data.
-\item \code{ppmc_mean}: The mean of the \code{ndraws} posterior samples calculated for
-the given statistic.
+\item \verb{obs_\{ppmc\}}: The value of the relevant statistic in the observed
+data.
+\item \code{ppmc_mean}: The mean of the \code{ndraws} posterior samples calculated
+for the given statistic.
 \item Quantile columns: 1 column for each value of \code{probs}, providing the
 corresponding quantiles of the \code{ndraws} posterior samples calculated for
 the given statistic.
-\item \code{samples}: A list column, where each element contains a vector of length
-\code{(ndraws * return_draws)}, representing samples from the posterior
-distribution of the calculated statistic. This column is excluded if
-\code{return_draws = 0}.
+\item \code{samples}: A list column, where each element contains a vector of
+length \code{(ndraws * return_draws)}, representing samples from the
+posterior distribution of the calculated statistic. This column is
+excluded if \code{return_draws = 0}.
 \item \code{ppp}: The posterior predictive p-value. This is the proportion of
 posterior samples for calculated statistic that are greater than the
 observed value. Values very close to 0 or 1 indicate incompatibility

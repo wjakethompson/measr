@@ -3,7 +3,7 @@
 \name{measr_extract}
 \alias{measr_extract}
 \alias{measr_extract.measrdcm}
-\title{Extract components of a \code{measrfit} object.}
+\title{Extract components of a \code{measrfit} object}
 \usage{
 measr_extract(model, ...)
 
@@ -19,8 +19,8 @@ measr_extract(model, ...)
 For \code{what = "odds_ratio_flags"} and
 \code{what = "conditional_prob_flags"}, the compatibility interval used for
 determining model fit flags to return. For example, a \code{ppmc_interval} of
-0.95 (the default) will return any PPMCs where the posterior predictive
-\emph{p}-value (ppp) is less than 0.025 or greater than 0.975.
+0.95 (the default) will return any \acronym{PPMC}s where the posterior
+predictive \emph{p}-value (ppp) is less than 0.025 or greater than 0.975.
 \item \code{agreement}:
 
 For \code{what = "classification_reliability"}, additional
@@ -48,7 +48,7 @@ on what is being extracted, but usually the returned object is a
 \link[tibble:tibble-package]{tibble} with the requested information.
 }
 \description{
-Extract components of a \code{measrfit} object.
+Extract components of a \code{measrfit} object
 
 Extract components of an estimated diagnostic classification model
 }
@@ -153,3 +153,7 @@ Templin, J., & Bradshaw, L. (2013). Measuring the reliability of
 diagnostic classification model examinee estimates. \emph{Journal of
 Classification, 30}(2), 251-275. \doi{10.1007/s00357-013-9129-4}
 }
+\concept{Bradshaw}
+\concept{Goodman}
+\concept{Sinharay}
+\concept{Templin}

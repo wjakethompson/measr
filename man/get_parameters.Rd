@@ -28,7 +28,7 @@ generic, but consistent names (e.g., "att1", "att2", "att3").}
 \item{rename_item}{Should item names from the \code{qmatrix} be replaced with
 generic, but consistent names (e.g., 1, 2, 3).}
 
-\item{type}{Type of DCM to estimate. Must be one of
+\item{type}{Type of \acronym{DCM} to estimate. Must be one of
 lcdm, dina, dino, or crum.}
 
 \item{attribute_structure}{Structural model specification. Must be one of

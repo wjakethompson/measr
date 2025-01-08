@@ -1,15 +1,15 @@
 #' Create a `measrfit` object
 #'
-#' Models fitted with **measr** are represented as a `measrfit` object. If a
-#' model is estimated with *Stan*, but not **measr**, a `measrfit` object can be
-#' created in order to access other functionality in **measr** (e.g., model fit,
+#' Models fitted with [`measr`] are represented as a `measrfit` object. If a
+#' model is estimated with *Stan*, but not [`measr`], a `measrfit` object can be
+#' created in order to access other functionality in measr (e.g., model fit,
 #' reliability).
 #'
 #' @param data The data and Q-matrix used to estimate the model.
-#' @param type The type of DCM that was estimated.
+#' @param type The type of \acronym{DCM} that was estimated.
 #' @param prior A [measrprior][measrprior()] object containing information on
 #'   the priors used in the model.
-#' @param stancode The model code in **Stan** language.
+#' @param stancode The model code in *Stan* language.
 #' @param method The method used to fit the model.
 #' @param algorithm The name of the algorithm used to fit the model.
 #' @param backend The name of the backend used to fit the model.
@@ -27,14 +27,17 @@
 #'   fitting the model.
 #' @param file Optional name of a file which the model objects was saved to
 #'   or loaded from.
-#' @param version The versions of **measr**, **Stan**, **rstan** and/or
-#'   **cmdstanr** that were used to fit the model.
+#' @param version The versions of measr, *Stan*, and rstan or cmdstanr that were
+#'   used to fit the model.
 #' @param class Additional classes to be added (e.g., `measrdcm` for a
 #'   diagnostic classification model).
 #'
-#' @return A [measrfit][measrfit-class] object.
+#' @concept Stan
+#'
+#' @return A [`measrfit`][`measrfit-class`] object.
 #' @export
-#' @seealso [measrfit-class], [as_measrfit()], [is_measrfit()]
+#'
+#' @seealso See [`measrfit-class`], [`as_measrfit()`], [`is_measrfit()`].
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
@@ -92,7 +95,7 @@ measrfit <- function(data = list(), type = character(),
 #'
 #' @return An object of class [measrfit-class].
 #' @export
-#' @seealso [measrfit-class], [measrfit()], [is_measrfit()]
+#' @seealso See [measrfit-class], [measrfit()], [is_measrfit()].
 #'
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
@@ -129,9 +132,9 @@ as_measrfit.default <- function(x, class = character()) {
 }
 
 
-#' Class `measrfit` of models fitted with the **measr** package
+#' Class `measrfit` of models fitted with the measr package
 #'
-#' Models fitted with the **measr** package are represented as a `measrfit`
+#' Models fitted with the measr package are represented as a `measrfit`
 #' object, which contains the posterior draws, Stan code, priors, and other
 #' relevant information.
 #'
@@ -142,7 +145,7 @@ as_measrfit.default <- function(x, class = character()) {
 #' @slot type The type of DCM that was estimated.
 #' @slot prior A [measrprior][measrprior()] object containing information on the
 #'   priors used in the model.
-#' @slot stancode The model code in **Stan** language.
+#' @slot stancode The model code in *Stan* language.
 #' @slot method The method used to fit the model.
 #' @slot algorithm The name of the algorithm used to fit the model.
 #' @slot backend The name of the backend used to fit the model.
@@ -160,10 +163,10 @@ as_measrfit.default <- function(x, class = character()) {
 #'   fitting the model.
 #' @slot file Optional name of a file which the model objects was saved to
 #'   or loaded from.
-#' @slot version The versions of **measr**, **Stan**, **rstan** and/or
-#'   **cmdstanr** that were used to fit the model.
+#' @slot version The versions of measr, *Stan*, and rstan or cmdstanr that were
+#'   used to fit the model.
 #'
-#' @seealso [measrfit()], [as_measrfit()], [is_measrfit()]
+#' @seealso See [measrfit()], [as_measrfit()], [is_measrfit()].
 NULL
 
 
@@ -226,13 +229,13 @@ validate_measrfit <- function(x) {
 }
 
 
-#' Check if argument is a `measrfit` object
+#' Check if argument is a [`measrfit`] object
 #'
-#' @param x An object to be checked
+#' @param x An object to be checked.
 #'
-#' @return A logical indicating is `x` is a `measrfit` object.
+#' @return A logical indicating is `x` is a [`measrfit`] object.
 #' @export
-#' @seealso [measrfit-class], [measrfit()], [as_measrfit()]
+#' @seealso See [measrfit-class], [measrfit()], [as_measrfit()].
 #'
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(

@@ -1,10 +1,13 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [main, master]
 
 name: test-coverage
+
+permissions: read-all
 
 jobs:
   test-coverage:
@@ -13,7 +16,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -25,6 +28,7 @@ jobs:
           cache-version: 3
           extra-packages: |
             any::covr
+            any::xml2
             github::stan-dev/cmdstanr
           upgrade: 'TRUE'
           needs: coverage
@@ -37,7 +41,7 @@ jobs:
 
       - name: Test coverage
         run: |
-          covr::codecov(
+          cov <- covr::package_coverage(
             quiet = FALSE,
             clean = FALSE,
             line_exclusions = list("src/stanExports_gqs_loglik.h",
@@ -50,6 +54,15 @@ jobs:
           )
         shell: Rscript {0}
 
+      - uses: codecov/codecov-action@v4
+        with:
+          # Fail if error if not on PR, or if on PR and token is given
+          fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
+          file: ./cobertura.xml
+          plugin: noop
+          disable_search: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Show testthat output
         if: always()
         run: |
@@ -59,7 +72,7 @@ jobs:
 
       - name: Upload test results
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-test-failures
           path: ${{ runner.temp }}/package
