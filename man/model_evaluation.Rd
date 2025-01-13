@@ -10,7 +10,7 @@
 \usage{
 add_criterion(
   x,
-  criterion = c("loo", "waic"),
+  criterion = c("loo", "waic", "aic", "bic"),
   overwrite = FALSE,
   save = TRUE,
   ...,
