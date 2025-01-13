@@ -69,8 +69,8 @@ aic <- function(model) {
   num_params <- model$model$par %>%
     tibble::as_tibble() %>%
     dplyr::mutate(param = names(model$model$par)) %>%
-    dplyr::filter(!stringr::str_detect(param, "pi")) %>%
-    dplyr::filter(!stringr::str_detect(param, "log_Vc")) %>%
+    dplyr::filter(!stringr::str_detect(.data$param, "pi")) %>%
+    dplyr::filter(!stringr::str_detect(.data$param, "log_Vc")) %>%
     nrow() - 1
 
   aic <- (-2 * logLik) + (2 * num_params)
@@ -84,12 +84,12 @@ bic <- function(model) {
   num_params <- model$model$par %>%
     tibble::as_tibble() %>%
     dplyr::mutate(param = names(model$model$par)) %>%
-    dplyr::filter(!stringr::str_detect(param, "pi")) %>%
-    dplyr::filter(!stringr::str_detect(param, "log_Vc")) %>%
+    dplyr::filter(!stringr::str_detect(.data$param, "pi")) %>%
+    dplyr::filter(!stringr::str_detect(.data$param, "log_Vc")) %>%
     nrow() - 1
 
   N <- model$data$data %>%
-    dplyr::distinct(resp_id) %>%
+    dplyr::distinct(.data$resp_id) %>%
     nrow()
 
   bic <- (-2 * logLik) + (log(N) * num_params)
