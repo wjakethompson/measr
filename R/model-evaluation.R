@@ -131,7 +131,8 @@ add_criterion <- function(x, criterion = c("loo", "waic", "aic", "bic"),
                                       "available for models estimated with ",
                                       "`method = \"optim\"`."))
   }
-  criterion <- rlang::arg_match(criterion, values = c("loo", "waic"),
+  criterion <- rlang::arg_match(criterion,
+                                values = c("loo", "waic", "aic", "bic"),
                                 multiple = TRUE)
   overwrite <- check_logical(overwrite, name = "overwrite")
   save <- check_logical(save, name = "force_save")
@@ -145,8 +146,10 @@ add_criterion <- function(x, criterion = c("loo", "waic", "aic", "bic"),
   }
   all_criteria <- c(new_criteria, redo_criteria)
 
-  if (length(all_criteria) > 0) {
+  if (length(all_criteria) > 0 & (model$method == "mcmc")) {
     log_lik_array <- loglik_array(model)
+  } else if (length(all_criteria) > 0 & (model$method == "optim")) {
+    log_lik_array <- model$model$value
   }
 
   if ("loo" %in% all_criteria) {
@@ -154,6 +157,12 @@ add_criterion <- function(x, criterion = c("loo", "waic", "aic", "bic"),
   }
   if ("waic" %in% all_criteria) {
     model$criteria$waic <- waic(log_lik_array)
+  }
+  if ("aic" %in% all_criteria) {
+    model$criteria$aic <- aic(log_lik_array)
+  }
+  if ("=bic" %in% all_criteria) {
+    model$criteria$bic <- bic(log_lik_array)
   }
 
   # re-save model object (if applicable)
