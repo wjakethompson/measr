@@ -116,8 +116,7 @@ test_that("loo and waic can be added to model", {
   expect_equal(names(loo_model$criteria), "loo")
   expect_s3_class(loo_model$criteria$loo, "psis_loo")
 
-  lw_model <- add_criterion(loo_model, criterion = c("loo", "waic"),
-                            overwrite = TRUE)
+  lw_model <- add_criterion(loo_model, overwrite = TRUE)
   expect_equal(names(lw_model$criteria), c("loo", "waic"))
   expect_s3_class(lw_model$criteria$loo, "psis_loo")
   expect_s3_class(lw_model$criteria$waic, "waic")

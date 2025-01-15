@@ -293,3 +293,14 @@ test_that("mcmc requirements error", {
   expect_s3_class(err, "error_bad_method")
   expect_match(err$message, "`method = \"mcmc\"`")
 })
+
+test_that("optim requirements error", {
+  skip_on_cran()
+
+  mcmc_mod <- cmds_ecpe_lcdm
+  mcmc_mod$method <- "mcmc"
+
+  err <- rlang::catch_cnd(add_criterion(mcmc_mod, criterion = c("aic", "bic")))
+  expect_s3_class(err, "error_bad_method")
+  expect_match(err$message, "`method = \"optim\"`")
+})
