@@ -19,15 +19,14 @@
 <link href="../deps/Playfair_Display-0.4.9/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Estimating diagnostic classification models">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Estimating diagnostic classification models">
 <meta name="robots" content="noindex">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-none" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">measr</a>
 
@@ -118,21 +117,21 @@ data generating parameters.</p>
 <span></span>
 <span><span class="va">sim_data</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,000 × 21</span></span></span>
-<span><span class="co">#&gt;    resp_id    A1    A2    A3    A4    A5    A6    A7    A8    A9   A10   A11</span></span>
-<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1     1     1     0     1     0     0     0     0     1     0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       2     1     1     1     0     0     1     0     1     1     0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       3     1     1     1     1     1     0     1     1     0     1     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       4     1     0     1     0     0     1     0     1     1     0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       5     1     1     0     0     0     0     0     1     1     0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       6     1     1     1     0     1     0     0     1     1     0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       7     1     0     1     0     0     1     0     1     1     0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       8     0     1     1     0     0     1     0     1     1     0     0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       9     1     1     1     0     0     1     1     1     1     0     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>      10     1     1     1     0     1     1     0     1     1     1     1</span></span>
+<span><span class="co">#&gt;    resp_id    A1    A2    A3    A4    A5    A6    A7    A8    A9   A10</span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1     1     1     0     1     0     0     0     0     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       2     1     1     1     0     0     1     0     1     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       3     1     1     1     1     1     0     1     1     0     1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       4     1     0     1     0     0     1     0     1     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       5     1     1     0     0     0     0     0     1     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       6     1     1     1     0     1     0     0     1     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       7     1     0     1     0     0     1     0     1     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       8     0     1     1     0     0     1     0     1     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       9     1     1     1     0     0     1     1     1     1     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>      10     1     1     1     0     1     1     0     1     1     1</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1,990 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 more variables: A12 &lt;int&gt;, A13 &lt;int&gt;, A14 &lt;int&gt;, A15 &lt;int&gt;, A16 &lt;int&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   A17 &lt;int&gt;, A18 &lt;int&gt;, A19 &lt;int&gt;, A20 &lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 more variables: A11 &lt;int&gt;, A12 &lt;int&gt;, A13 &lt;int&gt;, A14 &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   A15 &lt;int&gt;, A16 &lt;int&gt;, A17 &lt;int&gt;, A18 &lt;int&gt;, A19 &lt;int&gt;, A20 &lt;int&gt;</span></span></span>
 <span></span>
 <span><span class="va">sim_data</span><span class="op">$</span><span class="va">q_matrix</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 5</span></span></span>
@@ -418,7 +417,7 @@ Methods</em>, <em>11</em>(3), 287–305. <a href="https://doi.org/10.1037/1082-9
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>The research reported here was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=4546" class="external-link">R305D210045</a> to the University of Kansas. The opinions expressed are those of the authors and do not represent the views of the Institute or the U.S. Department of Education.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
@@ -426,6 +425,7 @@ Methods</em>, <em>11</em>(3), 287–305. <a href="https://doi.org/10.1037/1082-9
 
 
 
-  <script data-goatcounter="https://measr.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
-</body>
+
+
+  </body>
 </html>
