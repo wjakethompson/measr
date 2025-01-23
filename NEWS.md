@@ -4,6 +4,8 @@
 
 * Added new `measrfit()` function for creating measrfit objects from *Stan* models that were not originally created with measr.
 
+* Added `aic()` and `bic()` functions for calculating the Akaike and Bayesian information criteria, respectively, for models estimated with `method = "optim"`.
+
 # measr 1.0.0
 
 ## New documentation

@@ -39,7 +39,8 @@ add_respondent_estimates(
 \item{x}{A \link{measrfit} object.}
 
 \item{criterion}{A vector of criteria to calculate and add to the model
-object.}
+object. Must be one of \code{"loo"} or \code{"waic"} for models estimated with MCMC,
+or one of \code{"aic"} or \code{"bic"} for model estimated with the optimizer.}
 
 \item{overwrite}{Logical. Indicates whether specified elements that have
 already been added to the estimated model should be overwritten. Default is
