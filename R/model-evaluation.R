@@ -10,7 +10,8 @@
 #' @inheritParams dcm2::calc_m2
 #' @param x A [measrfit] object.
 #' @param criterion A vector of criteria to calculate and add to the model
-#'   object.
+#'   object. Must be one of `"loo"` or `"waic"` for models estimated with MCMC,
+#'   or one of `"aic"` or `"bic"` for model estimated with the optimizer.
 #' @param method A vector of model fit methods to evaluate and add to the model
 #'   object.
 #' @param probs The percentiles to be computed by the [stats::quantile()]
@@ -117,16 +118,23 @@ NULL
 
 #' @export
 #' @rdname model_evaluation
-add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
-                          save = TRUE, ..., r_eff = NA) {
+add_criterion <- function(x, criterion = c("loo", "waic"),
+                          overwrite = FALSE, save = TRUE, ..., r_eff = NA) {
   model <- check_model(x, required_class = "measrfit", name = "x")
-  if (model$method != "mcmc") {
+  if (any(model$method != "mcmc" && any(criterion %in% c("loo", "waic")))) {
     rlang::abort("error_bad_method",
-                 message = glue::glue("Model criteria are only available for ",
-                                      "models estimated with ",
+                 message = glue::glue("LOO and WAIC model criteria are only ",
+                                      "available for models estimated with ",
                                       "`method = \"mcmc\"`."))
+  } else if (any(model$method != "optim" &&
+                 any(criterion %in% c("aic", "bic")))) {
+    rlang::abort("error_bad_method",
+                 message = glue::glue("AIC and BIC model criteria are only ",
+                                      "available for models estimated with ",
+                                      "`method = \"optim\"`."))
   }
-  criterion <- rlang::arg_match(criterion, values = c("loo", "waic"),
+  criterion <- rlang::arg_match(criterion,
+                                values = c("loo", "waic", "aic", "bic"),
                                 multiple = TRUE)
   overwrite <- check_logical(overwrite, name = "overwrite")
   save <- check_logical(save, name = "force_save")
@@ -140,7 +148,7 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
   }
   all_criteria <- c(new_criteria, redo_criteria)
 
-  if (length(all_criteria) > 0) {
+  if (length(all_criteria) > 0 && (model$method == "mcmc")) {
     log_lik_array <- loglik_array(model)
   }
 
@@ -149,6 +157,12 @@ add_criterion <- function(x, criterion = c("loo", "waic"), overwrite = FALSE,
   }
   if ("waic" %in% all_criteria) {
     model$criteria$waic <- waic(log_lik_array)
+  }
+  if ("aic" %in% all_criteria) {
+    model$criteria$aic <- aic(model)
+  }
+  if ("bic" %in% all_criteria) {
+    model$criteria$bic <- bic(model)
   }
 
   # re-save model object (if applicable)
