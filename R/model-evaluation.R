@@ -10,7 +10,8 @@
 #' @inheritParams dcm2::calc_m2
 #' @param x A [measrfit] object.
 #' @param criterion A vector of criteria to calculate and add to the model
-#'   object.
+#'   object. Must be one of `"loo"` or `"waic"` for models estimated with MCMC,
+#'   or one of `"aic"` or `"bic"` for model estimated with the optimizer.
 #' @param method A vector of model fit methods to evaluate and add to the model
 #'   object.
 #' @param probs The percentiles to be computed by the [stats::quantile()]
@@ -120,12 +121,13 @@ NULL
 add_criterion <- function(x, criterion = c("loo", "waic"),
                           overwrite = FALSE, save = TRUE, ..., r_eff = NA) {
   model <- check_model(x, required_class = "measrfit", name = "x")
-  if (any(model$method != "mcmc" & criterion %in% c("loo", "waic"))) {
+  if (any(model$method != "mcmc" && any(criterion %in% c("loo", "waic")))) {
     rlang::abort("error_bad_method",
                  message = glue::glue("LOO and WAIC model criteria are only ",
                                       "available for models estimated with ",
                                       "`method = \"mcmc\"`."))
-  } else if (any(model$method != "optim" & criterion %in% c("aic", "bic"))) {
+  } else if (any(model$method != "optim" &&
+                 any(criterion %in% c("aic", "bic")))) {
     rlang::abort("error_bad_method",
                  message = glue::glue("AIC and BIC model criteria are only ",
                                       "available for models estimated with ",
@@ -146,7 +148,7 @@ add_criterion <- function(x, criterion = c("loo", "waic"),
   }
   all_criteria <- c(new_criteria, redo_criteria)
 
-  if (length(all_criteria) > 0 & (model$method == "mcmc")) {
+  if (length(all_criteria) > 0 && (model$method == "mcmc")) {
     log_lik_array <- loglik_array(model)
   }
 
