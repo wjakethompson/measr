@@ -123,9 +123,11 @@ For details on the LCDM, see @lcdm-handbook.
 The data set we're using contains 29 items that together measure three attributes: morphosyntactic rules, cohesive rules, and lexical rules.
 The Q-matrix defines which attributes are measured by each item.
 For example, item E1 measures morphosyntactic and cohesive rules.
-The data is further described in `?ecpe`.
+The data is further described in `?dcmdata::ecpe`.
 
 ```{r data}
+library(dcmdata)
+
 ecpe_data
 
 ecpe_qmatrix
@@ -142,16 +144,22 @@ As previously discussed, we're estimating an LCDM in this example.
 For more details and options for customizing the model specification and estimation, see the [model estimation article](https://measr.info/articles/model-estimation.html) on the measr website.
 
 ```{r est-hide, include = FALSE}
-ecpe_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
-                       resp_id = "resp_id", item_id = "item_id",
-                       method = "optim", type = "lcdm",
-                       file = "fits/ecpe-optim-lcdm")
+ecpe_spec <- dcm_specify(ecpe_qmatrix, identifier = "item_id",
+                         measurement_model = lcdm(),
+                         structural_model = unconstrained())
+
+ecpe_lcdm <- dcm_estimate(ecpe_spec, data = ecpe_data, identifier = "resp_id",
+                          method = "optim", backend = "rstan",
+                          file = "fits/ecpe-optim-lcdm")
 ```
 
 ```{r est-show, eval = FALSE}
-ecpe_lcdm <- measr_dcm(data = ecpe_data, qmatrix = ecpe_qmatrix,
-                       resp_id = "resp_id", item_id = "item_id",
-                       method = "optim", type = "lcdm")
+ecpe_spec <- dcm_specify(ecpe_qmatrix, identifier = "item_id",
+                         measurement_model = lcdm(),
+                         structural_model = unconstrained())
+
+ecpe_lcdm <- dcm_estimate(ecpe_spec, data = ecpe_data, identifier = "resp_id",
+                          method = "optim", backend = "rstan")
 ```
 
 Once the model as estimated, we can use `measr_extract()` to pull out the probability that each respondent is proficient on each of the attributes.

@@ -70,8 +70,11 @@ However, please not that some functionality will be lost when using the optimize
 ```{r est-model, eval = FALSE}
 library(measr)
 
-model <- measr_dcm(data = ecpe_data, resp_id = "resp_id",
-                   qmatrix = ecpe_qmatrix, item_id = "item_id")
+model <- dcm_estimate(
+  dcm_spec = dcm_specify(dcmdata::ecpe_qmatrix, identifier = "item_id"),
+  data = dcmdata::ecpe_data, identifier = "resp_id",
+  iter = 1000, warmup = 200, chains = 2, cores = 2
+)
 ```
 
 Once a model has been estimated, we can then add and evaluate model fit.

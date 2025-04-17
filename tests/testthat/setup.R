@@ -1,17 +1,23 @@
+dina_spec <- dcmstan::dcm_specify(qmatrix = q_matrix, identifier = "item",
+                                  measurement_model = dina())
+
+dino_spec <- dcmstan::dcm_specify(qmatrix = q_matrix, identifier = "item",
+                                  measurement_model = dino())
+
 out <- capture.output(
   suppressMessages(
-    rstn_dina <- measr_dcm(data = dina_data, missing = NA, qmatrix = q_matrix,
-                           resp_id = "resp_id", item_id = "item", type = "dina",
-                           method = "optim", seed = 63277, backend = "rstan",
-                           precompiled = stanmodels$test_dina)
+    rstn_dina <- dcm_estimate(dina_spec, data = dina_data,
+                              identifier = "resp_id", method = "optim",
+                              backend = "rstan", seed = 63277,
+                              precompiled = stanmodels$test_dina)
   )
 )
 
 out <- capture.output(
   suppressMessages(
-    rstn_dino <- measr_dcm(data = dino_data, missing = NA, qmatrix = q_matrix,
-                           resp_id = "resp_id", item_id = "item", type = "dino",
-                           method = "optim", seed = 63277, backend = "rstan",
-                           precompiled = stanmodels$test_dina)
+    rstn_dino <- dcm_estimate(dina_spec, data = dino_data,
+                              identifier = "resp_id", method = "optim",
+                              backend = "rstan", seed = 63277,
+                              precompiled = stanmodels$test_dina)
   )
 )

@@ -8,8 +8,6 @@ Authors@R: c(
            comment = c(ORCID = "0000-0001-6177-7161")),
     person("Matthew", "Johnson", , , role = "cph",
            comment = "Provided code adapted for reliability.measrdcm()"),
-    person("Paul-Christian", "Bürkner", , , role = "cph",
-           comment = "Author of eval_silent()"),
     person("University of Kansas", role = "cph"),
     person("Institute of Education Sciences", role = "fnd")
   )
@@ -29,17 +27,20 @@ Depends:
     R (>= 4.1.0)
 Imports:
     dcm2,
+    dcmstan (>= 0.0.0.9000),
     dplyr (>= 1.1.1),
     dtplyr,
     fs,
     glue,
+    lifecycle,
     loo,
     methods,
     posterior,
     psych,
     Rcpp (>= 0.12.0),
     RcppParallel (>= 5.0.1),
-    rlang (>= 0.4.11),
+    rdcmchecks,
+    rlang (>= 1.1.0),
     rstan (>= 2.26.0),
     rstantools (>= 2.3.0),
     stats,
@@ -56,11 +57,16 @@ Suggests:
     cli,
     cmdstanr (>= 0.4.0),
     crayon,
+    dcmdata,
     knitr,
     rmarkdown,
     roxygen2,
     spelling,
     testthat (>= 3.0.0)
+Remotes:
+    r-dcm/dcmdata,
+    r-dcm/dcmstan,
+    r-dcm/rdcmchecks
 Additional_repositories: https://mc-stan.org/r-packages/
 Config/testthat/edition: 3
 Config/Needs/website: r-dcm/rdcmtemplate, wjakethompson/wjake, showtext, ggdist, english

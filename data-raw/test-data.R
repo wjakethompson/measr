@@ -153,7 +153,8 @@ ecpe_mod <- list(item1 = ~a1 * a2,
                  item26 = ~a3,
                  item27 = ~a1,
                  item28 = ~a3)
-ecpe_lldcm <- lldcm(as.matrix(ecpe_data[, -1]), 3, ecpe_mod, maxit = 1000)
+ecpe_lldcm <- lldcm(as.matrix(dcmdata::ecpe_data[, -1]), 3, ecpe_mod,
+                    maxit = 1000)
 ecpe_lldcm_reli <- reliab(ecpe_lldcm)
 
 

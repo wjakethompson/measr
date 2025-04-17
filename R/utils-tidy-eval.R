@@ -54,9 +54,9 @@
 #'   needed in more complex cases, for instance if you need to inspect
 #'   or modify the expressions in some way.
 #'
-#' * The `.data` pronoun is an object that represents the current
+#' * The `.data` placeholder is an object that represents the current
 #'   slice of data. If you have a variable name in a string, use the
-#'   `.data` pronoun to subset that variable with `[[`.
+#'   `.data` placeholder to subset that variable with `[[`.
 #'
 #'   ```
 #'   my_var <- "disp"

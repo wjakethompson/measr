@@ -59,9 +59,9 @@ In this simple case, the code is equivalent to the usage of \verb{\{\{}
 and \code{...} above. Defusing with \code{enquo()} or \code{enquos()} is only
 needed in more complex cases, for instance if you need to inspect
 or modify the expressions in some way.
-\item The \code{.data} pronoun is an object that represents the current
+\item The \code{.data} placeholder is an object that represents the current
 slice of data. If you have a variable name in a string, use the
-\code{.data} pronoun to subset that variable with \code{[[}.
+\code{.data} placeholder to subset that variable with \code{[[}.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{my_var <- "disp"
 mtcars |> summarise(mean = mean(.data[[my_var]]))
