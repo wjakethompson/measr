@@ -73,9 +73,8 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
   strc_param <- strc_param %>%
     dplyr::mutate(estimate = mean(.data$estimate)) |>
     dplyr::select("class", "estimate") |>
-    dplyr::mutate(# class = gsub(",", "", class),
-      class = sub("\\[", "", class),
-      class = sub("]", "", class))
+    dplyr::mutate(class = sub("\\[", "", class),
+                  class = sub("]", "", class))
 
   # pi matrix
   all_params <- item_param |>
