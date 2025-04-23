@@ -1,3 +1,37 @@
+# dcmstan ----------------------------------------------------------------------
+#' @importFrom dcmstan dcm_specify
+#' @export
+dcmstan::dcm_specify
+
+#' @importFrom dcmstan prior
+#' @export
+dcmstan::prior
+
+#' @importFrom dcmstan lcdm
+#' @export
+dcmstan::lcdm
+
+#' @importFrom dcmstan dina
+#' @export
+dcmstan::dina
+
+#' @importFrom dcmstan dino
+#' @export
+dcmstan::dino
+
+#' @importFrom dcmstan crum
+#' @export
+dcmstan::crum
+
+#' @importFrom dcmstan unconstrained
+#' @export
+dcmstan::unconstrained
+
+#' @importFrom dcmstan independent
+#' @export
+dcmstan::independent
+
+# posterior --------------------------------------------------------------------
 #' @importFrom posterior E
 #' @export
 posterior::E

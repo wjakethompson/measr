@@ -16,13 +16,6 @@ template:
       card: summary_large_image
 
 reference:
-- title: Data sets
-  contents:
-  - ecpe_data
-  - ecpe_qmatrix
-  - mdm_data
-  - mdm_qmatrix
-
 - title: Model estimation
 
 - subtitle: Priors
