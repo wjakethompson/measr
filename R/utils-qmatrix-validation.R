@@ -19,7 +19,7 @@ calc_sigma <- function(q, strc_param, pi_mat, ii) {
                        dplyr::mutate(dplyr::across(dplyr::where(is.numeric),
                                                    ~ as.character(.x))),
                      by = colnames(filtered_q)) |>
-    dplyr::group_by(prof_num) |>
+    dplyr::group_by(.data$prof_num) |>
     dplyr::summarize(w = sum(.data$estimate)) |>
     dplyr::ungroup()
 
@@ -27,7 +27,7 @@ calc_sigma <- function(q, strc_param, pi_mat, ii) {
     tidyr::separate(col = "class", into = colnames(q)) |>
     tibble::rowid_to_column("prof_num") |>
     dplyr::left_join(pi_mat |>
-                       dplyr::filter(item_id == ii) |>
+                       dplyr::filter(.data$item_id == ii) |>
                        dplyr::select(-"item_id"),
                      by = c("prof_num" = "profile_id")) |>
     dplyr::select(-"prof_num") |>
@@ -36,7 +36,7 @@ calc_sigma <- function(q, strc_param, pi_mat, ii) {
                                                    ~ as.character(.x))),
                      by = colnames(filtered_q)) |>
     dplyr::mutate(product = .data$estimate * .data$prob) |>
-    dplyr::group_by(prof_num) |>
+    dplyr::group_by(.data$prof_num) |>
     dplyr::summarize(product_sum = sum(.data$product),
                      w_sum = sum(.data$estimate)) |>
     dplyr::ungroup() |>
@@ -46,8 +46,8 @@ calc_sigma <- function(q, strc_param, pi_mat, ii) {
   # calculate sigma_1:K
   sigma_components <- condensed_p |>
     dplyr::left_join(condensed_strc_param, by = "prof_num") |>
-    dplyr::mutate(wp = w * p,
-                  wp2 = w * p * p) |>
+    dplyr::mutate(wp = .data$w * .data$p,
+                  wp2 = .data$w * .data$p * .data$p) |>
     dplyr::summarize(p_bar = sum(.data$wp),
                      wp2 = sum(.data$wp2))
 

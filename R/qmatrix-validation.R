@@ -154,9 +154,9 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
     max_specification <- max_specification |>
       dplyr::mutate(pvaf = max_sigma / max_sigma)
 
-    possible_specifications <- tibble()
-    possible_specifications <- bind_rows(possible_specifications,
-                                         max_specification)
+    possible_specifications <- tibble::tibble()
+    possible_specifications <- dplyr::bind_rows(possible_specifications,
+                                                max_specification)
 
     for (jj in 2:(nrow(all_profiles) - 1)) {
       q <- all_profiles[jj, ]
@@ -172,7 +172,7 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
       # only profiles where sigma / sigma_1:K >= epsilon are appropriate
       keep_spec <- sigma_q / max_sigma > epsilon
       if (keep_spec) {
-        possible_specifications <- bind_rows(possible_specifications, q)
+        possible_specifications <- dplyr::bind_rows(possible_specifications, q)
       }
     }
 
@@ -202,7 +202,7 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
                                   original_specification = list(actual_spec),
                                   empirical_specification = list(correct_spec),
                                   pvaf = final_pvaf)
-    validation_output <- bind_rows(validation_output, item_output)
+    validation_output <- dplyr::bind_rows(validation_output, item_output)
   }
 
   if (overwrite || is.null(mod$qmatrix_validation)) {
