@@ -267,9 +267,9 @@ add_marginal_likelihood <- function(x, overwrite = FALSE, save = TRUE) {
                                       "`method = \"mcmc\"`."))
   }
 
-  model <- measr:::check_model(x, required_class = "measrfit", name = "x")
-  overwrite <- measr:::check_logical(overwrite, name = "overwrite")
-  save <- measr:::check_logical(save, name = "force_save")
+  model <- check_model(x, required_class = "measrfit", name = "x")
+  overwrite <- check_logical(overwrite, name = "overwrite")
+  save <- check_logical(save, name = "force_save")
 
   # calculate log marginal likelihood
   suppressWarnings(
