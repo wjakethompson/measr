@@ -26,6 +26,7 @@ BugReports: https://github.com/wjakethompson/measr/issues
 Depends:
     R (>= 4.1.0)
 Imports:
+    cli,
     dcm2,
     dcmstan (>= 0.0.0.9000),
     dplyr (>= 1.1.1),
@@ -54,9 +55,7 @@ LinkingTo:
     rstan (>= 2.26.0),
     StanHeaders (>= 2.26.0)
 Suggests:
-    cli,
     cmdstanr (>= 0.4.0),
-    crayon,
     dcmdata,
     knitr,
     rmarkdown,
