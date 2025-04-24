@@ -96,3 +96,10 @@ test_that("Bayes factor works", {
   expect_equal(sum(tmp_mod$bayes_factor$posterior_probability[,9]), 1)
   expect_equal(sum(tmp_mod$bayes_factor$posterior_probability[,10]), 1)
 })
+
+test_that("Add marginal likelihood works", {
+  tmp_mod2 <- add_marginal_likelihood(cmds_mdm_lcdm)
+
+  expect_equal(typeof(tmp_mod2$log_marginal_likelihood), "double")
+  expect_equal(length(tmp_mod2$log_marginal_likelihood), 1)
+})
