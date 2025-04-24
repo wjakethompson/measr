@@ -76,6 +76,16 @@ extract_info_crit <- function(model, criterion) {
   model$criteria[[criterion]]
 }
 
+extract_marginal_likelihood <- function(model) {
+  if (is.null(model$log_marginal_likelihood)) {
+    rlang::abort(message = glue::glue("The log_marginal_likelihood ",
+                                      "must be added to a model object before ",
+                                      "it can be extracted. See ",
+                                      "`?add_marginal_likelihood()`."))
+  }
+  model$log_marginal_likelihood
+}
+
 # DCM-specific extracts --------------------------------------------------------
 dcm_extract_item_param <- function(model) {
   items <- model$data$qmatrix %>%
