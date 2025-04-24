@@ -5,9 +5,6 @@ bridgesampling::bridge_sampler
 #' @importFrom bridgesampling .restructure_upars
 bridgesampling:::.restructure_upars
 
-#' @importFrom bridgesampling .validate_cores
-bridgesampling:::.validate_cores
-
 bridge_sampler.measrfit <- function (samples = NULL, repetitions = 1,
                                      method = "normal", cores = 1,
                                      use_neff = TRUE, maxiter = 1000,
@@ -18,7 +15,6 @@ bridge_sampler.measrfit <- function (samples = NULL, repetitions = 1,
   if (is.null(samples$.__enclos_env__$private$model_methods_env_$model_ptr)) {
     samples$init_model_methods()
   }
-  cores <- bridgesampling:::.validate_cores(cores)
   samples_md <- samples$metadata()
   upars <- samples$unconstrain_draws()
   samples_dims <- c(sum(unlist(samples_md$stan_variable_sizes[!samples_md$stan_variables %in%
