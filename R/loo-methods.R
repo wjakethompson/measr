@@ -10,6 +10,10 @@ loo::waic
 #' @export
 loo::loo_compare
 
+#' @importFrom loo extract_log_lik
+#' @export
+loo::extract_log_lik
+
 #' Efficient approximate leave-one-out cross-validation (\acronym{LOO})
 #'
 #' A [loo::loo()] method that is customized for `measrfit` objects. This is a
@@ -132,4 +136,22 @@ loo_compare.measrfit <- function(x, ..., criterion = c("loo", "waic"),
   }
 
   loo::loo_compare(loo_list)
+}
+
+extract_log_lik.measrfit <- function(x, parameter_name = "log_lik",
+                                     merge_chains = TRUE) {
+  if (!inherits(x, "measrfit"))
+    stop("Not a measrfit object.", call. = FALSE)
+  if (x@mode != 0)
+    stop("Stan model does not contain posterior draws.",
+         call. = FALSE)
+  if (!requireNamespace("rstan", quietly = TRUE))
+    stop("Please load the 'rstan' package.", call. = FALSE)
+  if (merge_chains) {
+    log_lik <- as.matrix(stanfit, pars = parameter_name)
+  }
+  else {
+    log_lik <- as.array(stanfit, pars = parameter_name)
+  }
+  unname(log_lik)
 }
