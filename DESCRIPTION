@@ -28,6 +28,7 @@ BugReports: https://github.com/wjakethompson/measr/issues
 Depends:
     R (>= 4.1.0)
 Imports:
+    bridgesampling,
     dcm2,
     dplyr (>= 1.1.1),
     dtplyr,
