@@ -356,7 +356,6 @@ add_bayes_factor <- function(x, y, overwrite = FALSE,
       dplyr::filter(.data$model == x$type)
   }
 
-
   # re-save model object (if applicable)
   if (!is.null(x$file) && save) {
     saveRDS(x, file = x$file)
