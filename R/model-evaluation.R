@@ -319,7 +319,7 @@ add_bayes_factor <- function(x, y, overwrite = FALSE,
       (log_marg_lik2 + log(prior_prob[2]))
     posterior_prob_mod1 <- exp(log_difference) / (1 + exp(log_difference))
     posterior_prob <- c(posterior_prob_mod1, 1 - posterior_prob_mod1)
-    names(posterior_prob) <- c(x$type, mod2$type)
+    names(posterior_prob) <- c(x$type, y$type)
     loop_output <- tibble::tibble(prior = prior_prob,
                                   model = names(posterior_prob),
                                   prob = posterior_prob)
@@ -327,10 +327,12 @@ add_bayes_factor <- function(x, y, overwrite = FALSE,
       dplyr::left_join(posterior_probabilities_mod1,
                        loop_output %>%
                          dplyr::filter(.data$model == x$type) %>%
-                         dplyr::mutate(prior = paste0("pr_",
+                         dplyr::mutate(prior = paste0("prior_",
                                                       as.character(
                                                         .data$prior
-                                                      ))) %>%
+                                                      ),
+                                                      "_",
+                                                      x$type)) %>%
                          tidyr::pivot_wider(names_from = "prior",
                                             values_from = "prob"),
                        by = "model")
@@ -338,10 +340,13 @@ add_bayes_factor <- function(x, y, overwrite = FALSE,
       dplyr::left_join(posterior_probabilities_mod2,
                        loop_output %>%
                          dplyr::filter(.data$model == y$type) %>%
-                         dplyr::mutate(prior = paste0("pr_",
+                         dplyr::mutate(prior = 1 - .data$prior,
+                                       prior = paste0("prior_",
                                                       as.character(
                                                         .data$prior
-                                                      ))) %>%
+                                                      ),
+                                                      "_",
+                                                      x$type)) %>%
                          tidyr::pivot_wider(names_from = "prior",
                                             values_from = "prob"),
                        by = "model")
@@ -354,8 +359,7 @@ add_bayes_factor <- function(x, y, overwrite = FALSE,
   if (overwrite || is.null(x$bayes_factor)) {
     x$bayes_factor$bf <- bf
     x$bayes_factor$comp_model <- y$type
-    x$bayes_factor$posterior_probability <- posterior_probabilities %>%
-      dplyr::filter(.data$model == x$type)
+    x$bayes_factor$posterior_probability <- posterior_probabilities
   }
 
   # re-save model object (if applicable)
