@@ -9,6 +9,8 @@
 #' @inheritParams loo::loo
 #' @inheritParams dcm2::calc_m2
 #' @param x A [measrfit] object.
+#' @param y A [measrfit] object. This is only needed for relative model
+#'   evaluation metrics such as `add_bayes_factor()`.
 #' @param criterion A vector of criteria to calculate and add to the model
 #'   object. Must be one of `"loo"` or `"waic"` for models estimated with MCMC,
 #'   or one of `"aic"` or `"bic"` for model estimated with the optimizer.
