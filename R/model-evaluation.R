@@ -254,3 +254,159 @@ add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
 
   return(model)
 }
+
+#' @export
+#' @rdname model_evaluation
+add_marginal_likelihood <- function(x, overwrite = FALSE, save = TRUE) {
+  if (x$method == "optim") {
+    rlang::abort("error_bad_method",
+                 message = glue::glue("Bayes factor is only ",
+                                      "available for models estimated with ",
+                                      "`method = \"mcmc\"`."))
+  }
+
+  model <- measr:::check_model(x, required_class = "measrfit", name = "x")
+  overwrite <- measr:::check_logical(overwrite, name = "overwrite")
+  save <- measr:::check_logical(save, name = "force_save")
+
+  # calculate log marginal likelihood
+  suppressWarnings(
+    log_marg_lik <- bridge_sampler(samples = model$model,
+                                            maxiter = 10000,
+                                            silent = TRUE)
+  )
+
+  # save log marginal likelihood to model
+  if (overwrite || is.null(model$log_marginal_likelihood)) {
+    model$log_marginal_likelihood <- log_marg_lik$logml
+  }
+
+  # re-save model object (if applicable)
+  if (!is.null(model$file) && save) {
+    saveRDS(model, file = model$file)
+  }
+
+  return(model)
+}
+
+#' @export
+#' @rdname model_evaluation
+add_bayes_factor <- function(x, y, overwrite = FALSE,
+                             save = TRUE) {
+  if (x$method == "optim" || y$method == "optim") {
+    rlang::abort("error_bad_method",
+                 message = glue::glue("Bayes factor is only ",
+                                      "available for models estimated with ",
+                                      "`method = \"mcmc\"`."))
+  }
+
+  # if (!is.null(prior_prob) && length(prior_prob) != 2) {
+  #   rlang::abort("error_bad_method",
+  #                message = glue::glue("Prior probability must have a length ",
+  #                                     "of 2."))
+  # }
+
+  # if (!is.null(prior_prob) && sum(prior_prob) != 1) {
+  #   rlang::abort("error_bad_method",
+  #                message = glue::glue("Prior probabilities do not sum to 1."))
+  # }
+
+  x <- add_marginal_likelihood(x = x)
+  y <- add_marginal_likelihood(x = y)
+
+  log_marg_lik1 <- extract_marginal_likelihood(x)
+  log_marg_lik2 <- extract_marginal_likelihood(y)
+
+  bf <- exp(log_marg_lik1 - log_marg_lik2)
+
+  # posterior_probabilities <- tibble::tibble(model = c(x$type,
+  #                                                     y$type))
+  posterior_probabilities_mod1 <- tibble::tibble(model = x$type)
+  posterior_probabilities_mod2 <- tibble::tibble(model = y$type)
+  for (prior in seq(.1, .9, by = .1)) {
+    prior_prob <- c(prior, 1 - prior)
+
+    log_difference <- (log_marg_lik1 + log(prior_prob[1])) -
+      (log_marg_lik2 + log(prior_prob[2]))
+    posterior_prob_mod1 <- exp(log_difference) / (1 + exp(log_difference))
+    posterior_prob <- c(posterior_prob_mod1, 1 - posterior_prob_mod1)
+    names(posterior_prob) <- c(x$type, mod2$type)
+    loop_output <- tibble::tibble(prior = prior_prob,
+                                  model = names(posterior_prob),
+                                  prob = posterior_prob)#  %>%
+    # dplyr::filter(.data$model == x$type) %>%
+    # dplyr::mutate(prior = paste0("pr_", as.character(.data$prior))) %>%
+    # tidyr::pivot_wider(names_from = "prior", values_from = "prob")
+    posterior_probabilities_mod1 <-
+      dplyr::left_join(posterior_probabilities_mod1,
+                       loop_output %>%
+                         dplyr::filter(.data$model == x$type) %>%
+                         dplyr::mutate(prior = paste0("pr_",
+                                                      as.character(
+                                                        .data$prior
+                                                      ))) %>%
+                         tidyr::pivot_wider(names_from = "prior",
+                                            values_from = "prob"),
+                       by = "model")
+    posterior_probabilities_mod2 <-
+      dplyr::left_join(posterior_probabilities_mod2,
+                       loop_output %>%
+                         dplyr::filter(.data$model == y$type) %>%
+                         dplyr::mutate(prior = paste0("pr_",
+                                                      as.character(
+                                                        .data$prior
+                                                      ))) %>%
+                         tidyr::pivot_wider(names_from = "prior",
+                                            values_from = "prob"),
+                       by = "model")
+
+    # tmp <- e^logml*prior_prob
+    # post_prob <- as.numeric(e^logml*prior_prob / (tmp[2] + tmp[1]))
+    # names(post_prob) <- c(mod1$type, y$type)
+    # bridge_out <- tibble(prior = prior_prob,
+    #                      model = names(post_prob),
+    #                      prob = post_prob,
+    #                      type = "bridge calc")
+
+    # test_output <- bind_rows(test_output, my_out, bridge_out)
+
+    # testthat::expect_equal(posterior_prob, post_prob)
+  }
+
+  posterior_probabilities <- dplyr::bind_rows(posterior_probabilities_mod1,
+                                              posterior_probabilities_mod2)
+
+
+  # posterior_prob <- tibble::tibble(model = c("m1", "m2"),
+  #                                  log_marg_lik = c(log_marg_lik1,
+  #                                                   log_marg_lik2),
+  #                                  prior = prior_prob) %>%
+  #   dplyr::mutate(log_prior = log(.data$prior),
+  #                 adj_log_marg_lik = .data$log_marg_lik + .data$log_prior,
+  #                 denom = sum(.data$log_marg_lik * .data$prior),
+  #                 log_odds_post = .data$adj_log_marg_lik - .data$denom,
+  #                 post_prob = exp(.data$log_odds_post) /
+  #                   (1 + exp(.data$log_odds_post))) %>%
+  #   dplyr::pull(post_prob)
+
+  # posterior_prob <- bridgesampling::post_prob(log_marg_lik1, log_marg_lik2,
+  #                                             prior_prob = c(.5, .5),
+  #                                             model_names = c(mod1$type,
+  #                                                             y$type))
+
+  # save Bayes factor to model
+  if (overwrite || is.null(x$bayes_factor)) {
+    x$bayes_factor$bf <- bf
+    x$bayes_factor$comp_model <- y$type
+    x$bayes_factor$posterior_probability <- posterior_probabilities %>%
+      dplyr::filter(.data$model == x$type)
+  }
+
+
+  # re-save model object (if applicable)
+  if (!is.null(x$file) && save) {
+    saveRDS(x, file = x$file)
+  }
+
+  return(x)
+}
