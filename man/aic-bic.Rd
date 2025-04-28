@@ -5,9 +5,9 @@
 \alias{bic}
 \title{Maximum likelihood based information criteria}
 \usage{
-aic(x, ...)
+aic(x, ..., force = FALSE)
 
-bic(x, ...)
+bic(x, ..., force = FALSE)
 }
 \arguments{
 \item{x}{A \link[=dcm_estimate]{measrdcm} object estimated with

@@ -31,6 +31,10 @@ dcmstan::unconstrained
 #' @export
 dcmstan::independent
 
+#' @importFrom dcmstan hdcm
+#' @export
+dcmstan::hdcm
+
 # posterior --------------------------------------------------------------------
 #' @importFrom posterior E
 #' @export
