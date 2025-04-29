@@ -3,6 +3,10 @@
 #' @export
 dcmstan::dcm_specify
 
+#' @importFrom dcmstan create_profiles
+#' @export
+dcmstan::create_profiles
+
 #' @importFrom dcmstan prior
 #' @export
 dcmstan::prior
