@@ -1,7 +1,8 @@
 write_measrfit <- function(model, file) {
   if (S7::S7_inherits(model@backend, cmdstanr)) {
     cur_files <-  model@model$output_files()
-    new_files <- paste0(fs::path_ext_remove(file), "-", seq_along(cur_files),
+    new_files <- paste0(fs::path_wd(), "/",
+                        fs::path_ext_remove(file), "-", seq_along(cur_files),
                         ".csv")
     if (!identical(cur_files, new_files)) {
       model@model$save_output_files(
