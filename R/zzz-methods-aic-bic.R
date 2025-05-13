@@ -81,8 +81,7 @@ S7::method(bic, measrdcm) <- function(x, force = FALSE) {
     )
   }
 
-  # START HERE: need to generalize for cmdstanr backend
-  log_lik <- x@model$value
+  log_lik <- loglik(x@backend, model = x)
 
   num_params <- get_draws(x) |>
     posterior::subset_draws(variable = c("log_Vc", "pi"), exclude = TRUE) |>
