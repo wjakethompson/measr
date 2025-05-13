@@ -153,7 +153,7 @@ add_criterion <- function(x, criterion = c("loo", "waic", "aic", "bic"),
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && length(all_criteria) && save) {
+  if (!rlang::is_empty(x@file) && length(all_criteria) && save) {
     write_measrfit(x, file = x@file)
   }
   x
