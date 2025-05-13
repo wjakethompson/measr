@@ -115,7 +115,9 @@ loo::loo_compare
 
 # utilities --------------------------------------------------------------------
 find_criterion <- function(model, criterion) {
-  if (!is.null(model@criteria[[criterion]])) return(model@criteria[[criterion]])
+  if (!rlang::is_empty(model@criteria[[criterion]])) {
+    return(model@criteria[[criterion]])
+  }
 
   out <- utils::capture.output( # nolint
     crit <- do.call(criterion, list(x = model))

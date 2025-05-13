@@ -172,7 +172,7 @@ add_reliability <- function(x, overwrite = FALSE, save = TRUE, ...) {
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && save) {
+  if (!rlang::is_empty(x@file) && save) {
     write_measrfit(x, file = x@file)
   }
   x
@@ -207,7 +207,7 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && save) {
+  if (!rlang::is_empty(x@file) && save) {
     write_measrfit(x, file = x@file)
   }
   x
@@ -231,7 +231,7 @@ add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && save) {
+  if (!rlang::is_empty(x@file) && save) {
     write_measrfit(x, file = x@file)
   }
   x
