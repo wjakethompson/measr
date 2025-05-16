@@ -273,9 +273,9 @@ add_marginal_likelihood <- function(x, overwrite = FALSE, save = TRUE) {
 
   # calculate log marginal likelihood
   suppressWarnings(
-    log_marg_lik <- bridge_sampler.measrfit(samples = model$model,
-                                            maxiter = 10000,
-                                            silent = TRUE)
+    log_marg_lik <- bridge_sampler(samples = model$model,
+                                   maxiter = 10000,
+                                   silent = TRUE)
   )
 
   # save log marginal likelihood to model
