@@ -77,12 +77,39 @@ reliability <- S7::new_generic(
 #' )
 #'
 #' reliability(rstn_mdm_lcdm)
+<<<<<<< HEAD:R/zzz-methods-reliability.R
 S7::method(reliability, measrdcm) <- function(x, force = FALSE,
                                               threshold = 0.5) {
   # check for existing reliability ---------------------------------------------
   check_bool(force)
   if (!rlang::is_empty(x@reliability) && !force) {
     return(x@reliability)
+=======
+reliability.measrdcm <- function(model, ..., threshold = 0.5, force = FALSE) {
+  threshold <- check_double(threshold, lb = 0, ub = 1, inclusive = FALSE,
+                            name = "threshold")
+  force <- check_logical(force, name = "force")
+
+  att_names <- colnames(dplyr::select(model$data$qmatrix, -"item_id"))
+  if (length(threshold) == 1) {
+    threshold <- rep(threshold, times = length(att_names)) |>
+      rlang::set_names(att_names)
+  } else if (length(threshold) == length(att_names)) {
+    if (is.null(names(threshold))) {
+      threshold <- rlang::set_names(threshold, att_names)
+    } else if (!all(names(threshold) %in% att_names)) {
+      bad_names <- setdiff(names(threshold), att_names)
+      rlang::abort(
+        message = glue::glue("Unknown attribute names provided: ",
+                             "{paste(bad_names, collapse = ', ')}")
+      )
+    }
+  } else {
+    rlang::abort(
+      message = glue::glue("`threshold` must be of length 1 or length ",
+                           "{length(att_names)} (the number of attributes).")
+    )
+>>>>>>> b561f7d (switch to native pipe):R/reliability.R
   }
 
   # check arguments ------------------------------------------------------------

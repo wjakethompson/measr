@@ -102,11 +102,40 @@ measr_dcm <- function(data,
                       file = NULL,
                       file_refit = getOption("measr.file_refit", "never"),
                       ...) {
+<<<<<<< HEAD:R/dep-fit-dcm.R
   lifecycle::deprecate_warn(
     "2.0.0",
     "measr_dcm()",
     details = "This is a limited version of dcm_estimate(); use it instead."
   )
+=======
+  resp_id <- check_character(resp_id, name = "resp_id", allow_null = TRUE)
+  item_id <- check_character(item_id, name = "item_id", allow_null = TRUE)
+  clean_data <- check_data(data, name = "data", identifier = resp_id,
+                           missing = missing)
+  qmatrix <- check_qmatrix(qmatrix, identifier = item_id,
+                           item_levels = levels(clean_data$item_id),
+                           name = "qmatrix")
+  clean_qmatrix <- qmatrix |>
+    dplyr::select(-"item_id") |>
+    dplyr::rename_with(~glue::glue("att{1:(ncol(qmatrix) - 1)}"))
+  type <- rlang::arg_match(type, dcm_choices())
+  max_interaction <- check_integer(
+    ifelse(is.infinite(max_interaction), ncol(clean_qmatrix), max_interaction),
+    lb = 1, inclusive = TRUE, name = "max_interaction")
+  attribute_structure <- rlang::arg_match(attribute_structure, strc_choices())
+  method <- rlang::arg_match(method, c("mcmc", "optim"))
+  prior <- check_prior(prior, type = type, qmatrix = clean_qmatrix,
+                       strc = attribute_structure,
+                       name = "prior", allow_null = TRUE)
+  backend <- rlang::arg_match(backend, backend_choices())
+  file <- check_file(file, name = "file", create_dir = FALSE,
+                     check_file = FALSE, ext = "rds", allow_null = TRUE)
+  file_refit <- rlang::arg_match(file_refit, c("never", "always", "on_change"))
+  rlang::check_installed(backend,
+                         reason = glue::glue("for `backend = \"{backend}\"`"),
+                         action = install_backend)
+>>>>>>> b561f7d (switch to native pipe):R/fit-dcm.R
 
   type <- rlang::arg_match(type)
   attribute_structure <- rlang::arg_match(attribute_structure)
