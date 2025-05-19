@@ -57,20 +57,11 @@ cdi <- function(model, weight_prevalence = TRUE) {
 
   stan_draws <- get_draws(model, vars = c("log_Vc", "pi"))
 
-<<<<<<< HEAD:R/cdi.R
   pi_matrix <- posterior::subset_draws(stan_draws, variable = "pi") |>
     posterior::as_draws_df() |>
     tibble::as_tibble() |>
     tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) |>
     dplyr::summarize(value = E(.data$value), .by = "name") |>
-=======
-  pi_matrix <- stan_draws |>
-    posterior::subset_draws(variable = "pi") |>
-    posterior::as_draws_df() |>
-    tibble::as_tibble() |>
-    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) |>
-    dplyr::summarize(value = mean(.data$value), .by = "name") |>
->>>>>>> b561f7d (switch to native pipe):R/discrimination.R
     tidyr::separate_wider_regex(
       cols = "name",
       patterns = c("pi\\[", item = "[0-9]*", ",", class = "[0-9]*", "\\]")
@@ -117,13 +108,8 @@ cdi <- function(model, weight_prevalence = TRUE) {
       posterior::as_draws_df() |>
       tibble::as_tibble() |>
       tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) |>
-<<<<<<< HEAD:R/cdi.R
       dplyr::mutate(value = exp(.data$value)) |>
       dplyr::summarize(value = E(.data$value), .by = "name") |>
-=======
-      dplyr::summarize(value = mean(.data$value), .by = "name") |>
-      dplyr::mutate(value = exp(.data$value)) |>
->>>>>>> b561f7d (switch to native pipe):R/discrimination.R
       tidyr::separate_wider_regex(
         cols = "name",
         patterns = c("log_Vc\\[", class = "[0-9]*", "\\]")

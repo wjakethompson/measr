@@ -146,11 +146,7 @@ reli_list <- function(model, threshold) {
   n_resp <- length(model@data$respondent_names)
   n_att <- length(model@model_spec@qmatrix_meta$attribute_names)
   n_class  <- 2 ^ n_att
-<<<<<<< HEAD
   profile_vec <- dcmstan::create_profiles(n_att) |>
-=======
-  profile_vec <- create_profiles(n_att) |>
->>>>>>> b561f7d (switch to native pipe)
     as.matrix() |>
     t() |>
     as.vector()
@@ -195,7 +191,6 @@ reli_list <- function(model, threshold) {
     as.vector()
 
   # structural parameters
-<<<<<<< HEAD
   strc <- get_draws(model, vars = "Vc") |>
     posterior::as_draws_df() |>
     tibble::as_tibble() |>
@@ -205,25 +200,6 @@ reli_list <- function(model, threshold) {
     as.numeric()
 
   att_names <- names(model@model_spec@qmatrix_meta$attribute_names)
-=======
-  strc <- if (model$backend == "rstan" && model$method == "optim") {
-    model$model$par |>
-      tibble::enframe() |>
-      dplyr::filter(grepl("^Vc", .data$name)) |>
-      dplyr::pull(.data$value)
-  } else {
-    posterior::as_draws_df(model$model) |>
-      tibble::as_tibble() |>
-      dplyr::select(dplyr::matches("^Vc")) |>
-      dplyr::summarize(dplyr::across(dplyr::everything(),
-                                     \(x) mean(x, na.rm = TRUE))) |>
-      as.numeric()
-  }
-
-  att_names <- model$data$qmatrix |>
-    dplyr::select(-"item_id") |>
-    colnames()
->>>>>>> b561f7d (switch to native pipe)
 
   res <- create_reli_list(n_resp = n_resp, n_att = n_att, n_class = n_class,
                           profile_vec = profile_vec, class_att = class_att,

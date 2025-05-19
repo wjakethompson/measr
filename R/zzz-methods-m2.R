@@ -43,24 +43,14 @@ dcm2::fit_m2
     return(model@fit$m2)
   }
 
-<<<<<<< HEAD:R/zzz-methods-m2.R
   item_order <- names(model@data$item_names)
   dat <- model@data$clean_data |>
-=======
-  item_order <- levels(model$data$data$item_id)
-  dat <- model$data$data |>
->>>>>>> b561f7d (switch to native pipe):R/m2-methods.R
     tidyr::pivot_wider(names_from = "item_id", values_from = "score") |>
     dplyr::select(-"resp_id", !!!item_order) |>
     as.matrix() |>
     unname()
 
-<<<<<<< HEAD:R/zzz-methods-m2.R
   q <- model@model_spec@qmatrix
-=======
-  q <- model$data$qmatrix |>
-    dplyr::select(-"item_id")
->>>>>>> b561f7d (switch to native pipe):R/m2-methods.R
 
   draws <- get_draws(model, vars = c("log_Vc", "pi"))
 
@@ -87,17 +77,11 @@ dcm2::fit_m2
     as.matrix() |>
     unname()
 
-<<<<<<< HEAD:R/zzz-methods-m2.R
   dcm2::calc_m2(data = dat, struc_params = strc, pi_matrix = pi,
                 qmatrix = q, ci = ci, link = "logit",
                 model_type = toupper(
                   model@model_spec@measurement_model@model
                 )) |>
-=======
-  m2 <- dcm2::calc_m2(data = dat, struc_params = strc, pi_matrix = pi,
-                      qmatrix = q, ci = ci, link = "logit",
-                      model_type = toupper(model$type)) |>
->>>>>>> b561f7d (switch to native pipe):R/m2-methods.R
     dplyr::mutate(dplyr::across(dplyr::starts_with("ci"), ~round(.x, 4)),
                   !!glue::glue("{ci * 100}% CI") :=
                     paste0("[", .data$ci_lower, ", ", .data$ci_upper, "]"),
