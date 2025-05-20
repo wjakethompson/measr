@@ -52,7 +52,7 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
   item_param <- measr_extract(mod, "item_param")
   item_param <- item_param |>
     dplyr::mutate(estimate = mean(.data$estimate)) |>
-    dplyr::select(!!dplyr::sym(mod$data$item_id):"estimate")
+    dplyr::select(!!dplyr::sym(mod@data$item_identifier):"estimate")
   item_ids <- item_param |>
     dplyr::distinct(.data$item_id) %>%
     tibble::rowid_to_column("new_item_id")
