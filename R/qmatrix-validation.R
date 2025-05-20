@@ -30,19 +30,16 @@
 #' @name qmatrix_validation
 #' @export
 #' @examplesIf measr_examples()
-#' cmds_ecpe_lcdm <- measr_dcm(
-#'   data = ecpe_data, missing = NA, qmatrix = ecpe_qmatrix,
-#'   resp_id = "resp_id", item_id = "item_id", type = "lcdm",
-#'   method = "optim", seed = 63277, backend = "cmdstanr",
-#'   prior = c(prior(uniform(-15, 15), class = "intercept"),
-#'             prior(uniform(0, 15), class = "maineffect"),
-#'             prior(uniform(-15, 15), class = "interaction"))
-#' )
-#'
-#' cmds_ecpe_lcdm <- add_qmatrix_validation(cmds_ecpe_lcdm)
+#' mod_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
+#'                         identifier = "item")
+#' rstn_mdm <- dcm_estimate(mod_spec, data = dcmdata::mdm_data,
+#'                          identifier = "respondent", backend = "rstan",
+#'                          method = "optim")
+#' rstn_mdm <- add_respondent_estimates(rstn_mdm)
+#' rstn_mdm <- add_qmatrix_validation(rstn_mdm)
 add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
                                    save = TRUE) {
-  if (is.null(mod$respondent_estimates)) {
+  if (rlang::is_empty(mod@respondent_estimates)) {
     rlang::abort("error_bad_method",
                  message = glue::glue("Respondent estimates need to be added ",
                                       "to the model with ",
@@ -64,9 +61,9 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
     dplyr::mutate(item_id = .data$new_item_id) |>
     dplyr::select(-"new_item_id")
 
-  qmatrix <- mod$data$qmatrix
+  qmatrix <- mod@model_spec@qmatrix
   qmatrix <- qmatrix %>%
-    dplyr::select(-!!dplyr::sym(mod$data$item_id))
+    dplyr::select(-!!dplyr::sym(mod@data$item_identifier))
 
   # posterior probabilities of each class
   strc_param <- measr_extract(mod, "strc_param")
@@ -205,13 +202,14 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
     validation_output <- dplyr::bind_rows(validation_output, item_output)
   }
 
-  if (overwrite || is.null(mod$qmatrix_validation)) {
-    mod$qmatrix_validation <- validation_output
+  if (overwrite || rlang::is_empty(mod@qmatrix_validation)) {
+    mod@qmatrix_validation <- list(q_matrix_validation_output =
+                                     validation_output)
   }
 
   # re-save model object (if applicable)
-  if (!is.null(mod$file) && save) {
-    saveRDS(mod, file = mod$file)
+  if (!is.null(mod@file) && save) {
+    write_measrfit(x, file = x@file)
   }
 
   return(mod)
