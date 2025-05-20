@@ -271,6 +271,7 @@ measrfit <- S7::new_class("measrfit", package = "measr",
     fit = S7::class_list,
     criteria = S7::class_list,
     reliability = S7::class_list,
+    qmatrix_validation = S7::class_list,
     file = S7::new_property(
       class = S7::class_character,
       setter = function(self, value) {
