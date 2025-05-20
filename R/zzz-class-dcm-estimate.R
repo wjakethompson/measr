@@ -183,6 +183,10 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
 #'   the model.
 #' @param reliability An empty list for adding reliability information after
 #'   fitting the model.
+#' @param log_marginal_likelihood An empty list for adding the log marginal
+#'   likelihood after fitting the model.
+#' @param bayes_factor An empty list for adding Bayes factors after fitting the
+#'   model.
 #' @param file Optional name of a file which the model objects was saved to
 #'   or loaded from.
 #' @param version The versions of measr, *Stan*, and rstan or cmdstanr that were
@@ -271,6 +275,8 @@ measrfit <- S7::new_class("measrfit", package = "measr",
     fit = S7::class_list,
     criteria = S7::class_list,
     reliability = S7::class_list,
+    log_marginal_likelihood = S7::class_list,
+    bayes_factor = S7::class_list,
     file = S7::new_property(
       class = S7::class_character,
       setter = function(self, value) {

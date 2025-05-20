@@ -6,6 +6,8 @@
 \alias{add_reliability}
 \alias{add_fit}
 \alias{add_respondent_estimates}
+\alias{add_marginal_likelihood}
+\alias{add_bayes_factor}
 \title{Add model evaluation metrics model objects}
 \usage{
 add_criterion(
@@ -34,6 +36,10 @@ add_respondent_estimates(
   overwrite = FALSE,
   save = TRUE
 )
+
+add_marginal_likelihood(x, overwrite = FALSE, save = TRUE)
+
+add_bayes_factor(x, y, overwrite = FALSE, save = TRUE)
 }
 \arguments{
 \item{x}{A \link[=dcm_estimate]{measrdcm} object.}
@@ -83,6 +89,9 @@ object.}
 \item{probs}{The percentiles to be computed by the \code{\link[stats:quantile]{stats::quantile()}}
 function. Only relevant if the model was estimated with \code{method = "mcmc"}.
 Only used if \code{summary} is \code{TRUE}.}
+
+\item{y}{A \link[=dcm_estimate]{measrdcm} object. This is only used for relative
+model fit methods.}
 }
 \value{
 A modified \link[=dcm_estimate]{measrdcm} object with the corresponding
