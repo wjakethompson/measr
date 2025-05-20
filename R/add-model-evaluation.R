@@ -10,6 +10,8 @@
 #' @inheritParams dcm2::calc_m2
 #' @inheritParams score
 #' @param x A [measrdcm][dcm_estimate()] object.
+#' @param y A [measrdcm][dcm_estimate()] object. This is only used for relative
+#'   model fit methods.
 #' @param criterion A vector of information criteria to calculate and add to the
 #'   model object. Must be `"loo"` or `"waic"` for models estimated with MCMC,
 #'   or `"aic"` or `"bic"` for models estimated with the optimizer.
