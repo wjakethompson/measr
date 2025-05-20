@@ -6,7 +6,7 @@
 #' of the model object so that time-intensive calculations do not need to be
 #' repeated.
 #'
-#' @param mod A [measrfit] object.
+#' @param mod A [measrdcm][dcm_estimate()] object.
 #' @param epsilon The threshold for proportion of variance accounted for to flag
 #'   items for appropriate empirical specifications. The default is .95 as
 #'   implemented by de la Torre and Chiu (2016).
@@ -14,14 +14,14 @@
 #'   already been added to the estimated model should be overwritten. Default is
 #'   `FALSE`.
 #' @param save Logical. Only relevant if a file was specified in the
-#'   [measrfit] object passed to `x`. If `TRUE` (the default), the model is
-#'   re-saved to the specified file when new criteria are added to the `R`
-#'   object. If `FALSE`, the new criteria will be added to the `R` object, but
-#'   the saved file will not be updated.
+#'   [measrdcm][dcm_estimate()] object passed to `x`. If `TRUE` (the default),
+#'   the model is re-saved to the specified file when new criteria are added to
+#'   the `R` object. If `FALSE`, the new criteria will be added to the `R`
+#'   object, but the saved file will not be updated.
 #'
-#' @return A modified [measrfit] object with the estimated item-level
-#' discrimination index are added to the `$qmatrix_validation` element of the
-#' fitted model.
+#' @return A modified [measrdcm][dcm_estimate()] object with the estimated
+#' item-level discrimination index are added to the `$qmatrix_validation`
+#' element of the fitted model.
 #'
 #' @references de la Torre, J., & Chiu, C.-Y. (2016). A general method of
 #'   empirical Q-matrix validation. *Psychometrika, 81*(2), 253-273.
