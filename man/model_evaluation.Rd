@@ -89,6 +89,9 @@ object.}
 \item{probs}{The percentiles to be computed by the \code{\link[stats:quantile]{stats::quantile()}}
 function. Only relevant if the model was estimated with \code{method = "mcmc"}.
 Only used if \code{summary} is \code{TRUE}.}
+
+\item{y}{A \link[=dcm_estimate]{measrdcm} object. This is only used for relative
+model fit methods.}
 }
 \value{
 A modified \link[=dcm_estimate]{measrdcm} object with the corresponding
