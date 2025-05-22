@@ -15,6 +15,8 @@
 #'   or `"aic"` or `"bic"` for models estimated with the optimizer.
 #' @param method A vector of model fit methods to evaluate and add to the model
 #'   object.
+#' @param crit_value Numerical. A critical value threshold for evaluating the
+#'   residual correlations from the Yen's Q calculations.
 #' @param overwrite Logical. Indicates whether specified elements that have
 #'   already been added to the estimated model should be overwritten. Default is
 #'   `FALSE`.
@@ -51,6 +53,11 @@
 #' respectively. This function wraps [reliability()]. Arguments supplied to
 #' `...` are passed to [reliability()].
 #'
+#' For `add_yens_q()`, the Yen's Q statistic is added to the `@yens_q` element
+#' of the fitted model. The Yen's Q statistic is calculated as described by
+#' Christensen et al. (2016). The critical value for evaluating the residual
+#' correlations uses a default value of .2 as described by Chen and Thissen (1997).
+#'
 #' @return A modified [measrdcm][dcm_estimate()] object with the corresponding
 #'   slot populated with the specified information.
 #'
@@ -58,10 +65,17 @@
 #'   maximum likelihood principle. In B. N. Petrov & F. Csáki (Eds.),
 #'   *Proceedings of the Second International Symposium on Information Theory*
 #'   (pp. 267-281). Akademiai Kiado.
+#' @references Chen, W.-H., & Thissen, D. (1997). Local dependence indexes for
+#'   item pairs using item response theory. *Journal of Educational and
+#'   Behavioral Statistics, 22*(3), 265-389. \doi{10.3102/10769986022003265}
 #' @references Cui, Y., Gierl, M. J., & Chang, H.-H. (2012). Estimating
 #'   classification consistency and accuracy for cognitive diagnostic
 #'   assessment. *Journal of Educational Measurement, 49*(1), 19-38.
 #'   \doi{10.1111/j.1745-3984.2011.00158.x}
+#' @references Christensen, K. B., Makransky, G., & Horton, M. (2016). Critical
+#'   values for Yen's Q3: Identification of local dependence in the Rasch model
+#'   using residual correlations. *Applied Psychological Measurement, 41*(3),
+#'   178-194. \doi{10.1177/0146621616677520}
 #' @references Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
 #'   Limited-information goodness-of-fit testing of diagnostic classification
 #'   item response models. *British Journal of Mathematical and Statistical
