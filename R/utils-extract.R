@@ -99,7 +99,9 @@ dcm_extract_item_param <- function(model, call) {
                            name = "item", value = "item_id")
   params <- dcmstan::get_parameters(model@model_spec@measurement_model,
                                     qmatrix = model@model_spec@qmatrix) |>
-    dplyr::left_join(items, by = "item_id", multiple = "all") |>
+    dplyr::left_join(items |>
+                       dplyr::mutate(item_id = as.character(.data$item_id)),
+                     by = "item_id", multiple = "all") |>
     dplyr::select("item", dplyr::everything(), -"item_id")
   draws <- as_draws(model) |>
     posterior::subset_draws(variable = dplyr::pull(params, "coefficient")) |>
