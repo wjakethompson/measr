@@ -261,35 +261,29 @@ add_yens_q <- function(x, crit_value = .2,
                                       "before `add_yens_q()`."))
   }
 
-  possible_profs <- create_profiles(x@data@qmatrix |>
-                                      dplyr::select(
-                                        -!!rlang::sym(x@data@item_id)
-                                      ) |>
+  possible_profs <- create_profiles(x@model_spec@qmatrix |>
                                       ncol()) |>
     tidyr::unite(col = "profile", everything(), sep = "") |>
     tibble::rowid_to_column("profile_num")
 
-  qmatrix <- x@data@qmatrix |>
-    dplyr::select(-!!rlang::sym(x@data@item_id))
+  qmatrix <- x@model_spec@qmatrix
 
-  obs <- x@data@data |>
-    dplyr::rename(resp_id = !!rlang::sym(x@data@resp_id),
-                  item_id = !!rlang::sym(x@data@item_id))
+  obs <- x@data$clean_data
+
   # pi matrix
   item_param <- measr_extract(x, "item_param")
   item_param <- item_param |>
     dplyr::mutate(estimate = mean(.data$estimate)) |>
-    dplyr::select(!!dplyr::sym(x@data$item_identifier):"estimate")
+    dplyr::select(!!rlang::sym(x@data$item_identifier):"estimate")
   item_ids <- item_param |>
-    dplyr::distinct(.data$item_id) %>%
+    dplyr::distinct(!!rlang::sym(x@data$item_identifier)) |>
     tibble::rowid_to_column("new_item_id")
   item_param <- item_param |>
-    dplyr::left_join(item_ids, by = "item_id") |>
+    dplyr::left_join(item_ids, by = x@data$item_identifier) |>
     dplyr::mutate(item_id = .data$new_item_id) |>
-    dplyr::select(-"new_item_id")
+    dplyr::select(-"new_item_id", -!!rlang::sym(x@data$item_identifier))
   all_params <- item_param |>
-    dplyr::select(-"estimate") |>
-    dplyr::rename(type = "class", coefficient = "coef")
+    dplyr::select(-"estimate")
 
   att_dict <- tibble::tibble(att = colnames(qmatrix)) |>
     tibble::rowid_to_column("att_name") |>
@@ -338,7 +332,7 @@ add_yens_q <- function(x, crit_value = .2,
     dplyr::filter(.data$valid_for_profile == 1) |>
     dplyr::select(-"valid_for_profile") |>
     dplyr::left_join(item_param |>
-                       dplyr::select("coef", "estimate"),
+                       dplyr::select(coef = "coefficient", "estimate"),
                      by = c("param_name" = "coef")) |>
     dplyr::group_by(.data$item_id, .data$profile_id) |>
     dplyr::summarize(log_odds = sum(.data$estimate),
@@ -346,12 +340,12 @@ add_yens_q <- function(x, crit_value = .2,
     dplyr::mutate(prob = 1 / (1 + exp(-.data$log_odds))) |>
     dplyr::select(-"log_odds") |>
     dplyr::rename(pi = "prob")
-  class_probs <- x@respondent_estimates@class_probabilities |>
+  class_probs <- x@respondent_estimates$class_probabilities |>
     dplyr::mutate(class = gsub("(\\D|\\.(?=.*\\.))", "", .data$class,
                                perl = TRUE)) |>
     dplyr::left_join(possible_profs, by = c("class" = "profile")) |>
-    dplyr::select(resp_id = !!rlang::sym(x@data@resp_id), class = "profile_num",
-                  "probability")
+    dplyr::select(resp_id = !!rlang::sym(x@data$respondent_identifier),
+                  class = "profile_num", "probability")
 
   exp_value <- class_probs |>
     dplyr::left_join(pi_mat, by = c("class" = "profile_id"),
@@ -361,7 +355,9 @@ add_yens_q <- function(x, crit_value = .2,
     dplyr::summarize(exp = sum(.data$exp), .groups = 'keep') |>
     dplyr::ungroup() |>
     dplyr::left_join(obs |>
-                       dplyr::left_join(item_ids, by = c("item_id")) |>
+                       dplyr::left_join(item_ids,
+                                        by = c("item_id" =
+                                                 x@data$item_identifier)) |>
                        dplyr::select("resp_id", item_id = "new_item_id",
                                      "score"),
                      by = c("resp_id", "item_id")) |>
@@ -389,8 +385,10 @@ add_yens_q <- function(x, crit_value = .2,
     }
   }
 
+  colnames(yens_q) <- 1:num_items
+
   yens_q <- yens_q |>
-    tibble::as_tibble()
+    tibble::as_tibble(.name_repair = "minimal")
   names(yens_q) <- item_ids |>
     dplyr::mutate(item_id = as.character(.data$new_item_id)) |>
     dplyr::pull()
