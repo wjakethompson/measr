@@ -44,10 +44,11 @@ jobs:
           cov <- covr::package_coverage(
             quiet = FALSE,
             clean = FALSE,
-            line_exclusions = list("src/stanExports_gqs_loglik.h",
-                                   "src/stanExports_gqs_probs.h",
+            line_exclusions = list("R/zzz.R",
+                                   "src/stanExports_gqs_loglik.h",
+                                   "src/stanExports_gqs_ppmc_probs.h",
                                    "src/stanExports_gqs_ppmc.h",
-                                   "src/stanExports_test_lcdm.h",
+                                   "src/stanExports_gqs_probs.h",
                                    "src/stanExports_test_dina.h",
                                    "src/stanExports_test_dino.h"),
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
