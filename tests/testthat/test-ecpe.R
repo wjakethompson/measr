@@ -52,12 +52,14 @@ test_that("lcdm model works for ecpe", {
   expect_equal(class(cmds_ecpe_lcdm@model), c("CmdStanMLE", "CmdStanFit", "R6"))
   expect_true(is.list(cmds_ecpe_lcdm@respondent_estimates) &&
                 rlang::is_empty(cmds_ecpe_lcdm@respondent_estimates))
-  expect_true(is.list(cmds_ecpe_lcdm@fit) && rlang::is_empty(cmds_ecpe_lcdm@fit))
+  expect_true(is.list(cmds_ecpe_lcdm@fit) &&
+                rlang::is_empty(cmds_ecpe_lcdm@fit))
   expect_true(is.list(cmds_ecpe_lcdm@criteria) &&
                 rlang::is_empty(cmds_ecpe_lcdm@criteria))
   expect_true(is.list(cmds_ecpe_lcdm@reliability) &&
                 rlang::is_empty(cmds_ecpe_lcdm@reliability))
-  expect_true(is.character(cmds_ecpe_lcdm@file) && rlang::is_empty(cmds_ecpe_lcdm@file))
+  expect_true(is.character(cmds_ecpe_lcdm@file) &&
+                rlang::is_empty(cmds_ecpe_lcdm@file))
   expect_identical(names(cmds_ecpe_lcdm@version),
                    c("R", "R-measr", "R-cmdstanr", "CmdStan"))
 

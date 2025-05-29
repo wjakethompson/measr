@@ -97,10 +97,12 @@ extract_info_crit <- function(model, criterion, call) {
 dcm_extract_item_param <- function(model, call) {
   items <- tibble::enframe(model@model_spec@qmatrix_meta$item_names,
                            name = "item", value = "item_id")
-  params <- dcmstan::get_parameters(model@model_spec@measurement_model,
-                                    qmatrix = model@model_spec@qmatrix,
-                                    attributes = model@model_spec@qmatrix_meta$attribute_names,
-                                    items = model@model_spec@qmatrix_meta$item_names) |>
+  params <- dcmstan::get_parameters(
+    model@model_spec@measurement_model,
+    qmatrix = model@model_spec@qmatrix,
+    attributes = model@model_spec@qmatrix_meta$attribute_names,
+    items = model@model_spec@qmatrix_meta$item_names
+  ) |>
     dplyr::rename(item = "item_id")
   draws <- as_draws(model) |>
     posterior::subset_draws(variable = dplyr::pull(params, "coefficient")) |>

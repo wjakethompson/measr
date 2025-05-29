@@ -207,7 +207,8 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
     x@fit <- lapply(names(x@fit),
                     \(nm) {
                       if (!nm %in% names(ppmc_list)) return(x@fit[[nm]])
-                      dplyr::select(x@fit[[nm]], all_of(names(ppmc_list[[nm]])))
+                      dplyr::select(x@fit[[nm]],
+                                    dplyr::all_of(names(ppmc_list[[nm]])))
                     }) |>
       rlang::set_names(nm = names(x@fit))
   }
