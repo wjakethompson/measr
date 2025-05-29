@@ -1,9 +1,9 @@
 write_measrfit <- function(model, file) {
+  file_path <- fs::path_dir(fs::path_abs(file))
+  file_name <- fs::path_file(fs::path_abs(file))
+
   if (S7::S7_inherits(model@backend, cmdstanr)) {
     cur_files <-  model@model$output_files()
-
-    file_path <- fs::path_dir(fs::path_abs(file))
-    file_name <- fs::path_file(fs::path_abs(file))
     new_files <- paste0(file_path, "/", fs::path_ext_remove(file_name),
                         "-", seq_along(cur_files), ".csv")
 

@@ -37,14 +37,27 @@ S7::method(loglik_array, measrdcm) <- function(model) {
 }
 
 
-loglik <- S7::new_generic("loglik", "backend", function(backend, model) {
-  S7::S7_dispatch()
-})
 
-S7::method(loglik, rstan) <- function(backend, model) {
+loglik <- S7::new_generic("loglik", "model")
+
+S7::method(loglik, measrdcm) <- function(model) {
+  calc_loglik(model@backend, model@method, model = model)
+}
+
+calc_loglik <- S7::new_generic("calc_loglik", c("backend", "method"),
+  function(backend, method, model) {
+    S7::S7_dispatch()
+  })
+
+S7::method(calc_loglik, list(stanbackend, mcmc)) <- function(backend, method, model) {
+  log_lik <- loglik_array(model)
+  sum(apply(log_lik, c(3), mean))
+}
+
+S7::method(calc_loglik, list(rstan, optim)) <- function(backend, method, model) {
   model@model$value
 }
 
-S7::method(loglik, cmdstanr) <- function(backend, model) {
+S7::method(calc_loglik, list(cmdstanr, optim)) <- function(backend, method, model) {
   model@model$lp()
 }

@@ -10,7 +10,7 @@
 #' @export
 reliability <- S7::new_generic(
   "reliability", "x",
-  function(x, ..., force = FALSE, threshold = 0.5) {
+  function(x, ..., force = FALSE) {
     S7::S7_dispatch()
   }
 )
