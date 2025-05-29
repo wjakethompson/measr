@@ -8,6 +8,9 @@
 #' @param x A [measrdcm][dcm_estimate()] object estimated with
 #'   `backend = "optim"`.
 #' @param ... Unused.
+#' @param force If the criterion has already been added to the
+#'   model object with [add_criterion()], should it be recalculated. Default is
+#'   `FALSE`.
 #'
 #' @rdname aic-bic
 #' @return The numeric value of the information criterion.

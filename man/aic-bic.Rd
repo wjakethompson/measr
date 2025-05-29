@@ -14,6 +14,10 @@ bic(x, ..., force = FALSE)
 \code{backend = "optim"}.}
 
 \item{...}{Unused.}
+
+\item{force}{If the criterion has already been added to the
+model object with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is
+\code{FALSE}.}
 }
 \value{
 The numeric value of the information criterion.

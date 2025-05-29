@@ -10,7 +10,7 @@
 #' @export
 reliability <- S7::new_generic(
   "reliability", "x",
-  function(x, ..., force = FALSE) {
+  function(x, ..., threshold = 0.5, force = FALSE) {
     S7::S7_dispatch()
   }
 )
@@ -69,6 +69,7 @@ reliability <- S7::new_generic(
 #'
 #' @export
 #' @name reliability
+#' @aliases reliability
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(
 #'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
@@ -77,8 +78,8 @@ reliability <- S7::new_generic(
 #' )
 #'
 #' reliability(rstn_mdm_lcdm)
-S7::method(reliability, measrdcm) <- function(x, force = FALSE,
-                                              threshold = 0.5) {
+S7::method(reliability, measrdcm) <- function(x, threshold = 0.5,
+                                              force = FALSE) {
   # check for existing reliability ---------------------------------------------
   check_bool(force)
   if (!rlang::is_empty(x@reliability) && !force) {
