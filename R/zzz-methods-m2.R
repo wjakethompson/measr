@@ -15,6 +15,7 @@ dcm2::fit_m2
 #'   Default is `FALSE`.
 #'
 #' @return A data frame created by [dcm2::fit_m2()].
+#' @name m2
 #'
 #' @references Hansen, M., Cai, L., Monroe, S., & Li, Z. (2016).
 #'   Limited-information goodness-of-fit testing of diagnostic classification
@@ -25,8 +26,6 @@ dcm2::fit_m2
 #'   of cognitive diagnostic models. *Journal of Educational and Behavioral
 #'   Statistics, 41*(1), 3-26. \doi{10.3102/1076998615621293}
 #'
-#' @describeIn fit_m2 \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} for
-#'   diagnostic classification models.
 #' @export
 #' @examplesIf measr_examples()
 #' rstn_mdm_lcdm <- measr_dcm(

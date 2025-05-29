@@ -7,6 +7,10 @@ dcmstan::dcm_specify
 #' @export
 dcmstan::create_profiles
 
+#' @importFrom dcmstan get_parameters
+#' @export
+dcmstan::get_parameters
+
 #' @importFrom dcmstan prior
 #' @export
 dcmstan::prior
