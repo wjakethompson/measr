@@ -66,7 +66,7 @@ Remotes:
     r-dcm/dcmdata,
     r-dcm/dcmstan,
     r-dcm/rdcmchecks
-Additional_repositories: https://mc-stan.org/r-packages/
+Additional_repositories: https://stan-dev.r-universe.dev
 Config/testthat/edition: 3
 Config/Needs/website: r-dcm/rdcmtemplate, wjakethompson/wjake, showtext, ggdist, english
 Config/Needs/documentation: openpharma/roxylint
