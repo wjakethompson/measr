@@ -4,7 +4,7 @@
 \alias{reliability}
 \title{Estimate the reliability of a diagnostic classification model}
 \usage{
-reliability(x, ..., force = FALSE, threshold = 0.5)
+reliability(x, ..., force = FALSE)
 }
 \arguments{
 \item{x}{The estimated model to be evaluated.}
