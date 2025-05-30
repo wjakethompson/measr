@@ -34,8 +34,8 @@ yens_q <- S7::new_generic("yens_q", "x", function(x, ..., force = FALSE) {
 
 # methods ----------------------------------------------------------------------
 S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
-  if (!rlang::is_empty(x@criteria$aic) && !force) {
-    return(x@criteria$aic)
+  if (!rlang::is_empty(x@criteria$yen_q) && !force) {
+    return(x@criteria$yens_q)
   }
 
   if (rlang::is_empty(x@respondent_estimates)) {
@@ -63,65 +63,147 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
   item_param <- item_param |>
     dplyr::left_join(item_ids, by = x@data$item_identifier) |>
     dplyr::mutate(item_id = .data$new_item_id) |>
-    dplyr::select(-"new_item_id", -!!rlang::sym(x@data$item_identifier))
+    dplyr::select(-"new_item_id")
   all_params <- item_param |>
     dplyr::select(-"estimate")
 
-  att_dict <- tibble::tibble(att = colnames(qmatrix)) |>
-    tibble::rowid_to_column("att_name") |>
-    dplyr::mutate(att_name = glue::glue("att{att_name}"))
-
-  for (ii in att_dict$att) {
-    all_params <- all_params |>
-      dplyr::mutate(attributes = sub(ii,
-                                     att_dict |>
-                                       dplyr::filter(.data$att == ii) |>
-                                       dplyr::pull(.data$att_name),
-                                     .data$attributes))
-  }
-
-  all_params <- all_params |>
-    dplyr::mutate(attributes = dplyr::case_when(is.na(.data$attributes) ~
-                                                  "intercept",
-                                                TRUE ~ .data$attributes))
-
   all_profiles <- create_profiles(ncol(qmatrix))
 
-  profile_params <-
-    stats::model.matrix(stats::as.formula(paste0("~ .^",
-                                                 max(ncol(all_profiles),
-                                                     2L))),
-                        all_profiles) |>
-    tibble::as_tibble() |>
-    tibble::rowid_to_column(var = "profile_id") |>
-    tidyr::pivot_longer(-"profile_id", names_to = "parameter",
-                        values_to = "valid_for_profile") |>
-    dplyr::mutate(parameter = dplyr::case_when(.data$parameter ==
-                                                 "(Intercept)" ~
-                                                 "intercept",
-                                               TRUE ~ gsub(":", "__",
-                                                           .data$parameter)))
+  if (x@model_spec@measurement_model@model %in% c("lcdm", "crum")) {
+    att_dict <- tibble::tibble(att = colnames(qmatrix)) |>
+      tibble::rowid_to_column("att_name") |>
+      dplyr::mutate(att_name = glue::glue("att{att_name}"))
 
-  pi_mat <- tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
-                               profile_id = seq_len(nrow(all_profiles))) |>
-    dplyr::left_join(dplyr::select(all_params, "item_id",
-                                   "parameter" = "attributes",
-                                   "param_name" = "coefficient"),
-                     by = "item_id",
-                     multiple = "all", relationship = "many-to-many") |>
-    dplyr::left_join(profile_params, by = c("profile_id", "parameter"),
-                     relationship = "many-to-one") |>
-    dplyr::filter(.data$valid_for_profile == 1) |>
-    dplyr::select(-"valid_for_profile") |>
-    dplyr::left_join(item_param |>
-                       dplyr::select(coef = "coefficient", "estimate"),
-                     by = c("param_name" = "coef")) |>
-    dplyr::group_by(.data$item_id, .data$profile_id) |>
-    dplyr::summarize(log_odds = sum(.data$estimate),
-                     .groups = "drop") |>
-    dplyr::mutate(prob = 1 / (1 + exp(-.data$log_odds))) |>
-    dplyr::select(-"log_odds") |>
-    dplyr::rename(pi = "prob")
+    for (ii in att_dict$att) {
+      all_params <- all_params |>
+        dplyr::mutate(attributes = sub(ii,
+                                       att_dict |>
+                                         dplyr::filter(.data$att == ii) |>
+                                         dplyr::pull(.data$att_name),
+                                       .data$attributes))
+    }
+
+    all_params <- all_params |>
+      dplyr::mutate(attributes = dplyr::case_when(is.na(.data$attributes) ~
+                                                    "intercept",
+                                                  TRUE ~ .data$attributes))
+
+    profile_params <-
+      stats::model.matrix(stats::as.formula(paste0("~ .^",
+                                                   max(ncol(all_profiles),
+                                                       2L))),
+                          all_profiles) |>
+      tibble::as_tibble() |>
+      tibble::rowid_to_column(var = "profile_id") |>
+      tidyr::pivot_longer(-"profile_id", names_to = "parameter",
+                          values_to = "valid_for_profile") |>
+      dplyr::mutate(parameter = dplyr::case_when(.data$parameter ==
+                                                   "(Intercept)" ~
+                                                   "intercept",
+                                                 TRUE ~ gsub(":", "__",
+                                                             .data$parameter)))
+
+    pi_mat <- tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
+                                 profile_id = seq_len(nrow(all_profiles))) |>
+      dplyr::left_join(dplyr::select(all_params, "item_id",
+                                     "parameter" = "attributes",
+                                     "param_name" = "coefficient"),
+                       by = "item_id",
+                       multiple = "all", relationship = "many-to-many") |>
+      dplyr::left_join(profile_params, by = c("profile_id", "parameter"),
+                       relationship = "many-to-one") |>
+      dplyr::filter(.data$valid_for_profile == 1) |>
+      dplyr::select(-"valid_for_profile") |>
+      dplyr::left_join(item_param |>
+                         dplyr::select(coef = "coefficient", "estimate"),
+                       by = c("param_name" = "coef")) |>
+      dplyr::group_by(.data$item_id, .data$profile_id) |>
+      dplyr::summarize(log_odds = sum(.data$estimate),
+                       .groups = "drop") |>
+      dplyr::mutate(prob = 1 / (1 + exp(-.data$log_odds))) |>
+      dplyr::select(-"log_odds") |>
+      dplyr::rename(pi = "prob")
+  } else if (x@model_spec@measurement_model@model == "dina") {
+    meas_by_item <- qmatrix |>
+      tibble::rowid_to_column("item_id") |>
+      tidyr::pivot_longer(cols = -c("item_id"), names_to = "att",
+                          values_to = "meas")
+
+    pi_mat <- tidyr::crossing(profile_id = 1:nrow(all_profiles),
+                              item_id = 1:nrow(qmatrix)) |>
+      dplyr::left_join(all_profiles |>
+                         tibble::rowid_to_column("profile_id"),
+                       by = "profile_id") |>
+      tidyr::pivot_longer(cols = -c("profile_id", "item_id"), names_to = "att",
+                          values_to = "mastered") |>
+      dplyr::left_join(meas_by_item, by = c("item_id", "att")) |>
+      dplyr::filter(.data$meas == 1) |>
+      dplyr::mutate(mastered = as.numeric(.data$mastered == .data$meas)) |>
+      dplyr::select(-"meas") |>
+      dplyr::group_by(.data$profile_id, .data$item_id) |>
+      dplyr::summarize(mastered_all = mean(.data$mastered), .groups = 'keep') |>
+      dplyr::ungroup() |>
+      dplyr::mutate(mastered_all = dplyr::case_when(.data$mastered_all < 1 ~ 0,
+                                                    TRUE ~ 1)) |>
+      dplyr::left_join(all_params |>
+                         tidyr::pivot_wider(names_from = "type",
+                                            values_from = "coefficient"),
+                       by = "item_id") |>
+      dplyr::mutate(param = dplyr::case_when(.data$mastered_all == 0 ~ guess,
+                                             .data$mastered_all == 1 ~ slip)) |>
+      dplyr::select(-"guess", -"slip", -"mastered_all") |>
+      dplyr::left_join(item_param |>
+                         dplyr::select(-"type"),
+                       by = c("item_id", "param" = "coefficient")) |>
+      dplyr::rename(pi = "estimate") |>
+      dplyr::select(-"param")
+  } else if (x@model_spec@measurement_model@model == "dino") {
+    meas_by_item <- qmatrix |>
+      tibble::rowid_to_column("item_id") |>
+      tidyr::pivot_longer(cols = -c("item_id"), names_to = "att",
+                          values_to = "meas")
+
+    pi_mat <- tidyr::crossing(profile_id = 1:nrow(all_profiles),
+                              item_id = 1:nrow(qmatrix)) |>
+      dplyr::left_join(all_profiles |>
+                         tibble::rowid_to_column("profile_id"),
+                       by = "profile_id") |>
+      tidyr::pivot_longer(cols = -c("profile_id", "item_id"), names_to = "att",
+                          values_to = "mastered") |>
+      dplyr::left_join(meas_by_item, by = c("item_id", "att")) |>
+      dplyr::filter(.data$meas == 1) |>
+      dplyr::mutate(mastered = as.numeric(.data$mastered == .data$meas)) |>
+      dplyr::select(-"meas") |>
+      dplyr::group_by(.data$profile_id, .data$item_id) |>
+      dplyr::summarize(mastered_all = mean(.data$mastered), .groups = 'keep') |>
+      dplyr::ungroup() |>
+      dplyr::mutate(mastered_all = dplyr::case_when(.data$mastered_all > 0 ~ 1,
+                                                    TRUE ~ 0)) |>
+      dplyr::left_join(all_params |>
+                         tidyr::pivot_wider(names_from = "type",
+                                            values_from = "coefficient"),
+                       by = "item_id") |>
+      dplyr::mutate(param = dplyr::case_when(.data$mastered_all == 0 ~ guess,
+                                             .data$mastered_all == 1 ~ slip)) |>
+      dplyr::select(-"guess", -"slip", -"mastered_all") |>
+      dplyr::left_join(item_param |>
+                         dplyr::mutate(estimate =
+                                         dplyr::case_when(.data$type == "slip" ~
+                                                            1 - .data$estimate,
+                                                          TRUE ~
+                                                            .data$estimate)) |>
+                         dplyr::select(-"type"),
+                       by = c("item_id", "param" = "coefficient")) |>
+      dplyr::rename(pi = "estimate") |>
+      dplyr::select(-"param")
+  } else if (x@model_spec@measurement_model@model == "nido") {
+
+  } else if (x@model_spec@measurement_model@model == "nida") {
+
+  } else if (x@model_spec@measurement_model@model == "ncrum") {
+
+  }
+
   class_probs <- x@respondent_estimates$class_probabilities |>
     dplyr::mutate(class = gsub("(\\D|\\.(?=.*\\.))", "", .data$class,
                                perl = TRUE)) |>
