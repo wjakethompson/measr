@@ -61,37 +61,46 @@ sim_data$q_matrix
 
 ## Specifying a DCM for Estimation
 
-In measr, DCMs are specified and estimated using the `measr_dcm()` function.
+In measr, DCMs are specified and estimated using the `dcm_specify()`  and `dcm_estimate()` functions, respectively.
 We'll start by estimating a loglinear cognitive diagnostic model (LCDM).
 The LCDM is a general DCM that subsumes many other DCM subtypes [@lcdm].
 
-First, we specify the data (`data`) and the Q-matrix (`qmatrix`) that should be used to estimate the model.
-Note that these are the only required arguments to the `measr_dcm()` function.
-If no other arguments are provided, sensible defaults (described below) will take care of the rest of the specification and estimation.
-Next, we can specify which columns, if any, in our `data` and `qmatrix` contain respondent identifiers and item identifiers in, respectively.
-If one or more of these variables are not present in the data, these arguments can be omitted, and measr will assign identifiers based on the row number (i.e., row 1 in `qmatrix` becomes item 1).
+First, we specify the model using our Q-matrix (`qmatrix`).
+Note that this is the only required argument to the `dcm_specify()` function.
+If no other arguments are provided, sensible defaults (described below) will take care of the rest of the specification.
+Next, we can specify which column, if any, in our `qmatrix` contains item identifiers.
+If this variables is not present in the data, this argument can be omitted, and measr will assign identifiers based on the row number (i.e., row 1 in `qmatrix` becomes item 1).
 We can then specify the type of DCM we want to estimate.
-The current options are `"lcdm"` (the default) `"dina"`, and `"dino"` (see [Estimating Other DCM Sub-Types](#subtype) below).
+Here, we'll choose the LCDM for our measurement model, and we'll use an unconstrained structural model.^[For more details on the modeling options, see [Estimating Other DCM Sub-Types](#subtype) below.]
 
-You also have the option to choose which estimation engine to use, via the `"backend"` argument.
+```{r specify-dcm}
+model_spec <- dcm_specify(qmatrix = sim_data$q_matrix, identifier = "item_id",
+                          measurement_model = lcdm(),
+                          structural_model = unconstrained())
+
+model_spec
+```
+
+We can then pass this model specification to `dcm_estimate()`, along with our data (`data`).
+As with the model specification, we can specify which column, if any, contains respondent identifiers in the `data` object.
+For the model estimation, we have the option to choose which engine to use, via the `backend` argument.
 The default backend is `backend = "rstan"`, which will use the [rstan](https://mc-stan.org/rstan/) package to estimate the model.
-Alternatively, you can use the [cmdstanr](https://mc-stan.org/cmdstanr/) package to estimate the model by specifying `backend = "cmdstanr"`.
-The cmdstanr package works by using a local installation of Stan to estimate the models, rather than the version that is pre-compiled in rstan.
+Alternatively, we can use the [cmdstanr](https://mc-stan.org/cmdstanr/) package to estimate the model by specifying `backend = "cmdstanr"`.
+The cmdstanr package works by using a local installation of *Stan* to estimate the models, rather than the version that is pre-compiled in rstan.
 Once a backend has been chosen, we can supply additional arguments to those specific estimating functions.
-In the example below, I specify 500 warm-up iterations per chain, 500 post-warm-up iterations per chain, and 4 cores to run the chains in parallel.
-The full set up options available for rstan and cmdstanr can be found by looking at the help pages for `rstan::sampling()` and `` cmdstanr::`model-method-sample` ``, respectively.
+In the example below, we specify 1,000 warm-up iterations per chain, 500 post-warm-up iterations per chain, and 4 cores to run the chains in parallel.
+The full set up options available for rstan and cmdstanr can be found by looking at the help pages for `?rstan::sampling()` and `` ?cmdstanr::`model-method-sample` ``, respectively.
 
-Finally, because estimating these models can be time intensive, you can specify a `file`.
+Finally, because estimating these models can be time intensive, we can specify a `file`.
 If a file is specified, an R object of the fitted model will be automatically saved to the specified file.
 If the specified `file` already exists, then the fitted model will be read back into R, eliminating the need to re-estimate the model.
 
-```{r}
-lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
-                  resp_id = "resp_id", item_id = "item_id",
-                  type = "lcdm", method = "mcmc", backend = "cmdstanr",
-                  iter_warmup = 1000, iter_sampling = 500,
-                  chains = 4, parallel_chains = 4,
-                  file = "fits/sim-lcdm")
+```{r estimate-dcm}
+lcdm <- dcm_estimate(model_spec, data = sim_data$data, identifier = "resp_id",
+                     method = "mcmc", backend = "cmdstanr",
+                     iter_warmup = 1000, iter_sampling = 500,
+                     chains = 4, parallel_chains = 4,
+                     file = "fits/sim-lcdm")
 ```
 
 ### Examining Parameter Estimates
@@ -126,12 +135,13 @@ library(glue)
 
 param_compare <- item_parameters |>
   left_join(sim_data$true_items,
-            by = c("item_id", "class", "attributes", "coef"),
+            by = c("item_id", "type" = "class", "attributes",
+                   "coefficient" = "coef"),
             relationship = "one-to-one") |>
   mutate(measr_est = map_dbl(estimate, mean),
-         type = case_when(str_detect(coef, "_0") ~ "Intercept",
-                          str_detect(coef, "_1") ~ "Main Effect",
-                          str_detect(coef, "_2") ~ "Interaction"),
+         type = case_when(str_detect(coefficient, "_0") ~ "Intercept",
+                          str_detect(coefficient, "_1") ~ "Main Effect",
+                          str_detect(coefficient, "_2") ~ "Interaction"),
          type = factor(type, levels = c("Intercept", "Main Effect",
                                         "Interaction")))
 
@@ -187,7 +197,7 @@ In the code to estimate the LCDM above, we did not specify any prior distributio
 By default, measr uses the following prior distributions for the LCDM:
 
 ```{r lcdm-prior}
-default_dcm_priors(type = "lcdm")
+default_dcm_priors(measurement_model = lcdm())
 ```
 
 As you can see, main effect parameters get a `lognormal(0, 1)` prior by default.
@@ -195,19 +205,19 @@ Different prior distributions can be specified with the `prior()` function.
 For example, we can specify a `normal(0, 10)` prior for the main effects with:
 
 ```{r normal-prior}
-prior(normal(0, 10), class = "maineffect")
+prior(normal(0, 10), type = "maineffect")
 ```
 
 By default, the prior is applied to all parameters in the class (i.e., all main effects).
 However, we can also apply a prior to a specific parameter.
 For example, here we specify a &chi;^2^ distribution with 2 degrees of freedom as the default prior for main effects, and an exponential distribution with a rate of 2 for the main effect of attribute 1 on just item 7.
-To see all parameters (including `class` and `coef`) that can be specified, we can use `get_parameters()`.
+To see all parameters (including `type` and `coefficient`) that can be specified, we can pass our model specification to `get_parameters()`.
 
 ```{r multi-prior}
-c(prior(chi_square(2), class = "maineffect"),
-  prior(exponential(2), class = "maineffect", coef = "l7_11"))
+c(prior(chi_square(2), type = "maineffect"),
+  prior(exponential(2), type = "maineffect", coefficient = "l7_11"))
 
-get_parameters(sim_data$q_matrix, item_id = "item_id", type = "lcdm")
+get_parameters(model_spec)
 ```
 
 Any distribution that is supported by the *Stan* language can be used as a prior.
@@ -222,19 +232,23 @@ This means that we will estimate the model using *Stan's* optimizer, rather than
 Note that the prior still influences the model when using `method = "optim"`, just as they do when using `method = "mcmc"` (the default).
 
 ```{r new-prior}
-new_prior <- prior(normal(0, 15), class = "maineffect", lb = 0)
-new_lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
-                      resp_id = "resp_id", item_id = "item_id",
-                      type = "lcdm", method = "optim", backend = "cmdstanr",
-                      prior = new_prior,
-                      file = "fits/sim-lcdm-optim")
+new_prior <- prior(normal(0, 15), type = "maineffect", lower_bound = 0)
 
-new_lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
-                      resp_id = "resp_id", item_id = "item_id",
-                      type = "lcdm", method = "optim", backend = "cmdstanr",
-                      prior = c(prior(normal(0, 15), class = "maineffect",
-                                      lb = 0)),
-                      file = "fits/sim-lcdm-optim")
+new_spec <- dcm_specify(qmatrix = sim_data$q_matrix, identifier = "item_id",
+                        measurement_model = lcdm(),
+                        structural_model = unconstrained(),
+                        priors = new_prior)
+
+new_spec <- dcm_specify(qmatrix = sim_data$q_matrix, identifier = "item_id",
+                        measurement_model = lcdm(),
+                        structural_model = unconstrained(),
+                        priors = prior(normal(0, 15), type = "maineffect",
+                                       lower_bound = 0))
+
+# Estimate the updated model
+new_lcdm <- dcm_estimate(new_spec, data = sim_data$data, identifier = "resp_id",
+                         method = "optim", backend = "cmdstanr",
+                         file = "fits/sim-lcdm-optim")
 ```
 
 The priors used to estimate the model are saved in the returned model object, so we can always go back and see which priors were used if we are unsure.
@@ -247,7 +261,8 @@ measr_extract(new_lcdm, "prior")
 ### Other DCM Sub-Types {#subtype}
 
 Although a primary motivation for measr is to provide researchers with software that makes the LCDM readily accessible, a few other popular DCM subtypes are also supported.
-For example, we can estimate the deterministic inputs, noisy "and" gate [DINA, @junker2001] or the deterministic inputs, noisy "or" gate [DINO, @dino] models by specifying a different `type` in the `measr_dcm()` function.
+For example, we can estimate the deterministic inputs, noisy "and" gate [DINA, @junker2001] or the deterministic inputs, noisy "or" gate [DINO, @dino] models by specifying a different `measurement_model` in the `dcm_specify()` function.
+For a complete list of currently supported measurement and structural models, see `` ?dcmstan::`measurement-model` `` and `` ?dcmstan::`structural-model` ``, respectively.
 
 Future development work will continue to add functionality for more DCM subtypes.
 If there is a specific subtype you are interested in, or would like to see supported, please open an issue on the [GitHub repository](https://github.com/wjakethompson/measr/issues).
