@@ -19,11 +19,16 @@ reference:
 - title: Model estimation
 
 - subtitle: Specification
-  desc: Define prior distributions for the model parameters.
+  desc: >
+    Specify a diagnostic model, including measurement model, structural model,
+    and prior distributions.
   contents:
-  - dcm_specify
-  - prior
-  - get_parameters
+  - dcmstan::dcm_specify
+  - dcmstan::`measurement-model`
+  - dcmstan::`structural-model`
+  - dcmstan::get_parameters
+  - dcmstan::prior
+  - dcmstan::default_dcm_priors
 
 - subtitle: Estimation
   desc: >
