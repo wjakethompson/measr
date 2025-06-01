@@ -24,8 +24,6 @@ reference:
     and prior distributions.
   contents:
   - dcmstan::dcm_specify
-  - dcmstan::`measurement-model`
-  - dcmstan::`structural-model`
   - dcmstan::get_parameters
   - dcmstan::prior
   - dcmstan::default_dcm_priors
