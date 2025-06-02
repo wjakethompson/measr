@@ -66,7 +66,7 @@ attributes are independent of each other.}
 sampling method, or \code{"optim"}, which uses Stan's optimizer.}
 
 \item{prior}{A \link[dcmstan:prior]{prior} object. If \code{NULL}, default priors
-are used, as specified by \code{\link[=default_dcm_priors]{default_dcm_priors()}}.}
+are used, as specified by \code{\link[dcmstan:default_dcm_priors]{dcmstan::default_dcm_priors()}}.}
 
 \item{backend}{Character string naming the package to use as the backend for
 fitting the Stan model. Options are \code{"rstan"} (the default) or

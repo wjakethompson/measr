@@ -209,6 +209,13 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   if ("ppmc" %in% method) {
     ppmc_list <- fit_ppmc(x, ..., force = overwrite)
     x@fit <- utils::modifyList(x@fit, ppmc_list)
+    x@fit <- lapply(names(x@fit),
+                    \(nm) {
+                      if (!nm %in% names(ppmc_list)) return(x@fit[[nm]])
+                      dplyr::select(x@fit[[nm]],
+                                    dplyr::all_of(names(ppmc_list[[nm]])))
+                    }) |>
+      rlang::set_names(nm = names(x@fit))
   }
 
   # re-save model object (if applicable) ---------------------------------------

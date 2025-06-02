@@ -6,7 +6,9 @@
 \alias{reexports}
 \alias{dcm_specify}
 \alias{create_profiles}
+\alias{get_parameters}
 \alias{prior}
+\alias{default_dcm_priors}
 \alias{lcdm}
 \alias{dina}
 \alias{dino}
@@ -39,7 +41,7 @@ below to see their documentation.
 \describe{
   \item{dcm2}{\code{\link[dcm2]{fit_m2}}}
 
-  \item{dcmstan}{\code{\link[dcmstan]{create_profiles}}, \code{\link[dcmstan:measurement-model]{crum}}, \code{\link[dcmstan]{dcm_specify}}, \code{\link[dcmstan:measurement-model]{dina}}, \code{\link[dcmstan:measurement-model]{dino}}, \code{\link[dcmstan:structural-model]{hdcm}}, \code{\link[dcmstan:structural-model]{independent}}, \code{\link[dcmstan:measurement-model]{lcdm}}, \code{\link[dcmstan]{prior}}, \code{\link[dcmstan:structural-model]{unconstrained}}}
+  \item{dcmstan}{\code{\link[dcmstan]{create_profiles}}, \code{\link[dcmstan:measurement-model]{crum}}, \code{\link[dcmstan]{dcm_specify}}, \code{\link[dcmstan]{default_dcm_priors}}, \code{\link[dcmstan:measurement-model]{dina}}, \code{\link[dcmstan:measurement-model]{dino}}, \code{\link[dcmstan]{get_parameters}}, \code{\link[dcmstan:structural-model]{hdcm}}, \code{\link[dcmstan:structural-model]{independent}}, \code{\link[dcmstan:measurement-model]{lcdm}}, \code{\link[dcmstan]{prior}}, \code{\link[dcmstan:structural-model]{unconstrained}}}
 
   \item{loo}{\code{\link[loo]{loo}}, \code{\link[loo]{loo_compare}}, \code{\link[loo]{waic}}}
 

@@ -2,8 +2,8 @@
 extract_m2 <- function(model, call) {
   if (rlang::is_empty(model@fit$m2)) {
     cli::cli_abort(
-      cli::format_message(c("Model fit information must be ",
-                            "added to a model object before ",
+      cli::format_message(c("Model fit information must be added ",
+                            "to a model object before ",
                             "the M2 can be extracted. See ",
                             "{.fun add_fit}.")),
       call = call
@@ -15,8 +15,8 @@ extract_m2 <- function(model, call) {
 extract_rmsea <- function(model, call) {
   if (rlang::is_empty(model@fit$m2)) {
     cli::cli_abort(
-      cli::format_message(c("Model fit information must be ",
-                            "added to a model object before ",
+      cli::format_message(c("Model fit information must be added ",
+                            "to a model object before ",
                             "the RMSEA can be extracted. See ",
                             "{.fun add_fit}.")),
       call = call
@@ -29,8 +29,8 @@ extract_rmsea <- function(model, call) {
 extract_srmsr <- function(model, call) {
   if (rlang::is_empty(model@fit$m2)) {
     cli::cli_abort(
-      cli::format_message(c("Model fit information must be ",
-                            "added to a model object before ",
+      cli::format_message(c("Model fit information must be added ",
+                            "to a model object before ",
                             "the SRMSR can be extracted. See ",
                             "{.fun add_fit}.")),
       call = call
@@ -97,12 +97,13 @@ extract_info_crit <- function(model, criterion, call) {
 dcm_extract_item_param <- function(model, call) {
   items <- tibble::enframe(model@model_spec@qmatrix_meta$item_names,
                            name = "item", value = "item_id")
-  params <- dcmstan::get_parameters(model@model_spec@measurement_model,
-                                    qmatrix = model@model_spec@qmatrix) |>
-    dplyr::left_join(items |>
-                       dplyr::mutate(item_id = as.character(.data$item_id)),
-                     by = "item_id", multiple = "all") |>
-    dplyr::select("item", dplyr::everything(), -"item_id")
+  params <- dcmstan::get_parameters(
+    model@model_spec@measurement_model,
+    qmatrix = model@model_spec@qmatrix,
+    attributes = model@model_spec@qmatrix_meta$attribute_names,
+    items = model@model_spec@qmatrix_meta$item_names
+  ) |>
+    dplyr::rename(item = "item_id")
   draws <- as_draws(model) |>
     posterior::subset_draws(variable = dplyr::pull(params, "coefficient")) |>
     posterior::as_draws_rvars() |>

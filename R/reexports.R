@@ -7,9 +7,17 @@ dcmstan::dcm_specify
 #' @export
 dcmstan::create_profiles
 
+#' @importFrom dcmstan get_parameters
+#' @export
+dcmstan::get_parameters
+
 #' @importFrom dcmstan prior
 #' @export
 dcmstan::prior
+
+#' @importFrom dcmstan default_dcm_priors
+#' @export
+dcmstan::default_dcm_priors
 
 #' @importFrom dcmstan lcdm
 #' @export
