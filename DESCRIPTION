@@ -26,6 +26,7 @@ BugReports: https://github.com/wjakethompson/measr/issues
 Depends:
     R (>= 4.1.0)
 Imports:
+    bridgesampling,
     cli,
     dcm2,
     dcmstan (>= 0.0.0.9000),
