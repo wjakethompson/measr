@@ -5,6 +5,9 @@
 #' @param x A [measrdcm][dcm_estimate()] object.
 #' @param y A [measrdcm][dcm_estimate()] object.
 #' @param ... Unused.
+#' @param force If the criterion has already been added to the
+#'   model object with [add_criterion()], should it be recalculated. Default is
+#'   `FALSE`.
 #'
 #' @rdname bayes_factor
 #' @return A modified [measrdcm][dcm_estimate()] object with the Bayes factor
@@ -31,8 +34,8 @@
 #' rstn_dino <- add_respondent_estimates(rstn_dino)
 #'
 #' bayes_factor(rstn_dina, rstn_dino)
-bayes_factor <- S7::new_generic("bayes_factor", "x", "y",
-                                function(x, y, ..., force = FALSE) {
+bayes_factor <- S7::new_generic("bayes_factor", "x",
+                                function(x, ..., y, force = FALSE) {
   S7::S7_dispatch()
 })
 
