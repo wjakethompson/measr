@@ -27,130 +27,126 @@ namespace model_test_dina_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 123> locations_array__ =
+static constexpr std::array<const char*, 119> locations_array__ =
   {" (found before start of program)",
-  " (in 'test_dina', line 16, column 2 to column 16)",
-  " (in 'test_dina', line 18, column 2 to column 38)",
-  " (in 'test_dina', line 19, column 2 to column 39)",
-  " (in 'test_dina', line 22, column 2 to column 29)",
-  " (in 'test_dina', line 23, column 2 to column 17)",
-  " (in 'test_dina', line 26, column 6 to column 71)",
-  " (in 'test_dina', line 25, column 19 to line 27, column 5)",
-  " (in 'test_dina', line 25, column 4 to line 27, column 5)",
-  " (in 'test_dina', line 24, column 17 to line 28, column 3)",
-  " (in 'test_dina', line 24, column 2 to line 28, column 3)",
-  " (in 'test_dina', line 32, column 2 to column 35)",
-  " (in 'test_dina', line 33, column 2 to column 24)",
-  " (in 'test_dina', line 34, column 2 to column 25)",
-  " (in 'test_dina', line 35, column 2 to column 24)",
-  " (in 'test_dina', line 36, column 2 to column 25)",
-  " (in 'test_dina', line 37, column 2 to column 24)",
-  " (in 'test_dina', line 38, column 2 to column 25)",
-  " (in 'test_dina', line 39, column 2 to column 24)",
-  " (in 'test_dina', line 40, column 2 to column 25)",
-  " (in 'test_dina', line 41, column 2 to column 24)",
-  " (in 'test_dina', line 42, column 2 to column 25)",
-  " (in 'test_dina', line 43, column 2 to column 24)",
-  " (in 'test_dina', line 44, column 2 to column 25)",
-  " (in 'test_dina', line 45, column 2 to column 24)",
-  " (in 'test_dina', line 46, column 2 to column 25)",
-  " (in 'test_dina', line 47, column 2 to column 24)",
-  " (in 'test_dina', line 48, column 2 to column 25)",
-  " (in 'test_dina', line 49, column 2 to column 24)",
+  " (in 'test_dina', line 14, column 2 to column 16)",
+  " (in 'test_dina', line 16, column 2 to column 38)",
+  " (in 'test_dina', line 17, column 2 to column 39)",
+  " (in 'test_dina', line 20, column 2 to column 29)",
+  " (in 'test_dina', line 21, column 2 to column 17)",
+  " (in 'test_dina', line 24, column 6 to column 71)",
+  " (in 'test_dina', line 23, column 19 to line 25, column 5)",
+  " (in 'test_dina', line 23, column 4 to line 25, column 5)",
+  " (in 'test_dina', line 22, column 17 to line 26, column 3)",
+  " (in 'test_dina', line 22, column 2 to line 26, column 3)",
+  " (in 'test_dina', line 30, column 2 to column 35)",
+  " (in 'test_dina', line 31, column 2 to column 25)",
+  " (in 'test_dina', line 32, column 2 to column 24)",
+  " (in 'test_dina', line 33, column 2 to column 25)",
+  " (in 'test_dina', line 34, column 2 to column 24)",
+  " (in 'test_dina', line 35, column 2 to column 25)",
+  " (in 'test_dina', line 36, column 2 to column 24)",
+  " (in 'test_dina', line 37, column 2 to column 25)",
+  " (in 'test_dina', line 38, column 2 to column 24)",
+  " (in 'test_dina', line 39, column 2 to column 25)",
+  " (in 'test_dina', line 40, column 2 to column 24)",
+  " (in 'test_dina', line 41, column 2 to column 25)",
+  " (in 'test_dina', line 42, column 2 to column 24)",
+  " (in 'test_dina', line 43, column 2 to column 25)",
+  " (in 'test_dina', line 44, column 2 to column 24)",
+  " (in 'test_dina', line 45, column 2 to column 25)",
+  " (in 'test_dina', line 46, column 2 to column 24)",
+  " (in 'test_dina', line 47, column 2 to column 25)",
+  " (in 'test_dina', line 48, column 2 to column 24)",
+  " (in 'test_dina', line 49, column 2 to column 26)",
   " (in 'test_dina', line 50, column 2 to column 25)",
-  " (in 'test_dina', line 51, column 2 to column 25)",
-  " (in 'test_dina', line 52, column 2 to column 26)",
-  " (in 'test_dina', line 53, column 2 to column 25)",
-  " (in 'test_dina', line 54, column 2 to column 26)",
-  " (in 'test_dina', line 55, column 2 to column 25)",
-  " (in 'test_dina', line 56, column 2 to column 26)",
-  " (in 'test_dina', line 57, column 2 to column 25)",
-  " (in 'test_dina', line 58, column 2 to column 26)",
-  " (in 'test_dina', line 59, column 2 to column 25)",
-  " (in 'test_dina', line 60, column 2 to column 26)",
-  " (in 'test_dina', line 61, column 2 to column 25)",
-  " (in 'test_dina', line 62, column 2 to column 26)",
-  " (in 'test_dina', line 63, column 2 to column 25)",
-  " (in 'test_dina', line 64, column 2 to column 26)",
-  " (in 'test_dina', line 65, column 2 to column 25)",
-  " (in 'test_dina', line 66, column 2 to column 26)",
-  " (in 'test_dina', line 67, column 2 to column 25)",
-  " (in 'test_dina', line 68, column 2 to column 26)",
-  " (in 'test_dina', line 69, column 2 to column 25)",
-  " (in 'test_dina', line 70, column 2 to column 26)",
-  " (in 'test_dina', line 71, column 2 to column 25)",
-  " (in 'test_dina', line 72, column 2 to column 26)",
-  " (in 'test_dina', line 73, column 2 to column 25)",
-  " (in 'test_dina', line 74, column 2 to column 26)",
-  " (in 'test_dina', line 75, column 2 to column 25)",
-  " (in 'test_dina', line 76, column 2 to column 26)",
-  " (in 'test_dina', line 77, column 2 to column 25)",
-  " (in 'test_dina', line 78, column 2 to column 26)",
-  " (in 'test_dina', line 79, column 2 to column 25)",
-  " (in 'test_dina', line 80, column 2 to column 26)",
-  " (in 'test_dina', line 81, column 2 to column 25)",
-  " (in 'test_dina', line 82, column 2 to column 26)",
-  " (in 'test_dina', line 83, column 2 to column 25)",
-  " (in 'test_dina', line 84, column 2 to column 26)",
-  " (in 'test_dina', line 85, column 2 to column 25)",
-  " (in 'test_dina', line 86, column 2 to column 26)",
-  " (in 'test_dina', line 87, column 2 to column 25)",
-  " (in 'test_dina', line 88, column 2 to column 26)",
-  " (in 'test_dina', line 89, column 2 to column 25)",
-  " (in 'test_dina', line 90, column 2 to column 26)",
-  " (in 'test_dina', line 91, column 2 to column 25)",
-  " (in 'test_dina', line 92, column 2 to column 26)",
-  " (in 'test_dina', line 93, column 2 to column 25)",
-  " (in 'test_dina', line 94, column 2 to column 26)",
-  " (in 'test_dina', line 95, column 2 to column 25)",
-  " (in 'test_dina', line 96, column 2 to column 26)",
-  " (in 'test_dina', line 97, column 2 to column 25)",
-  " (in 'test_dina', line 98, column 2 to column 26)",
-  " (in 'test_dina', line 99, column 2 to column 25)",
-  " (in 'test_dina', line 100, column 2 to column 26)",
-  " (in 'test_dina', line 101, column 2 to column 25)",
-  " (in 'test_dina', line 102, column 2 to column 26)",
-  " (in 'test_dina', line 105, column 15 to column 16)",
-  " (in 'test_dina', line 105, column 4 to column 21)",
-  " (in 'test_dina', line 107, column 12 to column 18)",
-  " (in 'test_dina', line 107, column 6 to column 35)",
-  " (in 'test_dina', line 109, column 8 to column 37)",
-  " (in 'test_dina', line 110, column 8 to line 111, column 68)",
-  " (in 'test_dina', line 108, column 26 to line 112, column 7)",
-  " (in 'test_dina', line 108, column 6 to line 112, column 7)",
-  " (in 'test_dina', line 113, column 6 to column 41)",
-  " (in 'test_dina', line 106, column 19 to line 114, column 5)",
-  " (in 'test_dina', line 106, column 4 to line 114, column 5)",
-  " (in 'test_dina', line 115, column 4 to column 30)",
-  " (in 'test_dina', line 104, column 17 to line 116, column 3)",
-  " (in 'test_dina', line 104, column 2 to line 116, column 3)",
+  " (in 'test_dina', line 51, column 2 to column 26)",
+  " (in 'test_dina', line 52, column 2 to column 25)",
+  " (in 'test_dina', line 53, column 2 to column 26)",
+  " (in 'test_dina', line 54, column 2 to column 25)",
+  " (in 'test_dina', line 55, column 2 to column 26)",
+  " (in 'test_dina', line 56, column 2 to column 25)",
+  " (in 'test_dina', line 57, column 2 to column 26)",
+  " (in 'test_dina', line 58, column 2 to column 25)",
+  " (in 'test_dina', line 59, column 2 to column 26)",
+  " (in 'test_dina', line 60, column 2 to column 25)",
+  " (in 'test_dina', line 61, column 2 to column 26)",
+  " (in 'test_dina', line 62, column 2 to column 25)",
+  " (in 'test_dina', line 63, column 2 to column 26)",
+  " (in 'test_dina', line 64, column 2 to column 25)",
+  " (in 'test_dina', line 65, column 2 to column 26)",
+  " (in 'test_dina', line 66, column 2 to column 25)",
+  " (in 'test_dina', line 67, column 2 to column 26)",
+  " (in 'test_dina', line 68, column 2 to column 25)",
+  " (in 'test_dina', line 69, column 2 to column 26)",
+  " (in 'test_dina', line 70, column 2 to column 25)",
+  " (in 'test_dina', line 71, column 2 to column 26)",
+  " (in 'test_dina', line 72, column 2 to column 25)",
+  " (in 'test_dina', line 73, column 2 to column 26)",
+  " (in 'test_dina', line 74, column 2 to column 25)",
+  " (in 'test_dina', line 75, column 2 to column 26)",
+  " (in 'test_dina', line 76, column 2 to column 25)",
+  " (in 'test_dina', line 77, column 2 to column 26)",
+  " (in 'test_dina', line 78, column 2 to column 25)",
+  " (in 'test_dina', line 79, column 2 to column 26)",
+  " (in 'test_dina', line 80, column 2 to column 25)",
+  " (in 'test_dina', line 81, column 2 to column 26)",
+  " (in 'test_dina', line 82, column 2 to column 25)",
+  " (in 'test_dina', line 83, column 2 to column 26)",
+  " (in 'test_dina', line 84, column 2 to column 25)",
+  " (in 'test_dina', line 85, column 2 to column 26)",
+  " (in 'test_dina', line 86, column 2 to column 25)",
+  " (in 'test_dina', line 87, column 2 to column 26)",
+  " (in 'test_dina', line 88, column 2 to column 25)",
+  " (in 'test_dina', line 89, column 2 to column 26)",
+  " (in 'test_dina', line 90, column 2 to column 25)",
+  " (in 'test_dina', line 91, column 2 to column 26)",
+  " (in 'test_dina', line 92, column 2 to column 25)",
+  " (in 'test_dina', line 93, column 2 to column 26)",
+  " (in 'test_dina', line 94, column 2 to column 25)",
+  " (in 'test_dina', line 95, column 2 to column 26)",
+  " (in 'test_dina', line 96, column 2 to column 25)",
+  " (in 'test_dina', line 97, column 2 to column 26)",
+  " (in 'test_dina', line 98, column 2 to column 25)",
+  " (in 'test_dina', line 99, column 2 to column 26)",
+  " (in 'test_dina', line 100, column 2 to column 25)",
+  " (in 'test_dina', line 103, column 15 to column 16)",
+  " (in 'test_dina', line 103, column 4 to column 21)",
+  " (in 'test_dina', line 105, column 12 to column 18)",
+  " (in 'test_dina', line 105, column 6 to column 35)",
+  " (in 'test_dina', line 107, column 8 to column 37)",
+  " (in 'test_dina', line 108, column 8 to line 109, column 68)",
+  " (in 'test_dina', line 106, column 26 to line 110, column 7)",
+  " (in 'test_dina', line 106, column 6 to line 110, column 7)",
+  " (in 'test_dina', line 111, column 6 to column 41)",
+  " (in 'test_dina', line 104, column 19 to line 112, column 5)",
+  " (in 'test_dina', line 104, column 4 to line 112, column 5)",
+  " (in 'test_dina', line 113, column 4 to column 30)",
+  " (in 'test_dina', line 102, column 17 to line 114, column 3)",
+  " (in 'test_dina', line 102, column 2 to line 114, column 3)",
   " (in 'test_dina', line 2, column 2 to column 17)",
   " (in 'test_dina', line 3, column 2 to column 17)",
   " (in 'test_dina', line 4, column 2 to column 17)",
   " (in 'test_dina', line 5, column 2 to column 17)",
-  " (in 'test_dina', line 6, column 2 to column 17)",
+  " (in 'test_dina', line 6, column 8 to column 9)",
+  " (in 'test_dina', line 6, column 2 to column 35)",
   " (in 'test_dina', line 7, column 8 to column 9)",
   " (in 'test_dina', line 7, column 2 to column 35)",
   " (in 'test_dina', line 8, column 8 to column 9)",
-  " (in 'test_dina', line 8, column 2 to column 35)",
+  " (in 'test_dina', line 8, column 2 to column 34)",
   " (in 'test_dina', line 9, column 8 to column 9)",
-  " (in 'test_dina', line 9, column 2 to column 34)",
+  " (in 'test_dina', line 9, column 2 to column 38)",
   " (in 'test_dina', line 10, column 8 to column 9)",
-  " (in 'test_dina', line 10, column 2 to column 38)",
-  " (in 'test_dina', line 11, column 8 to column 9)",
-  " (in 'test_dina', line 11, column 2 to column 36)",
-  " (in 'test_dina', line 12, column 9 to column 10)",
-  " (in 'test_dina', line 12, column 11 to column 12)",
-  " (in 'test_dina', line 12, column 2 to column 20)",
-  " (in 'test_dina', line 13, column 9 to column 10)",
-  " (in 'test_dina', line 13, column 11 to column 12)",
-  " (in 'test_dina', line 13, column 2 to column 17)",
-  " (in 'test_dina', line 16, column 10 to column 11)",
-  " (in 'test_dina', line 18, column 8 to column 9)",
-  " (in 'test_dina', line 19, column 8 to column 9)",
-  " (in 'test_dina', line 22, column 9 to column 10)",
-  " (in 'test_dina', line 23, column 9 to column 10)",
-  " (in 'test_dina', line 23, column 11 to column 12)"};
+  " (in 'test_dina', line 10, column 2 to column 36)",
+  " (in 'test_dina', line 11, column 9 to column 10)",
+  " (in 'test_dina', line 11, column 11 to column 12)",
+  " (in 'test_dina', line 11, column 2 to column 17)",
+  " (in 'test_dina', line 14, column 10 to column 11)",
+  " (in 'test_dina', line 16, column 8 to column 9)",
+  " (in 'test_dina', line 17, column 8 to column 9)",
+  " (in 'test_dina', line 20, column 9 to column 10)",
+  " (in 'test_dina', line 21, column 9 to column 10)",
+  " (in 'test_dina', line 21, column 11 to column 12)"};
 #include <stan_meta_header.hpp>
 class model_test_dina final : public model_base_crtp<model_test_dina> {
 private:
@@ -158,15 +154,12 @@ private:
   int R;
   int N;
   int C;
-  int A;
   std::vector<int> ii;
   std::vector<int> rr;
   std::vector<int> y;
   std::vector<int> start;
   std::vector<int> num;
-  Eigen::Matrix<double,-1,-1> Alpha_data__;
   Eigen::Matrix<double,-1,-1> Xi_data__;
-  Eigen::Map<Eigen::Matrix<double,-1,-1>> Alpha{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double,-1,-1>> Xi{nullptr, 0, 0};
 public:
   ~model_test_dina() {}
@@ -222,108 +215,70 @@ public:
       current_statement__ = 99;
       stan::math::check_greater_or_equal(function__, "C", C, 1);
       current_statement__ = 100;
-      context__.validate_dims("data initialization", "A", "int",
-        std::vector<size_t>{});
-      A = std::numeric_limits<int>::min();
-      current_statement__ = 100;
-      A = context__.vals_i("A")[(1 - 1)];
-      current_statement__ = 100;
-      stan::math::check_greater_or_equal(function__, "A", A, 1);
-      current_statement__ = 101;
       stan::math::validate_non_negative_index("ii", "N", N);
-      current_statement__ = 102;
+      current_statement__ = 101;
       context__.validate_dims("data initialization", "ii", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       ii = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 102;
+      current_statement__ = 101;
       ii = context__.vals_i("ii");
-      current_statement__ = 102;
+      current_statement__ = 101;
       stan::math::check_greater_or_equal(function__, "ii", ii, 1);
-      current_statement__ = 102;
+      current_statement__ = 101;
       stan::math::check_less_or_equal(function__, "ii", ii, I);
-      current_statement__ = 103;
+      current_statement__ = 102;
       stan::math::validate_non_negative_index("rr", "N", N);
-      current_statement__ = 104;
+      current_statement__ = 103;
       context__.validate_dims("data initialization", "rr", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       rr = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 104;
+      current_statement__ = 103;
       rr = context__.vals_i("rr");
-      current_statement__ = 104;
+      current_statement__ = 103;
       stan::math::check_greater_or_equal(function__, "rr", rr, 1);
-      current_statement__ = 104;
+      current_statement__ = 103;
       stan::math::check_less_or_equal(function__, "rr", rr, R);
-      current_statement__ = 105;
+      current_statement__ = 104;
       stan::math::validate_non_negative_index("y", "N", N);
-      current_statement__ = 106;
+      current_statement__ = 105;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 106;
+      current_statement__ = 105;
       y = context__.vals_i("y");
-      current_statement__ = 106;
+      current_statement__ = 105;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
-      current_statement__ = 106;
+      current_statement__ = 105;
       stan::math::check_less_or_equal(function__, "y", y, 1);
-      current_statement__ = 107;
+      current_statement__ = 106;
       stan::math::validate_non_negative_index("start", "R", R);
-      current_statement__ = 108;
+      current_statement__ = 107;
       context__.validate_dims("data initialization", "start", "int",
         std::vector<size_t>{static_cast<size_t>(R)});
       start = std::vector<int>(R, std::numeric_limits<int>::min());
-      current_statement__ = 108;
+      current_statement__ = 107;
       start = context__.vals_i("start");
-      current_statement__ = 108;
+      current_statement__ = 107;
       stan::math::check_greater_or_equal(function__, "start", start, 1);
-      current_statement__ = 108;
+      current_statement__ = 107;
       stan::math::check_less_or_equal(function__, "start", start, N);
-      current_statement__ = 109;
+      current_statement__ = 108;
       stan::math::validate_non_negative_index("num", "R", R);
-      current_statement__ = 110;
+      current_statement__ = 109;
       context__.validate_dims("data initialization", "num", "int",
         std::vector<size_t>{static_cast<size_t>(R)});
       num = std::vector<int>(R, std::numeric_limits<int>::min());
-      current_statement__ = 110;
+      current_statement__ = 109;
       num = context__.vals_i("num");
-      current_statement__ = 110;
+      current_statement__ = 109;
       stan::math::check_greater_or_equal(function__, "num", num, 1);
-      current_statement__ = 110;
+      current_statement__ = 109;
       stan::math::check_less_or_equal(function__, "num", num, I);
-      current_statement__ = 111;
-      stan::math::validate_non_negative_index("Alpha", "C", C);
-      current_statement__ = 112;
-      stan::math::validate_non_negative_index("Alpha", "A", A);
-      current_statement__ = 113;
-      context__.validate_dims("data initialization", "Alpha", "double",
-        std::vector<size_t>{static_cast<size_t>(C), static_cast<size_t>(A)});
-      Alpha_data__ = Eigen::Matrix<double,-1,-1>::Constant(C, A,
-                       std::numeric_limits<double>::quiet_NaN());
-      new (&Alpha)
-        Eigen::Map<Eigen::Matrix<double,-1,-1>>(Alpha_data__.data(), C, A);
-      {
-        std::vector<local_scalar_t__> Alpha_flat__;
-        current_statement__ = 113;
-        Alpha_flat__ = context__.vals_r("Alpha");
-        current_statement__ = 113;
-        pos__ = 1;
-        current_statement__ = 113;
-        for (int sym1__ = 1; sym1__ <= A; ++sym1__) {
-          current_statement__ = 113;
-          for (int sym2__ = 1; sym2__ <= C; ++sym2__) {
-            current_statement__ = 113;
-            stan::model::assign(Alpha, Alpha_flat__[(pos__ - 1)],
-              "assigning variable Alpha", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            current_statement__ = 113;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      current_statement__ = 114;
+      current_statement__ = 110;
       stan::math::validate_non_negative_index("Xi", "I", I);
-      current_statement__ = 115;
+      current_statement__ = 111;
       stan::math::validate_non_negative_index("Xi", "C", C);
-      current_statement__ = 116;
+      current_statement__ = 112;
       context__.validate_dims("data initialization", "Xi", "double",
         std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(C)});
       Xi_data__ = Eigen::Matrix<double,-1,-1>::Constant(I, C,
@@ -332,34 +287,34 @@ public:
         C);
       {
         std::vector<local_scalar_t__> Xi_flat__;
-        current_statement__ = 116;
+        current_statement__ = 112;
         Xi_flat__ = context__.vals_r("Xi");
-        current_statement__ = 116;
+        current_statement__ = 112;
         pos__ = 1;
-        current_statement__ = 116;
+        current_statement__ = 112;
         for (int sym1__ = 1; sym1__ <= C; ++sym1__) {
-          current_statement__ = 116;
+          current_statement__ = 112;
           for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
-            current_statement__ = 116;
+            current_statement__ = 112;
             stan::model::assign(Xi, Xi_flat__[(pos__ - 1)],
               "assigning variable Xi", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 116;
+            current_statement__ = 112;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 117;
+      current_statement__ = 113;
       stan::math::validate_positive_index("Vc", "C", C);
-      current_statement__ = 118;
+      current_statement__ = 114;
       stan::math::validate_non_negative_index("slip", "I", I);
-      current_statement__ = 119;
+      current_statement__ = 115;
       stan::math::validate_non_negative_index("guess", "I", I);
-      current_statement__ = 120;
+      current_statement__ = 116;
       stan::math::validate_non_negative_index("log_Vc", "C", C);
-      current_statement__ = 121;
+      current_statement__ = 117;
       stan::math::validate_non_negative_index("pi", "I", I);
-      current_statement__ = 122;
+      current_statement__ = 118;
       stan::math::validate_non_negative_index("pi", "C", C);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -439,283 +394,283 @@ public:
                          stan::math::rep_vector(1, C)));
         current_statement__ = 12;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(1)), 5, 25));
         current_statement__ = 13;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(1)), 5, 25));
         current_statement__ = 14;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(2)), 5, 25));
         current_statement__ = 15;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(2)), 5, 25));
         current_statement__ = 16;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(3)), 5, 25));
         current_statement__ = 17;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(3)), 5, 25));
         current_statement__ = 18;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(4)), 5, 25));
         current_statement__ = 19;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(4)), 5, 25));
         current_statement__ = 20;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(5)), 5, 25));
         current_statement__ = 21;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(5)), 5, 25));
         current_statement__ = 22;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(6)), 5, 25));
         current_statement__ = 23;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(6)), 5, 25));
         current_statement__ = 24;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(7)), 5, 25));
         current_statement__ = 25;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(7)), 5, 25));
         current_statement__ = 26;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(8)), 5, 25));
         current_statement__ = 27;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(8)), 5, 25));
         current_statement__ = 28;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(9)), 5, 25));
         current_statement__ = 29;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(9)), 5, 25));
         current_statement__ = 30;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(10)), 5, 25));
         current_statement__ = 31;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(10)), 5, 25));
         current_statement__ = 32;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(11)), 5, 25));
         current_statement__ = 33;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(11)), 5, 25));
         current_statement__ = 34;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(12)), 5, 25));
         current_statement__ = 35;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(12)), 5, 25));
         current_statement__ = 36;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(13)), 5, 25));
         current_statement__ = 37;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(13)), 5, 25));
         current_statement__ = 38;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(14)), 5, 25));
         current_statement__ = 39;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(14)), 5, 25));
         current_statement__ = 40;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(15)), 5, 25));
         current_statement__ = 41;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(15)), 5, 25));
         current_statement__ = 42;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(16)), 5, 25));
         current_statement__ = 43;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(16)), 5, 25));
         current_statement__ = 44;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(17)), 5, 25));
         current_statement__ = 45;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(17)), 5, 25));
         current_statement__ = 46;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(18)), 5, 25));
         current_statement__ = 47;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(18)), 5, 25));
         current_statement__ = 48;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(19)), 5, 25));
         current_statement__ = 49;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(19)), 5, 25));
         current_statement__ = 50;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(20)), 5, 25));
         current_statement__ = 51;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(20)), 5, 25));
         current_statement__ = 52;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(21)), 5, 25));
         current_statement__ = 53;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(21)), 5, 25));
         current_statement__ = 54;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(22)), 5, 25));
         current_statement__ = 55;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(22)), 5, 25));
         current_statement__ = 56;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(23)), 5, 25));
         current_statement__ = 57;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(23)), 5, 25));
         current_statement__ = 58;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(24)), 5, 25));
         current_statement__ = 59;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(24)), 5, 25));
         current_statement__ = 60;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(25)), 5, 25));
         current_statement__ = 61;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(25)), 5, 25));
         current_statement__ = 62;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(26)), 5, 25));
         current_statement__ = 63;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(26)), 5, 25));
         current_statement__ = 64;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(27)), 5, 25));
         current_statement__ = 65;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(27)), 5, 25));
         current_statement__ = 66;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(28)), 5, 25));
         current_statement__ = 67;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(28)), 5, 25));
         current_statement__ = 68;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(29)), 5, 25));
         current_statement__ = 69;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(29)), 5, 25));
         current_statement__ = 70;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(30)), 5, 25));
         current_statement__ = 71;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(30)), 5, 25));
         current_statement__ = 72;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(31)), 5, 25));
         current_statement__ = 73;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(31)), 5, 25));
         current_statement__ = 74;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(32)), 5, 25));
         current_statement__ = 75;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(32)), 5, 25));
         current_statement__ = 76;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(33)), 5, 25));
         current_statement__ = 77;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(33)), 5, 25));
         current_statement__ = 78;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(34)), 5, 25));
         current_statement__ = 79;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(34)), 5, 25));
         current_statement__ = 80;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(slip, "slip",
+                         stan::model::rvalue(guess, "guess",
                            stan::model::index_uni(35)), 5, 25));
         current_statement__ = 81;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(
-                         stan::model::rvalue(guess, "guess",
+                         stan::model::rvalue(slip, "slip",
                            stan::model::index_uni(35)), 5, 25));
         current_statement__ = 95;
         for (int r = 1; r <= R; ++r) {

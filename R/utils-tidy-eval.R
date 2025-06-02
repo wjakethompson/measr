@@ -23,8 +23,8 @@
 #'
 #'   ```
 #'   my_function <- function(data, var, ...) {
-#'     data %>%
-#'       group_by(...) %>%
+#'     data |>
+#'       group_by(...) |>
 #'       summarise(mean = mean({{ var }}))
 #'   }
 #'   ```
@@ -43,8 +43,8 @@
 #'     dots <- enquos(...)
 #'
 #'     # Inject
-#'     data %>%
-#'       group_by(!!!dots) %>%
+#'     data |>
+#'       group_by(!!!dots) |>
 #'       summarise(mean = mean(!!var))
 #'   }
 #'   ```
@@ -54,13 +54,13 @@
 #'   needed in more complex cases, for instance if you need to inspect
 #'   or modify the expressions in some way.
 #'
-#' * The `.data` pronoun is an object that represents the current
+#' * The `.data` placeholder is an object that represents the current
 #'   slice of data. If you have a variable name in a string, use the
-#'   `.data` pronoun to subset that variable with `[[`.
+#'   `.data` placeholder to subset that variable with `[[`.
 #'
 #'   ```
 #'   my_var <- "disp"
-#'   mtcars %>% summarise(mean = mean(.data[[my_var]]))
+#'   mtcars |> summarise(mean = mean(.data[[my_var]]))
 #'   ```
 #'
 #' * Another tidy eval operator is `:=`. It makes it possible to use
@@ -72,7 +72,7 @@
 #'   my_function <- function(data, var, suffix = "foo") {
 #'     # Use `{{` to tunnel function arguments and the usual glue
 #'     # operator `{` to interpolate plain strings.
-#'     data %>%
+#'     data |>
 #'       summarise("{{ var }}_mean_{suffix}" := mean({{ var }}))
 #'   }
 #'   ```
@@ -87,7 +87,7 @@
 #'   my_function <- function(data, var, suffix = "foo") {
 #'     var <- enquo(var)
 #'     prefix <- as_label(var)
-#'     data %>%
+#'     data |>
 #'       summarise("{prefix}_mean_{suffix}" := mean(!!var))
 #'   }
 #'   ```

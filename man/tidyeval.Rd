@@ -31,8 +31,8 @@ passed from function arguments inside other tidy eval functions.
 arguments contained in dots, use \code{...} in the normal way.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{my_function <- function(data, var, ...) \{
-  data \%>\%
-    group_by(...) \%>\%
+  data |>
+    group_by(...) |>
     summarise(mean = mean(\{\{ var \}\}))
 \}
 }\if{html}{\out{</div>}}
@@ -49,8 +49,8 @@ into an evaluation context with \verb{!!} (for a single expression) and
   dots <- enquos(...)
 
   # Inject
-  data \%>\%
-    group_by(!!!dots) \%>\%
+  data |>
+    group_by(!!!dots) |>
     summarise(mean = mean(!!var))
 \}
 }\if{html}{\out{</div>}}
@@ -59,12 +59,12 @@ In this simple case, the code is equivalent to the usage of \verb{\{\{}
 and \code{...} above. Defusing with \code{enquo()} or \code{enquos()} is only
 needed in more complex cases, for instance if you need to inspect
 or modify the expressions in some way.
-\item The \code{.data} pronoun is an object that represents the current
+\item The \code{.data} placeholder is an object that represents the current
 slice of data. If you have a variable name in a string, use the
-\code{.data} pronoun to subset that variable with \code{[[}.
+\code{.data} placeholder to subset that variable with \code{[[}.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{my_var <- "disp"
-mtcars \%>\% summarise(mean = mean(.data[[my_var]]))
+mtcars |> summarise(mean = mean(.data[[my_var]]))
 }\if{html}{\out{</div>}}
 \item Another tidy eval operator is \verb{:=}. It makes it possible to use
 glue and curly-curly syntax on the LHS of \code{=}. For technical
@@ -74,7 +74,7 @@ the left of \code{=}, so we use \verb{:=} as a workaround.
 \if{html}{\out{<div class="sourceCode">}}\preformatted{my_function <- function(data, var, suffix = "foo") \{
   # Use `\{\{` to tunnel function arguments and the usual glue
   # operator `\{` to interpolate plain strings.
-  data \%>\%
+  data |>
     summarise("\{\{ var \}\}_mean_\{suffix\}" := mean(\{\{ var \}\}))
 \}
 }\if{html}{\out{</div>}}
@@ -87,7 +87,7 @@ can be reproduced manually with:
 \if{html}{\out{<div class="sourceCode">}}\preformatted{my_function <- function(data, var, suffix = "foo") \{
   var <- enquo(var)
   prefix <- as_label(var)
-  data \%>\%
+  data |>
     summarise("\{prefix\}_mean_\{suffix\}" := mean(!!var))
 \}
 }\if{html}{\out{</div>}}
