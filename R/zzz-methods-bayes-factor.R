@@ -14,7 +14,12 @@
 #'   slot populated with the Bayes factor statistic.
 #' @export
 #'
-#' @references
+#' The results of the Bayes factor calculations are designed to be consistent
+#' with the reporting guidelines for Bayesian analysis developedy by Kruschke
+#' (2021).
+#'
+#' @references Kruschke, J. K. (2021). Bayesian analysis reporting guidelines.
+#'   *Nature, 5*, 1282-1291. \doi{10.1038/s41562-021-01177-7}
 #'
 #' @examplesIf measr_examples()
 #' # example code
