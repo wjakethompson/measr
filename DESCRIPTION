@@ -26,7 +26,7 @@ BugReports: https://github.com/wjakethompson/measr/issues
 Depends:
     R (>= 4.1.0)
 Imports:
-    bridgesampling,
+    cli,
     dcm2,
     dcmstan (>= 0.0.0.9000),
     dplyr (>= 1.1.1),
@@ -56,20 +56,19 @@ LinkingTo:
     rstan (>= 2.26.0),
     StanHeaders (>= 2.26.0)
 Suggests:
-    cli,
     cmdstanr (>= 0.4.0),
-    crayon,
     dcmdata,
     knitr,
     rmarkdown,
     roxygen2,
     spelling,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    withr
 Remotes:
     r-dcm/dcmdata,
     r-dcm/dcmstan,
     r-dcm/rdcmchecks
-Additional_repositories: https://mc-stan.org/r-packages/
+Additional_repositories: https://stan-dev.r-universe.dev
 Config/testthat/edition: 3
 Config/Needs/website: r-dcm/rdcmtemplate, wjakethompson/wjake, showtext, ggdist, english
 Config/Needs/documentation: openpharma/roxylint

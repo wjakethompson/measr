@@ -5,15 +5,19 @@
 \alias{bic}
 \title{Maximum likelihood based information criteria}
 \usage{
-aic(x, ...)
+aic(x, ..., force = FALSE)
 
-bic(x, ...)
+bic(x, ..., force = FALSE)
 }
 \arguments{
 \item{x}{A \link[=dcm_estimate]{measrdcm} object estimated with
 \code{backend = "optim"}.}
 
 \item{...}{Unused.}
+
+\item{force}{If the criterion has already been added to the
+model object with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is
+\code{FALSE}.}
 }
 \value{
 The numeric value of the information criterion.

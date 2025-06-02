@@ -3,9 +3,21 @@
 #' @export
 dcmstan::dcm_specify
 
+#' @importFrom dcmstan create_profiles
+#' @export
+dcmstan::create_profiles
+
+#' @importFrom dcmstan get_parameters
+#' @export
+dcmstan::get_parameters
+
 #' @importFrom dcmstan prior
 #' @export
 dcmstan::prior
+
+#' @importFrom dcmstan default_dcm_priors
+#' @export
+dcmstan::default_dcm_priors
 
 #' @importFrom dcmstan lcdm
 #' @export
@@ -30,6 +42,10 @@ dcmstan::unconstrained
 #' @importFrom dcmstan independent
 #' @export
 dcmstan::independent
+
+#' @importFrom dcmstan hdcm
+#' @export
+dcmstan::hdcm
 
 # posterior --------------------------------------------------------------------
 #' @importFrom posterior E

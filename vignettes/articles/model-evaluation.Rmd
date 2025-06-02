@@ -58,19 +58,23 @@ library(tidyverse)
 
 sim_data <- read_rds("data/simulated-data.rds")
 
-lcdm <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
-                  resp_id = "resp_id", item_id = "item_id",
-                  type = "lcdm", method = "mcmc", backend = "cmdstanr",
-                  iter_warmup = 1000, iter_sampling = 500,
-                  chains = 4, parallel_chains = 4,
-                  file = "fits/sim-lcdm")
+lcdm <- dcm_estimate(
+  dcm_spec = dcm_specify(qmatrix = sim_data$q_matrix, identifier = "item_id",
+                         measurement_model = lcdm()),
+  data = sim_data$data, identifier = "resp_id",
+  method = "mcmc", backend = "cmdstanr",
+  iter_warmup = 1000, iter_sampling = 500, chains = 4, parallel_chains = 4,
+  file = "fits/sim-lcdm"
+)
 
-dina <- measr_dcm(data = sim_data$data, qmatrix = sim_data$q_matrix,
-                  resp_id = "resp_id", item_id = "item_id",
-                  type = "dina", method = "mcmc", backend = "cmdstanr",
-                  iter_warmup = 1000, iter_sampling = 500,
-                  chains = 4, parallel_chains = 4,
-                  file = "fits/sim-dina.rds")
+dina <- dcm_estimate(
+  dcm_spec = dcm_specify(qmatrix = sim_data$q_matrix, identifier = "item_id",
+                         measurement_model = dina()),
+  data = sim_data$data, identifier = "resp_id",
+  method = "mcmc", backend = "cmdstanr",
+  iter_warmup = 1000, iter_sampling = 500, chains = 4, parallel_chains = 4,
+  file = "fits/sim-dina"
+)
 ```
 
 ## Model Evaluation
@@ -124,7 +128,7 @@ Using `fit_ppmc()` can specify which PPMCs to calculate.
 For example, here we estimate just the model-level raw score check by setting `item_fit = NULL`.
 
 ```{r raw-score-ppmc}
-fit_ppmc(lcdm, model_fit = "raw_score", item_fit = NULL)
+fit_ppmc(lcdm, model_fit = "raw_score")
 ```
 
 `fit_ppmc()` returns a list, where each element is a different PPMC.
@@ -134,7 +138,7 @@ We then see the mean of the posterior distribution for the &chi;^2^, quantiles o
 The *ppp* is the proportion of posterior draws that are greater than the observed value.
 Values close to 0 indicate poor fit.
 Values close to 1 may indicate overfitting.
-Because the LCDM was used to generate this data, it's not surprising that the *ppp* is approaching 1 for our estimated model, as the model is perfectly capturing the data generating process.
+Because the LCDM was used to generate this data, it's not surprising that the *ppp* is approaching close to 0.5 for our estimated model, as the model is perfectly capturing the data generating process (i.e., our observed data is right in the middle of what the estimated model would expect).
 
 We can also specify the posterior quantiles that are returned.
 For example, we can calculate the item-level odds ratios and request quantiles that will result in a 90% credible interval.
@@ -178,7 +182,7 @@ The `se_diff` column is the standard error of the difference between that model 
 loo_compare(list(lcdm = lcdm_loo, dina = dina_loo))
 ```
 
-```{r loo-compare-store}
+```{r loo-compare-store, echo = FALSE}
 loo_comp <- loo_compare(list(lcdm = lcdm_loo, dina = dina_loo))
 ```
 

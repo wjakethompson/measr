@@ -8,6 +8,9 @@
 #' @param x A [measrdcm][dcm_estimate()] object estimated with
 #'   `backend = "optim"`.
 #' @param ... Unused.
+#' @param force If the criterion has already been added to the
+#'   model object with [add_criterion()], should it be recalculated. Default is
+#'   `FALSE`.
 #'
 #' @rdname aic-bic
 #' @return The numeric value of the information criterion.
@@ -31,14 +34,18 @@
 #' aic(model)
 #'
 #' bic(model)
-aic <- S7::new_generic("aic", "x")
+aic <- S7::new_generic("aic", "x", function(x, ..., force = FALSE) {
+  S7::S7_dispatch()
+})
 
 #' @rdname aic-bic
 #' @export
-bic <- S7::new_generic("bic", "x")
+bic <- S7::new_generic("bic", "x", function(x, ..., force = FALSE) {
+  S7::S7_dispatch()
+})
 
 # methods ----------------------------------------------------------------------
-S7::method(aic, measrdcm) <- function(x) {
+S7::method(aic, measrdcm) <- function(x, force = FALSE) {
   if (!rlang::is_empty(x@criteria$aic) && !force) {
     return(x@criteria$aic)
   }
@@ -50,8 +57,7 @@ S7::method(aic, measrdcm) <- function(x) {
     )
   }
 
-  # START HERE: need to generalize for cmdstanr backend -331.764
-  log_lik <- loglik(x@backend, model = x)
+  log_lik <- loglik(model = x)
 
   num_params <- get_draws(x) |>
     posterior::subset_draws(variable = c("log_Vc", "pi"), exclude = TRUE) |>
@@ -65,7 +71,7 @@ S7::method(aic, measrdcm) <- function(x) {
   (-2 * log_lik) + (2 * num_params)
 }
 
-S7::method(bic, measrdcm) <- function(x) {
+S7::method(bic, measrdcm) <- function(x, force = FALSE) {
   if (!rlang::is_empty(x@criteria$bic) && !force) {
     return(x@criteria$bic)
   }
@@ -77,8 +83,7 @@ S7::method(bic, measrdcm) <- function(x) {
     )
   }
 
-  # START HERE: need to generalize for cmdstanr backend
-  log_lik <- x@model$value
+  log_lik <- loglik(model = x)
 
   num_params <- get_draws(x) |>
     posterior::subset_draws(variable = c("log_Vc", "pi"), exclude = TRUE) |>
