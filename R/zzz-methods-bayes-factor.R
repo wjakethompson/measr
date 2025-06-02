@@ -141,8 +141,6 @@ add_marginal_likelihood <- function(x) {
   }
 
   rdcmchecks::check_S7(x, class = "measrfit")
-  check_bool(overwrite)
-  check_bool(save)
 
   # calculate log marginal likelihood
   log_marg_lik <- bridgesampling::bridge_sampler(x@model,
