@@ -53,7 +53,7 @@ S7::method(bayes_factor, measrdcm) <- function(x, y, force = FALSE) {
   if (rlang::is_empty(x@respondent_estimates)) {
     rlang::abort("error_bad_method",
                  message = glue::glue("Run `add_respondent_estimates()` ",
-                                      "before `add_yens_q()`."))
+                                      "before `bayes_factor()`."))
   }
 
   if ("measr::optim" %in% class(x@method) ||
