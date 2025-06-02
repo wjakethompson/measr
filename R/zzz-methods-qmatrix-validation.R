@@ -6,22 +6,17 @@
 #' of the model object so that time-intensive calculations do not need to be
 #' repeated.
 #'
-#' @param mod A [measrdcm][dcm_estimate()] object.
+#' @param x A [measrdcm][dcm_estimate()] object.
 #' @param epsilon The threshold for proportion of variance accounted for to flag
 #'   items for appropriate empirical specifications. The default is .95 as
 #'   implemented by de la Torre and Chiu (2016).
-#' @param overwrite Logical. Indicates whether specified elements that have
-#'   already been added to the estimated model should be overwritten. Default is
+#' @param ... Unused.
+#' @param force If the criterion has already been added to the
+#'   model object with [add_criterion()], should it be recalculated. Default is
 #'   `FALSE`.
-#' @param save Logical. Only relevant if a file was specified in the
-#'   [measrdcm][dcm_estimate()] object passed to `x`. If `TRUE` (the default),
-#'   the model is re-saved to the specified file when new criteria are added to
-#'   the `R` object. If `FALSE`, the new criteria will be added to the `R`
-#'   object, but the saved file will not be updated.
 #'
-#' @return A modified [measrdcm][dcm_estimate()] object with the estimated
-#' item-level discrimination index are added to the `$qmatrix_validation`
-#' element of the fitted model.
+#' @return A tibble containing the estimated item-level discrimination indices
+#' used to empirically validate the Q-matrix.
 #'
 #' @references de la Torre, J., & Chiu, C.-Y. (2016). A general method of
 #'   empirical Q-matrix validation. *Psychometrika, 81*(2), 253-273.
@@ -36,23 +31,34 @@
 #'                          identifier = "respondent", backend = "rstan",
 #'                          method = "optim")
 #' rstn_mdm <- add_respondent_estimates(rstn_mdm)
-#' rstn_mdm <- add_qmatrix_validation(rstn_mdm)
-add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
-                                   save = TRUE) {
-  if (rlang::is_empty(mod@respondent_estimates)) {
+#' q_matrix_validation <- qmatrix_validation(rstn_mdm)
+qmatrix_validation <- S7::new_generic("qmatrix_validation", "x",
+                                      function(x, ..., epsilon = .95,
+                                               force = FALSE) {
+                                        S7::S7_dispatch()
+                                      })
+
+# methods ----------------------------------------------------------------------
+S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
+                                                     force = FALSE) {
+  if (!rlang::is_empty(x@qmatrix_validation) && !force) {
+    return(x@qmatrix_validation)
+  }
+
+  if (rlang::is_empty(x@respondent_estimates)) {
     rlang::abort("error_bad_method",
                  message = glue::glue("Respondent estimates need to be added ",
                                       "to the model with ",
                                       "`add_respondent_estimates()`."))
   }
 
-  att_post_probs <- measr_extract(mod, "attribute_prob")
-  post_probs <- measr_extract(mod, "class_prob")
+  att_post_probs <- measr_extract(x, "attribute_prob")
+  post_probs <- measr_extract(x, "class_prob")
 
-  item_param <- measr_extract(mod, "item_param")
+  item_param <- measr_extract(x, "item_param")
   item_param <- item_param |>
     dplyr::mutate(estimate = mean(.data$estimate)) |>
-    dplyr::select(!!dplyr::sym(mod@data$item_identifier):"estimate")
+    dplyr::select(!!dplyr::sym(x@data$item_identifier):"estimate")
   item_ids <- item_param |>
     dplyr::distinct(.data$item_id) %>%
     tibble::rowid_to_column("new_item_id")
@@ -61,12 +67,12 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
     dplyr::mutate(item_id = .data$new_item_id) |>
     dplyr::select(-"new_item_id")
 
-  qmatrix <- mod@model_spec@qmatrix
+  qmatrix <- x@model_spec@qmatrix
   qmatrix <- qmatrix %>%
-    dplyr::select(-!!dplyr::sym(mod@data$item_identifier))
+    dplyr::select(-!!dplyr::sym(x@data$item_identifier))
 
   # posterior probabilities of each class
-  strc_param <- measr_extract(mod, "strc_param")
+  strc_param <- measr_extract(x, "strc_param")
   strc_param <- strc_param %>%
     dplyr::mutate(estimate = mean(.data$estimate)) |>
     dplyr::select("class", "estimate") |>
@@ -202,15 +208,5 @@ add_qmatrix_validation <- function(mod, epsilon = .95, overwrite = FALSE,
     validation_output <- dplyr::bind_rows(validation_output, item_output)
   }
 
-  if (overwrite || rlang::is_empty(mod@qmatrix_validation)) {
-    mod@qmatrix_validation <- list(q_matrix_validation_output =
-                                     validation_output)
-  }
-
-  # re-save model object (if applicable)
-  if (!is.null(mod@file) && save) {
-    write_measrfit(x, file = x@file)
-  }
-
-  return(mod)
+  return(validation_output)
 }
