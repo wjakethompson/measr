@@ -6,8 +6,6 @@
 \alias{add_reliability}
 \alias{add_fit}
 \alias{add_respondent_estimates}
-\alias{add_marginal_likelihood}
-\alias{add_bayes_factor}
 \title{Add model evaluation metrics model objects}
 \usage{
 add_criterion(
@@ -36,10 +34,6 @@ add_respondent_estimates(
   overwrite = FALSE,
   save = TRUE
 )
-
-add_marginal_likelihood(x, overwrite = FALSE, save = TRUE)
-
-add_bayes_factor(x, y, overwrite = FALSE, save = TRUE)
 }
 \arguments{
 \item{x}{A \link[=dcm_estimate]{measrdcm} object.}
