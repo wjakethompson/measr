@@ -11,6 +11,10 @@
 #' @return A tibble with the residual correlation and flags for all item pairs.
 #' @export
 #'
+#' The Yen's Q statistic is calculated as described by Christensen et al.
+#' (2016). The critical value for evaluating the residual correlations uses a
+#' default value of .2 as described by Chen and Thissen (1997).
+#'
 #' @references Chen, W.-H., & Thissen, D. (1997). Local dependence indexes for
 #'   item pairs using item response theory. *Journal of Educational and
 #'   Behavioral Statistics, 22*(3), 265-389. \doi{10.3102/10769986022003265}
@@ -46,7 +50,7 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
 
   possible_profs <- create_profiles(x@model_spec@qmatrix |>
                                       ncol()) |>
-    tidyr::unite(col = "profile", everything(), sep = "") |>
+    tidyr::unite(col = "profile", dplyr::everything(), sep = "") |>
     tibble::rowid_to_column("profile_num")
 
   qmatrix <- x@model_spec@qmatrix
@@ -83,12 +87,11 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
                      relationship = "many-to-many") |>
     dplyr::mutate(exp = .data$probability * .data$pi) |>
     dplyr::group_by(.data$resp_id, .data$item_id) |>
-    dplyr::summarize(exp = sum(.data$exp), .groups = 'keep') |>
+    dplyr::summarize(exp = sum(.data$exp), .groups = "keep") |>
     dplyr::ungroup() |>
     dplyr::left_join(obs |>
                        dplyr::left_join(item_ids,
-                                        by = c("item_id" =
-                                                 x@data$item_identifier)) |>
+                                        by = c("item_id")) |>
                        dplyr::select("resp_id", item_id = "new_item_id",
                                      "score"),
                      by = c("resp_id", "item_id")) |>
@@ -103,14 +106,14 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
         yens_q[ii, jj] <- 1
       } else {
         tmp_yens_q <- exp_value |>
-          dplyr::filter(item_id == ii | item_id == jj) |>
+          dplyr::filter(.data$item_id == ii | .data$item_id == jj) |>
           dplyr::select(-"exp", -"score") |>
           tidyr::pivot_wider(names_from = "item_id", values_from = "d") |>
           dplyr::select(-"resp_id") |>
           cor()
 
-        yens_q[ii, jj] <- tmp_yens_q[1,2]
-        yens_q[jj, ii] <- tmp_yens_q[2,1]
+        yens_q[ii, jj] <- tmp_yens_q[1, 2]
+        yens_q[jj, ii] <- tmp_yens_q[2, 1]
       }
     }
   }
@@ -127,7 +130,7 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
     tidyr::pivot_longer(cols = -c("item_id"), names_to = "item_id_2",
                         values_to = "resid_corr") |>
     dplyr::filter(.data$item_id < .data$item_id_2) |>
-    dplyr::mutate(flag = abs(resid_corr) >= crit_value)
+    dplyr::mutate(flag = abs(.data$resid_corr) >= crit_value)
 
   return(yens_q)
 }

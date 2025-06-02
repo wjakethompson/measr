@@ -51,11 +51,6 @@
 #' respectively. This function wraps [reliability()]. Arguments supplied to
 #' `...` are passed to [reliability()].
 #'
-#' For `add_yens_q()`, the Yen's Q statistic is added to the `@yens_q` element
-#' of the fitted model. The Yen's Q statistic is calculated as described by
-#' Christensen et al. (2016). The critical value for evaluating the residual
-#' correlations uses a default value of .2 as described by Chen and Thissen (1997).
-#'
 #' @return A modified [measrdcm][dcm_estimate()] object with the corresponding
 #'   slot populated with the specified information.
 #'
