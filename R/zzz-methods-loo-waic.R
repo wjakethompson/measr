@@ -88,7 +88,7 @@ loo::loo_compare
   dots <- rlang::dots_list(..., .named = TRUE)
   dots_check <- vapply(dots, S7::S7_inherits, logical(1), class = measrdcm)
   if (!all(dots_check)) {
-    msg <- paste("{.arg {cli::cli_vec(names(dots)[!dots_check])}} must ",
+    msg <- paste("{.arg {cli::cli_vec(names(dots)[!dots_check])}} must",
                  "{?be a/be a/all be} {.cls measrdcm} object{?s}")
     cli::cli_abort(msg)
   }
@@ -115,7 +115,9 @@ loo::loo_compare
 
 # utilities --------------------------------------------------------------------
 find_criterion <- function(model, criterion) {
-  if (!is.null(model@criteria[[criterion]])) return(model@criteria[[criterion]])
+  if (!rlang::is_empty(model@criteria[[criterion]])) {
+    return(model@criteria[[criterion]])
+  }
 
   out <- utils::capture.output( # nolint
     crit <- do.call(criterion, list(x = model))

@@ -41,7 +41,7 @@
 #' @param method Estimation method. Options are `"mcmc"`, which uses Stan's
 #'   sampling method, or `"optim"`, which uses Stan's optimizer.
 #' @param prior A [prior][dcmstan::prior()] object. If `NULL`, default priors
-#'   are used, as specified by [default_dcm_priors()].
+#'   are used, as specified by [dcmstan::default_dcm_priors()].
 #' @param backend Character string naming the package to use as the backend for
 #'   fitting the Stan model. Options are `"rstan"` (the default) or
 #'   `"cmdstanr"`. Can be set globally for the current `R` session via the

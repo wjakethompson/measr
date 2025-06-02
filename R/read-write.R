@@ -1,17 +1,22 @@
 write_measrfit <- function(model, file) {
+  file_path <- fs::path_dir(fs::path_abs(file))
+  file_name <- fs::path_file(fs::path_abs(file))
+
   if (S7::S7_inherits(model@backend, cmdstanr)) {
     cur_files <-  model@model$output_files()
-    new_files <- paste0(fs::path_ext_remove(file), "-", seq_along(cur_files),
-                        ".csv")
+    new_files <- paste0(file_path, "/", fs::path_ext_remove(file_name),
+                        "-", seq_along(cur_files), ".csv")
+
     if (!identical(cur_files, new_files)) {
       model@model$save_output_files(
-        fs::path_dir(file),
-        basename = fs::path_file(fs::path_ext_remove(file)),
+        dir = file_path,
+        basename = fs::path_ext_remove(file_name),
         timestamp = FALSE, random = FALSE
       )
     }
   }
-  saveRDS(model, file = file)
+  saveRDS(model,
+          file = fs::path_ext_set(fs::path(file_path, file_name), ".rds"))
 }
 
 read_measrfit <- function(file) {

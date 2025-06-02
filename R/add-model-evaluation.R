@@ -153,7 +153,7 @@ add_criterion <- function(x, criterion = c("loo", "waic", "aic", "bic"),
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && length(all_criteria) && save) {
+  if (!rlang::is_empty(x@file) && length(all_criteria) && save) {
     write_measrfit(x, file = x@file)
   }
   x
@@ -172,7 +172,7 @@ add_reliability <- function(x, overwrite = FALSE, save = TRUE, ...) {
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && save) {
+  if (!rlang::is_empty(x@file) && save) {
     write_measrfit(x, file = x@file)
   }
   x
@@ -204,10 +204,17 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   if ("ppmc" %in% method) {
     ppmc_list <- fit_ppmc(x, ..., force = overwrite)
     x@fit <- utils::modifyList(x@fit, ppmc_list)
+    x@fit <- lapply(names(x@fit),
+                    \(nm) {
+                      if (!nm %in% names(ppmc_list)) return(x@fit[[nm]])
+                      dplyr::select(x@fit[[nm]],
+                                    dplyr::all_of(names(ppmc_list[[nm]])))
+                    }) |>
+      rlang::set_names(nm = names(x@fit))
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && save) {
+  if (!rlang::is_empty(x@file) && save) {
     write_measrfit(x, file = x@file)
   }
   x
@@ -231,7 +238,7 @@ add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
   }
 
   # re-save model object (if applicable) ---------------------------------------
-  if (!is.null(x@file) && save) {
+  if (!rlang::is_empty(x@file) && save) {
     write_measrfit(x, file = x@file)
   }
   x

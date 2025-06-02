@@ -12,8 +12,10 @@ S7::method(stan_data, measrdcm) <- function(x, clean_data = NULL) {
                      num = dplyr::n()) |>
     dplyr::arrange(.data$resp_id)
 
-  profiles <- dcmstan::create_profiles(x@model_spec@structural_model,
-                                       attributes = ncol(x@model_spec@qmatrix))
+  profiles <- dcmstan::create_profiles(
+    x@model_spec@structural_model,
+    attributes = x@model_spec@qmatrix_meta$attribute_names
+  )
 
   stan_data <- list(
     I = nrow(x@model_spec@qmatrix),

@@ -4,16 +4,12 @@
 \alias{reliability}
 \title{Estimate the reliability of a diagnostic classification model}
 \usage{
-reliability(x, ..., force = FALSE, threshold = 0.5)
+reliability(x, ..., threshold = 0.5, force = FALSE)
 }
 \arguments{
 \item{x}{The estimated model to be evaluated.}
 
 \item{...}{Unused. For future extensions.}
-
-\item{force}{If reliability information has already been added to the model
-object with \code{\link[=add_reliability]{add_reliability()}}, should it be recalculated. Default is
-\code{FALSE}.}
 
 \item{threshold}{For \code{map_reliability}, the threshold applied to the
 attribute-level probabilities for determining the binary attribute
@@ -22,6 +18,10 @@ is applied to all attributes), or length equal to the number of attributes.
 If a named vector is supplied, names should match the attribute names in the
 Q-matrix used to estimate the model. If unnamed, thresholds should be in the
 order the attributes were defined in the Q-matrix.}
+
+\item{force}{If reliability information has already been added to the model
+object with \code{\link[=add_reliability]{add_reliability()}}, should it be recalculated. Default is
+\code{FALSE}.}
 }
 \value{
 For class \code{measrdcm}, a list with 3 elements:

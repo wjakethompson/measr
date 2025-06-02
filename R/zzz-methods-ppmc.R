@@ -133,10 +133,15 @@ S7::method(fit_ppmc, measrdcm) <- function(x,
                                            probs = c(0.025, 0.975),
                                            return_draws = 0,
                                            force = FALSE) {
-  model_fit <- rlang::arg_match(model_fit, values = dcm_model_ppmc,
-                                multiple = TRUE)
-  item_fit <- rlang::arg_match(item_fit, values = dcm_item_ppmc,
-                               multiple = TRUE)
+  if (!is.null(model_fit)) {
+    model_fit <- rlang::arg_match(model_fit, values = dcm_model_ppmc,
+                                  multiple = TRUE)
+  }
+  if (!is.null(item_fit)) {
+    item_fit <- rlang::arg_match(item_fit, values = dcm_item_ppmc,
+                                 multiple = TRUE)
+  }
+
   all_ppmc <- c(model_fit, item_fit)
 
   # create output object -------------------------------------------------------

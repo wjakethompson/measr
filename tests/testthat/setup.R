@@ -1,4 +1,4 @@
-dina_spec <- dcmstan::dcm_specify(qmatrix = q_matrix, identifier = "item",
+dina_spec <- dcmstan::dcm_specify(qmatrix = q_matrix[, -1],
                                   measurement_model = dina())
 
 dino_spec <- dcmstan::dcm_specify(qmatrix = q_matrix, identifier = "item",
@@ -15,7 +15,7 @@ out <- capture.output(
 
 out <- capture.output(
   suppressMessages(
-    rstn_dino <- dcm_estimate(dina_spec, data = dino_data,
+    rstn_dino <- dcm_estimate(dino_spec, data = dino_data,
                               identifier = "resp_id", method = "optim",
                               backend = "rstan", seed = 63277,
                               precompiled = stanmodels$test_dina)
