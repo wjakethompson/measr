@@ -11,13 +11,13 @@ test_that("Q-matrix validation works for ecpe", {
     )
   )
   rstn_ecpe_lcdm <- add_respondent_estimates(rstn_ecpe_lcdm)
-  tmp_mod <- add_qmatrix_validation(mod = rstn_ecpe_lcdm)
+  qmat_valid_res <- qmatrix_validation(x = rstn_ecpe_lcdm)
 
-  expect_equal(names(tmp_mod@qmatrix_validation),
+  expect_equal(names(qmat_valid_res),
                c("item_id", "validation_flag", "original_specification",
                  "empirical_specification", "pvaf"))
-  expect_equal(nrow(tmp_mod@qmatrix_validation), 28)
-  expect_equal(nrow(tmp_mod@qmatrix_validation %>%
+  expect_equal(nrow(qmat_valid_res), 28)
+  expect_equal(nrow(qmat_valid_res |>
                       dplyr::filter(!validation_flag)),
                28)
 })
