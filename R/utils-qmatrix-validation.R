@@ -7,7 +7,8 @@ calc_sigma <- function(q, strc_param, pi_mat, ii) {
     dplyr::filter(.data$meas == 1) |>
     tidyr::pivot_wider(names_from = "att", values_from = "meas")
 
-  # iterate through the 2^K - 1 possible classes for each item to calculate sigma (e.g., sigma_1:3)
+  # iterate through the 2^K - 1 possible classes for each item to calculate
+  # sigma (e.g., sigma_1:3)
   poss_subsets <- create_profiles(atts_meas)
   colnames(poss_subsets) <- colnames(filtered_q)
   poss_subsets <- poss_subsets |>

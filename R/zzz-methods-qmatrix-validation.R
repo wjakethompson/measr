@@ -56,7 +56,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
   all_profiles <- create_profiles(ncol(qmatrix))
   pi_mat <- x@model$par |>
     tibble::enframe() |>
-    dplyr::filter(grepl("pi", name)) |>
+    dplyr::filter(grepl("pi", .data$name)) |>
     dplyr::mutate(name = sub("pi\\[", "", .data$name),
                   name = sub("]", "", .data$name)) |>
     tidyr::separate_wider_delim(cols = "name", delim = ",",
@@ -67,7 +67,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
 
   # posterior probabilities of each class
   strc_param <- measr_extract(x, "strc_param")
-  strc_param <- strc_param %>%
+  strc_param <- strc_param |>
     dplyr::mutate(estimate = mean(.data$estimate)) |>
     dplyr::select("class", "estimate") |>
     dplyr::mutate(class = sub("\\[", "", class),
@@ -77,7 +77,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
 
   # calculate sigma_1:K* (e.g., sigma_1:2)
   for (ii in seq_len(nrow(qmatrix))) {
-    max_specification <- all_profiles[nrow(all_profiles),]
+    max_specification <- all_profiles[nrow(all_profiles), ]
     max_sigma <- calc_sigma(q = max_specification, strc_param = strc_param,
                             pi_mat = pi_mat, ii)
 
@@ -107,7 +107,8 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
     }
 
     # choosing profile measuring the fewest attributes
-    # when there is a tie, profile chosen based on proportion of variance accounted for (PVAF)
+    # when there is a tie, profile chosen based on proportion of variance
+    # accounted for (PVAF)
     correct_spec <- possible_specifications |>
       dplyr::select(-"pvaf") |>
       dplyr::mutate(total_atts =

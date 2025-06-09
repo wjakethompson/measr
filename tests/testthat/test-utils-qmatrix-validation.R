@@ -1,7 +1,7 @@
 test_that("calc_sigma works", {
   # example calculation from de la Torre & Chiu (2016)
   spec <- tibble::tibble(att = c("att1", "att2", "att3", "att4"),
-                                      meas = c(1, 1, 1, 1)) %>%
+                                      meas = c(1, 1, 1, 1)) |>
     tidyr::pivot_wider(names_from = "att", values_from = "meas")
   strc <- tibble::tibble(class = c("0,0,0,0", "1,0,0,0", "0,1,0,0", "0,0,1,0",
                                    "1,1,0,0", "1,0,1,0", "0,1,1,0", "1,1,1,0",
