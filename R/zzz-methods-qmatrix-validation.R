@@ -52,24 +52,18 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
                                       "`add_respondent_estimates()`."))
   }
 
-  att_post_probs <- measr_extract(x, "attribute_prob")
-  post_probs <- measr_extract(x, "class_prob")
-
-  item_param <- measr_extract(x, "item_param")
-  item_param <- item_param |>
-    dplyr::mutate(estimate = mean(.data$estimate)) |>
-    dplyr::select(!!dplyr::sym(x@data$item_identifier):"estimate")
-  item_ids <- item_param |>
-    dplyr::distinct(.data$item_id) %>%
-    tibble::rowid_to_column("new_item_id")
-  item_param <- item_param |>
-    dplyr::left_join(item_ids, by = "item_id") |>
-    dplyr::mutate(item_id = .data$new_item_id) |>
-    dplyr::select(-"new_item_id")
-
   qmatrix <- x@model_spec@qmatrix
-  qmatrix <- qmatrix %>%
-    dplyr::select(-!!dplyr::sym(x@data$item_identifier))
+  all_profiles <- create_profiles(ncol(qmatrix))
+  pi_mat <- x@model$par |>
+    tibble::enframe() |>
+    dplyr::filter(grepl("pi", name)) |>
+    dplyr::mutate(name = sub("pi\\[", "", .data$name),
+                  name = sub("]", "", .data$name)) |>
+    tidyr::separate_wider_delim(cols = "name", delim = ",",
+                                names = c("item_id", "profile_id")) |>
+    dplyr::select("profile_id", "item_id", "prob" = "value") |>
+    dplyr::mutate(profile_id = as.numeric(.data$profile_id),
+                  item_id = as.numeric(.data$item_id))
 
   # posterior probabilities of each class
   strc_param <- measr_extract(x, "strc_param")
@@ -78,73 +72,6 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
     dplyr::select("class", "estimate") |>
     dplyr::mutate(class = sub("\\[", "", class),
                   class = sub("]", "", class))
-
-  # pi matrix
-  all_params <- item_param |>
-    dplyr::select(-"estimate") |>
-    dplyr::rename(type = "class", coefficient = "coef")
-
-  att_dict <- tibble::tibble(att = colnames(qmatrix)) |>
-    tibble::rowid_to_column("att_name") |>
-    dplyr::mutate(att_name = glue::glue("att{att_name}"))
-
-  for (ii in att_dict$att) {
-    all_params <- all_params |>
-      dplyr::mutate(attributes = sub(ii,
-                                     att_dict |>
-                                       dplyr::filter(.data$att == ii) |>
-                                       dplyr::pull(.data$att_name),
-                                     .data$attributes))
-  }
-
-  all_params <- all_params |>
-    dplyr::mutate(attributes = dplyr::case_when(is.na(.data$attributes) ~
-                                                  "intercept",
-                                                TRUE ~ .data$attributes))
-
-  all_profiles <- create_profiles(ncol(qmatrix))
-
-  profile_params <-
-    stats::model.matrix(stats::as.formula(paste0("~ .^",
-                                                 max(ncol(all_profiles),
-                                                     2L))),
-                        all_profiles) |>
-    tibble::as_tibble() |>
-    tibble::rowid_to_column(var = "profile_id") |>
-    tidyr::pivot_longer(-"profile_id", names_to = "parameter",
-                        values_to = "valid_for_profile") |>
-    dplyr::mutate(parameter = dplyr::case_when(.data$parameter == "(Intercept)" ~
-                                                 "intercept",
-                                               TRUE ~ gsub(":", "__",
-                                                           .data$parameter)))
-
-  pi_mat <- tidyr::expand_grid(item_id = seq_len(nrow(qmatrix)),
-                               profile_id = seq_len(nrow(all_profiles))) |>
-    dplyr::left_join(dplyr::select(all_params, "item_id",
-                                   "parameter" = "attributes",
-                                   "param_name" = "coefficient"),
-                     by = "item_id",
-                     multiple = "all", relationship = "many-to-many") |>
-    dplyr::left_join(profile_params, by = c("profile_id", "parameter"),
-                     relationship = "many-to-one") |>
-    dplyr::filter(.data$valid_for_profile == 1) |>
-    dplyr::select(-"valid_for_profile") |>
-    dplyr::left_join(item_param |>
-                       dplyr::select("coef", "estimate"),
-                     by = c("param_name" = "coef")) |>
-    dplyr::group_by(.data$item_id, .data$profile_id) |>
-    dplyr::summarize(log_odds = sum(.data$estimate),
-                     .groups = "drop") |>
-    dplyr::mutate(prob = 1 / (1 + exp(-.data$log_odds))) |>
-    dplyr::select(-"log_odds")
-
-  attributes_per_item <- qmatrix %>%
-    dplyr::mutate(total_atts =
-                    rowSums(dplyr::across(dplyr::where(is.numeric)))) %>%
-    dplyr::select("total_atts") %>%
-    tibble::rowid_to_column("item_id")
-
-  colnames(qmatrix) <- colnames(all_profiles)
 
   validation_output <- tibble::tibble()
 
@@ -173,7 +100,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
 
       # flagging profiles where sigma / sigma_1:K < epsilon
       # only profiles where sigma / sigma_1:K >= epsilon are appropriate
-      keep_spec <- sigma_q / max_sigma > epsilon
+      keep_spec <- (sigma_q / max_sigma) > epsilon
       if (keep_spec) {
         possible_specifications <- dplyr::bind_rows(possible_specifications, q)
       }
