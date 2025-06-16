@@ -44,19 +44,39 @@ measr_extract <- S7::new_generic(
 #' @details
 #' For diagnostic classification models, we can extract the following
 #' information:
+#'
+#' ## Model metadata
+#'   * `prior`: The priors used when estimating the model.
+#'   * `classes`: The possible classes or profile patterns. This will show the
+#'     class label (i.e., the pattern of proficiency) and the attributes
+#'     included in each class.
+#'
+#' ## Estimated parameters
+#'
+#' ### Model parameters
 #'   * `item_param`: The estimated item parameters. This shows the name of the
 #'     parameter, the class of the parameter, and the estimated value.
 #'   * `strc_param`: The estimated structural parameters. This is the base rate
 #'     of membership in each class. This shows the class pattern and the
 #'     estimated proportion of respondents in each class.
-#'   * `prior`: The priors used when estimating the model.
-#'   * `classes`: The possible classes or profile patterns. This will show the
-#'     class label (i.e., the pattern of proficiency) and the attributes
-#'     included in each class.
+#'   * `pi_matrix`: The model estimated probability that a respondent in the
+#'     given class provides a correct response to the item. The output shows the
+#'     the item (rows), class (columns), and estimated *p*-values.
+#'   * `exp_pvalues`: Model expected *p*-values for each item. This is
+#'     equivalent to the `pi_matrix`, but also includes and "overall" variable,
+#'     which represents the expected *p*-value for each item (i.e., an average
+#'     of the class-specific *p*-values, weighted by the prevalence of each
+#'     class).
+#'
+#' ### Respondent results
 #'   * `class_prob`: The probability that each respondent belongs to class
 #'     (i.e., has the given pattern of proficiency).
 #'   * `attribute_prob`: The proficiency probability for each respondent and
 #'     attribute.
+#'
+#' ## Model fit
+#'
+#' ### Absolute model fit
 #'   * `m2`: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic.
 #'     See [fit_m2()] for details. Model fit information must first be added to
 #'     the model using [add_fit()].
@@ -84,12 +104,22 @@ measr_extract <- S7::new_generic(
 #'     responses to each item. See [fit_ppmc()] for details.
 #'   * `ppmc_pvalue_flags`: A subset of the PPMC proportion correct values where
 #'     the _ppp_ is outside the specified `ppmc_interval`.
+#'
+#' ### Relative model fit
 #'   * `loo`: The leave-one-out cross validation results. See [loo::loo()] for
 #'     details. The information criterion must first be added to the model using
 #'     [add_criterion()].
 #'   * `waic`: The widely applicable information criterion results. See
 #'     [loo::waic()] for details. The information criterion must first be added
 #'     to the model using [add_criterion()].
+#'   * `aic`: The Akaike information criterion results. See [aic()] for details.
+#'     The information criterion must first be added to the model using
+#'     [add_criterion()].
+#'   * `bic`: The Bayesian information criterion results. See [bic()] for
+#'     details. The information criterion must first be added to the model using
+#'     [add_criterion()].
+#'
+#' ## Reliability
 #'   * `pattern_reliability`: The accuracy and consistency of the overall
 #'     attribute profile classification, as described by Cui et al. (2012).
 #'     Reliability information must first be added to the model using

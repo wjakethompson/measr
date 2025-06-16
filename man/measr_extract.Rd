@@ -52,20 +52,48 @@ Extract components of an estimated diagnostic classification model
 \details{
 For diagnostic classification models, we can extract the following
 information:
+\subsection{Model metadata}{
+\itemize{
+\item \code{prior}: The priors used when estimating the model.
+\item \code{classes}: The possible classes or profile patterns. This will show the
+class label (i.e., the pattern of proficiency) and the attributes
+included in each class.
+}
+}
+
+\subsection{Estimated parameters}{
+\subsection{Model parameters}{
 \itemize{
 \item \code{item_param}: The estimated item parameters. This shows the name of the
 parameter, the class of the parameter, and the estimated value.
 \item \code{strc_param}: The estimated structural parameters. This is the base rate
 of membership in each class. This shows the class pattern and the
 estimated proportion of respondents in each class.
-\item \code{prior}: The priors used when estimating the model.
-\item \code{classes}: The possible classes or profile patterns. This will show the
-class label (i.e., the pattern of proficiency) and the attributes
-included in each class.
+\item \code{pi_matrix}: The model estimated probability that a respondent in the
+given class provides a correct response to the item. The output shows the
+the item (rows), class (columns), and estimated \emph{p}-values.
+\item \code{exp_pvalues}: Model expected \emph{p}-values for each item. This is
+equivalent to the \code{pi_matrix}, but also includes and "overall" variable,
+which represents the expected \emph{p}-value for each item (i.e., an average
+of the class-specific \emph{p}-values, weighted by the prevalence of each
+class).
+}
+}
+
+\subsection{Respondent results}{
+\itemize{
 \item \code{class_prob}: The probability that each respondent belongs to class
 (i.e., has the given pattern of proficiency).
 \item \code{attribute_prob}: The proficiency probability for each respondent and
 attribute.
+}
+}
+
+}
+
+\subsection{Model fit}{
+\subsection{Absolute model fit}{
+\itemize{
 \item \code{m2}: The \ifelse{html}{\out{M<sub>2</sub>}}{\eqn{M_2}} fit statistic.
 See \code{\link[=fit_m2]{fit_m2()}} for details. Model fit information must first be added to
 the model using \code{\link[=add_fit]{add_fit()}}.
@@ -93,12 +121,30 @@ is outside the specified \code{ppmc_interval}.
 responses to each item. See \code{\link[=fit_ppmc]{fit_ppmc()}} for details.
 \item \code{ppmc_pvalue_flags}: A subset of the PPMC proportion correct values where
 the \emph{ppp} is outside the specified \code{ppmc_interval}.
+}
+}
+
+\subsection{Relative model fit}{
+\itemize{
 \item \code{loo}: The leave-one-out cross validation results. See \code{\link[loo:loo]{loo::loo()}} for
 details. The information criterion must first be added to the model using
 \code{\link[=add_criterion]{add_criterion()}}.
 \item \code{waic}: The widely applicable information criterion results. See
 \code{\link[loo:waic]{loo::waic()}} for details. The information criterion must first be added
 to the model using \code{\link[=add_criterion]{add_criterion()}}.
+\item \code{aic}: The Akaike information criterion results. See \code{\link[=aic]{aic()}} for details.
+The information criterion must first be added to the model using
+\code{\link[=add_criterion]{add_criterion()}}.
+\item \code{bic}: The Bayesian information criterion results. See \code{\link[=bic]{bic()}} for
+details. The information criterion must first be added to the model using
+\code{\link[=add_criterion]{add_criterion()}}.
+}
+}
+
+}
+
+\subsection{Reliability}{
+\itemize{
 \item \code{pattern_reliability}: The accuracy and consistency of the overall
 attribute profile classification, as described by Cui et al. (2012).
 Reliability information must first be added to the model using
@@ -111,6 +157,7 @@ for each attribute, using the metrics described by Johnson & Sinharay
 proficiency on each attribute, as described by Johnson & Sinharay (2020).
 Reliability information must first be added to the model using
 \code{\link[=add_reliability]{add_reliability()}}.
+}
 }
 }
 \examples{
