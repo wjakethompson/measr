@@ -46,8 +46,7 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
     x <- add_respondent_estimates(x)
   }
 
-  possible_profs <- create_profiles(x@model_spec@qmatrix |>
-                                      ncol()) |>
+  possible_profs <- create_profiles(x@model_spec) |>
     tidyr::unite(col = "profile", dplyr::everything(), sep = "") |>
     tibble::rowid_to_column("profile_num")
 
