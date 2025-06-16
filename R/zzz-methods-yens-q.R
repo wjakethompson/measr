@@ -67,10 +67,9 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
                   item_id = as.numeric(.data$item_id)) |>
     dplyr::select("profile_id", "item_id", "pi")
 
-  item_ids <- pi_mat |>
+  item_ids <- obs |>
     dplyr::distinct(.data$item_id) |>
-    dplyr::rename("new_item_id" = "item_id") |>
-    dplyr::mutate(item_id = paste0("item_", .data$new_item_id))
+    tibble::rowid_to_column("new_item_id")
 
   class_probs <- x@respondent_estimates$class_probabilities |>
     dplyr::mutate(class = gsub("(\\D|\\.(?=.*\\.))", "", .data$class,
