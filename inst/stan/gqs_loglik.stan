@@ -8,9 +8,8 @@ data {
   array[N] int<lower=1,upper=R> rr;    // respondent for observation n
   array[N] int<lower=0,upper=1> y;     // score for observation n
   array[R] int<lower=1,upper=N> start; // starting row for respondent R
-  array[R] int<lower=1,upper=I> num;   // number of items for respondent R
-  matrix[C,A] Alpha;                   // attribute pattern for each class
-  matrix[I,C] Xi;                      // class attribute mastery indicator
+  array[R] int<lower=1,upper=I> num;   // number items for respondent R
+  matrix[C,A] Alpha;                   // attribute patterns for classes
 }
 parameters {
   vector[C] log_Vc;

@@ -16,32 +16,23 @@ template:
       card: summary_large_image
 
 reference:
-- title: Data sets
-  contents:
-  - ecpe_data
-  - ecpe_qmatrix
-  - mdm_data
-  - mdm_qmatrix
-
 - title: Model estimation
 
-- subtitle: Priors
-  desc: Define prior distributions for the model parameters.
+- subtitle: Specification
+  desc: >
+    Specify a diagnostic model, including measurement model, structural model,
+    and prior distributions.
   contents:
-  - measrprior
-  - is_measrprior
-  - default_dcm_priors
-  - get_parameters
+  - dcmstan::dcm_specify
+  - dcmstan::get_parameters
+  - dcmstan::prior
+  - dcmstan::default_dcm_priors
 
-- subtitle: Model fitting
+- subtitle: Estimation
   desc: >
     Estimate the model using Markov chain Monte Carlo or Stan's optimizer.
   contents:
-  - measr_dcm
-  - measrfit-class
-  - measrfit
-  - as_measrfit
-  - is_measrfit
+  - dcm_estimate
 
 - title: Model evaluation
 
@@ -57,16 +48,16 @@ reference:
   desc: >
     Evaluate the fit of the estimated model to the observed data.
   contents:
-  - fit_m2.measrdcm
+  - m2
   - fit_ppmc
 
 - subtitle: Model comparisons
   desc: >
     Assess the relative fit of two competing models.
   contents:
-  - loo_compare.measrfit
-  - loo.measrfit
-  - waic.measrfit
+  - aic
+  - bic
+  - loo-waic
   - loglik_array
 
 - subtitle: Add evaluations to model objects
@@ -80,16 +71,11 @@ reference:
   desc: View and use an estimated model.
   contents:
   - measr_extract
-  - predict.measrdcm
-
-- title: Miscellaneous
-  contents:
-  - create_profiles
+  - score
 
 - title: internal
   contents:
   - measr_examples
-  - c.measrprior
 
 articles:
 - title: Get started

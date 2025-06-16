@@ -4,7 +4,12 @@ linters: linters_with_defaults(
   )
 exclusions: list(
     "R/stanmodels.R",
-    "R/fit-dcm.R" = list(
+    "R/import-standalone-obj-type.R",
+    "R/import-standalone-types-check.R",
+    "R/zzz-class-dcm-estimate.R" = list(
+      line_length_linter = Inf
+    ),
+    "R/dep-fit-dcm.R" = list(
       line_length_linter = Inf
     ),
     "vignettes/measr.Rmd" = list(

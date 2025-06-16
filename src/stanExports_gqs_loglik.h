@@ -27,50 +27,47 @@ namespace model_gqs_loglik_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 43> locations_array__ =
+static constexpr std::array<const char*, 40> locations_array__ =
   {" (found before start of program)",
-  " (in 'string', line 16, column 2 to column 19)",
-  " (in 'string', line 17, column 2 to column 17)",
-  " (in 'string', line 20, column 2 to column 20)",
-  " (in 'string', line 22, column 15 to column 16)",
-  " (in 'string', line 22, column 4 to column 29)",
-  " (in 'string', line 24, column 12 to column 18)",
-  " (in 'string', line 24, column 6 to column 35)",
-  " (in 'string', line 26, column 8 to column 37)",
-  " (in 'string', line 27, column 8 to line 28, column 68)",
-  " (in 'string', line 25, column 26 to line 29, column 7)",
-  " (in 'string', line 25, column 6 to line 29, column 7)",
-  " (in 'string', line 30, column 6 to column 49)",
-  " (in 'string', line 23, column 19 to line 31, column 5)",
-  " (in 'string', line 23, column 4 to line 31, column 5)",
-  " (in 'string', line 32, column 4 to column 41)",
-  " (in 'string', line 21, column 17 to line 33, column 3)",
-  " (in 'string', line 21, column 2 to line 33, column 3)",
-  " (in 'string', line 2, column 2 to column 17)",
-  " (in 'string', line 3, column 2 to column 17)",
-  " (in 'string', line 4, column 2 to column 17)",
-  " (in 'string', line 5, column 2 to column 17)",
-  " (in 'string', line 6, column 2 to column 17)",
-  " (in 'string', line 7, column 8 to column 9)",
-  " (in 'string', line 7, column 2 to column 35)",
-  " (in 'string', line 8, column 8 to column 9)",
-  " (in 'string', line 8, column 2 to column 35)",
-  " (in 'string', line 9, column 8 to column 9)",
-  " (in 'string', line 9, column 2 to column 34)",
-  " (in 'string', line 10, column 8 to column 9)",
-  " (in 'string', line 10, column 2 to column 38)",
-  " (in 'string', line 11, column 8 to column 9)",
-  " (in 'string', line 11, column 2 to column 36)",
-  " (in 'string', line 12, column 9 to column 10)",
-  " (in 'string', line 12, column 11 to column 12)",
-  " (in 'string', line 12, column 2 to column 20)",
-  " (in 'string', line 13, column 9 to column 10)",
-  " (in 'string', line 13, column 11 to column 12)",
-  " (in 'string', line 13, column 2 to column 17)",
-  " (in 'string', line 16, column 9 to column 10)",
-  " (in 'string', line 17, column 9 to column 10)",
-  " (in 'string', line 17, column 11 to column 12)",
-  " (in 'string', line 20, column 9 to column 10)"};
+  " (in 'gqs_loglik', line 15, column 2 to column 19)",
+  " (in 'gqs_loglik', line 16, column 2 to column 17)",
+  " (in 'gqs_loglik', line 19, column 2 to column 20)",
+  " (in 'gqs_loglik', line 21, column 15 to column 16)",
+  " (in 'gqs_loglik', line 21, column 4 to column 29)",
+  " (in 'gqs_loglik', line 23, column 12 to column 18)",
+  " (in 'gqs_loglik', line 23, column 6 to column 35)",
+  " (in 'gqs_loglik', line 25, column 8 to column 37)",
+  " (in 'gqs_loglik', line 26, column 8 to line 27, column 68)",
+  " (in 'gqs_loglik', line 24, column 26 to line 28, column 7)",
+  " (in 'gqs_loglik', line 24, column 6 to line 28, column 7)",
+  " (in 'gqs_loglik', line 29, column 6 to column 49)",
+  " (in 'gqs_loglik', line 22, column 19 to line 30, column 5)",
+  " (in 'gqs_loglik', line 22, column 4 to line 30, column 5)",
+  " (in 'gqs_loglik', line 31, column 4 to column 41)",
+  " (in 'gqs_loglik', line 20, column 17 to line 32, column 3)",
+  " (in 'gqs_loglik', line 20, column 2 to line 32, column 3)",
+  " (in 'gqs_loglik', line 2, column 2 to column 17)",
+  " (in 'gqs_loglik', line 3, column 2 to column 17)",
+  " (in 'gqs_loglik', line 4, column 2 to column 17)",
+  " (in 'gqs_loglik', line 5, column 2 to column 17)",
+  " (in 'gqs_loglik', line 6, column 2 to column 17)",
+  " (in 'gqs_loglik', line 7, column 8 to column 9)",
+  " (in 'gqs_loglik', line 7, column 2 to column 35)",
+  " (in 'gqs_loglik', line 8, column 8 to column 9)",
+  " (in 'gqs_loglik', line 8, column 2 to column 35)",
+  " (in 'gqs_loglik', line 9, column 8 to column 9)",
+  " (in 'gqs_loglik', line 9, column 2 to column 34)",
+  " (in 'gqs_loglik', line 10, column 8 to column 9)",
+  " (in 'gqs_loglik', line 10, column 2 to column 38)",
+  " (in 'gqs_loglik', line 11, column 8 to column 9)",
+  " (in 'gqs_loglik', line 11, column 2 to column 36)",
+  " (in 'gqs_loglik', line 12, column 9 to column 10)",
+  " (in 'gqs_loglik', line 12, column 11 to column 12)",
+  " (in 'gqs_loglik', line 12, column 2 to column 20)",
+  " (in 'gqs_loglik', line 15, column 9 to column 10)",
+  " (in 'gqs_loglik', line 16, column 9 to column 10)",
+  " (in 'gqs_loglik', line 16, column 11 to column 12)",
+  " (in 'gqs_loglik', line 19, column 9 to column 10)"};
 #include <stan_meta_header.hpp>
 class model_gqs_loglik final : public model_base_crtp<model_gqs_loglik> {
 private:
@@ -85,9 +82,7 @@ private:
   std::vector<int> start;
   std::vector<int> num;
   Eigen::Matrix<double,-1,-1> Alpha_data__;
-  Eigen::Matrix<double,-1,-1> Xi_data__;
   Eigen::Map<Eigen::Matrix<double,-1,-1>> Alpha{nullptr, 0, 0};
-  Eigen::Map<Eigen::Matrix<double,-1,-1>> Xi{nullptr, 0, 0};
 public:
   ~model_gqs_loglik() {}
   model_gqs_loglik(stan::io::var_context& context__, unsigned int
@@ -240,42 +235,12 @@ public:
         }
       }
       current_statement__ = 36;
-      stan::math::validate_non_negative_index("Xi", "I", I);
-      current_statement__ = 37;
-      stan::math::validate_non_negative_index("Xi", "C", C);
-      current_statement__ = 38;
-      context__.validate_dims("data initialization", "Xi", "double",
-        std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(C)});
-      Xi_data__ = Eigen::Matrix<double,-1,-1>::Constant(I, C,
-                    std::numeric_limits<double>::quiet_NaN());
-      new (&Xi) Eigen::Map<Eigen::Matrix<double,-1,-1>>(Xi_data__.data(), I,
-        C);
-      {
-        std::vector<local_scalar_t__> Xi_flat__;
-        current_statement__ = 38;
-        Xi_flat__ = context__.vals_r("Xi");
-        current_statement__ = 38;
-        pos__ = 1;
-        current_statement__ = 38;
-        for (int sym1__ = 1; sym1__ <= C; ++sym1__) {
-          current_statement__ = 38;
-          for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
-            current_statement__ = 38;
-            stan::model::assign(Xi, Xi_flat__[(pos__ - 1)],
-              "assigning variable Xi", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            current_statement__ = 38;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      current_statement__ = 39;
       stan::math::validate_non_negative_index("log_Vc", "C", C);
-      current_statement__ = 40;
+      current_statement__ = 37;
       stan::math::validate_non_negative_index("pi", "I", I);
-      current_statement__ = 41;
+      current_statement__ = 38;
       stan::math::validate_non_negative_index("pi", "C", C);
-      current_statement__ = 42;
+      current_statement__ = 39;
       stan::math::validate_non_negative_index("log_lik", "R", R);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -14,12 +14,14 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 RcppExport SEXP _rcpp_module_boot_stan_fit4gqs_loglik_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4gqs_ppmc_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4gqs_ppmc_probs_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4gqs_probs_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4test_dina_mod();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_stan_fit4gqs_loglik_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4gqs_loglik_mod, 0},
     {"_rcpp_module_boot_stan_fit4gqs_ppmc_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4gqs_ppmc_mod, 0},
+    {"_rcpp_module_boot_stan_fit4gqs_ppmc_probs_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4gqs_ppmc_probs_mod, 0},
     {"_rcpp_module_boot_stan_fit4gqs_probs_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4gqs_probs_mod, 0},
     {"_rcpp_module_boot_stan_fit4test_dina_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4test_dina_mod, 0},
     {NULL, NULL, 0}
