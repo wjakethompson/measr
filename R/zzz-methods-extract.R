@@ -143,12 +143,21 @@ S7::method(measr_extract, measrdcm) <- function(model, what, ...) {
 
   out <- switch(
     what,
-    item_param = dcm_extract_item_param(model, call = call),
-    strc_param = dcm_extract_strc_param(model, call = call),
+    # model meta data ----------------------------------------------------------
     prior = model@model_spec@priors,
     classes = dcm_extract_classes(model, call = call),
+
+    # model parameters ---------------------------------------------------------
+    item_param = dcm_extract_item_param(model, call = call),
+    strc_param = dcm_extract_strc_param(model, call = call),
+    pi_matrix = dcm_extract_pi_matrix(model, call = call),
+    exp_pvalues = dcm_extract_pvalues(model, call = call),
+
+    # respondent results -------------------------------------------------------
     class_prob = dcm_extract_class_prob(model, call = call),
     attribute_prob = dcm_extract_attr_prob(model, call = call),
+
+    # absolute fit -------------------------------------------------------------
     m2 = extract_m2(model, call = call),
     rmsea = extract_rmsea(model, call = call),
     srmsr = extract_srmsr(model, call = call),
@@ -163,10 +172,14 @@ S7::method(measr_extract, measrdcm) <- function(model, what, ...) {
     ppmc_pvalue = dcm_extract_ppmc_pvalue(model, ppmc_interval = NULL,
                                           call = call),
     ppmc_pvalue_flags = dcm_extract_ppmc_pvalue(model, ..., call = call),
+
+    # relative fit -------------------------------------------------------------
     loo = extract_info_crit(model, "loo", call = call),
     waic = extract_info_crit(model, "waic", call = call),
     aic = extract_info_crit(model, "aic", call = call),
     bic = extract_info_crit(model, "bic", call = call),
+
+    # reliability --------------------------------------------------------------
     pattern_reliability = dcm_extract_patt_reli(model, call = call),
     classification_reliability = dcm_extract_map_reli(model, ..., call = call),
     probability_reliability = dcm_extract_eap_reli(model, ..., call = call),
