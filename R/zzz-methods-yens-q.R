@@ -128,7 +128,19 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
     tidyr::pivot_longer(cols = -c("item_id"), names_to = "item_id_2",
                         values_to = "resid_corr") |>
     dplyr::filter(.data$item_id < .data$item_id_2) |>
-    dplyr::mutate(flag = abs(.data$resid_corr) >= crit_value)
+    dplyr::mutate(flag = abs(.data$resid_corr) >= crit_value) |>
+    dplyr::left_join(item_ids |>
+                       dplyr::mutate(new_item_id =
+                                       as.character(.data$new_item_id)) |>
+                       dplyr::rename(item = item_id),
+                     by = c("item_id" = "new_item_id")) |>
+    dplyr::select(item_id = "item", "item_id_2", "resid_corr", "flag") |>
+    dplyr::left_join(item_ids |>
+                       dplyr::mutate(new_item_id =
+                                       as.character(.data$new_item_id)) |>
+                       dplyr::rename(item = item_id),
+                     by = c("item_id_2" = "new_item_id")) |>
+    dplyr::select("item_id", item_id_2 = "item", "resid_corr", "flag")
 
   return(yens_q)
 }
