@@ -43,9 +43,7 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
   }
 
   if (rlang::is_empty(x@respondent_estimates)) {
-    rlang::abort("error_bad_method",
-                 message = glue::glue("Run `add_respondent_estimates()` ",
-                                      "before `add_yens_q()`."))
+    x <- add_respondent_estimates(x)
   }
 
   possible_profs <- create_profiles(x@model_spec@qmatrix |>
