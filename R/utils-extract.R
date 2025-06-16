@@ -179,7 +179,7 @@ dcm_extract_model_pvalues <- function(model, call) {
     dplyr::mutate(dplyr::across(where(is.double), posterior::as_rvar)) |>
     dplyr::summarize(overall = posterior::rvar_sum(.data$prod) /
                        posterior::rvar_sum(.data$estimate),
-                     .by = "item")
+                     .by = model@data$item_identifier)
 
   pvals <- dplyr::full_join(draws, w_pval, by = model@data$item_identifier,
                             relationship = "one-to-one")

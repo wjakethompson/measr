@@ -39,8 +39,30 @@ test_that("extract structural parameters", {
   dina_param <- measr_extract(rstn_dina, "strc_param")
   expect_equal(nrow(dina_param), 32)
   expect_equal(dina_param$class, dplyr::pull(profile_labels(5), "class"))
-  expect_s3_class(dina_param$estimate, "rvar")
+  expect_true(is.double(dina_param$estimate))
   expect_true(all(!is.na(dina_param$estimate)))
+})
+
+test_that("extract pi matrix", {
+  dina_pimat <- measr_extract(rstn_dina, "pi_matrix")
+  expect_equal(nrow(dina_pimat), 35)
+  expect_equal(ncol(dina_pimat), 33)
+  expect_equal(dina_pimat$item_id, q_matrix$item)
+  expect_equal(colnames(dina_pimat)[-1],
+               dplyr::pull(profile_labels(5), "class"))
+  expect_true(all(vapply(dina_pimat[, -1], is.double, logical(1))))
+  expect_true(all(vapply(dina_pimat[, -1], \(x) !any(is.na(x)), logical(1))))
+})
+
+test_that("extract model p-values", {
+  dino_pimat <- measr_extract(rstn_dino, "exp_pvalues")
+  expect_equal(nrow(dino_pimat), 35)
+  expect_equal(ncol(dino_pimat), 34)
+  expect_equal(dino_pimat$item, q_matrix$item)
+  expect_equal(colnames(dino_pimat)[-1],
+               c(dplyr::pull(profile_labels(5), "class"), "overall"))
+  expect_true(all(vapply(dino_pimat[, -1], is.double, logical(1))))
+  expect_true(all(vapply(dino_pimat[, -1], \(x) !any(is.na(x)), logical(1))))
 })
 
 test_that("extract priors", {
