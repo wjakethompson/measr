@@ -54,11 +54,13 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
 
   obs <- x@data$clean_data
 
-  pi_mat <- x@model$par |>
-    tibble::enframe() |>
-    dplyr::rename("parameter" = "name",
-                  "pi" = "value") |>
-    dplyr::filter(grepl("pi", .data$parameter)) |>
+  pi_mat <- get_draws(x, vars = c("pi")) |>
+    posterior::subset_draws(variable = "pi") |>
+    posterior::as_draws_df() |>
+    tibble::as_tibble() |>
+    tidyr::pivot_longer(cols = dplyr::everything(),
+                        names_to = "parameter", values_to = "pi") |>
+    dplyr::filter(!(.data$parameter %in% c(".chain", ".iteration", ".draw"))) |>
     dplyr::mutate(parameter = sub("pi\\[", "", .data$parameter),
                   parameter = sub("\\]", "", .data$parameter)) |>
     tidyr::separate_wider_delim(col = "parameter", delim = ",",
