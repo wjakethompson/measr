@@ -45,9 +45,7 @@ on what is being extracted, but usually the returned object is a
 \link[tibble:tibble-package]{tibble} with the requested information.
 }
 \description{
-Extract components of a \code{measrfit} object
-
-Extract components of an estimated diagnostic classification model
+Extract model metadata, parameter estimates, and model evaluation results.
 }
 \details{
 For diagnostic classification models, we can extract the following
@@ -61,7 +59,7 @@ included in each class.
 }
 }
 
-\subsection{Estimated parameters}{
+\subsection{Estimated model components}{
 \subsection{Model parameters}{
 \itemize{
 \item \code{item_param}: The estimated item parameters. This shows the name of the

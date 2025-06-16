@@ -1,5 +1,7 @@
 #' Extract components of a `measrfit` object
 #'
+#' Extract model metadata, parameter estimates, and model evaluation results.
+#'
 #' @param model The estimated to extract information from.
 #' @param ... Additional arguments passed to specific methods.
 #'
@@ -11,8 +13,6 @@ measr_extract <- S7::new_generic(
   }
 )
 
-#' Extract components of an estimated diagnostic classification model
-#'
 #' @param what Character string. The information to be extracted. See details
 #'   for available options.
 #' @param ... Additional arguments passed to each extract method.
@@ -51,7 +51,7 @@ measr_extract <- S7::new_generic(
 #'     class label (i.e., the pattern of proficiency) and the attributes
 #'     included in each class.
 #'
-#' ## Estimated parameters
+#' ## Estimated model components
 #'
 #' ### Model parameters
 #'   * `item_param`: The estimated item parameters. This shows the name of the
@@ -181,7 +181,7 @@ S7::method(measr_extract, measrdcm) <- function(model, what, ...) {
     item_param = dcm_extract_item_param(model, call = call),
     strc_param = dcm_extract_strc_param(model, call = call),
     pi_matrix = dcm_extract_pi_matrix(model, call = call),
-    exp_pvalues = dcm_extract_pvalues(model, call = call),
+    exp_pvalues = dcm_extract_model_pvalues(model, call = call),
 
     # respondent results -------------------------------------------------------
     class_prob = dcm_extract_class_prob(model, call = call),
