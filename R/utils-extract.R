@@ -162,8 +162,8 @@ dcm_extract_model_pvalues <- function(model, call) {
       patterns = c("pi\\[", item_id = "[0-9]*",
                    ",", class_id = "[0-9]*", "\\]")
     ) |>
-    dplyr::mutate(item_id = as.integer(item_id),
-                  class_id = as.integer(class_id),
+    dplyr::mutate(item_id = as.integer(.data$item_id),
+                  class_id = as.integer(.data$class_id),
                   item_id = names(model@data$item_names)[.data$item_id]) |>
     dplyr::left_join(profiles, by = "class_id") |>
     dplyr::select(!!model@data$item_identifier := "item_id",
@@ -176,7 +176,7 @@ dcm_extract_model_pvalues <- function(model, call) {
     dplyr::left_join(dcm_extract_strc_param(model, call = call),
                      by = "class", relationship = "many-to-one") |>
     dplyr::mutate(prod = .data$pi * .data$estimate) |>
-    dplyr::mutate(dplyr::across(where(is.double), posterior::as_rvar)) |>
+    dplyr::mutate(dplyr::across(dplyr::where(is.double), posterior::as_rvar)) |>
     dplyr::summarize(overall = posterior::rvar_sum(.data$prod) /
                        posterior::rvar_sum(.data$estimate),
                      .by = model@data$item_identifier)
