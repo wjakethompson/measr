@@ -32,13 +32,18 @@ repeated.
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-mod_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
-                        identifier = "item")
-rstn_mdm <- dcm_estimate(mod_spec, data = dcmdata::mdm_data,
-                         identifier = "respondent", backend = "rstan",
-                         method = "optim")
-rstn_mdm <- add_respondent_estimates(rstn_mdm)
-q_matrix_validation <- qmatrix_validation(rstn_mdm)
+mod_spec <- dcm_specify(qmatrix = dcmdata::ecpe_qmatrix,
+                        measurement_model = dcmstan::lcdm(),
+                        structural_model =
+                          dcmstan::hdcm(hierarchy =
+                                          paste0("lexical -> cohesive -> ",
+                                                 "morphosyntactic")),
+                        identifier = "item_id")
+rstn_ecpe <- dcm_estimate(mod_spec, data = dcmdata::ecpe_data,
+                          identifier = "resp_id", backend = "rstan",
+                          method = "optim")
+rstn_ecpe <- add_respondent_estimates(rstn_ecpe)
+q_matrix_validation <- qmatrix_validation(rstn_ecpe)
 \dontshow{\}) # examplesIf}
 }
 \references{
