@@ -192,7 +192,7 @@ details on the LCDM, see <span class="citation">Henson &amp; Templin (<a href="#
 three attributes: morphosyntactic rules, cohesive rules, and lexical
 rules. The Q-matrix defines which attributes are measured by each item.
 For example, item E1 measures morphosyntactic and cohesive rules. The
-data is further described in <code><a href="https://dcmdata.r-dcm.org/reference/ecpe.html" class="external-link">?dcmdata::ecpe</a></code>.</p>
+data is further described in <code><a href="https://dcmdata.r-dcm.org/reference/ecpe.html" class="external-link">?ecpe</a></code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dcmdata.r-dcm.org" class="external-link">dcmdata</a></span><span class="op">)</span></span>
 <span></span>
@@ -231,17 +231,25 @@ data is further described in <code><a href="https://dcmdata.r-dcm.org/reference/
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E9                    0        0       1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E10                   1        0       0</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 18 more rows</span></span></span></code></pre></div>
-<p>We can estimate the LCDM using the <code><a href="../reference/measr_dcm.html">measr_dcm()</a></code> function.
-We specify the data set, the Q-matrix, and the column names of the
-respondent and item identifiers in each (if they exist). Finally, we add
-two additional arguments. The <code>method</code> defines how the model
-should be estimated. For computational efficiency, I’ve selected
+<p>We can estimate the LCDM by first specifying the model using
+<code><a href="https://dcmstan.r-dcm.org/reference/dcm_specify.html" class="external-link">dcm_specify()</a></code>. We specify the Q-matrix and the column name
+of the item identifiers. The function also allows us to define the type
+of DCM we want to estimate, in this case, an LCDM with unconstrained
+attributes.</p>
+<p>Once we have created the specification, we can estimate the model
+using <code><a href="../reference/dcm_estimate.html">dcm_estimate()</a></code>. We provide our model specification,
+along with the data set and the column name of the respondent
+identifiers. We can also add arguments to control the estimation
+process. The <code>method</code> defines how the model should be
+estimated. For computational efficiency, I’ve selected
 <code>"optim"</code>, which uses Stan’s optimizer to estimate the model.
 For a fully Bayesian estimation, you can change this
-<code>method = "mcmc"</code>. Finally, we specify the type of DCM to
-estimate. As previously discussed, we’re estimating an LCDM in this
-example. For more details and options for customizing the model
-specification and estimation, see the <a href="https://measr.info/articles/model-estimation.html">model
+<code>method = "mcmc"</code>. The <code>backend</code> defines which
+Stan engine to use for the estimation. The default is
+<code>"rstan"</code>, which will then use the <a href="https://mc-stan.org/rstan" class="external-link">rstan</a> package for estimating the
+model. Alternatively, <code>backend = "cmdstanr"</code> will use the <a href="https://mc-stan.org/cmdstanr" class="external-link">cmdstanr</a> package. For more
+details and options for customizing the model specification and
+estimation, see the <a href="https://measr.info/articles/model-estimation.html">model
 estimation article</a> on the measr website.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ecpe_spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dcmstan.r-dcm.org/reference/dcm_specify.html" class="external-link">dcm_specify</a></span><span class="op">(</span><span class="va">ecpe_qmatrix</span>, identifier <span class="op">=</span> <span class="st">"item_id"</span>,</span>
