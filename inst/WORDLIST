@@ -11,7 +11,6 @@ Csáki
 Cui
 DCM
 DCMs
-DOI
 EAP
 ECPE
 GDINA
@@ -33,6 +32,7 @@ Olivares
 PPMC
 PPMCs
 Petrov
+Psychometrika
 RMSEA
 RStan
 Roussos
@@ -43,6 +43,7 @@ Schwarz
 Sinharay
 Templin
 Tian
+Torre
 Vehtari
 WAIC
 Watanabe
@@ -55,12 +56,12 @@ biserial
 blatent
 cmdstanr
 codecov
+de
 dichotomously
 dina
 doi
 dplyr
 et
-eval
 examinee
 extensibility
 frac
@@ -73,11 +74,9 @@ measr's
 measrdcm
 measrfit
 measr’s
-monotonicity
 morphosyntactic
 pkgdown
 polytomously
-posteriori
 ppp
 pre
 psychometrics
@@ -92,7 +91,6 @@ tibbles
 toolchain
 tunnelled
 tunnelling
-warmup
 κ
 λ
 χ
