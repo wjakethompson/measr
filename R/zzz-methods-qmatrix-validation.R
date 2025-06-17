@@ -76,7 +76,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
   # posterior probabilities of each class
   strc_param <- measr_extract(x, "strc_param")
   strc_param <- strc_param |>
-    dplyr::mutate(estimate = mean(.data$estimate)) |>
+    dplyr::mutate(estimate = E(.data$estimate)) |>
     dplyr::select("class", "estimate") |>
     dplyr::mutate(class = sub("\\[", "", class),
                   class = sub("]", "", class))
