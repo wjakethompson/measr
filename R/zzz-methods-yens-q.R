@@ -132,7 +132,7 @@ S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
     dplyr::left_join(item_ids |>
                        dplyr::mutate(new_item_id =
                                        as.character(.data$new_item_id)) |>
-                       dplyr::rename(item = item_id),
+                       dplyr::rename(item = .data$item_id),
                      by = c("item_id" = "new_item_id")) |>
     dplyr::select(item_id = "item", "item_id_2", "resid_corr", "flag") |>
     dplyr::left_join(item_ids |>
