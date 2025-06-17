@@ -46,14 +46,11 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
   }
 
   if (rlang::is_empty(x@respondent_estimates)) {
-    rlang::abort("error_bad_method",
-                 message = glue::glue("Respondent estimates need to be added ",
-                                      "to the model with ",
-                                      "`add_respondent_estimates()`."))
+    x <- add_respondent_estimates(x)
   }
 
   qmatrix <- x@model_spec@qmatrix
-  all_profiles <- create_profiles(ncol(qmatrix))
+  all_profiles <- create_profiles(x@model_spec)
   pi_mat <- x@model$par |>
     tibble::enframe() |>
     dplyr::filter(grepl("pi", .data$name)) |>
