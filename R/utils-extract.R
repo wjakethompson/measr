@@ -132,7 +132,7 @@ dcm_extract_item_param <- function(model, call) {
 dcm_extract_strc_param <- function(model, call) {
   profiles <- profile_labels(model@model_spec)
 
-  get_draws(model, vars = "Vc") |>
+  draws <- get_draws(model, vars = "Vc") |>
     posterior::as_draws_rvars() |>
     tibble::as_tibble() |>
     tidyr::pivot_longer(cols = dplyr::everything(),
@@ -140,6 +140,61 @@ dcm_extract_strc_param <- function(model, call) {
     tibble::rowid_to_column(var = "class_id") |>
     dplyr::left_join(profiles, by = "class_id") |>
     dplyr::select("class", "estimate")
+
+  if (S7::S7_inherits(model@method, optim)) {
+    draws <- draws |>
+      dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E))
+  }
+
+  draws
+}
+
+dcm_extract_model_pvalues <- function(model, call) {
+  profiles <- profile_labels(model@model_spec)
+
+  draws <- get_draws(model, vars = "pi") |>
+    posterior::as_draws_df() |>
+    tibble::as_tibble() |>
+    tidyr::pivot_longer(cols = -c(".chain", ".iteration", ".draw")) |>
+    dplyr::summarize(value = posterior::rvar(.data$value), .by = "name") |>
+    tidyr::separate_wider_regex(
+      "name",
+      patterns = c("pi\\[", item_id = "[0-9]*",
+                   ",", class_id = "[0-9]*", "\\]")
+    ) |>
+    dplyr::mutate(item_id = as.integer(.data$item_id),
+                  class_id = as.integer(.data$class_id),
+                  item_id = names(model@data$item_names)[.data$item_id]) |>
+    dplyr::left_join(profiles, by = "class_id") |>
+    dplyr::select(!!model@data$item_identifier := "item_id",
+                  "class", pi = "value") |>
+    tidyr::pivot_wider(names_from = "class", values_from = "pi")
+
+  w_pval <- draws |>
+    tidyr::pivot_longer(cols = -model@data$item_identifier,
+                        names_to = "class", values_to = "pi") |>
+    dplyr::left_join(dcm_extract_strc_param(model, call = call),
+                     by = "class", relationship = "many-to-one") |>
+    dplyr::mutate(prod = .data$pi * .data$estimate) |>
+    dplyr::mutate(dplyr::across(dplyr::where(is.double), posterior::as_rvar)) |>
+    dplyr::summarize(overall = posterior::rvar_sum(.data$prod) /
+                       posterior::rvar_sum(.data$estimate),
+                     .by = model@data$item_identifier)
+
+  pvals <- dplyr::full_join(draws, w_pval, by = model@data$item_identifier,
+                            relationship = "one-to-one")
+
+  if (S7::S7_inherits(model@method, optim)) {
+    pvals <- pvals |>
+      dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar), E))
+  }
+
+  pvals
+}
+
+dcm_extract_pi_matrix <- function(model, call) {
+  dcm_extract_model_pvalues(model, call = call) |>
+    dplyr::select(-"overall")
 }
 
 dcm_extract_classes <- function(model, call) {

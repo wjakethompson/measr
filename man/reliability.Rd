@@ -59,9 +59,9 @@ Johnson & Sinharay (2019).
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-rstn_mdm_lcdm <- measr_dcm(
-  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
-  resp_id = "respondent", item_id = "item", type = "lcdm",
+rstn_mdm_lcdm <- dcm_estimate(
+  dcm_specify(dcmdata::mdm_qmatrix, identifier = "item"),
+  data = dcmdata::mdm_data, missing = NA, identifier = "respondent",
   method = "optim", seed = 63277, backend = "rstan"
 )
 
