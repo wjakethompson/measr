@@ -26,6 +26,11 @@
 #' @export
 #' @examplesIf measr_examples()
 #' mod_spec <- dcm_specify(qmatrix = dcmdata::ecpe_qmatrix,
+#'                         measurement_model = dcmstan::lcdm(),
+#'                         structural_model =
+#'                           dcmstan::hdcm(hierarchy =
+#'                                           paste0("lexical -> cohesive -> ",
+#'                                                  "morphosyntactic")),
 #'                         identifier = "item_id")
 #' rstn_ecpe <- dcm_estimate(mod_spec, data = dcmdata::ecpe_data,
 #'                           identifier = "resp_id", backend = "rstan",
@@ -58,6 +63,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
 
   qmatrix <- x@model_spec@qmatrix
   all_profiles <- create_profiles(x@model_spec)
+  names(qmatrix) <- names(all_profiles)
   pi_mat <- measr:::get_draws(x, vars = c("pi")) |>
     posterior::subset_draws(variable = "pi") |>
     posterior::as_draws_df() |>
