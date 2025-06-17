@@ -51,14 +51,18 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
 
   qmatrix <- x@model_spec@qmatrix
   all_profiles <- create_profiles(x@model_spec)
-  pi_mat <- x@model$par |>
-    tibble::enframe() |>
-    dplyr::filter(grepl("pi", .data$name)) |>
-    dplyr::mutate(name = sub("pi\\[", "", .data$name),
-                  name = sub("]", "", .data$name)) |>
-    tidyr::separate_wider_delim(cols = "name", delim = ",",
+  pi_mat <- measr:::get_draws(x, vars = c("pi")) |>
+    posterior::subset_draws(variable = "pi") |>
+    posterior::as_draws_df() |>
+    tibble::as_tibble() |>
+    tidyr::pivot_longer(cols = dplyr::everything(),
+                        names_to = "parameter", values_to = "pi") |>
+    dplyr::filter(!(.data$parameter %in% c(".chain", ".iteration", ".draw"))) |>
+    dplyr::mutate(parameter = sub("pi\\[", "", .data$parameter),
+                  parameter = sub("]", "", .data$parameter)) |>
+    tidyr::separate_wider_delim(cols = "parameter", delim = ",",
                                 names = c("item_id", "profile_id")) |>
-    dplyr::select("profile_id", "item_id", "prob" = "value") |>
+    dplyr::select("profile_id", "item_id", "prob" = "pi") |>
     dplyr::mutate(profile_id = as.numeric(.data$profile_id),
                   item_id = as.numeric(.data$item_id))
 
