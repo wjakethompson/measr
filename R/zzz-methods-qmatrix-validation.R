@@ -25,13 +25,13 @@
 #' @name qmatrix_validation
 #' @export
 #' @examplesIf measr_examples()
-#' mod_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
-#'                         identifier = "item")
-#' rstn_mdm <- dcm_estimate(mod_spec, data = dcmdata::mdm_data,
-#'                          identifier = "respondent", backend = "rstan",
-#'                          method = "optim")
-#' rstn_mdm <- add_respondent_estimates(rstn_mdm)
-#' q_matrix_validation <- qmatrix_validation(rstn_mdm)
+#' mod_spec <- dcm_specify(qmatrix = dcmdata::ecpe_qmatrix,
+#'                         identifier = "item_id")
+#' rstn_ecpe <- dcm_estimate(mod_spec, data = dcmdata::ecpe_data,
+#'                           identifier = "resp_id", backend = "rstan",
+#'                           method = "optim")
+#' rstn_ecpe <- add_respondent_estimates(rstn_ecpe)
+#' q_matrix_validation <- qmatrix_validation(rstn_ecpe)
 qmatrix_validation <- S7::new_generic("qmatrix_validation", "x",
                                       function(x, ..., epsilon = .95,
                                                force = FALSE) {
