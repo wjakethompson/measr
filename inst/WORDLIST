@@ -32,7 +32,6 @@ Olivares
 PPMC
 PPMCs
 Petrov
-Psychometrika
 RMSEA
 RStan
 Roussos
@@ -43,7 +42,6 @@ Schwarz
 Sinharay
 Templin
 Tian
-Torre
 Vehtari
 WAIC
 Watanabe
@@ -56,7 +54,8 @@ biserial
 blatent
 cmdstanr
 codecov
-de
+dcmdata
+dcmstan
 dichotomously
 dina
 doi

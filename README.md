@@ -67,7 +67,7 @@ page](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
 
 We can define a DCM using `dcm_specify()`. This function requires a
 Q-matrix defining which attributes are measured by each item. We also
-identify any item identifier columns. Other arugments can be specified
+identify any item identifier columns. Other arguments can be specified
 to customize the type of model to estimate (e.g., type of measurement or
 structural model; see `?dcmstan::dcm_specify()`). We can then estimate
 our specified DCM using `dcm_estimate()`. We supply our specification
