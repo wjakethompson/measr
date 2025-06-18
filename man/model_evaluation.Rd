@@ -125,12 +125,13 @@ respectively. This function wraps \code{\link[=reliability]{reliability()}}. Arg
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-cmds_mdm_dina <- measr_dcm(
-  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
-  resp_id = "respondent", item_id = "item", type = "dina",
-  method = "optim", seed = 63277, backend = "rstan",
-  prior = c(prior(beta(5, 17), class = "slip"),
-            prior(beta(5, 17), class = "guess"))
+cmds_mdm_dina <- dcm_estimate(
+  dcm_specify(dcmdata::mdm_qmatrix, identifier = "item",
+              measurement_model = dina(),
+              priors = c(prior(beta(5, 17), type = "slip"),
+                         prior(beta(5, 17), type = "guess"))),
+  data = dcmdata::mdm_data, missing = NA, identifier = "respondent",
+  method = "optim", seed = 63277, backend = "rstan"
 )
 
 cmds_mdm_dina <- add_reliability(cmds_mdm_dina)

@@ -166,14 +166,15 @@ each pair of items (\code{item_fit = "odds_ratio"}) as described by Park et al.
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-mdm_dina <- measr_dcm(
-  data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
-  resp_id = "respondent", item_id = "item", type = "dina",
+mdm_dina <- dcm_estimate(
+  dcm_specify(dcmdata::mdm_qmatrix, identifier = "item",
+              measurement_model = dina()),
+  data = dcmdata::mdm_data, missing = NA, identifier = "respondent",
   method = "mcmc", seed = 63277, backend = "rstan",
   iter = 700, warmup = 500, chains = 2, refresh = 0
 )
 
-fit_ppmc(mdm_dina, model_fit = "raw_score", item_fit = NULL)
+fit_ppmc(mdm_dina, model_fit = "raw_score")
 \dontshow{\}) # examplesIf}
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mdm_dina <- measr_dcm(

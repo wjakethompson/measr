@@ -6,6 +6,12 @@
 
 * Added `aic()` and `bic()` functions for calculating the Akaike and Bayesian information criteria, respectively, for models estimated with `method = "optim"`.
 
+* Refactored package to use S7 objects instead of S3
+
+* Functions for generating Stan code have been relocated to dcmstan
+
+* `measr_dcm()` deprecated in favor of `dcm_estimate()`
+
 # measr 1.0.0
 
 ## New documentation
