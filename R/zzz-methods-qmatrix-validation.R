@@ -64,6 +64,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
   qmatrix <- x@model_spec@qmatrix
   all_profiles <- create_profiles(x@model_spec)
   names(qmatrix) <- names(all_profiles)
+
   pi_mat <- measr:::get_draws(x, vars = c("pi")) |>
     posterior::subset_draws(variable = "pi") |>
     posterior::as_draws_df() |>
