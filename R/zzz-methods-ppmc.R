@@ -83,14 +83,15 @@
 #'
 #' @export
 #' @examplesIf measr_examples()
-#' mdm_dina <- measr_dcm(
-#'   data = mdm_data, missing = NA, qmatrix = mdm_qmatrix,
-#'   resp_id = "respondent", item_id = "item", type = "dina",
+#' mdm_dina <- dcm_estimate(
+#'   dcm_specify(dcmdata::mdm_qmatrix, identifier = "item",
+#'               measurement_model = dina()),
+#'   data = dcmdata::mdm_data, missing = NA, identifier = "respondent",
 #'   method = "mcmc", seed = 63277, backend = "rstan",
 #'   iter = 700, warmup = 500, chains = 2, refresh = 0
 #' )
 #'
-#' fit_ppmc(mdm_dina, model_fit = "raw_score", item_fit = NULL)
+#' fit_ppmc(mdm_dina, model_fit = "raw_score")
 fit_ppmc <- S7::new_generic(
   "fit_ppmc", "x",
   function(x, ..., model_fit = NULL, item_fit = NULL,

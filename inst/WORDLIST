@@ -11,7 +11,6 @@ Csáki
 Cui
 DCM
 DCMs
-DOI
 EAP
 ECPE
 GDINA
@@ -55,12 +54,13 @@ biserial
 blatent
 cmdstanr
 codecov
+dcmdata
+dcmstan
 dichotomously
 dina
 doi
 dplyr
 et
-eval
 examinee
 extensibility
 frac
@@ -73,11 +73,9 @@ measr's
 measrdcm
 measrfit
 measr’s
-monotonicity
 morphosyntactic
 pkgdown
 polytomously
-posteriori
 ppp
 pre
 psychometrics
@@ -92,7 +90,6 @@ tibbles
 toolchain
 tunnelled
 tunnelling
-warmup
 κ
 λ
 χ
