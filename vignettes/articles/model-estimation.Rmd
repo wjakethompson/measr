@@ -193,7 +193,7 @@ strc_compare |>
 
 ### Prior Distributions
 
-In the code to estimate the LCDM above, we did not specify any prior distributions in the call to `measr_dcm()`.
+In the code to define the LCDM above, we did not specify any prior distributions in the call to `dcm_specify()`.
 By default, measr uses the following prior distributions for the LCDM:
 
 ```{r lcdm-prior}

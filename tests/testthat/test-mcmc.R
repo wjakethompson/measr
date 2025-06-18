@@ -77,6 +77,29 @@ test_that("get_draws works as expected", {
   expect_s3_class(test_draws, "draws_array")
 })
 
+# extracts ---------------------------------------------------------------------
+test_that("extract pi matrix", {
+  lcdm_pimat <- measr_extract(cmds_mdm_lcdm, "pi_matrix")
+  expect_equal(nrow(lcdm_pimat), 4)
+  expect_equal(ncol(lcdm_pimat), 3)
+  expect_equal(lcdm_pimat$item, dcmdata::mdm_qmatrix$item)
+  expect_equal(colnames(lcdm_pimat)[-1],
+               dplyr::pull(profile_labels(1), "class"))
+  expect_true(all(vapply(lcdm_pimat[, -1], posterior::is_rvar, logical(1))))
+  expect_true(all(vapply(lcdm_pimat[, -1], \(x) !any(is.na(x)), logical(1))))
+})
+
+test_that("extract model p-values", {
+  dina_pimat <- measr_extract(rstn_mdm_dina, "exp_pvalues")
+  expect_equal(nrow(dina_pimat), 4)
+  expect_equal(ncol(dina_pimat), 4)
+  expect_equal(dina_pimat$item, dcmdata::mdm_qmatrix$item)
+  expect_equal(colnames(dina_pimat)[-1],
+               c(dplyr::pull(profile_labels(1), "class"), "overall"))
+  expect_true(all(vapply(dina_pimat[, -1], posterior::is_rvar, logical(1))))
+  expect_true(all(vapply(dina_pimat[, -1], \(x) !any(is.na(x)), logical(1))))
+})
+
 # loglik -----------------------------------------------------------------------
 test_that("loglik is calculated correctly", {
   skip_on_cran()
