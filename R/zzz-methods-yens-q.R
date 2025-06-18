@@ -5,6 +5,9 @@
 #' @param x A [measrdcm][dcm_estimate()] object.
 #' @param crit_value Numerical. A critical value threshold for evaluating the
 #'   residual correlations from the Yen's Q calculations.
+#' @param force If the Yen's Q information has already been added to the model
+#'   object with [yens_q()], should it be recalculated? Default is
+#'   `FALSE`.
 #' @param ... Unused.
 #'
 #' @rdname yens-q
@@ -32,7 +35,8 @@
 #'                       seed = 63277)
 #'
 #' yens_q(model)
-yens_q <- S7::new_generic("yens_q", "x", function(x, ..., force = FALSE) {
+yens_q <- S7::new_generic("yens_q", "x", function(x, ..., crit_value = .2,
+                                                  force = FALSE) {
   S7::S7_dispatch()
 })
 
