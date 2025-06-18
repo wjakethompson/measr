@@ -4,7 +4,7 @@
 \alias{yens_q}
 \title{Yen's Q statistic for diagnostic models}
 \usage{
-yens_q(x, ..., force = FALSE)
+yens_q(x, ..., crit_value = 0.2, force = FALSE)
 }
 \arguments{
 \item{x}{A \link[=dcm_estimate]{measrdcm} object.}
@@ -13,6 +13,10 @@ yens_q(x, ..., force = FALSE)
 
 \item{crit_value}{Numerical. A critical value threshold for evaluating the
 residual correlations from the Yen's Q calculations.}
+
+\item{force}{If the Yen's Q information has already been added to the model
+object with \code{\link[=yens_q]{yens_q()}}, should it be recalculated? Default is
+\code{FALSE}.}
 }
 \value{
 A tibble with the residual correlation and flags for all item pairs.
