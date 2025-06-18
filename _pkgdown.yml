@@ -51,6 +51,12 @@ reference:
   - m2
   - fit_ppmc
 
+- subtitle: Model assumptions
+  desc: >
+    Evaluate assumptions of the estimated model
+  contents:
+    - qmatrix_validation
+
 - subtitle: Model comparisons
   desc: >
     Assess the relative fit of two competing models.
