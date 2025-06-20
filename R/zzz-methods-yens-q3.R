@@ -92,7 +92,7 @@ S7::method(yens_q3, measrdcm) <- function(x, crit_value = .2, summary = NULL) {
   pi_mat <- measr_extract(x, "pi_matrix") |>
     tidyr::pivot_longer(cols = -x@data$item_identifier,
                         names_to = "profile", values_to = "pi") |>
-    dplyr::select("profile", "item", "pi")
+    dplyr::select("profile", item = !!x@data$item_identifier, "pi")
 
   class_probs <- x@respondent_estimates$class_probabilities |>
     dplyr::select(resp_id = !!rlang::sym(x@data$respondent_identifier),
@@ -121,28 +121,28 @@ S7::method(yens_q3, measrdcm) <- function(x, crit_value = .2, summary = NULL) {
     dplyr::select(-"resp_id") |>
     stats::cor(use = "pairwise.complete.obs")
 
-  all_cor <- tidyr::crossing(item1 = x@data$item_names,
-                             item2 = x@data$item_names) |>
-    dplyr::filter(.data$item1 < item2) |>
-    dplyr::mutate(item1 = names(x@data$item_names)[.data$item1],
-                  item2 = names(x@data$item_names)[.data$item2],
-                  resid_cor = mapply(\(x, y) resid_cor[y, x],
-                                     .data$item1, .data$item2),
-                  resid_cor = unname(.data$resid_cor),
-                  flag = abs(.data$resid_cor) > crit_value)
+  all_cor <- tidyr::crossing(item_1 = x@data$item_names,
+                             item_2 = x@data$item_names) |>
+    dplyr::filter(.data$item_1 < .data$item_2) |>
+    dplyr::mutate(item_1 = names(x@data$item_names)[.data$item_1],
+                  item_2 = names(x@data$item_names)[.data$item_2],
+                  resid_corr = mapply(\(x, y) resid_cor[y, x],
+                                      .data$item_1, .data$item_2),
+                  resid_corr = unname(.data$resid_corr),
+                  flag = abs(.data$resid_corr) > crit_value)
 
   # calculate summary statistic and/or return ----------------------------------
   if (is.null(summary)) return(all_cor)
 
   sum_stat <- if (summary == "q3max") {
     all_cor |>
-      dplyr::mutate(abs_val = abs(resid_cor)) |>
-      dplyr::slice_max(abs_val) |>
+      dplyr::mutate(abs_val = abs(.data$resid_corr)) |>
+      dplyr::slice_max(.data$abs_val) |>
       dplyr::pull("abs_val")
   } else if (summary == "q3star") {
     all_cor |>
-      dplyr::mutate(abs_val = abs(resid_cor)) |>
-      dplyr::summarize(q3star = max(abs_val) - mean(abs_val)) |>
+      dplyr::mutate(abs_val = abs(.data$resid_corr)) |>
+      dplyr::summarize(q3star = max(.data$abs_val) - mean(.data$abs_val)) |>
       dplyr::pull("q3star")
   }
 
