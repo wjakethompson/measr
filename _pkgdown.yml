@@ -5,6 +5,7 @@ home:
 
 template:
   package: rdcmtemplate
+  math-rendering: katex
   bootstrap: 5
   opengraph:
     image:
@@ -50,6 +51,12 @@ reference:
   contents:
   - m2
   - fit_ppmc
+
+- subtitle: Model assumptions
+  desc: >
+    Evaluate assumptions of the estimated model
+  contents:
+    - yens_q3
 
 - subtitle: Model comparisons
   desc: >
