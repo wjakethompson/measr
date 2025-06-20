@@ -5,6 +5,7 @@ home:
 
 template:
   package: rdcmtemplate
+  math-rendering: katex
   bootstrap: 5
   opengraph:
     image:
@@ -55,7 +56,7 @@ reference:
   desc: >
     Evaluate assumptions of the estimated model
   contents:
-    - yens_q
+    - yens_q3
 
 - subtitle: Model comparisons
   desc: >

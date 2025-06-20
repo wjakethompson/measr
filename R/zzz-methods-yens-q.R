@@ -1,30 +1,64 @@
-#' Yen's Q statistic for diagnostic models
+#' Yen's \eqn{Q_3} statistic for local item dependence
 #'
-#' Calculate the Yen's Q statistic for diagnostic models.
+#' Calculate the \eqn{Q_3} statistic to evaluate the assumption of independent
+#' items.
 #'
 #' @param x A [measrdcm][dcm_estimate()] object.
-#' @param crit_value Numerical. A critical value threshold for evaluating the
-#'   residual correlations from the Yen's Q calculations.
-#' @param force If the Yen's Q information has already been added to the model
-#'   object with [yens_q()], should it be recalculated? Default is
-#'   `FALSE`.
 #' @param ... Unused.
+#' @param crit_value The critical value threshold for flagging the
+#'   residual correlation of a given item pair. The default is 0.2, as described
+#'   by Chen and Thissen (1997).
+#' @param summary A summary statistic to be returned. Must be one of `"q3max"`
+#'   or `"q3star"` (see Details). If `NULL` (the default), no summary statistic
+#'   is return, and all residual correlations are returned.
 #'
-#' @rdname yens-q
-#' @return A tibble with the residual correlation and flags for all item pairs.
+#' @details
+#' Psychometric models assume that items are independent of each other,
+#' conditional on the latent trait.
+#' The \eqn{Q_3} statistic (Yen, 1984) is used to evaluate this assumption.
+#' For each observed item response, we calculate the residual between the model
+#' predicted score and the observed score and then estimate correlations between
+#' the residuals across items.
+#' Each residual correlation is a \eqn{Q_3} statistic.
+#'
+#' Often, a critical values is used to flag a residual correlation above a given
+#' threshold (e.g., Chen & Thissen, 1997).
+#' Alternatively, we may use a summary statistic such as the maximum \eqn{Q_3}
+#' statistic (\eqn{Q_{3,max}}; Christensen et al., 2017), defined as
+#'
+#' \deqn{Q_{3,max} = \text{max}_{i>j}\left|Q_{3,ij}\right|}
+#'
+#' Or the mean-adjusted maximum \eqn{Q_3} statistic (\eqn{Q_{3,*}};
+#' Marais, 2013), defined as
+#'
+#' \deqn{
+#'   \overline{Q}_3 = \begin{pmatrix} I\\\ 2\end{pmatrix}^{-1}
+#'   \displaystyle\sum_{i>j}Q_{3,ij} \\
+#'
+#'   Q_{3,*} = Q_{3,max} - \overline{Q}_3
+#' }
+#'
+#' @return If `summary = NULL`, a tibble with the residual correlation and
+#'   flags for all item pairs. Otherwise, a numeric value representing the
+#'   requested summary statistic.
 #' @export
 #'
-#' The Yen's Q statistic is calculated as described by Christensen et al.
-#' (2016). The critical value for evaluating the residual correlations uses a
-#' default value of .2 as described by Chen and Thissen (1997).
+#' @concept Chen
+#' @concept Thissen
 #'
 #' @references Chen, W.-H., & Thissen, D. (1997). Local dependence indexes for
 #'   item pairs using item response theory. *Journal of Educational and
 #'   Behavioral Statistics, 22*(3), 265-389. \doi{10.3102/10769986022003265}
-#' @references Christensen, K. B., Makransky, G., & Horton, M. (2016). Critical
+#' @references Christensen, K. B., Makransky, G., & Horton, M. (2017). Critical
 #'   values for Yen's Q3: Identification of local dependence in the Rasch model
 #'   using residual correlations. *Applied Psychological Measurement, 41*(3),
 #'   178-194. \doi{10.1177/0146621616677520}
+#' @references Marais, I. (2013). Local dependence. In K. B. Christensen, S.
+#'   Kreiner, & M. Mesbah (Eds.), *Rasch models in health* (pp. 111-130). Wiley.
+#' @references Yen, W. M. (1984). Effects of local item dependence on the fit
+#'   and equating performance of the three-parameter logistic model.
+#'   *Applied Psychological Measurement, 8*(2), 125-145.
+#'   \doi{10.1177/014662168400800201}
 #'
 #' @examplesIf measr_examples()
 #' # example code
@@ -34,117 +68,83 @@
 #'                       identifier = "respondent", method = "optim",
 #'                       seed = 63277)
 #'
-#' yens_q(model)
-yens_q <- S7::new_generic("yens_q", "x", function(x, ..., crit_value = .2,
-                                                  force = FALSE) {
+#' yens_q3(model)
+yens_q3 <- S7::new_generic("yens_q3", "x", function(x, ..., crit_value = .2,
+                                                    summary = NULL) {
+  check_number_decimal(crit_value, min = -1, max = 1)
+  if (!is.null(summary)) {
+    rlang::arg_match(summary, values = c("q3max", "q3star"))
+  }
   S7::S7_dispatch()
 })
 
 # methods ----------------------------------------------------------------------
-S7::method(yens_q, measrdcm) <- function(x, crit_value = .2, force = FALSE) {
-  if (!rlang::is_empty(x@criteria$yen_q) && !force) {
-    return(x@criteria$yens_q)
-  }
-
+S7::method(yens_q3, measrdcm) <- function(x, crit_value = .2, summary = NULL) {
   if (rlang::is_empty(x@respondent_estimates)) {
     x <- add_respondent_estimates(x)
   }
 
-  possible_profs <- create_profiles(x@model_spec) |>
-    tidyr::unite(col = "profile", dplyr::everything(), sep = "") |>
-    tibble::rowid_to_column("profile_num")
+  # meta data ------------------------------------------------------------------
+  possible_profs <- profile_labels(x@model_spec) |>
+    dplyr::select("class", "class_id") |>
+    tibble::deframe()
 
-  qmatrix <- x@model_spec@qmatrix
-
-  obs <- x@data$clean_data
-
-  pi_mat <- get_draws(x, vars = c("pi")) |>
-    posterior::subset_draws(variable = "pi") |>
-    posterior::as_draws_df() |>
-    tibble::as_tibble() |>
-    tidyr::pivot_longer(cols = dplyr::everything(),
-                        names_to = "parameter", values_to = "pi") |>
-    dplyr::filter(!(.data$parameter %in% c(".chain", ".iteration", ".draw"))) |>
-    dplyr::mutate(parameter = sub("pi\\[", "", .data$parameter),
-                  parameter = sub("\\]", "", .data$parameter)) |>
-    tidyr::separate_wider_delim(col = "parameter", delim = ",",
-                                names = c("item_id", "profile_id")) |>
-    dplyr::mutate(profile_id = as.numeric(.data$profile_id),
-                  item_id = as.numeric(.data$item_id)) |>
-    dplyr::select("profile_id", "item_id", "pi")
-
-  item_ids <- obs |>
-    dplyr::distinct(.data$item_id) |>
-    tibble::rowid_to_column("new_item_id")
+  pi_mat <- measr_extract(x, "pi_matrix") |>
+    tidyr::pivot_longer(cols = -x@data$item_identifier,
+                        names_to = "profile", values_to = "pi") |>
+    dplyr::select("profile", "item", "pi")
 
   class_probs <- x@respondent_estimates$class_probabilities |>
-    dplyr::mutate(class = gsub("(\\D|\\.(?=.*\\.))", "", .data$class,
-                               perl = TRUE)) |>
-    dplyr::left_join(possible_profs, by = c("class" = "profile")) |>
     dplyr::select(resp_id = !!rlang::sym(x@data$respondent_identifier),
-                  class = "profile_num", "probability")
+                  "class", "probability")
 
-  exp_value <- class_probs |>
-    dplyr::left_join(pi_mat, by = c("class" = "profile_id"),
-                     relationship = "many-to-many") |>
-    dplyr::mutate(exp = .data$probability * .data$pi) |>
-    dplyr::group_by(.data$resp_id, .data$item_id) |>
-    dplyr::summarize(exp = sum(.data$exp), .groups = "keep") |>
-    dplyr::ungroup() |>
-    dplyr::left_join(obs |>
-                       dplyr::left_join(item_ids,
-                                        by = c("item_id")) |>
-                       dplyr::select("resp_id", item_id = "new_item_id",
-                                     "score"),
-                     by = c("resp_id", "item_id")) |>
-    dplyr::mutate(d = .data$score - .data$exp)
+  # calculate Q3 ---------------------------------------------------------------
+  obs <- x@data$clean_data
+  resid_cor <- tidyr::expand_grid(resp_id = names(x@data$respondent_names),
+                                  item_id = names(x@data$item_names),
+                                  profile = names(possible_profs)) |>
+    dplyr::semi_join(obs, by = c("resp_id", "item_id")) |>
+    dplyr::left_join(class_probs, by = c("resp_id", "profile" = "class"),
+                     relationship = "many-to-one") |>
+    dplyr::left_join(pi_mat, by = c("item_id" = "item", "profile"),
+                     relationship = "many-to-one") |>
+    dplyr::summarize(
+      exp = exp(log(sum(exp(log(.data$probability) + log(.data$pi)))) -
+                  log(sum(.data$probability))),
+      .by = c("resp_id", "item_id")
+    ) |>
+    dplyr::left_join(obs, by = c("resp_id", "item_id"),
+                     relationship = "one-to-one") |>
+    dplyr::mutate(residual = .data$score - .data$exp) |>
+    dplyr::select("resp_id", "item_id", "residual") |>
+    tidyr::pivot_wider(names_from = "item_id", values_from = "residual") |>
+    dplyr::select(-"resp_id") |>
+    stats::cor(use = "pairwise.complete.obs")
 
-  num_items <- nrow(qmatrix)
-  yens_q <- matrix(nrow = num_items, ncol = num_items)
+  all_cor <- tidyr::crossing(item1 = x@data$item_names,
+                             item2 = x@data$item_names) |>
+    dplyr::filter(.data$item1 < item2) |>
+    dplyr::mutate(item1 = names(x@data$item_names)[.data$item1],
+                  item2 = names(x@data$item_names)[.data$item2],
+                  resid_cor = mapply(\(x, y) resid_cor[y, x],
+                                     .data$item1, .data$item2),
+                  resid_cor = unname(.data$resid_cor),
+                  flag = abs(.data$resid_cor) > crit_value)
 
-  for (ii in seq_len(num_items)) {
-    for (jj in seq_len(num_items)) {
-      if (ii == jj) {
-        yens_q[ii, jj] <- 1
-      } else {
-        tmp_yens_q <- exp_value |>
-          dplyr::filter(.data$item_id == ii | .data$item_id == jj) |>
-          dplyr::select(-"exp", -"score") |>
-          tidyr::pivot_wider(names_from = "item_id", values_from = "d") |>
-          dplyr::select(-"resp_id") |>
-          cor()
+  # calculate summary statistic and/or return ----------------------------------
+  if (is.null(summary)) return(all_cor)
 
-        yens_q[ii, jj] <- tmp_yens_q[1, 2]
-        yens_q[jj, ii] <- tmp_yens_q[2, 1]
-      }
-    }
+  sum_stat <- if (summary == "q3max") {
+    all_cor |>
+      dplyr::mutate(abs_val = abs(resid_cor)) |>
+      dplyr::slice_max(abs_val) |>
+      dplyr::pull("abs_val")
+  } else if (summary == "q3star") {
+    all_cor |>
+      dplyr::mutate(abs_val = abs(resid_cor)) |>
+      dplyr::summarize(q3star = max(abs_val) - mean(abs_val)) |>
+      dplyr::pull("q3star")
   }
 
-  colnames(yens_q) <- 1:num_items
-
-  yens_q <- yens_q |>
-    tibble::as_tibble(.name_repair = "minimal")
-  names(yens_q) <- item_ids |>
-    dplyr::mutate(item_id = as.character(.data$new_item_id)) |>
-    dplyr::pull()
-  yens_q <- yens_q |>
-    dplyr::mutate(item_id = as.character(item_ids$new_item_id)) |>
-    tidyr::pivot_longer(cols = -c("item_id"), names_to = "item_id_2",
-                        values_to = "resid_corr") |>
-    dplyr::filter(.data$item_id < .data$item_id_2) |>
-    dplyr::mutate(flag = abs(.data$resid_corr) >= crit_value) |>
-    dplyr::left_join(item_ids |>
-                       dplyr::mutate(new_item_id =
-                                       as.character(.data$new_item_id)) |>
-                       dplyr::rename(item = .data$item_id),
-                     by = c("item_id" = "new_item_id")) |>
-    dplyr::select(item_id = "item", "item_id_2", "resid_corr", "flag") |>
-    dplyr::left_join(item_ids |>
-                       dplyr::mutate(new_item_id =
-                                       as.character(.data$new_item_id)) |>
-                       dplyr::rename(item = .data$item_id),
-                     by = c("item_id_2" = "new_item_id")) |>
-    dplyr::select("item_id", item_id_2 = "item", "resid_corr", "flag")
-
-  return(yens_q)
+  sum_stat
 }
