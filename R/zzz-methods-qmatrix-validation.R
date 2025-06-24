@@ -103,8 +103,9 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
     possible_specifications <- dplyr::bind_rows(possible_specifications,
                                                 max_specification)
 
-    for (jj in 2:(nrow(all_profiles) - 1)) {
-      q <- all_profiles[jj, ]
+    full_set_profiles <- create_profiles(ncol(qmatrix))
+    for (jj in 2:(nrow(full_set_profiles) - 1)) {
+      q <- full_set_profiles[jj, ]
       sigma_q <- calc_sigma(q = q, strc_param = strc_param, pi_mat = pi_mat,
                             ii = ii)
 
