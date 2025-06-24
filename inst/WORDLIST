@@ -4,6 +4,7 @@ CDM
 CDMs
 CMD
 Cai
+Chiu
 CmdStan
 CmdStanModel
 CmdStanR
@@ -42,6 +43,7 @@ Schwarz
 Sinharay
 Templin
 Tian
+Torre
 Vehtari
 WAIC
 Watanabe
@@ -54,8 +56,10 @@ biserial
 blatent
 cmdstanr
 codecov
+crum
 dcmdata
 dcmstan
+de
 dichotomously
 dina
 doi
