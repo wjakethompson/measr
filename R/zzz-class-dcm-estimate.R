@@ -194,7 +194,7 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
 measrfit <- S7::new_class("measrfit", package = "measr",
   properties = list(
     model_spec = S7::new_property(
-      class = S7::S7_object,
+      class = S7::class_any,
       setter = function(self, value) {
         if (!is.null(self@model_spec)) {
           stop("@model_spec is read-only", call. = FALSE)
@@ -214,8 +214,7 @@ measrfit <- S7::new_class("measrfit", package = "measr",
       }
     ),
     stancode = S7::new_property(
-      class = S7::new_S3_class(class = c("glue", "character")),
-      default = glue::glue(),
+      class = S7::class_character,
       setter = function(self, value) {
         if (!is.null(self@stancode)) {
           stop("@stancode is read-only", call. = FALSE)
@@ -226,7 +225,7 @@ measrfit <- S7::new_class("measrfit", package = "measr",
     ),
     method = S7::new_property(
       class = stanmethod,
-      default = optim(),
+      default = NULL,
       setter = function(self, value) {
         if (!is.null(self@method)) {
           stop("@method is read-only", call. = FALSE)
@@ -247,7 +246,7 @@ measrfit <- S7::new_class("measrfit", package = "measr",
     ),
     backend = S7::new_property(
       class = stanbackend,
-      default = rstan(),
+      default = NULL,
       setter = function(self, value) {
         if (!is.null(self@backend)) {
           stop("@backend is read-only", call. = FALSE)
@@ -325,8 +324,59 @@ measrfit <- S7::new_class("measrfit", package = "measr",
   }
 )
 
+#' S7 class for measrdcm objects
+#'
+#' The `measrdcm` constructor is exported to facilitate the conversion of other
+#' model objects (e.g., `stanfit`) to `measrdcm` objects. We do not expect or
+#' recommend calling this function directly, unless you are creating a method
+#' for converting to `measrdcm`. Rather, to create a `measrdcm` object, one
+#' should use [dcm_estimate()].
+#'
+#' @param model_spec The model specification used to estimate the model.
+#' @param data The data used to estimate the model.
+#' @param stancode The model code in *Stan* language.
+#' @param method The method used to fit the model.
+#' @param algorithm The name of the algorithm used to fit the model.
+#' @param backend The name of the backend used to fit the model.
+#' @param model The fitted Stan model. This will object of class
+#'   [rstan::stanfit-class] if `backend = "rstan"` and
+#'   [`CmdStanMCMC`](https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html)
+#'   if `backend = "cmdstanr"` was specified when fitting the model.
+#' @param respondent_estimates An empty list for adding estimated person
+#'   parameters after fitting the model.
+#' @param fit An empty list for adding model fit information after fitting the
+#'   model.
+#' @param criteria An empty list for adding information criteria after fitting
+#'   the model.
+#' @param reliability An empty list for adding reliability information after
+#'   fitting the model.
+#' @param file Optional name of a file which the model objects was saved to
+#'   or loaded from.
+#' @param version The versions of measr, *Stan*, and rstan or cmdstanr that were
+#'   used to fit the model.
+#'
+#' @concept Stan
+#'
+#' @returns A `measrdcm` object.
+#' @seealso [dcm_estimate()].
+#' @export
+#'
+#' @examples
+#' qmatrix <- tibble::tibble(
+#'   att1 = sample(0:1, size = 15, replace = TRUE),
+#'   att2 = sample(0:1, size = 15, replace = TRUE),
+#'   att3 = sample(0:1, size = 15, replace = TRUE),
+#'   att4 = sample(0:1, size = 15, replace = TRUE)
+#' )
+#'
+#' spec <- dcm_specify(qmatrix = qmatrix)
+#'
+#' measrdcm(spec)
 measrdcm <- S7::new_class("measrdcm", parent = measrfit, package = "measr",
   properties = list(
-    model_spec = S7::new_property(class = dcmstan::dcm_specification)
+    model_spec = S7::new_property(
+      class = dcmstan::dcm_specification,
+      default = NULL
+    )
   )
 )
