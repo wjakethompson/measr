@@ -65,12 +65,9 @@ not \code{file} exists.
 \item For \code{backend = "rstan"}, arguments are passed to \code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
 or \code{\link[rstan:stanmodel-method-optimizing]{rstan::optimizing()}}.
 \item For \code{backend = "cmdstanr"}, arguments are passed to the
-\href{https://mc-stan.org/cmdstanr/reference/model-method-sample.html}{\verb{$sample()}}
-or
-\href{https://mc-stan.org/cmdstanr/reference/model-method-optimize.html}{\verb{$optimize()}}
-methods of the
-\href{https://mc-stan.org/cmdstanr/reference/CmdStanModel.html}{CmdStanModel}
-class.
+\code{\link[cmdstanr:model-method-sample]{$sample()}} or
+\code{\link[cmdstanr:model-method-optimize]{$optimize()}} methods of the
+\link[cmdstanr:CmdStanModel]{CmdStanModel} class.
 }}
 }
 \value{
@@ -91,5 +88,7 @@ model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
 \dontshow{\}) # examplesIf}
 }
 \concept{Bayesian}
+\concept{Cmd}
 \concept{DCM}
+\concept{Model}
 \concept{Stan}

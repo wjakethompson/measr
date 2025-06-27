@@ -35,8 +35,8 @@ measrdcm(
 
 \item{model}{The fitted Stan model. This will object of class
 \link[rstan:stanfit-class]{rstan::stanfit} if \code{backend = "rstan"} and
-\href{https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html}{\code{CmdStanMCMC}}
-if \code{backend = "cmdstanr"} was specified when fitting the model.}
+\code{\link[cmdstanr:CmdStanMCMC]{CmdStanMCMC}} if \code{backend = "cmdstanr"} was
+specified when fitting the model.}
 
 \item{respondent_estimates}{An empty list for adding estimated person
 parameters after fitting the model.}

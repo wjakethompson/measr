@@ -41,16 +41,15 @@
 #'   * For `backend = "rstan"`, arguments are passed to [rstan::sampling()]
 #'     or [rstan::optimizing()].
 #'   * For `backend = "cmdstanr"`, arguments are passed to the
-#'     [`$sample()`](https://mc-stan.org/cmdstanr/reference/model-method-sample.html)
-#'     or
-#'     [`$optimize()`](https://mc-stan.org/cmdstanr/reference/model-method-optimize.html)
-#'     methods of the
-#'     [CmdStanModel](https://mc-stan.org/cmdstanr/reference/CmdStanModel.html)
-#'     class.
+#'     [`$sample()`][cmdstanr::sample()] or
+#'     [`$optimize()`][cmdstanr::optimize()] methods of the
+#'     [CmdStanModel][cmdstanr::CmdStanModel] class.
 #'
 #' @concept Bayesian
 #' @concept DCM
 #' @concept Stan
+#' @concept Cmd
+#' @concept Model
 #'
 #' @returns A `measrdcm` object.
 #' @export
@@ -173,8 +172,8 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
 #' @param backend The name of the backend used to fit the model.
 #' @param model The fitted Stan model. This will object of class
 #'   [rstan::stanfit-class] if `backend = "rstan"` and
-#'   [`CmdStanMCMC`](https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html)
-#'   if `backend = "cmdstanr"` was specified when fitting the model.
+#'   [`CmdStanMCMC`][cmdstanr::CmdStanMCMC] if `backend = "cmdstanr"` was
+#'   specified when fitting the model.
 #' @param respondent_estimates An empty list for adding estimated person
 #'   parameters after fitting the model.
 #' @param fit An empty list for adding model fit information after fitting the
@@ -340,8 +339,8 @@ measrfit <- S7::new_class("measrfit", package = "measr",
 #' @param backend The name of the backend used to fit the model.
 #' @param model The fitted Stan model. This will object of class
 #'   [rstan::stanfit-class] if `backend = "rstan"` and
-#'   [`CmdStanMCMC`](https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html)
-#'   if `backend = "cmdstanr"` was specified when fitting the model.
+#'   [`CmdStanMCMC`][cmdstanr::CmdStanMCMC] if `backend = "cmdstanr"` was
+#'   specified when fitting the model.
 #' @param respondent_estimates An empty list for adding estimated person
 #'   parameters after fitting the model.
 #' @param fit An empty list for adding model fit information after fitting the
