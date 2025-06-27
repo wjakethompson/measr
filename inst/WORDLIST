@@ -4,6 +4,7 @@ CDM
 CDMs
 CMD
 Cai
+Cmd
 CmdStan
 CmdStanModel
 CmdStanR
@@ -18,12 +19,16 @@ Gabry
 Gelman
 Gierl
 Kiado
+Kreiner
 Kruskal's
 Kullback
 LCDM
 Leibler
 Liu
+Makransky
+Marais
 Maydeu
+Mesbah
 Metaprogramming
 Mplus
 Netlify
@@ -34,6 +39,7 @@ PPMCs
 Petrov
 RMSEA
 RStan
+Rasch
 Roussos
 Rtools
 Rupp
@@ -41,6 +47,7 @@ SRMSR
 Schwarz
 Sinharay
 Templin
+Thissen
 Tian
 Vehtari
 WAIC
