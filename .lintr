@@ -6,9 +6,6 @@ exclusions: list(
     "R/stanmodels.R",
     "R/import-standalone-obj-type.R",
     "R/import-standalone-types-check.R",
-    "R/zzz-class-dcm-estimate.R" = list(
-      line_length_linter = Inf
-    ),
     "R/dep-fit-dcm.R" = list(
       line_length_linter = Inf
     ),
