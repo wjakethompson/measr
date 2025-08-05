@@ -46,7 +46,7 @@ bayes_factor <- S7::new_generic("bayes_factor", "x",
 
 # methods ----------------------------------------------------------------------
 S7::method(bayes_factor, measrdcm) <- function(x, y, force = FALSE) {
-  if (!rlang::is_empty(x@bayes_factor) && !force) {
+  if (!rlang::is_empty(x@criteria$bayes_factor) && !force) {
     return(x@criteria$bayes_factor)
   }
 
