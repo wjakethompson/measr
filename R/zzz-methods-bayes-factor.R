@@ -1,6 +1,8 @@
 #' Bayes factor for diagnostic models
 #'
-#' Calculate Bayes factors for diagnostic models.
+#' Calculate Bayes factors for diagnostic models. The results of the Bayes
+#' factor calculations are designed to be consistent with the reporting
+#' guidelines for Bayesian analysis developedy by Kruschke (2021).
 #'
 #' @param x A [measrdcm][dcm_estimate()] object.
 #' @param y A [measrdcm][dcm_estimate()] object.
@@ -13,10 +15,6 @@
 #' @return A modified [measrdcm][dcm_estimate()] object with the Bayes factor
 #'   slot populated with the Bayes factor statistic.
 #' @export
-#'
-#' The results of the Bayes factor calculations are designed to be consistent
-#' with the reporting guidelines for Bayesian analysis developedy by Kruschke
-#' (2021).
 #'
 #' @references Kruschke, J. K. (2021). Bayesian analysis reporting guidelines.
 #'   *Nature, 5*, 1282-1291. \doi{10.1038/s41562-021-01177-7}

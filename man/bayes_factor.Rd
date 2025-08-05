@@ -25,7 +25,9 @@ A modified \link[=dcm_estimate]{measrdcm} object with the Bayes factor
 slot populated with the Bayes factor statistic.
 }
 \description{
-Calculate Bayes factors for diagnostic models.
+Calculate Bayes factors for diagnostic models. The results of the Bayes
+factor calculations are designed to be consistent with the reporting
+guidelines for Bayesian analysis developedy by Kruschke (2021).
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
