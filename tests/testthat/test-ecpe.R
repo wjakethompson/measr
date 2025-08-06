@@ -6,17 +6,22 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
     identifier = "item_id",
     measurement_model = lcdm(),
     structural_model = unconstrained(),
-    priors = c(prior(uniform(-15, 15), type = "intercept"),
-               prior(uniform(0, 15), type = "maineffect"),
-               prior(uniform(-15, 15), type = "interaction"))
+    priors = c(
+      prior(uniform(-15, 15), type = "intercept"),
+      prior(uniform(0, 15), type = "maineffect"),
+      prior(uniform(-15, 15), type = "interaction")
+    )
   )
 
   out <- capture.output(
     suppressMessages(
       cmds_ecpe_lcdm <- dcm_estimate(
         ecpe_spec,
-        data = dcmdata::ecpe_data, identifier = "resp_id", missing = NA,
-        method = "optim", backend = "cmdstanr"
+        data = dcmdata::ecpe_data,
+        identifier = "resp_id",
+        missing = NA,
+        method = "optim",
+        backend = "cmdstanr"
       )
     )
   )
@@ -28,40 +33,66 @@ test_that("lcdm model works for ecpe", {
   expect_s7_class(cmds_ecpe_lcdm, measrfit)
   expect_s7_class(cmds_ecpe_lcdm, measrdcm)
   expect_identical(cmds_ecpe_lcdm@model_spec@qmatrix, ecpe_spec@qmatrix)
-  expect_identical(cmds_ecpe_lcdm@model_spec@qmatrix_meta$attribute_names,
-                   ecpe_spec@qmatrix_meta$attribute_names)
-  expect_identical(cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_identifier,
-                   "item_id")
-  expect_identical(cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_names,
-                   rlang::set_names(1:28, dcmdata::ecpe_qmatrix$item_id))
-  expect_identical(cmds_ecpe_lcdm@model_spec@measurement_model,
-                   ecpe_spec@measurement_model)
-  expect_identical(cmds_ecpe_lcdm@model_spec@structural_model,
-                   ecpe_spec@structural_model)
+  expect_identical(
+    cmds_ecpe_lcdm@model_spec@qmatrix_meta$attribute_names,
+    ecpe_spec@qmatrix_meta$attribute_names
+  )
+  expect_identical(
+    cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_identifier,
+    "item_id"
+  )
+  expect_identical(
+    cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_names,
+    rlang::set_names(1:28, dcmdata::ecpe_qmatrix$item_id)
+  )
+  expect_identical(
+    cmds_ecpe_lcdm@model_spec@measurement_model,
+    ecpe_spec@measurement_model
+  )
+  expect_identical(
+    cmds_ecpe_lcdm@model_spec@structural_model,
+    ecpe_spec@structural_model
+  )
   expect_identical(cmds_ecpe_lcdm@model_spec@priors, ecpe_spec@priors)
 
-  expect_identical(cmds_ecpe_lcdm@data$item_identifier,
-                   cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_identifier)
-  expect_identical(cmds_ecpe_lcdm@data$item_names,
-                   cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_names)
+  expect_identical(
+    cmds_ecpe_lcdm@data$item_identifier,
+    cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_identifier
+  )
+  expect_identical(
+    cmds_ecpe_lcdm@data$item_names,
+    cmds_ecpe_lcdm@model_spec@qmatrix_meta$item_names
+  )
 
   expect_s3_class(cmds_ecpe_lcdm@stancode, "glue")
   expect_s7_class(cmds_ecpe_lcdm@method, optim)
   expect_s7_class(cmds_ecpe_lcdm@backend, cmdstanr)
   expect_type(cmds_ecpe_lcdm@model, "environment")
   expect_equal(class(cmds_ecpe_lcdm@model), c("CmdStanMLE", "CmdStanFit", "R6"))
-  expect_true(is.list(cmds_ecpe_lcdm@respondent_estimates) &&
-                rlang::is_empty(cmds_ecpe_lcdm@respondent_estimates))
-  expect_true(is.list(cmds_ecpe_lcdm@fit) &&
-                rlang::is_empty(cmds_ecpe_lcdm@fit))
-  expect_true(is.list(cmds_ecpe_lcdm@criteria) &&
-                rlang::is_empty(cmds_ecpe_lcdm@criteria))
-  expect_true(is.list(cmds_ecpe_lcdm@reliability) &&
-                rlang::is_empty(cmds_ecpe_lcdm@reliability))
-  expect_true(is.character(cmds_ecpe_lcdm@file) &&
-                rlang::is_empty(cmds_ecpe_lcdm@file))
-  expect_identical(names(cmds_ecpe_lcdm@version),
-                   c("R", "R-measr", "R-cmdstanr", "CmdStan"))
+  expect_true(
+    is.list(cmds_ecpe_lcdm@respondent_estimates) &&
+      rlang::is_empty(cmds_ecpe_lcdm@respondent_estimates)
+  )
+  expect_true(
+    is.list(cmds_ecpe_lcdm@fit) &&
+      rlang::is_empty(cmds_ecpe_lcdm@fit)
+  )
+  expect_true(
+    is.list(cmds_ecpe_lcdm@criteria) &&
+      rlang::is_empty(cmds_ecpe_lcdm@criteria)
+  )
+  expect_true(
+    is.list(cmds_ecpe_lcdm@reliability) &&
+      rlang::is_empty(cmds_ecpe_lcdm@reliability)
+  )
+  expect_true(
+    is.character(cmds_ecpe_lcdm@file) &&
+      rlang::is_empty(cmds_ecpe_lcdm@file)
+  )
+  expect_identical(
+    names(cmds_ecpe_lcdm@version),
+    c("R", "R-measr", "R-cmdstanr", "CmdStan")
+  )
 
   expect_equal(loglik(cmds_ecpe_lcdm), ecpe_lldcm$logLik, tolerance = 0.01)
 
@@ -85,8 +116,10 @@ test_that("extract ecpe", {
     dplyr::filter(type != "structural")
 
   expect_equal(nrow(lcdm_param), nrow(all_param))
-  expect_equal(colnames(lcdm_param),
-               c("item_id", "type", "attributes", "coefficient", "estimate"))
+  expect_equal(
+    colnames(lcdm_param),
+    c("item_id", "type", "attributes", "coefficient", "estimate")
+  )
   expect_equal(lcdm_param$item_id, all_param$item_id)
   expect_equal(lcdm_param$type, all_param$type)
   expect_equal(lcdm_param$attributes, all_param$attributes)
@@ -101,20 +134,30 @@ test_that("extract ecpe", {
   expect_true(all(!is.na(lcdm_param$estimate)))
 
   lcdm_param <- measr_extract(cmds_ecpe_lcdm, "prior")
-  expect_equal(lcdm_param,
-               c(prior(uniform(-15, 15), type = "intercept"),
-                 prior(uniform(0, 15), type = "maineffect"),
-                 prior(uniform(-15, 15), type = "interaction"),
-                 prior(dirichlet(rep_vector(1, C)), type = "structural",
-                       coefficient = "Vc")))
+  expect_equal(
+    lcdm_param,
+    c(
+      prior(uniform(-15, 15), type = "intercept"),
+      prior(uniform(0, 15), type = "maineffect"),
+      prior(uniform(-15, 15), type = "interaction"),
+      prior(
+        dirichlet(rep_vector(1, C)),
+        type = "structural",
+        coefficient = "Vc"
+      )
+    )
+  )
 
   lcdm_param <- measr_extract(cmds_ecpe_lcdm, "classes")
-  expect_equal(colnames(lcdm_param), c("class", "morphosyntactic", "cohesive",
-                                       "lexical"))
+  expect_equal(
+    colnames(lcdm_param),
+    c("class", "morphosyntactic", "cohesive", "lexical")
+  )
   expect_equal(lcdm_param$class, dplyr::pull(profile_labels(3), "class"))
   exp_label <- lcdm_param |>
-    dplyr::mutate(new_label = paste0("[", morphosyntactic, ",", cohesive, ",",
-                                     lexical, "]")) |>
+    dplyr::mutate(
+      new_label = paste0("[", morphosyntactic, ",", cohesive, ",", lexical, "]")
+    ) |>
     dplyr::pull("new_label")
   expect_equal(lcdm_param$class, exp_label)
 })
@@ -122,42 +165,61 @@ test_that("extract ecpe", {
 test_that("ecpe probabilities are accurate", {
   skip_on_cran()
 
-  ecpe_preds <- score(cmds_ecpe_lcdm, newdata = dcmdata::ecpe_data,
-                      identifier = "resp_id")
+  ecpe_preds <- score(
+    cmds_ecpe_lcdm,
+    newdata = dcmdata::ecpe_data,
+    identifier = "resp_id"
+  )
 
   # dimensions are correct -----
-  expect_equal(names(ecpe_preds), c("class_probabilities",
-                                    "attribute_probabilities"))
-  expect_equal(colnames(ecpe_preds$class_probabilities),
-               c("resp_id", "class", "probability"))
-  expect_equal(colnames(ecpe_preds$attribute_probabilities),
-               c("resp_id", "attribute", "probability"))
-  expect_equal(nrow(ecpe_preds$class_probabilities),
-               nrow(dcmdata::ecpe_data) * (2 ^ 3))
-  expect_equal(nrow(ecpe_preds$attribute_probabilities),
-               nrow(dcmdata::ecpe_data) * 3)
+  expect_equal(
+    names(ecpe_preds),
+    c("class_probabilities", "attribute_probabilities")
+  )
+  expect_equal(
+    colnames(ecpe_preds$class_probabilities),
+    c("resp_id", "class", "probability")
+  )
+  expect_equal(
+    colnames(ecpe_preds$attribute_probabilities),
+    c("resp_id", "attribute", "probability")
+  )
+  expect_equal(
+    nrow(ecpe_preds$class_probabilities),
+    nrow(dcmdata::ecpe_data) * (2^3)
+  )
+  expect_equal(
+    nrow(ecpe_preds$attribute_probabilities),
+    nrow(dcmdata::ecpe_data) * 3
+  )
 
   # extract works -----
   expect_equal(cmds_ecpe_lcdm@respondent_estimates, list())
   err <- rlang::catch_cnd(measr_extract(cmds_ecpe_lcdm, "class_prob"))
-  expect_match(err$message,
-               "added to a model object before\\nclass probabilities")
+  expect_match(
+    err$message,
+    "added to a model object before\\nclass probabilities"
+  )
   err <- rlang::catch_cnd(measr_extract(cmds_ecpe_lcdm, "attribute_prob"))
-  expect_match(err$message,
-               "added to a model object before\\nattribute probabilities")
+  expect_match(
+    err$message,
+    "added to a model object before\\nattribute probabilities"
+  )
 
   cmds_ecpe_lcdm <- add_respondent_estimates(cmds_ecpe_lcdm)
   expect_equal(cmds_ecpe_lcdm@respondent_estimates, ecpe_preds)
-  expect_equal(measr_extract(cmds_ecpe_lcdm, "class_prob"),
-               ecpe_preds$class_probabilities |>
-                 dplyr::select("resp_id", "class", "probability") |>
-                 tidyr::pivot_wider(names_from = "class",
-                                    values_from = "probability"))
-  expect_equal(measr_extract(cmds_ecpe_lcdm, "attribute_prob"),
-               ecpe_preds$attribute_prob |>
-                 dplyr::select("resp_id", "attribute", "probability") |>
-                 tidyr::pivot_wider(names_from = "attribute",
-                                    values_from = "probability"))
+  expect_equal(
+    measr_extract(cmds_ecpe_lcdm, "class_prob"),
+    ecpe_preds$class_probabilities |>
+      dplyr::select("resp_id", "class", "probability") |>
+      tidyr::pivot_wider(names_from = "class", values_from = "probability")
+  )
+  expect_equal(
+    measr_extract(cmds_ecpe_lcdm, "attribute_prob"),
+    ecpe_preds$attribute_prob |>
+      dplyr::select("resp_id", "attribute", "probability") |>
+      tidyr::pivot_wider(names_from = "attribute", values_from = "probability")
+  )
 
   check_preds <- score(cmds_ecpe_lcdm)
   expect_equal(check_preds, cmds_ecpe_lcdm@respondent_estimates)
@@ -171,22 +233,23 @@ test_that("ecpe probabilities are accurate", {
 
   class_diff <- abs(
     round(measr_class, digits = 4) -
-      round(ecpe_lldcm$posterior[, c(1, 5, 3, 2, 7, 6, 4, 8)], digits = 4))
+      round(ecpe_lldcm$posterior[, c(1, 5, 3, 2, 7, 6, 4, 8)], digits = 4)
+  )
 
   expect_lt(mean(class_diff), .02)
   expect_lt(median(class_diff), .02)
 
-
   measr_attr <- ecpe_preds$attribute_probabilities |>
     dplyr::select("resp_id", "attribute", "probability") |>
-    tidyr::pivot_wider(names_from = "attribute",
-                       values_from = "probability") |>
+    tidyr::pivot_wider(names_from = "attribute", values_from = "probability") |>
     dplyr::select(-"resp_id") |>
     as.matrix() |>
     unname()
 
-  attr_diff <- abs(round(measr_attr, digits = 4) -
-                     round(ecpe_lldcm$eap, digits = 4))
+  attr_diff <- abs(
+    round(measr_attr, digits = 4) -
+      round(ecpe_lldcm$eap, digits = 4)
+  )
 
   expect_lt(mean(attr_diff), .02)
   expect_lt(median(attr_diff), .02)
@@ -199,30 +262,64 @@ test_that("ecpe reliability", {
   ecpe_reli8 <- reliability(cmds_ecpe_lcdm, threshold = 0.8)
 
   # list naming -----
-  expect_equal(names(ecpe_reli), c("pattern_reliability", "map_reliability",
-                                   "eap_reliability"))
+  expect_equal(
+    names(ecpe_reli),
+    c("pattern_reliability", "map_reliability", "eap_reliability")
+  )
   expect_equal(names(ecpe_reli$pattern_reliability), c("p_a", "p_c"))
   expect_equal(names(ecpe_reli$map_reliability), c("accuracy", "consistency"))
-  expect_equal(names(ecpe_reli$map_reliability$accuracy),
-               c("attribute", "acc", "lambda_a", "kappa_a", "youden_a",
-                 "tetra_a", "tp_a", "tn_a"))
-  expect_equal(names(ecpe_reli$map_reliability$consistency),
-               c("attribute", "consist", "lambda_c", "kappa_c", "youden_c",
-                 "tetra_c", "tp_c", "tn_c", "gammak", "pc_prime"))
-  expect_equal(names(ecpe_reli$eap_reliability),
-               c("attribute", "rho_pf", "rho_bs", "rho_i", "rho_tb"))
+  expect_equal(
+    names(ecpe_reli$map_reliability$accuracy),
+    c(
+      "attribute",
+      "acc",
+      "lambda_a",
+      "kappa_a",
+      "youden_a",
+      "tetra_a",
+      "tp_a",
+      "tn_a"
+    )
+  )
+  expect_equal(
+    names(ecpe_reli$map_reliability$consistency),
+    c(
+      "attribute",
+      "consist",
+      "lambda_c",
+      "kappa_c",
+      "youden_c",
+      "tetra_c",
+      "tp_c",
+      "tn_c",
+      "gammak",
+      "pc_prime"
+    )
+  )
+  expect_equal(
+    names(ecpe_reli$eap_reliability),
+    c("attribute", "rho_pf", "rho_bs", "rho_i", "rho_tb")
+  )
 
   # list rows -----
-  expect_equal(ecpe_reli$map_reliability$accuracy$attribute,
-               colnames(dcmdata::ecpe_qmatrix)[-1])
-  expect_equal(ecpe_reli$map_reliability$consistency$attribute,
-               colnames(dcmdata::ecpe_qmatrix)[-1])
-  expect_equal(ecpe_reli$eap_reliability$attribute,
-               colnames(dcmdata::ecpe_qmatrix)[-1])
+  expect_equal(
+    ecpe_reli$map_reliability$accuracy$attribute,
+    colnames(dcmdata::ecpe_qmatrix)[-1]
+  )
+  expect_equal(
+    ecpe_reli$map_reliability$consistency$attribute,
+    colnames(dcmdata::ecpe_qmatrix)[-1]
+  )
+  expect_equal(
+    ecpe_reli$eap_reliability$attribute,
+    colnames(dcmdata::ecpe_qmatrix)[-1]
+  )
 
   # reliability values -----
-  patt_diff <- abs(round(unname(ecpe_reli$pattern_reliability), digits = 4) -
-                     round(unname(ecpe_lldcm_reli[[1]]), digits = 4))
+  patt_diff <- abs(
+    round(unname(ecpe_reli$pattern_reliability), digits = 4) -
+      round(unname(ecpe_lldcm_reli[[1]]), digits = 4)
+  )
   expect_lt(mean(patt_diff), .01)
   expect_lt(median(patt_diff), .01)
 
@@ -249,30 +346,46 @@ test_that("ecpe reliability", {
 
   # check extraction -----
   expect_equal(cmds_ecpe_lcdm@reliability, list())
-  err <- rlang::catch_cnd(measr_extract(cmds_ecpe_lcdm,
-                                        "classification_reliability"))
-  expect_match(err$message,
-               "Reliability information must be\\nadded to a model")
+  err <- rlang::catch_cnd(measr_extract(
+    cmds_ecpe_lcdm,
+    "classification_reliability"
+  ))
+  expect_match(
+    err$message,
+    "Reliability information must be\\nadded to a model"
+  )
 
   reli_mod <- add_reliability(cmds_ecpe_lcdm)
   expect_equal(reli_mod@reliability, ecpe_reli)
 
-  expect_equal(measr_extract(reli_mod, "classification_reliability"),
-               dplyr::full_join(
-                 dplyr::select(reli_mod@reliability$map_reliability$accuracy,
-                               "attribute", accuracy = "acc"),
-                 dplyr::select(reli_mod@reliability$map_reliability$consistency,
-                               "attribute", consistency = "consist"),
-                 by = "attribute"
-               ))
+  expect_equal(
+    measr_extract(reli_mod, "classification_reliability"),
+    dplyr::full_join(
+      dplyr::select(
+        reli_mod@reliability$map_reliability$accuracy,
+        "attribute",
+        accuracy = "acc"
+      ),
+      dplyr::select(
+        reli_mod@reliability$map_reliability$consistency,
+        "attribute",
+        consistency = "consist"
+      ),
+      by = "attribute"
+    )
+  )
 
   # reliability thresholds -----
   expect_equal(ecpe_reli$pattern_reliability, ecpe_reli8$pattern_reliability)
   expect_equal(ecpe_reli$eap_reliability, ecpe_reli$eap_reliability)
-  expect_false(identical(ecpe_reli$map_reliability$accuracy,
-                         ecpe_reli8$map_reliability$accuracy))
-  expect_false(identical(ecpe_reli$map_reliability$consistency,
-                         ecpe_reli8$map_reliability$consistency))
+  expect_false(identical(
+    ecpe_reli$map_reliability$accuracy,
+    ecpe_reli8$map_reliability$accuracy
+  ))
+  expect_false(identical(
+    ecpe_reli$map_reliability$consistency,
+    ecpe_reli8$map_reliability$consistency
+  ))
 })
 
 test_that("m2 calculation is correct", {
@@ -314,12 +427,16 @@ test_that("read/write with cmdstanr", {
   )
   expect_true(fs::file_exists(fs::path_ext_set(file, "rds")))
   expect_true(fs::file_exists(fs::path_ext_set(paste0(file, "-1"), "csv")))
-  expect_identical(cmds_ecpe_lcdm@model$output_files(),
-                   as.character(fs::path_ext_set(paste0(file, "-1"), "csv")))
+  expect_identical(
+    cmds_ecpe_lcdm@model$output_files(),
+    as.character(fs::path_ext_set(paste0(file, "-1"), "csv"))
+  )
 
   # read with new specs -----
   clean_data <- rdcmchecks::clean_data(
-    dcmdata::ecpe_data, identifier = "resp_id", missing = NA,
+    dcmdata::ecpe_data,
+    identifier = "resp_id",
+    missing = NA,
     cleaned_qmatrix = list(
       clean_qmatrix = ecpe_spec@qmatrix,
       attribute_names = ecpe_spec@qmatrix_meta$attribute_names,
@@ -329,10 +446,12 @@ test_that("read/write with cmdstanr", {
     arg_qmatrix = "ecpe_spec"
   )
 
-  check_fit <- check_previous_fit(file = fs::path_ext_set(file, "rds"),
-                                  dcm_spec = ecpe_spec,
-                                  clean_data = clean_data,
-                                  stan_mthd = optim(),
-                                  stan_bknd = rstan())
+  check_fit <- check_previous_fit(
+    file = fs::path_ext_set(file, "rds"),
+    dcm_spec = ecpe_spec,
+    clean_data = clean_data,
+    stan_mthd = optim(),
+    stan_bknd = rstan()
+  )
   expect_null(check_fit)
 })

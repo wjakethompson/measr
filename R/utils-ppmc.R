@@ -13,7 +13,7 @@ pw_or <- function(dat) {
     n11 <- xtab[2, 2]
     or[i] <- (n00 * n11) / (n01 * n10)
   }
-  pwor <- tibble::as_tibble(ind, .name_repair = ~c("item_1", "item_2")) |>
+  pwor <- tibble::as_tibble(ind, .name_repair = ~ c("item_1", "item_2")) |>
     dplyr::mutate(or = or)
   return(pwor)
 }

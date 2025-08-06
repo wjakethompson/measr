@@ -3,6 +3,9 @@ linters: linters_with_defaults(
     return_linter = NULL
   )
 exclusions: list(
+    "data-raw/test-data.R" = list(
+      object_usage_linter = Inf
+    ),
     "R/stanmodels.R",
     "R/import-standalone-obj-type.R",
     "R/import-standalone-types-check.R",

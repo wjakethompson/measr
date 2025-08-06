@@ -1,13 +1,19 @@
 # compile stan model -----------------------------------------------------------
-stan_model <- S7::new_generic("stan_model", "backend",
-                              function(backend, code, ...) {
-                                S7::S7_dispatch()
-                              })
+stan_model <- S7::new_generic(
+  "stan_model",
+  "backend",
+  function(backend, code, ...) {
+    S7::S7_dispatch()
+  }
+)
 
 S7::method(stan_model, rstan) <-
   function(backend, code, ..., precompiled = NULL) {
-    if (!is.null(precompiled)) return(precompiled)
+    if (!is.null(precompiled)) {
+      return(precompiled)
+    }
 
+    # fmt: skip
     out <- utils::capture.output( # nolint
       compiled_model <- eval_silent(rstan::stan_model(model_code = code))
     )
@@ -23,7 +29,9 @@ S7::method(stan_model, cmdstanr) <- function(backend, code, ...) {
   if (cmdstanr::cmdstan_version() >= "2.29.0") {
     compiled_model$format(
       canonicalize = list("deprecations", "braces", "parentheses"),
-      overwrite_file = TRUE, quiet = TRUE, backup = FALSE
+      overwrite_file = TRUE,
+      quiet = TRUE,
+      backup = FALSE
     )
   }
 
@@ -63,15 +71,21 @@ S7::method(stan_function, list(cmdstanr, gqs)) <-
 
 
 # final stan calls -------------------------------------------------------------
-stan_call <- S7::new_generic("stan_call", c("backend", "method"),
-                             function(backend, method, code, args, ...) {
-                               S7::S7_dispatch()
-                             })
+stan_call <- S7::new_generic(
+  "stan_call",
+  c("backend", "method"),
+  function(backend, method, code, args, ...) {
+    S7::S7_dispatch()
+  }
+)
 
 S7::method(stan_call, list(rstan, stanmethod)) <-
   function(backend, method, code, args, ..., precompiled = NULL) {
-    args$object <- stan_model(backend = backend, code = code,
-                              precompiled = precompiled)
+    args$object <- stan_model(
+      backend = backend,
+      code = code,
+      precompiled = precompiled
+    )
     fit_func <- stan_function(backend = backend, method = method)
 
     list(call_function = fit_func, args = args)
@@ -80,8 +94,11 @@ S7::method(stan_call, list(rstan, stanmethod)) <-
 S7::method(stan_call, list(cmdstanr, stanmethod)) <-
   function(backend, method, code, args, ...) {
     compiled_model <- stan_model(backend = backend, code = code)
-    fit_func <- stan_function(backend = backend, method = method,
-                              compiled_model = compiled_model)
+    fit_func <- stan_function(
+      backend = backend,
+      method = method,
+      compiled_model = compiled_model
+    )
 
     list(call_function = fit_func, args = args)
   }

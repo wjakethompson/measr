@@ -1,9 +1,13 @@
 test_that("measr_dcm is deprecated", {
   err <- rlang::catch_cnd(
     measr_dcm(
-      data = dcmdata::mdm_data, missing = NA, qmatrix = dcmdata::mdm_data,
-      resp_id = "respondent", item_id = "item",
-      type = "lcdm", attribute_structure = "unconstrained",
+      data = dcmdata::mdm_data,
+      missing = NA,
+      qmatrix = dcmdata::mdm_data,
+      resp_id = "respondent",
+      item_id = "item",
+      type = "lcdm",
+      attribute_structure = "unconstrained",
       method = "optim"
     )
   )
@@ -18,36 +22,52 @@ test_that("measr_dcm works", {
 
   suppressWarnings(
     mod1 <- measr_dcm(
-      data = dcmdata::mdm_data, missing = NA, qmatrix = dcmdata::mdm_qmatrix,
-      resp_id = "respondent", item_id = "item",
-      type = "lcdm", attribute_structure = "unconstrained",
+      data = dcmdata::mdm_data,
+      missing = NA,
+      qmatrix = dcmdata::mdm_qmatrix,
+      resp_id = "respondent",
+      item_id = "item",
+      type = "lcdm",
+      attribute_structure = "unconstrained",
       method = "optim"
     )
   )
 
   suppressWarnings(
     mod2 <- measr_dcm(
-      data = dcmdata::mdm_data, missing = NA, qmatrix = dcmdata::mdm_qmatrix,
-      resp_id = "respondent", item_id = "item",
-      type = "dina", attribute_structure = "independent",
+      data = dcmdata::mdm_data,
+      missing = NA,
+      qmatrix = dcmdata::mdm_qmatrix,
+      resp_id = "respondent",
+      item_id = "item",
+      type = "dina",
+      attribute_structure = "independent",
       method = "optim"
     )
   )
 
   suppressWarnings(
     mod3 <- measr_dcm(
-      data = dcmdata::mdm_data, missing = NA, qmatrix = dcmdata::mdm_qmatrix,
-      resp_id = "respondent", item_id = "item",
-      type = "dino", attribute_structure = "unconstrained",
+      data = dcmdata::mdm_data,
+      missing = NA,
+      qmatrix = dcmdata::mdm_qmatrix,
+      resp_id = "respondent",
+      item_id = "item",
+      type = "dino",
+      attribute_structure = "unconstrained",
       method = "optim"
     )
   )
 
   suppressWarnings(
     mod4 <- measr_dcm(
-      data = dcmdata::mdm_data, missing = NA, qmatrix = dcmdata::mdm_qmatrix,
-      resp_id = "respondent", item_id = "item",
-      type = "crum", attribute_structure = "independent",
+      data = dcmdata::mdm_data,
+      missing = NA,
+      qmatrix = dcmdata::mdm_qmatrix,
+      resp_id = "respondent",
+      item_id = "item",
+      type = "crum",
+      attribute_structure = "independent",
       method = "optim"
     )
   )

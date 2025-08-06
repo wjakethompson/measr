@@ -69,14 +69,17 @@
 #'                       seed = 63277)
 #'
 #' yens_q3(model)
-yens_q3 <- S7::new_generic("yens_q3", "x", function(x, ..., crit_value = .2,
-                                                    summary = NULL) {
-  check_number_decimal(crit_value, min = -1, max = 1)
-  if (!is.null(summary)) {
-    rlang::arg_match(summary, values = c("q3max", "q3star"))
+yens_q3 <- S7::new_generic(
+  "yens_q3",
+  "x",
+  function(x, ..., crit_value = .2, summary = NULL) {
+    check_number_decimal(crit_value, min = -1, max = 1)
+    if (!is.null(summary)) {
+      rlang::arg_match(summary, values = c("q3max", "q3star"))
+    }
+    S7::S7_dispatch()
   }
-  S7::S7_dispatch()
-})
+)
 
 # methods ----------------------------------------------------------------------
 S7::method(yens_q3, measrdcm) <- function(x, crit_value = .2, summary = NULL) {
@@ -90,49 +93,73 @@ S7::method(yens_q3, measrdcm) <- function(x, crit_value = .2, summary = NULL) {
     tibble::deframe()
 
   pi_mat <- measr_extract(x, "pi_matrix") |>
-    tidyr::pivot_longer(cols = -x@data$item_identifier,
-                        names_to = "profile", values_to = "pi") |>
+    tidyr::pivot_longer(
+      cols = -x@data$item_identifier,
+      names_to = "profile",
+      values_to = "pi"
+    ) |>
     dplyr::select("profile", item = !!x@data$item_identifier, "pi")
 
   class_probs <- x@respondent_estimates$class_probabilities |>
-    dplyr::select(resp_id = !!rlang::sym(x@data$respondent_identifier),
-                  "class", "probability")
+    dplyr::select(
+      resp_id = !!rlang::sym(x@data$respondent_identifier),
+      "class",
+      "probability"
+    )
 
   # calculate Q3 ---------------------------------------------------------------
   obs <- x@data$clean_data
-  resid_cor <- tidyr::expand_grid(resp_id = names(x@data$respondent_names),
-                                  item_id = names(x@data$item_names),
-                                  profile = names(possible_profs)) |>
+  resid_cor <- tidyr::expand_grid(
+    resp_id = names(x@data$respondent_names),
+    item_id = names(x@data$item_names),
+    profile = names(possible_profs)
+  ) |>
     dplyr::semi_join(obs, by = c("resp_id", "item_id")) |>
-    dplyr::left_join(class_probs, by = c("resp_id", "profile" = "class"),
-                     relationship = "many-to-one") |>
-    dplyr::left_join(pi_mat, by = c("item_id" = "item", "profile"),
-                     relationship = "many-to-one") |>
+    dplyr::left_join(
+      class_probs,
+      by = c("resp_id", "profile" = "class"),
+      relationship = "many-to-one"
+    ) |>
+    dplyr::left_join(
+      pi_mat,
+      by = c("item_id" = "item", "profile"),
+      relationship = "many-to-one"
+    ) |>
     dplyr::summarize(
-      exp = exp(log(sum(exp(log(.data$probability) + log(.data$pi)))) -
-                  log(sum(.data$probability))),
+      exp = exp(
+        log(sum(exp(log(.data$probability) + log(.data$pi)))) -
+          log(sum(.data$probability))
+      ),
       .by = c("resp_id", "item_id")
     ) |>
-    dplyr::left_join(obs, by = c("resp_id", "item_id"),
-                     relationship = "one-to-one") |>
+    dplyr::left_join(
+      obs,
+      by = c("resp_id", "item_id"),
+      relationship = "one-to-one"
+    ) |>
     dplyr::mutate(residual = .data$score - .data$exp) |>
     dplyr::select("resp_id", "item_id", "residual") |>
     tidyr::pivot_wider(names_from = "item_id", values_from = "residual") |>
     dplyr::select(-"resp_id") |>
     stats::cor(use = "pairwise.complete.obs")
 
-  all_cor <- tidyr::crossing(item_1 = x@data$item_names,
-                             item_2 = x@data$item_names) |>
+  all_cor <- tidyr::crossing(
+    item_1 = x@data$item_names,
+    item_2 = x@data$item_names
+  ) |>
     dplyr::filter(.data$item_1 < .data$item_2) |>
-    dplyr::mutate(item_1 = names(x@data$item_names)[.data$item_1],
-                  item_2 = names(x@data$item_names)[.data$item_2],
-                  resid_corr = mapply(\(x, y) resid_cor[y, x],
-                                      .data$item_1, .data$item_2),
-                  resid_corr = unname(.data$resid_corr),
-                  flag = abs(.data$resid_corr) > crit_value)
+    dplyr::mutate(
+      item_1 = names(x@data$item_names)[.data$item_1],
+      item_2 = names(x@data$item_names)[.data$item_2],
+      resid_corr = mapply(\(x, y) resid_cor[y, x], .data$item_1, .data$item_2),
+      resid_corr = unname(.data$resid_corr),
+      flag = abs(.data$resid_corr) > crit_value
+    )
 
   # calculate summary statistic and/or return ----------------------------------
-  if (is.null(summary)) return(all_cor)
+  if (is.null(summary)) {
+    return(all_cor)
+  }
 
   sum_stat <- if (summary == "q3max") {
     all_cor |>

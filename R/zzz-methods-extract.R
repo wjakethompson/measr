@@ -7,7 +7,8 @@
 #'
 #' @export
 measr_extract <- S7::new_generic(
-  "measr_extract", "model",
+  "measr_extract",
+  "model",
   function(model, what, ...) {
     S7::S7_dispatch()
   }
@@ -192,15 +193,23 @@ S7::method(measr_extract, measrdcm) <- function(model, what, ...) {
     rmsea = extract_rmsea(model, call = call),
     srmsr = extract_srmsr(model, call = call),
     ppmc_raw_score = extract_ppmc_raw_score(model, call = call),
-    ppmc_conditional_prob = dcm_extract_ppmc_cond_prob(model,
-                                                       ppmc_interval = NULL,
-                                                       call = call),
-    ppmc_conditional_prob_flags = dcm_extract_ppmc_cond_prob(model, ...,
-                                                             call = call),
+    ppmc_conditional_prob = dcm_extract_ppmc_cond_prob(
+      model,
+      ppmc_interval = NULL,
+      call = call
+    ),
+    ppmc_conditional_prob_flags = dcm_extract_ppmc_cond_prob(
+      model,
+      ...,
+      call = call
+    ),
     ppmc_odds_ratio = extract_or(model, ppmc_interval = NULL, call = call),
     ppmc_odds_ratio_flags = extract_or(model, ..., call = call),
-    ppmc_pvalue = dcm_extract_ppmc_pvalue(model, ppmc_interval = NULL,
-                                          call = call),
+    ppmc_pvalue = dcm_extract_ppmc_pvalue(
+      model,
+      ppmc_interval = NULL,
+      call = call
+    ),
     ppmc_pvalue_flags = dcm_extract_ppmc_pvalue(model, ..., call = call),
 
     # relative fit -------------------------------------------------------------
