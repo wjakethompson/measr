@@ -27,8 +27,8 @@ S7::method(loglik_array, measrdcm) <- function(model) {
     args = stan_args,
     precompiled = stanmodels$gqs_loglik
   )
-  out <- capture.output(
-    #nolint
+  # fmt: skip
+  out <- capture.output( #nolint
     mod <- do.call(stan_function_call$call_function, stan_function_call$args)
   )
 

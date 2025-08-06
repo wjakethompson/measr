@@ -213,8 +213,8 @@ S7::method(fit_ppmc, measrdcm) <- function(
     args = stan_args,
     precompiled = precomp
   )
-  out <- capture.output(
-    # nolint
+  # fmt: skip
+  out <- capture.output( # nolint
     mod <- do.call(stan_function_call$call_function, stan_function_call$args)
   )
 
