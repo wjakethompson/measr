@@ -13,7 +13,6 @@ S7::method(stan_model, rstan) <-
       return(precompiled)
     }
 
-    # fmt: skip
     out <- utils::capture.output( # nolint
       compiled_model <- eval_silent(rstan::stan_model(model_code = code))
     )

@@ -111,7 +111,6 @@ S7::method(score, measrdcm) <-
       args = stan_args,
       precompiled = stanmodels$gqs_probs
     )
-    # fmt: skip
     out <- utils::capture.output( # nolint
       mod <- do.call(stan_function_call$call_function, stan_function_call$args)
     )
