@@ -52,8 +52,10 @@ S7::method(aic, measrdcm) <- function(x, force = FALSE) {
 
   if (!S7::S7_inherits(x@method, optim)) {
     cli::cli_abort(
-      glue::glue("{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
-                 "with {{.code method = \"optim\"}} to calculate the AIC")
+      glue::glue(
+        "{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
+        "with {{.code method = \"optim\"}} to calculate the AIC"
+      )
     )
   }
 
@@ -64,9 +66,13 @@ S7::method(aic, measrdcm) <- function(x, force = FALSE) {
     posterior::as_draws_df() |>
     tibble::as_tibble() |>
     dplyr::select(-c(".chain", ".iteration", ".draw")) |>
-    tidyr::pivot_longer(cols = dplyr::everything(),
-                        names_to = "param", values_to = "value") |>
-    nrow() - 1
+    tidyr::pivot_longer(
+      cols = dplyr::everything(),
+      names_to = "param",
+      values_to = "value"
+    ) |>
+    nrow() -
+    1
 
   (-2 * log_lik) + (2 * num_params)
 }
@@ -78,8 +84,10 @@ S7::method(bic, measrdcm) <- function(x, force = FALSE) {
 
   if (!S7::S7_inherits(x@method, optim)) {
     cli::cli_abort(
-      glue::glue("{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
-                 "with {{.code method = \"optim\"}} to calculate the BIC")
+      glue::glue(
+        "{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
+        "with {{.code method = \"optim\"}} to calculate the BIC"
+      )
     )
   }
 
@@ -90,9 +98,13 @@ S7::method(bic, measrdcm) <- function(x, force = FALSE) {
     posterior::as_draws_df() |>
     tibble::as_tibble() |>
     dplyr::select(-c(".chain", ".iteration", ".draw")) |>
-    tidyr::pivot_longer(cols = dplyr::everything(),
-                        names_to = "param", values_to = "value") |>
-    nrow() - 1
+    tidyr::pivot_longer(
+      cols = dplyr::everything(),
+      names_to = "param",
+      values_to = "value"
+    ) |>
+    nrow() -
+    1
 
   n <- length(x@data$respondent_names)
 

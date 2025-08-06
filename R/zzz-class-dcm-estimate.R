@@ -60,17 +60,24 @@
 #' model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
 #'                       identifier = "respondent", method = "optim",
 #'                       seed = 63277)
-dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
-                         method = c("mcmc", "optim"),
-                         backend = getOption("measr.backend", "rstan"),
-                         file = NULL,
-                         file_refit = getOption("measr.file_refit", "never"),
-                         ...) {
+dcm_estimate <- function(
+  dcm_spec,
+  data,
+  missing = NA,
+  identifier = NULL,
+  method = c("mcmc", "optim"),
+  backend = getOption("measr.backend", "rstan"),
+  file = NULL,
+  file_refit = getOption("measr.file_refit", "never"),
+  ...
+) {
   # check function inputs ------------------------------------------------------
   rdcmchecks::check_S7(dcm_spec, "dcmstan::dcm_specification")
   check_string(identifier, allow_null = TRUE)
   clean_data <- rdcmchecks::clean_data(
-    data, identifier = identifier, missing = missing,
+    data,
+    identifier = identifier,
+    missing = missing,
     cleaned_qmatrix = list(
       clean_qmatrix = dcm_spec@qmatrix,
       attribute_names = dcm_spec@qmatrix_meta$attribute_names,
@@ -81,10 +88,17 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
   )
   method <- rlang::arg_match(method, values = c("mcmc", "optim"))
   backend <- rlang::arg_match(backend, values = c("rstan", "cmdstanr"))
-  file <- check_file(file, create_dir = FALSE, check_file = FALSE, ext = "rds",
-                     allow_null = TRUE)
-  file_refit <- rlang::arg_match(file_refit,
-                                 values = c("never", "always", "on_change"))
+  file <- check_file(
+    file,
+    create_dir = FALSE,
+    check_file = FALSE,
+    ext = "rds",
+    allow_null = TRUE
+  )
+  file_refit <- rlang::arg_match(
+    file_refit,
+    values = c("never", "always", "on_change")
+  )
 
   # initial return check -------------------------------------------------------
   if (length(file) && file.exists(file) && file_refit == "never") {
@@ -97,11 +111,18 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
 
   # stan infrastructure --------------------------------------------------------
   stan_code <- dcmstan::stan_code(x = dcm_spec)
-  stan_dat <- dcmstan::stan_data(x = dcm_spec, data = data,
-                                 missing = missing, identifier = identifier)
+  stan_dat <- dcmstan::stan_data(
+    x = dcm_spec,
+    data = data,
+    missing = missing,
+    identifier = identifier
+  )
   stan_args <- utils::modifyList(
-    default_stan_args(backend = stan_bknd, method = stan_mthd,
-                      user_args = list(...)),
+    default_stan_args(
+      backend = stan_bknd,
+      method = stan_mthd,
+      user_args = list(...)
+    ),
     list(...)
   )
   stan_args <- c(list(data = stan_dat), stan_args)
@@ -109,8 +130,11 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
   # check for changed file -----------------------------------------------------
   if (length(file) && file.exists(file) && file_refit == "on_change") {
     previous_fit <- check_previous_fit(
-      file = file, dcm_spec = dcm_spec, clean_data = clean_data,
-      stan_mthd = stan_mthd, stan_bknd = stan_bknd
+      file = file,
+      dcm_spec = dcm_spec,
+      clean_data = clean_data,
+      stan_mthd = stan_mthd,
+      stan_bknd = stan_bknd
     )
     if (!is.null(previous_fit)) return(previous_fit)
   }
@@ -123,18 +147,23 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
     precompiled <- NULL
   }
 
-  stan_function_call <- stan_call(backend = stan_bknd, method = stan_mthd,
-                                  code = stan_code, args = stan_args,
-                                  precompiled = precompiled)
-  mod <- do.call(stan_function_call$call_function,
-                 stan_function_call$args)
+  stan_function_call <- stan_call(
+    backend = stan_bknd,
+    method = stan_mthd,
+    code = stan_code,
+    args = stan_args,
+    precompiled = precompiled
+  )
+  mod <- do.call(stan_function_call$call_function, stan_function_call$args)
 
   # create measrdcm object -----------------------------------------------------
   new_spec <- dcmstan::dcm_specification(
     qmatrix = dcm_spec@qmatrix,
-    qmatrix_meta = list(attribute_names = dcm_spec@qmatrix_meta$attribute_names,
-                        item_identifier = clean_data$item_identifier,
-                        item_names = clean_data$item_names),
+    qmatrix_meta = list(
+      attribute_names = dcm_spec@qmatrix_meta$attribute_names,
+      item_identifier = clean_data$item_identifier,
+      item_names = clean_data$item_names
+    ),
     measurement_model = dcm_spec@measurement_model,
     structural_model = dcm_spec@structural_model,
     priors = dcm_spec@priors
@@ -145,8 +174,12 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
     data = clean_data,
     stancode = stan_code,
     method = stan_mthd,
-    algorithm = get_algorithm(stan_bknd, stan_mthd, args = stan_args,
-                              model = mod),
+    algorithm = get_algorithm(
+      stan_bknd,
+      stan_mthd,
+      args = stan_args,
+      model = mod
+    ),
     backend = stan_bknd,
     model = mod,
     file = file,
@@ -190,7 +223,9 @@ dcm_estimate <- function(dcm_spec, data, missing = NA, identifier = NULL,
 #' @concept Stan
 #'
 #' @noRd
-measrfit <- S7::new_class("measrfit", package = "measr",
+measrfit <- S7::new_class(
+  "measrfit",
+  package = "measr",
   properties = list(
     model_spec = S7::new_property(
       class = S7::class_any,
@@ -291,26 +326,38 @@ measrfit <- S7::new_class("measrfit", package = "measr",
     )
   ),
   validator = function(self) {
-    err <- if ((inherits(self@backend, "measr::rstan") &&
-                inherits(self@method, "measr::optim")) &&
-               !is.list(self@model)) {
-      cli::cli_fmt(cli::cli_text("@model must be a list returned by ",
-                                 "{.fun rstan::optimizing}"))
-    } else if ((inherits(self@backend, "measr::rstan") &&
-                inherits(self@method, "measr::mcmc")) &&
-               !inherits(self@model, "stanfit")) {
-      cli::cli_fmt(cli::cli_text("@model must be a {.cls stanfit} object ",
-                                 "returned by {.fun rstan::sampling}"))
-    } else if ((inherits(self@backend, "measr::cmdstanr") &&
-                inherits(self@method, "measr::optim")) &&
-               !inherits(self@model, "CmdStanMLE")) {
+    err <- if (
+      (inherits(self@backend, "measr::rstan") &&
+        inherits(self@method, "measr::optim")) &&
+        !is.list(self@model)
+    ) {
+      cli::cli_fmt(cli::cli_text(
+        "@model must be a list returned by ",
+        "{.fun rstan::optimizing}"
+      ))
+    } else if (
+      (inherits(self@backend, "measr::rstan") &&
+        inherits(self@method, "measr::mcmc")) &&
+        !inherits(self@model, "stanfit")
+    ) {
+      cli::cli_fmt(cli::cli_text(
+        "@model must be a {.cls stanfit} object ",
+        "returned by {.fun rstan::sampling}"
+      ))
+    } else if (
+      (inherits(self@backend, "measr::cmdstanr") &&
+        inherits(self@method, "measr::optim")) &&
+        !inherits(self@model, "CmdStanMLE")
+    ) {
       cli::cli_fmt(cli::cli_text(
         "@model must be a {.cls CmdStanMLE} object returned by the ",
         "{.help [{.fun $optimize}](cmdstanr::CmdStanMLE)} method"
       ))
-    } else if ((inherits(self@backend, "measr::cmdstanr") &&
-                inherits(self@method, "measr::mcmc")) &&
-               !inherits(self@model, "CmdStanMCMC")) {
+    } else if (
+      (inherits(self@backend, "measr::cmdstanr") &&
+        inherits(self@method, "measr::mcmc")) &&
+        !inherits(self@model, "CmdStanMCMC")
+    ) {
       cli::cli_fmt(cli::cli_text(
         "@model must be a {.cls CmdStanMCMC} object returned by the ",
         "{.help [{.fun $sample}](cmdstanr::CmdStanMCMC)} method"
@@ -371,7 +418,10 @@ measrfit <- S7::new_class("measrfit", package = "measr",
 #' spec <- dcm_specify(qmatrix = qmatrix)
 #'
 #' measrdcm(spec)
-measrdcm <- S7::new_class("measrdcm", parent = measrfit, package = "measr",
+measrdcm <- S7::new_class(
+  "measrdcm",
+  parent = measrfit,
+  package = "measr",
   properties = list(
     model_spec = S7::new_property(
       class = dcmstan::dcm_specification,

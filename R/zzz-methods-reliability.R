@@ -9,7 +9,8 @@
 #' @importFrom psych tetrachoric
 #' @export
 reliability <- S7::new_generic(
-  "reliability", "x",
+  "reliability",
+  "x",
   function(x, ..., threshold = 0.5, force = FALSE) {
     S7::S7_dispatch()
   }
@@ -78,8 +79,11 @@ reliability <- S7::new_generic(
 #' )
 #'
 #' reliability(rstn_mdm_lcdm)
-S7::method(reliability, measrdcm) <- function(x, threshold = 0.5,
-                                              force = FALSE) {
+S7::method(reliability, measrdcm) <- function(
+  x,
+  threshold = 0.5,
+  force = FALSE
+) {
   # check for existing reliability ---------------------------------------------
   check_bool(force)
   if (!rlang::is_empty(x@reliability) && !force) {
@@ -96,9 +100,11 @@ S7::method(reliability, measrdcm) <- function(x, threshold = 0.5,
     threshold <- rep(threshold, length(att_names))
   } else if (length(threshold) != length(att_names)) {
     msg <- cli::cli_fmt(
-      cli::cli_text("{.arg threshold} must be length 1 or ",
-                    "{length(att_names)} (the number of attributes), ",
-                    "not {length(threshold)}")
+      cli::cli_text(
+        "{.arg threshold} must be length 1 or ",
+        "{length(att_names)} (the number of attributes), ",
+        "not {length(threshold)}"
+      )
     )
     cli::cli_abort(msg)
   }
@@ -107,8 +113,10 @@ S7::method(reliability, measrdcm) <- function(x, threshold = 0.5,
   } else if (!identical(sort(att_names), sort(names(threshold)))) {
     bad_names <- setdiff(names(threshold), att_names) # nolint
     msg <- cli::cli_fmt(
-      cli::cli_text("{.arg threshold} contains unknown attribute names: ",
-                    "{cli::cli_vec(bad_names)}")
+      cli::cli_text(
+        "{.arg threshold} contains unknown attribute names: ",
+        "{cli::cli_vec(bad_names)}"
+      )
     )
     cli::cli_abort(msg)
   }
@@ -171,12 +179,22 @@ S7::method(reliability, measrdcm) <- function(x, threshold = 0.5,
   kappa_c <- (acc - kap_base) / kap_base
 
   all_a <- as.matrix(create_profiles(k))
-  p_prime <- apply(sweep(apply(obj$posterior, 2, function(v) {
-    out <- tapply(v, apply(obj$posterior, 1, which.max), sum) / length(v)
-    if (dim(out) == 1) out <- as.array(c(out, `2` = 0))
-    return(out)
-  }),
-  2, obj$strc, "/") ^ 2, 2, sum)
+  p_prime <- apply(
+    sweep(
+      apply(obj$posterior, 2, function(v) {
+        out <- tapply(v, apply(obj$posterior, 1, which.max), sum) / length(v)
+        if (dim(out) == 1) {
+          out <- as.array(c(out, `2` = 0))
+        }
+        return(out)
+      }),
+      2,
+      obj$strc,
+      "/"
+    )^2,
+    2,
+    sum
+  )
   pc <- sum(p_prime * obj$strc)
   pc1 <- p_prime %*% (obj$strc * all_a) / p
   pc0 <- p_prime %*% (obj$strc * (1 - all_a)) / (1 - p)
@@ -184,67 +202,97 @@ S7::method(reliability, measrdcm) <- function(x, threshold = 0.5,
   pa <- mean(apply(obj$posterior, 1, max))
 
   res_map_acc <- tibble::enframe(acc, name = "attribute", value = "acc") |>
-    dplyr::full_join(tibble::enframe(lambda_a, name = "attribute",
-                                     value = "lambda_a"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(kappa_a, name = "attribute",
-                                     value = "kappa_a"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(youden_a, name = "attribute",
-                                     value = "youden_a"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(tetra_a, name = "attribute",
-                                     value = "tetra_a"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(tp_a, name = "attribute", value = "tp_a"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(tn_a, name = "attribute", value = "tn_a"),
-                     by = "attribute") |>
+    dplyr::full_join(
+      tibble::enframe(lambda_a, name = "attribute", value = "lambda_a"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(kappa_a, name = "attribute", value = "kappa_a"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(youden_a, name = "attribute", value = "youden_a"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(tetra_a, name = "attribute", value = "tetra_a"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(tp_a, name = "attribute", value = "tp_a"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(tn_a, name = "attribute", value = "tn_a"),
+      by = "attribute"
+    ) |>
     tibble::remove_rownames()
 
   gammak <- rlang::set_names(obj$gamma, att_names)
   pc_prime <- rlang::set_names(pc_prime, att_names)
 
-  res_map_con <- tibble::enframe(consist, name = "attribute",
-                                 value = "consist") |>
-    dplyr::full_join(tibble::enframe(lambda_c, name = "attribute",
-                                     value = "lambda_c"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(kappa_c, name = "attribute",
-                                     value = "kappa_c"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(youden_c, name = "attribute",
-                                     value = "youden_c"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(tetra_c, name = "attribute",
-                                     value = "tetra_c"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(tp_c, name = "attribute", value = "tp_c"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(tn_c, name = "attribute", value = "tn_c"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(gammak, name = "attribute",
-                                     value = "gammak"),
-                     by = "attribute") |>
-    dplyr::full_join(tibble::enframe(pc_prime, name = "attribute",
-                                     value = "pc_prime"),
-                     by = "attribute") |>
+  res_map_con <- tibble::enframe(
+    consist,
+    name = "attribute",
+    value = "consist"
+  ) |>
+    dplyr::full_join(
+      tibble::enframe(lambda_c, name = "attribute", value = "lambda_c"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(kappa_c, name = "attribute", value = "kappa_c"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(youden_c, name = "attribute", value = "youden_c"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(tetra_c, name = "attribute", value = "tetra_c"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(tp_c, name = "attribute", value = "tp_c"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(tn_c, name = "attribute", value = "tn_c"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(gammak, name = "attribute", value = "gammak"),
+      by = "attribute"
+    ) |>
+    dplyr::full_join(
+      tibble::enframe(pc_prime, name = "attribute", value = "pc_prime"),
+      by = "attribute"
+    ) |>
     tibble::remove_rownames()
 
   ## Reliability for EAP  ##
   tmp_fun <- function(v) {
-    m <- matrix(c(sum(v * v), sum(v * (1 - v)), sum(v * (1 - v)),
-                  sum((1 - v) * (1 - v))), 2, 2)
+    m <- matrix(
+      c(sum(v * v), sum(v * (1 - v)), sum(v * (1 - v)), sum((1 - v) * (1 - v))),
+      2,
+      2
+    )
     rho_tb <- psych::tetrachoric(m)$rho
     rho_bs <- m[2, 2] / (m[2, 2] + m[2, 1]) - m[1, 2] / (m[1, 1] + m[1, 2])
-    ind_info <- ifelse(.5 - abs(v - .5) < 1e-12, 0, v * log(v) + (1 - v) *
-                         log(1 - v))
+    ind_info <- ifelse(
+      .5 - abs(v - .5) < 1e-12,
+      0,
+      v *
+        log(v) +
+        (1 - v) *
+          log(1 - v)
+    )
     post_info <- mean(ind_info)
     prior <- mean(v)
     prior_info <- prior * log(prior) + (1 - prior) * log(1 - prior)
     rho_i <- 1 - exp(-2 * (post_info - prior_info))
-    pf_num <- sum(apply(v * obj$posterior, 2, mean) ^ 2 / obj$strc) - prior ^ 2
-    pf_den <- mean(v * v) - prior ^ 2
+    pf_num <- sum(apply(v * obj$posterior, 2, mean)^2 / obj$strc) - prior^2
+    pf_den <- mean(v * v) - prior^2
     rho_pf <- pf_num / pf_den
     c(rho_pf, rho_bs, rho_i, rho_tb)
   }
@@ -256,8 +304,9 @@ S7::method(reliability, measrdcm) <- function(x, threshold = 0.5,
     magrittr::set_colnames(c("rho_pf", "rho_bs", "rho_i", "rho_tb")) |>
     tibble::add_column(attribute = att_names, .before = 1)
 
-  list(pattern_reliability = c(p_a = pa, p_c = pc),
-       map_reliability = list(accuracy = res_map_acc,
-                              consistency = res_map_con),
-       eap_reliability = res_eap)
+  list(
+    pattern_reliability = c(p_a = pa, p_c = pc),
+    map_reliability = list(accuracy = res_map_acc, consistency = res_map_con),
+    eap_reliability = res_eap
+  )
 }

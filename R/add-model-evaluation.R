@@ -122,12 +122,20 @@ NULL
 
 #' @export
 #' @rdname model_evaluation
-add_criterion <- function(x, criterion = c("loo", "waic", "aic", "bic"),
-                          overwrite = FALSE, save = TRUE, ..., r_eff = NA) {
+add_criterion <- function(
+  x,
+  criterion = c("loo", "waic", "aic", "bic"),
+  overwrite = FALSE,
+  save = TRUE,
+  ...,
+  r_eff = NA
+) {
   rdcmchecks::check_S7(x, class = "measrfit")
-  criterion <- rlang::arg_match(criterion,
-                                values = c("loo", "waic", "aic", "bic"),
-                                multiple = TRUE)
+  criterion <- rlang::arg_match(
+    criterion,
+    values = c("loo", "waic", "aic", "bic"),
+    multiple = TRUE
+  )
   check_bool(overwrite)
   check_bool(save)
 
@@ -181,8 +189,14 @@ add_reliability <- function(x, overwrite = FALSE, save = TRUE, ...) {
 
 #' @export
 #' @rdname model_evaluation
-add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
-                    save = TRUE, ..., ci = 0.9) {
+add_fit <- function(
+  x,
+  method = c("m2", "ppmc"),
+  overwrite = FALSE,
+  save = TRUE,
+  ...,
+  ci = 0.9
+) {
   rdcmchecks::check_S7(x, class = "measrfit")
   method <- rlang::arg_match(method, values = c("m2", "ppmc"), multiple = TRUE)
   check_bool(overwrite)
@@ -196,8 +210,7 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   }
 
   # m2 -------------------------------------------------------------------------
-  if ("m2" %in% method &&
-      (rlang::is_empty(x@fit$m2) || overwrite)) {
+  if ("m2" %in% method && (rlang::is_empty(x@fit$m2) || overwrite)) {
     x@fit$m2 <- fit_m2(x, ci = ci, force = TRUE)
   }
 
@@ -205,12 +218,12 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
   if ("ppmc" %in% method) {
     ppmc_list <- fit_ppmc(x, ..., force = overwrite)
     x@fit <- utils::modifyList(x@fit, ppmc_list)
-    x@fit <- lapply(names(x@fit),
-                    \(nm) {
-                      if (!nm %in% names(ppmc_list)) return(x@fit[[nm]])
-                      dplyr::select(x@fit[[nm]],
-                                    dplyr::all_of(names(ppmc_list[[nm]])))
-                    }) |>
+    x@fit <- lapply(names(x@fit), \(nm) {
+      if (!nm %in% names(ppmc_list)) {
+        return(x@fit[[nm]])
+      }
+      dplyr::select(x@fit[[nm]], dplyr::all_of(names(ppmc_list[[nm]])))
+    }) |>
       rlang::set_names(nm = names(x@fit))
   }
 
@@ -223,8 +236,12 @@ add_fit <- function(x, method = c("m2", "ppmc"), overwrite = FALSE,
 
 #' @export
 #' @rdname model_evaluation
-add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
-                                     overwrite = FALSE, save = TRUE) {
+add_respondent_estimates <- function(
+  x,
+  probs = c(0.025, 0.975),
+  overwrite = FALSE,
+  save = TRUE
+) {
   rdcmchecks::check_S7(x, class = "measrfit")
   check_bool(overwrite)
   check_bool(save)
@@ -234,8 +251,12 @@ add_respondent_estimates <- function(x, probs = c(0.025, 0.975),
   }
 
   if (rlang::is_empty(x@respondent_estimates) || overwrite) {
-    x@respondent_estimates <- score(x, summary = TRUE, probs = probs,
-                                    force = TRUE)
+    x@respondent_estimates <- score(
+      x,
+      summary = TRUE,
+      probs = probs,
+      force = TRUE
+    )
   }
 
   # re-save model object (if applicable) ---------------------------------------

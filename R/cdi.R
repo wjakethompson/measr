@@ -66,8 +66,10 @@ cdi <- function(model, weight_prevalence = TRUE) {
       cols = "name",
       patterns = c("pi\\[", item = "[0-9]*", ",", class = "[0-9]*", "\\]")
     ) |>
-    dplyr::mutate(item = as.integer(.data$item),
-                  class = as.integer(.data$class))
+    dplyr::mutate(
+      item = as.integer(.data$item),
+      class = as.integer(.data$class)
+    )
 
   hamming <- profile_hamming(
     dplyr::select(measr_extract(model, "classes"), -"class")
@@ -76,29 +78,42 @@ cdi <- function(model, weight_prevalence = TRUE) {
     dplyr::select(-c("profile_1", "profile_2", "hamming")) |>
     colnames()
 
-  item_discrim <- tidyr::crossing(item = unique(pi_matrix$item),
-                                  profile_1 = unique(pi_matrix$class),
-                                  profile_2 = unique(pi_matrix$class)) |>
-    dplyr::left_join(pi_matrix, by = c("item", "profile_1" = "class"),
-                     relationship = "many-to-one") |>
+  item_discrim <- tidyr::crossing(
+    item = unique(pi_matrix$item),
+    profile_1 = unique(pi_matrix$class),
+    profile_2 = unique(pi_matrix$class)
+  ) |>
+    dplyr::left_join(
+      pi_matrix,
+      by = c("item", "profile_1" = "class"),
+      relationship = "many-to-one"
+    ) |>
     dplyr::rename("prob_1" = "value") |>
-    dplyr::left_join(pi_matrix, by = c("item", "profile_2" = "class"),
-                     relationship = "many-to-one") |>
+    dplyr::left_join(
+      pi_matrix,
+      by = c("item", "profile_2" = "class"),
+      relationship = "many-to-one"
+    ) |>
     dplyr::rename("prob_2" = "value") |>
-    dplyr::mutate(kli = (.data$prob_1 * log(.data$prob_1 / .data$prob_2)) +
-                    ((1 - .data$prob_1) *
-                       log((1 - .data$prob_1) / (1 - .data$prob_2)))) |>
-    dplyr::left_join(hamming, by = c("profile_1", "profile_2"),
-                     relationship = "many-to-one") |>
-    dplyr::mutate(dplyr::across(dplyr::where(is.logical),
-                                \(x) {
-                                  dplyr::case_when(
-                                    x & .data$hamming == 1L ~ TRUE,
-                                    .default = NA
-                                  )
-                                }),
-                  dplyr::across(dplyr::where(is.logical),
-                                \(x) as.integer(x) * .data$kli)) |>
+    dplyr::mutate(
+      kli = (.data$prob_1 * log(.data$prob_1 / .data$prob_2)) +
+        ((1 - .data$prob_1) *
+          log((1 - .data$prob_1) / (1 - .data$prob_2)))
+    ) |>
+    dplyr::left_join(
+      hamming,
+      by = c("profile_1", "profile_2"),
+      relationship = "many-to-one"
+    ) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::where(is.logical), \(x) {
+        dplyr::case_when(
+          x & .data$hamming == 1L ~ TRUE,
+          .default = NA
+        )
+      }),
+      dplyr::across(dplyr::where(is.logical), \(x) as.integer(x) * .data$kli)
+    ) |>
     dplyr::filter(.data$hamming > 0) |>
     dplyr::mutate(weight = 1 / .data$hamming)
 
@@ -135,19 +150,23 @@ cdi <- function(model, weight_prevalence = TRUE) {
   test_discrim <- item_discrim |>
     dplyr::summarize(dplyr::across(-"item", sum))
 
-  list(item_discrimination = item_discrim,
-       test_discrimination = test_discrim)
+  list(item_discrimination = item_discrim, test_discrimination = test_discrim)
 }
 
 profile_hamming <- function(profiles) {
-  profile_combos <- tidyr::crossing(profile_1 = seq_len(nrow(profiles)),
-                                    profile_2 = seq_len(nrow(profiles)))
+  profile_combos <- tidyr::crossing(
+    profile_1 = seq_len(nrow(profiles)),
+    profile_2 = seq_len(nrow(profiles))
+  )
 
-
-  hamming <- mapply(hamming_distance, profile_combos$profile_1,
-                    profile_combos$profile_2,
-                    MoreArgs = list(profiles = profiles),
-                    SIMPLIFY = FALSE, USE.NAMES = FALSE) |>
+  hamming <- mapply(
+    hamming_distance,
+    profile_combos$profile_1,
+    profile_combos$profile_2,
+    MoreArgs = list(profiles = profiles),
+    SIMPLIFY = FALSE,
+    USE.NAMES = FALSE
+  ) |>
     dplyr::bind_rows()
 
   dplyr::bind_cols(profile_combos, hamming)
@@ -158,13 +177,25 @@ hamming_distance <- function(prof1, prof2, profiles) {
   pattern2 <- profiles[prof2, ]
 
   pattern1 |>
-    tidyr::pivot_longer(cols = dplyr::everything(),
-                        names_to = "att", values_to = "patt1") |>
-    dplyr::left_join(tidyr::pivot_longer(pattern2, cols = dplyr::everything(),
-                                         names_to = "att", values_to = "patt2"),
-                     by = "att", relationship = "one-to-one") |>
-    dplyr::mutate(mismatch = .data$patt1 != .data$patt2,
-                  hamming = sum(.data$mismatch)) |>
+    tidyr::pivot_longer(
+      cols = dplyr::everything(),
+      names_to = "att",
+      values_to = "patt1"
+    ) |>
+    dplyr::left_join(
+      tidyr::pivot_longer(
+        pattern2,
+        cols = dplyr::everything(),
+        names_to = "att",
+        values_to = "patt2"
+      ),
+      by = "att",
+      relationship = "one-to-one"
+    ) |>
+    dplyr::mutate(
+      mismatch = .data$patt1 != .data$patt2,
+      hamming = sum(.data$mismatch)
+    ) |>
     dplyr::select("att", "mismatch", "hamming") |>
     tidyr::pivot_wider(names_from = "att", values_from = "mismatch")
 }
