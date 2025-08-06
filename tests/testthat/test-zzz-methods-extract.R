@@ -13,7 +13,7 @@ test_that("extract item parameters", {
     c("item_id", "type", "coefficient", "estimate")
   )
   expect_true(all(dina_param$item_id %in% q_matrix$item))
-  expect_equal(dina_param$type, rep(c("guess", "slip"), 35))
+  expect_equal(dina_param$type, rep(c("slip", "guess"), 35))
   expect_equal(
     dina_param$coefficient,
     dcmstan::get_parameters(dina(), qmatrix = q_matrix[, -1]) |>
@@ -30,7 +30,7 @@ test_that("extract item parameters", {
     c("item", "type", "coefficient", "estimate")
   )
   expect_true(all(dino_param$item %in% q_matrix$item))
-  expect_equal(dino_param$type, rep(c("guess", "slip"), 35))
+  expect_equal(dino_param$type, rep(c("slip", "guess"), 35))
   expect_equal(
     dino_param$coefficient,
     dcmstan::get_parameters(dino(), qmatrix = q_matrix, identifier = "item") |>
