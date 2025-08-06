@@ -1,1 +1,2 @@
+[format]
 skip = ["capture.output"]

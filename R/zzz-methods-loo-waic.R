@@ -131,7 +131,6 @@ find_criterion <- function(model, criterion) {
     return(model@criteria[[criterion]])
   }
 
-  # fmt: skip
   out <- utils::capture.output( # nolint
     crit <- do.call(criterion, list(x = model))
   )
