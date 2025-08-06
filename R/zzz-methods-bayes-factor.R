@@ -37,10 +37,13 @@
 #' rstn_dino <- add_respondent_estimates(rstn_dino)
 #'
 #' bayes_factor(rstn_dina, rstn_dino)
-bayes_factor <- S7::new_generic("bayes_factor", "x",
-                                function(x, ..., y, force = FALSE) {
-  S7::S7_dispatch()
-})
+bayes_factor <- S7::new_generic(
+  "bayes_factor",
+  "x",
+  function(x, ..., y, force = FALSE) {
+    S7::S7_dispatch()
+  }
+)
 
 # methods ----------------------------------------------------------------------
 S7::method(bayes_factor, measrdcm) <- function(x, y, force = FALSE) {
@@ -49,25 +52,41 @@ S7::method(bayes_factor, measrdcm) <- function(x, y, force = FALSE) {
   }
 
   if (rlang::is_empty(x@respondent_estimates)) {
-    rlang::abort("error_bad_method",
-                 message = glue::glue("Run `add_respondent_estimates()` ",
-                                      "before `bayes_factor()`."))
+    rlang::abort(
+      "error_bad_method",
+      message = glue::glue(
+        "Run `add_respondent_estimates()` ",
+        "before `bayes_factor()`."
+      )
+    )
   }
 
-  if ("measr::optim" %in% class(x@method) ||
-      "measr::optim" %in% class(y@method)) {
-    rlang::abort("error_bad_method",
-                 message = glue::glue("Bayes factor is only ",
-                                      "available for models estimated with ",
-                                      "`method = \"mcmc\"`."))
+  if (
+    "measr::optim" %in% class(x@method) || "measr::optim" %in% class(y@method)
+  ) {
+    rlang::abort(
+      "error_bad_method",
+      message = glue::glue(
+        "Bayes factor is only ",
+        "available for models estimated with ",
+        "`method = \"mcmc\"`."
+      )
+    )
   }
 
-  if ("measr::cmdstanr" %in% class(x@backend) ||
-      "measr::cmdstanr" %in% class(y@backend)) {
-    rlang::abort("error_bad_method",
-                 message = glue::glue("Bayes factor is only ",
-                                      "available for models estimated with ",
-                                      "`backend = \"rstan\"`."))
+  if (
+    "measr::cmdstanr" %in%
+      class(x@backend) ||
+      "measr::cmdstanr" %in% class(y@backend)
+  ) {
+    rlang::abort(
+      "error_bad_method",
+      message = glue::glue(
+        "Bayes factor is only ",
+        "available for models estimated with ",
+        "`backend = \"rstan\"`."
+      )
+    )
   }
 
   log_marg_lik1 <- add_marginal_likelihood(x = x)
@@ -86,49 +105,67 @@ S7::method(bayes_factor, measrdcm) <- function(x, y, force = FALSE) {
       (log_marg_lik2 + log(prior_prob[2]))
     posterior_prob_mod1 <- exp(log_difference) / (1 + exp(log_difference))
     posterior_prob <- c(posterior_prob_mod1, 1 - posterior_prob_mod1)
-    names(posterior_prob) <- c(x@model_spec@measurement_model@model,
-                               y@model_spec@measurement_model@model)
+    names(posterior_prob) <- c(
+      x@model_spec@measurement_model@model,
+      y@model_spec@measurement_model@model
+    )
     x_mod <- x@model_spec@measurement_model@model
     y_mod <- y@model_spec@measurement_model@model
-    loop_output <- tibble::tibble(prior = prior_prob,
-                                  model = names(posterior_prob),
-                                  prob = posterior_prob)
+    loop_output <- tibble::tibble(
+      prior = prior_prob,
+      model = names(posterior_prob),
+      prob = posterior_prob
+    )
     posterior_probabilities_mod1 <-
-      dplyr::left_join(posterior_probabilities_mod1,
-                       loop_output |>
-                         dplyr::filter(.data$model == x_mod) |>
-                         dplyr::mutate(prior = paste0("prior_",
-                                                      as.character(
-                                                        .data$prior
-                                                      ),
-                                                      "_",
-                                                      x_mod)) |>
-                         tidyr::pivot_wider(names_from = "prior",
-                                            values_from = "prob"),
-                       by = "model")
+      dplyr::left_join(
+        posterior_probabilities_mod1,
+        loop_output |>
+          dplyr::filter(.data$model == x_mod) |>
+          dplyr::mutate(
+            prior = paste0(
+              "prior_",
+              as.character(
+                .data$prior
+              ),
+              "_",
+              x_mod
+            )
+          ) |>
+          tidyr::pivot_wider(names_from = "prior", values_from = "prob"),
+        by = "model"
+      )
     posterior_probabilities_mod2 <-
-      dplyr::left_join(posterior_probabilities_mod2,
-                       loop_output |>
-                         dplyr::filter(.data$model == y_mod) |>
-                         dplyr::mutate(prior = 1 - .data$prior,
-                                       prior = paste0("prior_",
-                                                      as.character(
-                                                        .data$prior
-                                                      ),
-                                                      "_",
-                                                      x_mod)) |>
-                         tidyr::pivot_wider(names_from = "prior",
-                                            values_from = "prob"),
-                       by = "model")
+      dplyr::left_join(
+        posterior_probabilities_mod2,
+        loop_output |>
+          dplyr::filter(.data$model == y_mod) |>
+          dplyr::mutate(
+            prior = 1 - .data$prior,
+            prior = paste0(
+              "prior_",
+              as.character(
+                .data$prior
+              ),
+              "_",
+              x_mod
+            )
+          ) |>
+          tidyr::pivot_wider(names_from = "prior", values_from = "prob"),
+        by = "model"
+      )
   }
 
-  posterior_probabilities <- dplyr::bind_rows(posterior_probabilities_mod1,
-                                              posterior_probabilities_mod2)
+  posterior_probabilities <- dplyr::bind_rows(
+    posterior_probabilities_mod1,
+    posterior_probabilities_mod2
+  )
 
   # save Bayes factor to model
-  bf_output <- list(bf = bf,
-                    comp_model = y_mod,
-                    posterior_probability = posterior_probabilities)
+  bf_output <- list(
+    bf = bf,
+    comp_model = y_mod,
+    posterior_probability = posterior_probabilities
+  )
 
   return(bf_output)
 }
@@ -137,17 +174,20 @@ S7::method(bayes_factor, measrdcm) <- function(x, y, force = FALSE) {
 #' @rdname bayes_factor
 add_marginal_likelihood <- function(x) {
   if ("<measr::optim>" %in% class(x@method)) {
-    rlang::abort("error_bad_method",
-                 message = glue::glue("Bayes factor is only ",
-                                      "available for models estimated with ",
-                                      "`method = \"mcmc\"`."))
+    rlang::abort(
+      "error_bad_method",
+      message = glue::glue(
+        "Bayes factor is only ",
+        "available for models estimated with ",
+        "`method = \"mcmc\"`."
+      )
+    )
   }
 
   rdcmchecks::check_S7(x, class = "measrfit")
 
   # calculate log marginal likelihood
-  log_marg_lik <- bridgesampling::bridge_sampler(x@model,
-                                                 silent = TRUE)
+  log_marg_lik <- bridgesampling::bridge_sampler(x@model, silent = TRUE)
 
   return(log_marg_lik$logml)
 }

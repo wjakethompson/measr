@@ -1,12 +1,16 @@
 if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
   skip("No MCMC on CRAN")
 } else {
-  lcdm_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
-                          measurement_model = lcdm(),
-                          identifier = "item")
-  dina_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
-                           measurement_model = dina(),
-                           identifier = "item")
+  lcdm_spec <- dcm_specify(
+    qmatrix = dcmdata::mdm_qmatrix,
+    measurement_model = lcdm(),
+    identifier = "item"
+  )
+  dina_spec <- dcm_specify(
+    qmatrix = dcmdata::mdm_qmatrix,
+    measurement_model = dina(),
+    identifier = "item"
+  )
 
   out <- capture.output(
     suppressMessages(
@@ -34,18 +38,23 @@ test_that("Bayes factor works", {
   bf_res <- bayes_factor(rstn_mdm_lcdm, rstn_mdm_dina)
 
   expect_equal(length(bf_res), 3)
-  expect_equal(names(bf_res),
-               c("bf", "comp_model", "posterior_probability"))
+  expect_equal(names(bf_res), c("bf", "comp_model", "posterior_probability"))
   expect_equal(typeof(bf_res$bf), "double")
   expect_equal(bf_res$comp_model, "dina")
-  expect_equal(class(bf_res$posterior_probability),
-               c("tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    class(bf_res$posterior_probability),
+    c("tbl_df", "tbl", "data.frame")
+  )
   expect_equal(ncol(bf_res$posterior_probability), 10)
   expect_equal(nrow(bf_res$posterior_probability), 2)
-  expect_equal(bf_res$posterior_probability$model[1],
-               rstn_mdm_lcdm@model_spec@measurement_model@model)
-  expect_equal(bf_res$posterior_probability$model[2],
-               rstn_mdm_dina@model_spec@measurement_model@model)
+  expect_equal(
+    bf_res$posterior_probability$model[1],
+    rstn_mdm_lcdm@model_spec@measurement_model@model
+  )
+  expect_equal(
+    bf_res$posterior_probability$model[2],
+    rstn_mdm_dina@model_spec@measurement_model@model
+  )
   expect_equal(sum(bf_res$posterior_probability[, 2]), 1)
   expect_equal(sum(bf_res$posterior_probability[, 3]), 1)
   expect_equal(sum(bf_res$posterior_probability[, 4]), 1)
