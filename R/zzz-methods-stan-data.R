@@ -8,8 +8,7 @@ S7::method(stan_data, measrdcm) <- function(x, clean_data = NULL) {
   ragged_array <- clean_data$clean_data |>
     tibble::rowid_to_column() |>
     dplyr::group_by(.data$resp_id) |>
-    dplyr::summarize(start = min(.data$rowid),
-                     num = dplyr::n()) |>
+    dplyr::summarize(start = min(.data$rowid), num = dplyr::n()) |>
     dplyr::arrange(.data$resp_id)
 
   profiles <- dcmstan::create_profiles(

@@ -12,6 +12,9 @@
 \alias{lcdm}
 \alias{dina}
 \alias{dino}
+\alias{nida}
+\alias{nido}
+\alias{ncrum}
 \alias{crum}
 \alias{unconstrained}
 \alias{independent}
@@ -41,7 +44,7 @@ below to see their documentation.
 \describe{
   \item{dcm2}{\code{\link[dcm2]{fit_m2}}}
 
-  \item{dcmstan}{\code{\link[dcmstan]{create_profiles}}, \code{\link[dcmstan:measurement-model]{crum}}, \code{\link[dcmstan]{dcm_specify}}, \code{\link[dcmstan]{default_dcm_priors}}, \code{\link[dcmstan:measurement-model]{dina}}, \code{\link[dcmstan:measurement-model]{dino}}, \code{\link[dcmstan]{get_parameters}}, \code{\link[dcmstan:structural-model]{hdcm}}, \code{\link[dcmstan:structural-model]{independent}}, \code{\link[dcmstan:measurement-model]{lcdm}}, \code{\link[dcmstan]{prior}}, \code{\link[dcmstan:structural-model]{unconstrained}}}
+  \item{dcmstan}{\code{\link[dcmstan]{create_profiles}}, \code{\link[dcmstan:measurement-model]{crum}}, \code{\link[dcmstan]{dcm_specify}}, \code{\link[dcmstan]{default_dcm_priors}}, \code{\link[dcmstan:measurement-model]{dina}}, \code{\link[dcmstan:measurement-model]{dino}}, \code{\link[dcmstan]{get_parameters}}, \code{\link[dcmstan:structural-model]{hdcm}}, \code{\link[dcmstan:structural-model]{independent}}, \code{\link[dcmstan:measurement-model]{lcdm}}, \code{\link[dcmstan:measurement-model]{ncrum}}, \code{\link[dcmstan:measurement-model]{nida}}, \code{\link[dcmstan:measurement-model]{nido}}, \code{\link[dcmstan]{prior}}, \code{\link[dcmstan:structural-model]{unconstrained}}}
 
   \item{loo}{\code{\link[loo]{loo}}, \code{\link[loo]{loo_compare}}, \code{\link[loo]{waic}}}
 

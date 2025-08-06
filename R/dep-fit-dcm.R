@@ -87,21 +87,22 @@
 #'   resp_id = "respondent", item_id = "item", type = "lcdm",
 #'   method = "optim", seed = 63277, backend = "rstan"
 #' )
-measr_dcm <- function(data,
-                      missing = NA,
-                      qmatrix,
-                      resp_id = NULL,
-                      item_id = NULL,
-                      type = c("lcdm", "dina", "dino", "crum"),
-                      max_interaction = Inf,
-                      attribute_structure = c("unconstrained",
-                                              "independent"),
-                      method = c("mcmc", "optim"),
-                      prior = NULL,
-                      backend = getOption("measr.backend", "rstan"),
-                      file = NULL,
-                      file_refit = getOption("measr.file_refit", "never"),
-                      ...) {
+measr_dcm <- function(
+  data,
+  missing = NA,
+  qmatrix,
+  resp_id = NULL,
+  item_id = NULL,
+  type = c("lcdm", "dina", "dino", "crum"),
+  max_interaction = Inf,
+  attribute_structure = c("unconstrained", "independent"),
+  method = c("mcmc", "optim"),
+  prior = NULL,
+  backend = getOption("measr.backend", "rstan"),
+  file = NULL,
+  file_refit = getOption("measr.file_refit", "never"),
+  ...
+) {
   lifecycle::deprecate_warn(
     "2.0.0",
     "measr_dcm()",
@@ -111,23 +112,35 @@ measr_dcm <- function(data,
   type <- rlang::arg_match(type)
   attribute_structure <- rlang::arg_match(attribute_structure)
 
-  model_spec <- dcm_specify(qmatrix = qmatrix, identifier = item_id,
-                            measurement_model = switch(type,
-                              "lcdm" = dcmstan::lcdm(max_interaction),
-                              "dina" = dcmstan::dina(),
-                              "dino" = dcmstan::dino(),
-                              "crum" = dcmstan::crum()
-                            ),
-                            structural_model = switch(attribute_structure,
-                              "unconstrained" = dcmstan::unconstrained(),
-                              "independent" = dcmstan::independent()
-                            ),
-                            priors = prior)
+  model_spec <- dcm_specify(
+    qmatrix = qmatrix,
+    identifier = item_id,
+    measurement_model = switch(
+      type,
+      "lcdm" = dcmstan::lcdm(max_interaction),
+      "dina" = dcmstan::dina(),
+      "dino" = dcmstan::dino(),
+      "crum" = dcmstan::crum()
+    ),
+    structural_model = switch(
+      attribute_structure,
+      "unconstrained" = dcmstan::unconstrained(),
+      "independent" = dcmstan::independent()
+    ),
+    priors = prior
+  )
 
-  model <- dcm_estimate(dcm_spec = model_spec,
-                        data = data, missing = missing, identifier = resp_id,
-                        method = method, backend = backend,
-                        file = file, file_refit = file_refit, ...)
+  model <- dcm_estimate(
+    dcm_spec = model_spec,
+    data = data,
+    missing = missing,
+    identifier = resp_id,
+    method = method,
+    backend = backend,
+    file = file,
+    file_refit = file_refit,
+    ...
+  )
 
   return(model)
 }

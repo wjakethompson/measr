@@ -46,8 +46,10 @@ loo::loo_compare
 
   if (!S7::S7_inherits(x@method, mcmc)) {
     cli::cli_abort(
-      glue::glue("{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
-                 "with {{.code method = \"mcmc\"}} to estimate the LOO")
+      glue::glue(
+        "{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
+        "with {{.code method = \"mcmc\"}} to estimate the LOO"
+      )
     )
   }
 
@@ -64,8 +66,10 @@ loo::loo_compare
 
   if (!S7::S7_inherits(x@method, mcmc)) {
     cli::cli_abort(
-      glue::glue("{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
-                 "with {{.code method = \"mcmc\"}} to estimate the WAIC")
+      glue::glue(
+        "{{.arg {rlang::caller_arg(x)}}} must be a model estimated ",
+        "with {{.code method = \"mcmc\"}} to estimate the WAIC"
+      )
     )
   }
 
@@ -83,13 +87,19 @@ loo::loo_compare
 #'  [loo::loo_compare()].
 #' @rdname loo-waic
 #' @export
-`loo_compare.measr::measrdcm` <- function(x, ..., criterion = c("loo", "waic"),
-                                 model_names = NULL) {
+`loo_compare.measr::measrdcm` <- function(
+  x,
+  ...,
+  criterion = c("loo", "waic"),
+  model_names = NULL
+) {
   dots <- rlang::dots_list(..., .named = TRUE)
   dots_check <- vapply(dots, S7::S7_inherits, logical(1), class = measrdcm)
   if (!all(dots_check)) {
-    msg <- paste("{.arg {cli::cli_vec(names(dots)[!dots_check])}} must",
-                 "{?be a/be a/all be} {.cls measrdcm} object{?s}")
+    msg <- paste(
+      "{.arg {cli::cli_vec(names(dots)[!dots_check])}} must",
+      "{?be a/be a/all be} {.cls measrdcm} object{?s}"
+    )
     cli::cli_abort(msg)
   }
   all_models <- c(list(x), dots)
@@ -102,8 +112,10 @@ loo::loo_compare
   } else if (length(model_names) != length(all_models)) {
     rdcmchecks::abort_bad_argument(
       arg = "model_names",
-      must = glue::glue("be of length {length(all_models)}, ",
-                        "the same as the number of models provided"),
+      must = glue::glue(
+        "be of length {length(all_models)}, ",
+        "the same as the number of models provided"
+      ),
       not = length(model_names)
     )
   }
@@ -119,6 +131,7 @@ find_criterion <- function(model, criterion) {
     return(model@criteria[[criterion]])
   }
 
+  # fmt: skip
   out <- utils::capture.output( # nolint
     crit <- do.call(criterion, list(x = model))
   )

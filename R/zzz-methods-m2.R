@@ -58,8 +58,10 @@ dcm2::fit_m2
     dplyr::summarize(dplyr::across(dplyr::everything(), mean)) |>
     dplyr::select(-c(".chain", ".iteration", ".draw")) |>
     tidyr::pivot_longer(cols = dplyr::everything()) |>
-    dplyr::mutate(value = exp(.data$value),
-                  value = .data$value / sum(.data$value)) |>
+    dplyr::mutate(
+      value = exp(.data$value),
+      value = .data$value / sum(.data$value)
+    ) |>
     dplyr::pull("value")
 
   pi <- posterior::subset_draws(draws, variable = "pi") |>
@@ -68,21 +70,35 @@ dcm2::fit_m2
     dplyr::select(-c(".chain", ".iteration", ".draw")) |>
     dplyr::summarize(dplyr::across(dplyr::everything(), mean)) |>
     tidyr::pivot_longer(cols = dplyr::everything()) |>
-    tidyr::separate_wider_regex(cols = "name",
-                                patterns = c("pi\\[", item = "[0-9]*",
-                                             ",", class = "[0-9]*", "\\]")) |>
+    tidyr::separate_wider_regex(
+      cols = "name",
+      patterns = c("pi\\[", item = "[0-9]*", ",", class = "[0-9]*", "\\]")
+    ) |>
     tidyr::pivot_wider(names_from = "class", values_from = "value") |>
     dplyr::select(-"item") |>
     as.matrix() |>
     unname()
 
-  dcm2::calc_m2(data = dat, struc_params = strc, pi_matrix = pi,
-                qmatrix = q, ci = ci, link = "logit",
-                model_type = toupper(
-                  model@model_spec@measurement_model@model
-                )) |>
-    dplyr::mutate(dplyr::across(dplyr::starts_with("ci"), ~round(.x, 4)),
-                  !!glue::glue("{ci * 100}% CI") :=
-                    paste0("[", .data$ci_lower, ", ", .data$ci_upper, "]"),
-                  .before = "srmsr")
+  dcm2::calc_m2(
+    data = dat,
+    struc_params = strc,
+    pi_matrix = pi,
+    qmatrix = q,
+    ci = ci,
+    link = "logit",
+    model_type = toupper(
+      model@model_spec@measurement_model@model
+    )
+  ) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::starts_with("ci"), ~ round(.x, 4)),
+      !!glue::glue("{ci * 100}% CI") := paste0(
+        "[",
+        .data$ci_lower,
+        ", ",
+        .data$ci_upper,
+        "]"
+      ),
+      .before = "srmsr"
+    )
 }

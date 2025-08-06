@@ -21,16 +21,20 @@ S7::method(get_algorithm, list(cmdstanr, mcmc)) <-
 get_version_info <- S7::new_generic("get_version_info", "backend")
 
 S7::method(get_version_info, rstan) <- function(backend) {
-  list(R = base::getRversion(),
-       `R-measr` = utils::packageVersion("measr"),
-       `R-rstan` = utils::packageVersion("rstan"),
-       `R-StanHeaders` = utils::packageVersion("StanHeaders"),
-       Stan = as.package_version(rstan::stan_version()))
+  list(
+    R = base::getRversion(),
+    `R-measr` = utils::packageVersion("measr"),
+    `R-rstan` = utils::packageVersion("rstan"),
+    `R-StanHeaders` = utils::packageVersion("StanHeaders"),
+    Stan = as.package_version(rstan::stan_version())
+  )
 }
 
 S7::method(get_version_info, cmdstanr) <- function(backend) {
-  list(R = base::getRversion(),
-       `R-measr` = utils::packageVersion("measr"),
-       `R-cmdstanr` = utils::packageVersion("cmdstanr"),
-       CmdStan = as.package_version(cmdstanr::cmdstan_version()))
+  list(
+    R = base::getRversion(),
+    `R-measr` = utils::packageVersion("measr"),
+    `R-cmdstanr` = utils::packageVersion("cmdstanr"),
+    CmdStan = as.package_version(cmdstanr::cmdstan_version())
+  )
 }

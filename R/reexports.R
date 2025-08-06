@@ -31,6 +31,18 @@ dcmstan::dina
 #' @export
 dcmstan::dino
 
+#' @importFrom dcmstan nida
+#' @export
+dcmstan::nida
+
+#' @importFrom dcmstan nido
+#' @export
+dcmstan::nido
+
+#' @importFrom dcmstan ncrum
+#' @export
+dcmstan::ncrum
+
 #' @importFrom dcmstan crum
 #' @export
 dcmstan::crum
