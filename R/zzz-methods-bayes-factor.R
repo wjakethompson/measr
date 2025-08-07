@@ -170,24 +170,10 @@ S7::method(bayes_factor, measrdcm) <- function(x, y, force = FALSE) {
   return(bf_output)
 }
 
-#' @export
-#' @rdname bayes_factor
-add_marginal_likelihood <- function(x) {
-  if ("<measr::optim>" %in% class(x@method)) {
-    rlang::abort(
-      "error_bad_method",
-      message = glue::glue(
-        "Bayes factor is only ",
-        "available for models estimated with ",
-        "`method = \"mcmc\"`."
       )
     )
   }
 
-  rdcmchecks::check_S7(x, class = "measrfit")
 
-  # calculate log marginal likelihood
-  log_marg_lik <- bridgesampling::bridge_sampler(x@model, silent = TRUE)
 
-  return(log_marg_lik$logml)
 }
