@@ -2,55 +2,116 @@
 % Please edit documentation in R/zzz-methods-bayes-factor.R
 \name{bayes_factor}
 \alias{bayes_factor}
-\alias{add_marginal_likelihood}
-\title{Bayes factor for diagnostic models}
+\title{Bayes factor for model comparisons}
 \usage{
-bayes_factor(x, ..., y, force = FALSE)
-
-add_marginal_likelihood(x)
+bayes_factor(
+  x,
+  ...,
+  model_names = NULL,
+  prior_prob = seq(0.02, 0.98, by = 0.02)
+)
 }
 \arguments{
 \item{x}{A \link[=dcm_estimate]{measrdcm} object.}
 
-\item{...}{Unused.}
+\item{...}{Additional \link[=dcm_estimate]{measrdcm} to be compared to \code{x}.}
 
-\item{y}{A \link[=dcm_estimate]{measrdcm} object.}
+\item{model_names}{Names given to each provided model in the comparison
+output. If \code{NULL} (the default), the names will be parsed from the names of
+the objects passed for comparison.}
 
-\item{force}{If the criterion has already been added to the
-model object with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is
-\code{FALSE}.}
+\item{prior_prob}{A numeric vector of prior probabilities for the null model
+used to calculate the posterior probability of the null model relative to
+alternative model. See details for more information.}
 }
 \value{
-A modified \link[=dcm_estimate]{measrdcm} object with the Bayes factor
-slot populated with the Bayes factor statistic.
+A \link[tibble:tibble-package]{tibble} with one row per model comparison
+and four columns.
+\itemize{
+\item \code{null_model}: The null model in the comparison.
+\item \code{alt_model}: The alternative model in the comparison.
+\item \code{bf}: The estimated Bayes factor.
+\item \code{posterior_probs}: A nested list column, where element element is a
+tibble with two columns:
+\itemize{
+\item \code{prior_prob_null}: The prior probability that the null model is
+correct.
+\item \code{posterior_prob_null}: The posterior probability that the null model is
+correct.
+}
+
+The list column can be unnested with \code{\link[tidyr:unnest]{tidyr::unnest()}} (see examples). If
+\code{prior_prob} is \code{NULL}, the \code{posterior_probs} column is excluded from
+the returned object.
+}
 }
 \description{
-Calculate Bayes factors for diagnostic models. The results of the Bayes
-factor calculations are designed to be consistent with the reporting
-guidelines for Bayesian analysis developedy by Kruschke (2021).
+Calculate the Bayes factor for model comparisons, which represents the
+posterior odds of the null hypothesis when the prior probability of the null
+model is 0.5 (Jeffreys, 1935; Kass & Raftery, 1995).
+Consistent with the Bayesian reporting guidelines from Kruschke (2021), we
+calculate the posterior probability of the null model for a variety of prior
+probabilities, in addition to the Bayes factor.
+}
+\details{
+Bayes factors will be calculated for all possible pairwise comparisons
+between the models provided to \code{x} and \code{...}. In each comparison, one model
+is identified as the null model, and the other is the alternative. This
+distinction is not terribly meaningful from a calculation standpoint, as the
+probabilities for the alternative model are simply 1 minus the null
+probabilities. If you want particular models to be labeled as the "null", the
+determination is made by the order the models are sent to the function. That
+is, \code{x} will always be the null model. The first model included in \code{...} will
+be the alternative model when compared to \code{x} and the null model when
+compared to all other models included in \code{...}. Similarly, the second model
+included in \code{...} will be the alternative model when compared to \code{x} and the
+first model included in \code{...} and the null model in all other comparisons.
+
+\code{prior_prob} is used to specify a vector of possible prior probabilities for
+the null model. These are used in conjunction with the Bayes factor to
+determine the posterior model probability for the null model, relative to the
+alternative model. The posterior probability for the alternative model can
+be calculated as 1 minus the null model's posterior probability. You may
+specify a specific prior probability, or specify a range of possibilities to
+construct a graph similar to Kruschke's (2021) Figure 1. These probabilities
+can be interpreted as, "If the prior probability is \{\code{prior_prob_null}\},
+then the posterior is \{\code{posterior_prob_null}\}" (or 1 minus for the
+alternative model).
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# example code
-dina_spec <- dcmstan::dcm_specify(qmatrix = q_matrix[, -1],
-                                  measurement_model = dina())
-dino_spec <- dcmstan::dcm_specify(qmatrix = q_matrix, identifier = "item",
-                                  measurement_model = dino())
-rstn_dina <- dcm_estimate(dina_spec, data = dina_data,
-                          identifier = "resp_id", method = "optim",
-                          backend = "rstan", seed = 63277,
-                          precompiled = stanmodels$test_dina)
-rstn_dino <- dcm_estimate(dino_spec, data = dino_data,
-                          identifier = "resp_id", method = "optim",
-                          backend = "rstan", seed = 63277,
-                          precompiled = stanmodels$test_dina)
-rstn_dina <- add_respondent_estimates(rstn_dina)
-rstn_dino <- add_respondent_estimates(rstn_dino)
+mdm_dina <- dcm_estimate(
+  dcm_specify(dcmdata::mdm_qmatrix, identifier = "item",
+              measurement_model = dina()),
+  data = dcmdata::mdm_data, missing = NA, identifier = "respondent",
+  method = "mcmc", seed = 63277, backend = "rstan",
+  iter = 700, warmup = 500, chains = 2, refresh = 0
+)
 
-bayes_factor(rstn_dina, rstn_dino)
+mdm_dino <- dcm_estimate(
+  dcm_specify(dcmdata::mdm_qmatrix, identifier = "item",
+              measurement_model = dino()),
+  data = dcmdata::mdm_data, missing = NA, identifier = "respondent",
+  method = "mcmc", seed = 63277, backend = "rstan",
+  iter = 700, warmup = 500, chains = 2, refresh = 0
+)
+
+bf <- bayes_factor(mdm_dina, mdm_dino)
+bf
+
+tidyr::unnest(bf, "posterior_probs")
 \dontshow{\}) # examplesIf}
 }
 \references{
+Jeffreys, H. (1935). Some test os significance, treated by the
+theory of probability. \emph{Mathematical Proceedings of the Cambridge
+Philosophical Society, 31}(2), 203-222. \doi{10.1017/S030500410001330X}
+
+Kass, R. E., & Raftery, A. E. (1995). Bayes factors.
+\emph{Journal of the American Statistical Association, 90}(430), 773-795.
+\doi{10.1080/01621459.1995.10476572}
+
 Kruschke, J. K. (2021). Bayesian analysis reporting guidelines.
 \emph{Nature, 5}, 1282-1291. \doi{10.1038/s41562-021-01177-7}
 }
+\concept{Bayes}
