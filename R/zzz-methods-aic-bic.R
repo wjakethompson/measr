@@ -24,7 +24,6 @@
 #'   *The Annals of Statistics, 6*(2), 461–464. \doi{10.1214/aos/1176344136}
 #'
 #' @examplesIf measr_examples()
-#' # example code
 #' model_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
 #'                           identifier = "item")
 #' model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,

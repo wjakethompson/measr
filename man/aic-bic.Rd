@@ -30,7 +30,6 @@ the Bayesian information criterion (BIC; Schwarz, 1978).
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# example code
 model_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
                           identifier = "item")
 model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
