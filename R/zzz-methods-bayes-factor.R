@@ -198,7 +198,7 @@ S7::method(bayes_factor, measrdcm) <- function(
     dplyr::mutate(
       mod1 = all_models[.data$V1],
       mod2 = all_models[.data$V2],
-      bf = calc_bf(mod1, mod2)
+      bf = calc_bf(.data$mod1, .data$mod2)
     ) |>
     dplyr::ungroup() |>
     dplyr::select(null_model = "V1", alt_model = "V2", "bf")
@@ -224,7 +224,7 @@ calc_bf <- function(x, y) {
   log_marg_lik1 <- log_mll(x)
   log_marg_lik2 <- log_mll(y)
 
-  bf <- exp(log_marg_lik1 - log_marg_lik2)
+  exp(log_marg_lik1 - log_marg_lik2)
 }
 
 calc_model_probabilities <- function(x, y, prior_prob) {
@@ -234,9 +234,9 @@ calc_model_probabilities <- function(x, y, prior_prob) {
     prior_prob = prior_prob
   ) |>
     dplyr::mutate(
-      log_diff = (model_1 + log(.data$prior_prob)) -
-        (model_2 + log(1 - .data$prior_prob)),
-      posterior_prob = exp(log_diff) / (1 + exp(log_diff))
+      log_diff = (.data$model_1 + log(.data$prior_prob)) -
+        (.data$model_2 + log(1 - .data$prior_prob)),
+      posterior_prob = exp(.data$log_diff) / (1 + exp(.data$log_diff))
     ) |>
     dplyr::select(
       prior_prob_null = "prior_prob",
