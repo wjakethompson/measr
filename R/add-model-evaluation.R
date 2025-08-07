@@ -11,8 +11,9 @@
 #' @inheritParams score
 #' @param x A [measrdcm][dcm_estimate()] object.
 #' @param criterion A vector of information criteria to calculate and add to the
-#'   model object. Must be `"loo"` or `"waic"` for models estimated with MCMC,
-#'   or `"aic"` or `"bic"` for models estimated with the optimizer.
+#'   model object. Must be `"loo"`, `"waic"`, or `"log_mll"` for models
+#'   estimated with MCMC, or `"aic"` or `"bic"` for models estimated with the
+#'   optimizer.
 #' @param method A vector of model fit methods to evaluate and add to the model
 #'   object.
 #' @param overwrite Logical. Indicates whether specified elements that have
@@ -38,9 +39,10 @@
 #' Thompson, 2019), depending on which methods are specified.
 #'
 #' For `add_criterion()`, relative fit criteria are added to the `$criteria`
-#' element of the fitted model. This function wraps [loo()] or [waic()] to
-#' calculate the LOO-CV (Vehtari et al., 2017) or WAIC (Watanabe, 2010),
-#' respectively, for models estimated with MCMC.
+#' element of the fitted model. For models estimated with MCMC, this function
+#' wraps [loo()] or [waic()] to calculate the LOO-CV (Vehtari et al., 2017) or
+#' WAIC (Watanabe, 2010), respectively, or [log_mll()] to calculate the log
+#' marginal likelihood, which is used for calculating Bayes factors.
 #' For models estimated with the optimizer, this wraps [aic()] or [bic()]
 #' to estimate the AIC (Akaike, 1973) or BIC (Schwarz, 1978), respectively.
 #'
@@ -124,7 +126,7 @@ NULL
 #' @rdname model_evaluation
 add_criterion <- function(
   x,
-  criterion = c("loo", "waic", "aic", "bic"),
+  criterion = c("loo", "waic", "log_mll", "aic", "bic"),
   overwrite = FALSE,
   save = TRUE,
   ...,
@@ -133,7 +135,7 @@ add_criterion <- function(
   rdcmchecks::check_S7(x, class = "measrfit")
   criterion <- rlang::arg_match(
     criterion,
-    values = c("loo", "waic", "aic", "bic"),
+    values = c("loo", "waic", "log_mll", "aic", "bic"),
     multiple = TRUE
   )
   check_bool(overwrite)
@@ -149,16 +151,19 @@ add_criterion <- function(
   all_criteria <- c(new_criteria, redo_criteria)
 
   if ("loo" %in% all_criteria) {
-    x@criteria$loo <- loo(x, r_eff = r_eff, ...)
+    x@criteria$loo <- loo(x, r_eff = r_eff, ..., force = TRUE)
   }
   if ("waic" %in% all_criteria) {
-    x@criteria$waic <- waic(x, ...)
+    x@criteria$waic <- waic(x, ..., force = TRUE)
+  }
+  if ("log_mll" %in% all_criteria) {
+    x@criteria$log_mll <- log_mll(x, force = TRUE)
   }
   if ("aic" %in% all_criteria) {
-    x@criteria$aic <- aic(x)
+    x@criteria$aic <- aic(x, force = TRUE)
   }
   if ("bic" %in% all_criteria) {
-    x@criteria$bic <- bic(x)
+    x@criteria$bic <- bic(x, force = TRUE)
   }
 
   # re-save model object (if applicable) ---------------------------------------
