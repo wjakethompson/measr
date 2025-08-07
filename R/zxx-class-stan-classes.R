@@ -35,7 +35,7 @@
 #' the [CmdStanModel][cmdstanr::CmdStanModel] class when using `{cmdstanr}`.
 #' All method classes inherit from `measr::stanmethod`.
 #'
-#' @return An [S7 object][S7_object()] with the corresponding class.
+#' @return An [S7 object][S7::S7_object()] with the corresponding class.
 #' @rdname stan-classes
 #' @name stan-classes
 #' @examples

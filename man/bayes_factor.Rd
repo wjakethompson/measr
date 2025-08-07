@@ -103,7 +103,7 @@ tidyr::unnest(bf, "posterior_probs")
 \dontshow{\}) # examplesIf}
 }
 \references{
-Jeffreys, H. (1935). Some test os significance, treated by the
+Jeffreys, H. (1935). Some tests of significance, treated by the
 theory of probability. \emph{Mathematical Proceedings of the Cambridge
 Philosophical Society, 31}(2), 203-222. \doi{10.1017/S030500410001330X}
 

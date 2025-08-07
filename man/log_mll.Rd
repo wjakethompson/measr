@@ -20,10 +20,10 @@ model object with \code{\link[=add_criterion]{add_criterion()}}, should it be re
 The estimate of the log marginal likelihood.
 }
 \description{
-Calculate the log maringal likelihood with bridge sampling (Meng & Wong,
+Calculate the log marginal likelihood with bridge sampling (Meng & Wong,
 1996). This is a wrapper around \code{\link[bridgesampling:bridge_sampler]{bridgesampling::bridge_sampler()}}.
 Therefore, log marginal likelihood calculation is currently only available
-for models estimated with {rstan} using MCMC.
+for models estimated with \code{{rstan}} using MCMC.
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

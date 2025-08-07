@@ -12,7 +12,7 @@
 
 * `measr_dcm()` deprecated in favor of `dcm_estimate()`.
 
-* New functionality for relative model fit comparisions (`aic()`, `bic()`, `bayes_factor()`).
+* New functionality for relative model fit comparisons (`aic()`, `bic()`, `bayes_factor()`).
 
 * New functionality for testing model assumptions (`yens_q3()`).
 

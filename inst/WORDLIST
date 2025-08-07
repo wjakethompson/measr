@@ -12,16 +12,18 @@ Csáki
 Cui
 DCM
 DCMs
-DOI
 EAP
 ECPE
 GDINA
 Gabry
 Gelman
 Gierl
+Jeffreys
+Kass
 Kiado
 Kreiner
 Kruschke
+Kruschke's
 Kruskal's
 Kullback
 LCDM
@@ -30,6 +32,7 @@ Liu
 Makransky
 Marais
 Maydeu
+Meng
 Mesbah
 Metaprogramming
 Mplus
@@ -41,6 +44,7 @@ PPMCs
 Petrov
 RMSEA
 RStan
+Raftery
 Rasch
 Roussos
 Rtools
@@ -48,6 +52,7 @@ Rupp
 SRMSR
 Schwarz
 Sinharay
+Sinica
 Templin
 Thissen
 Tian
@@ -70,7 +75,6 @@ dina
 doi
 dplyr
 et
-eval
 examinee
 extensibility
 frac
@@ -83,11 +87,9 @@ measr's
 measrdcm
 measrfit
 measr’s
-monotonicity
 morphosyntactic
 pkgdown
 polytomously
-posteriori
 ppp
 pre
 psychometrics
@@ -102,7 +104,7 @@ tibbles
 toolchain
 tunnelled
 tunnelling
-warmup
+unnested
 κ
 λ
 χ

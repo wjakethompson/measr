@@ -1,9 +1,9 @@
 #' Log marginal likelihood calculation
 #'
-#' Calculate the log maringal likelihood with bridge sampling (Meng & Wong,
+#' Calculate the log marginal likelihood with bridge sampling (Meng & Wong,
 #' 1996). This is a wrapper around [bridgesampling::bridge_sampler()].
 #' Therefore, log marginal likelihood calculation is currently only available
-#' for models estimated with {rstan} using MCMC.
+#' for models estimated with `{rstan}` using MCMC.
 #'
 #' @param x A [measrdcm][dcm_estimate()] object estimated with
 #'   `backend = "optim"`.
@@ -117,7 +117,7 @@ S7::method(log_mll, measrdcm) <- function(x, force = FALSE) {
 #'     the returned object.
 #' @export
 #'
-#' @references Jeffreys, H. (1935). Some test os significance, treated by the
+#' @references Jeffreys, H. (1935). Some tests of significance, treated by the
 #'   theory of probability. *Mathematical Proceedings of the Cambridge
 #'   Philosophical Society, 31*(2), 203-222. \doi{10.1017/S030500410001330X}
 #' @references Kass, R. E., & Raftery, A. E. (1995). Bayes factors.
