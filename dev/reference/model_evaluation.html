@@ -70,7 +70,7 @@ repeated. See Details for specifics.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_criterion</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  criterion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"loo"</span>, <span class="st">"waic"</span>, <span class="st">"aic"</span>, <span class="st">"bic"</span><span class="op">)</span>,</span>
+<span>  criterion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"loo"</span>, <span class="st">"waic"</span>, <span class="st">"log_mll"</span>, <span class="st">"aic"</span>, <span class="st">"bic"</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  save <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -106,8 +106,9 @@ repeated. See Details for specifics.</p>
 
 <dt id="arg-criterion">criterion<a class="anchor" aria-label="anchor" href="#arg-criterion"></a></dt>
 <dd><p>A vector of information criteria to calculate and add to the
-model object. Must be <code>"loo"</code> or <code>"waic"</code> for models estimated with MCMC,
-or <code>"aic"</code> or <code>"bic"</code> for models estimated with the optimizer.</p></dd>
+model object. Must be <code>"loo"</code>, <code>"waic"</code>, or <code>"log_mll"</code> for models
+estimated with MCMC, or <code>"aic"</code> or <code>"bic"</code> for models estimated with the
+optimizer.</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
@@ -184,9 +185,10 @@ Liu et al., 2016) and/or <code><a href="fit_ppmc.html">fit_ppmc()</a></code> to 
 checks (Park et al., 2015; Sinharay &amp; Almond, 2007; Sinharay et al., 2006;
 Thompson, 2019), depending on which methods are specified.</p>
 <p>For <code>add_criterion()</code>, relative fit criteria are added to the <code>$criteria</code>
-element of the fitted model. This function wraps <code><a href="https://mc-stan.org/loo/reference/loo.html" class="external-link">loo()</a></code> or <code><a href="https://mc-stan.org/loo/reference/waic.html" class="external-link">waic()</a></code> to
-calculate the LOO-CV (Vehtari et al., 2017) or WAIC (Watanabe, 2010),
-respectively, for models estimated with MCMC.
+element of the fitted model. For models estimated with MCMC, this function
+wraps <code><a href="https://mc-stan.org/loo/reference/loo.html" class="external-link">loo()</a></code> or <code><a href="https://mc-stan.org/loo/reference/waic.html" class="external-link">waic()</a></code> to calculate the LOO-CV (Vehtari et al., 2017) or
+WAIC (Watanabe, 2010), respectively, or <code><a href="log_mll.html">log_mll()</a></code> to calculate the log
+marginal likelihood, which is used for calculating Bayes factors.
 For models estimated with the optimizer, this wraps <code><a href="aic-bic.html">aic()</a></code> or <code><a href="aic-bic.html">bic()</a></code>
 to estimate the AIC (Akaike, 1973) or BIC (Schwarz, 1978), respectively.</p>
 <p>For <code>add_reliability()</code>, reliability information is added to the

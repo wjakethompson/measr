@@ -12,10 +12,12 @@
 <url><loc>https://measr.info/dev/index.html</loc></url>
 <url><loc>https://measr.info/dev/news/index.html</loc></url>
 <url><loc>https://measr.info/dev/reference/aic-bic.html</loc></url>
+<url><loc>https://measr.info/dev/reference/bayes_factor.html</loc></url>
 <url><loc>https://measr.info/dev/reference/cdi.html</loc></url>
 <url><loc>https://measr.info/dev/reference/dcm_estimate.html</loc></url>
 <url><loc>https://measr.info/dev/reference/fit_ppmc.html</loc></url>
 <url><loc>https://measr.info/dev/reference/index.html</loc></url>
+<url><loc>https://measr.info/dev/reference/log_mll.html</loc></url>
 <url><loc>https://measr.info/dev/reference/loglik_array.html</loc></url>
 <url><loc>https://measr.info/dev/reference/loo-waic.html</loc></url>
 <url><loc>https://measr.info/dev/reference/m2.html</loc></url>
