@@ -1,6 +1,8 @@
 test_that("Q-matrix validation works for ecpe", {
-  mod_spec <- dcm_specify(qmatrix = dcmdata::ecpe_qmatrix,
-                          identifier = "item_id")
+  mod_spec <- dcm_specify(
+    qmatrix = dcmdata::ecpe_qmatrix,
+    identifier = "item_id"
+  )
 
   out <- capture.output(
     suppressMessages(
@@ -13,11 +15,22 @@ test_that("Q-matrix validation works for ecpe", {
   rstn_ecpe_lcdm <- add_respondent_estimates(rstn_ecpe_lcdm)
   qmat_valid_res <- qmatrix_validation(x = rstn_ecpe_lcdm)
 
-  expect_equal(names(qmat_valid_res),
-               c("item_id", "validation_flag", "original_specification",
-                 "empirical_specification", "pvaf"))
+  expect_equal(
+    names(qmat_valid_res),
+    c(
+      "item_id",
+      "validation_flag",
+      "original_specification",
+      "empirical_specification",
+      "pvaf"
+    )
+  )
   expect_equal(nrow(qmat_valid_res), 28)
-  expect_equal(nrow(qmat_valid_res |>
-                      dplyr::filter(!validation_flag)),
-               28)
+  expect_equal(
+    nrow(
+      qmat_valid_res |>
+        dplyr::filter(!validation_flag)
+    ),
+    28
+  )
 })
