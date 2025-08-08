@@ -299,6 +299,131 @@ test_that("model comparisons work", {
   )
 })
 
+# bayes factors ----------------------------------------------------------------
+test_that("log_mll works", {
+  err <- rlang::catch_cnd(log_mll(rstn_dina))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with")
+
+  err <- rlang::catch_cnd(log_mll(cmds_mdm_lcdm))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with")
+
+  expect_equal(typeof(log_mll(rstn_mdm_dina)), "double")
+  expect_equal(length(log_mll(rstn_mdm_dina)), 1)
+  expect_false(identical(log_mll(rstn_mdm_dina), log_mll(rstn_mdm_dina)))
+
+  store_mll <- rstn_mdm_dina
+  expect_true(rlang::is_empty(store_mll@criteria$log_mll))
+  store_mll <- add_criterion(store_mll, "log_mll")
+  expect_false(rlang::is_empty(store_mll@criteria$log_mll))
+  expect_equal(typeof(store_mll@criteria$log_mll), "double")
+  expect_equal(length(store_mll@criteria$log_mll), 1)
+  expect_identical(log_mll(store_mll), log_mll(store_mll))
+  expect_false(identical(log_mll(store_mll), log_mll(store_mll, force = TRUE)))
+})
+
+test_that("bayes_factor works", {
+  err <- rlang::catch_cnd(
+    bayes_factor(rstn_mdm_dina, rstn_mdm_dina, prior_prob = "a")
+  )
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a number, not the string")
+
+  err <- rlang::catch_cnd(
+    bayes_factor(rstn_mdm_dina, "measrfit")
+  )
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a.*measrdcm.*object")
+
+  err <- rlang::catch_cnd(
+    bayes_factor(rstn_mdm_dina, "measrfit", "object")
+  )
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must all be.*measrdcm.*objects")
+
+  err <- rlang::catch_cnd(
+    bayes_factor(rstn_mdm_dina, rstn_mdm_dina, model_names = paste0("mod", 1:3))
+  )
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "be of length 2, the same as the number of models")
+
+  dina1 <- rstn_mdm_dina
+  dina2 <- rstn_mdm_dina
+  bf1 <- bayes_factor(dina1, dina2, prior_prob = NULL)
+  expect_s3_class(bf1, "tbl_df")
+  expect_equal(colnames(bf1), c("null_model", "alt_model", "bf"))
+  expect_equal(nrow(bf1), 1)
+  expect_equal(bf1$null_model, "dina1")
+  expect_equal(bf1$alt_model, "dina2")
+  expect_equal(typeof(bf1$bf), "double")
+  expect_equal(bf1$bf, 1, tolerance = 0.1)
+
+  dina3 <- rstn_mdm_dina
+  bf2 <- bayes_factor(dina1, dina2, dina3, model_names = paste0("mod", 1:3))
+  expect_s3_class(bf2, "tbl_df")
+  expect_equal(
+    colnames(bf2),
+    c("null_model", "alt_model", "bf", "posterior_probs")
+  )
+  expect_equal(nrow(bf2), 3)
+  expect_equal(bf2$null_model, c("mod1", "mod1", "mod2"))
+  expect_equal(bf2$alt_model, c("mod2", "mod3", "mod3"))
+  expect_equal(typeof(bf2$bf), "double")
+  expect_equal(bf2$bf, rep(1, 3), tolerance = 0.1)
+  expect_equal(typeof(bf2$posterior_probs), "list")
+  for (i in seq_len(nrow(bf2))) {
+    expect_equal(
+      colnames(bf2$posterior_probs[[i]]),
+      c("prior_prob_null", "posterior_prob_null")
+    )
+    expect_equal(
+      bf2$posterior_probs[[i]]$prior_prob_null,
+      seq(0.02, 0.98, by = 0.02)
+    )
+    expect_equal(
+      bf2$posterior_probs[[i]]$posterior_prob_null,
+      seq(0.02, 0.98, by = 0.02),
+      tolerance = 0.1
+    )
+  }
+
+  dina4 <- rstn_mdm_dina
+  bf3 <- bayes_factor(dina1, dina2, dina3, dina4, prior_prob = seq(.1, .9, .1))
+  expect_s3_class(bf3, "tbl_df")
+  expect_equal(
+    colnames(bf3),
+    c("null_model", "alt_model", "bf", "posterior_probs")
+  )
+  expect_equal(nrow(bf3), 6)
+  expect_equal(
+    bf3$null_model,
+    c("dina1", "dina1", "dina1", "dina2", "dina2", "dina3")
+  )
+  expect_equal(
+    bf3$alt_model,
+    c("dina2", "dina3", "dina4", "dina3", "dina4", "dina4")
+  )
+  expect_equal(typeof(bf3$bf), "double")
+  expect_equal(bf3$bf, rep(1, 6), tolerance = 0.1)
+  expect_equal(typeof(bf3$posterior_probs), "list")
+  for (i in seq_len(nrow(bf3))) {
+    expect_equal(
+      colnames(bf3$posterior_probs[[i]]),
+      c("prior_prob_null", "posterior_prob_null")
+    )
+    expect_equal(
+      bf3$posterior_probs[[i]]$prior_prob_null,
+      seq(0.1, 0.9, by = 0.1)
+    )
+    expect_equal(
+      bf3$posterior_probs[[i]]$posterior_prob_null,
+      seq(0.1, 0.9, by = 0.1),
+      tolerance = 0.1
+    )
+  }
+})
+
 # ppmc -------------------------------------------------------------------------
 test_that("ppmc works", {
   skip_on_cran()

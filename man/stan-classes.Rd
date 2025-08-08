@@ -20,7 +20,7 @@ optim()
 gqs()
 }
 \value{
-An \link[=S7_object]{S7 object} with the corresponding class.
+An \link[S7:S7_object]{S7 object} with the corresponding class.
 }
 \description{
 The constructors for Stan back-ends and methods are exported to support

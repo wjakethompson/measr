@@ -61,7 +61,6 @@
 #'   \doi{10.1177/014662168400800201}
 #'
 #' @examplesIf measr_examples()
-#' # example code
 #' model_spec <- dcm_specify(qmatrix = dcmdata::mdm_qmatrix,
 #'                           identifier = "item")
 #' model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,

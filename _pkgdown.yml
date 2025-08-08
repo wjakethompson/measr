@@ -66,6 +66,8 @@ reference:
   - bic
   - loo-waic
   - loglik_array
+  - log_mll
+  - bayes_factor
 
 - subtitle: Add evaluations to model objects
   desc: >
