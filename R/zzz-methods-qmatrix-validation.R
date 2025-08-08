@@ -37,24 +37,33 @@
 #'                           method = "optim")
 #' rstn_ecpe <- add_respondent_estimates(rstn_ecpe)
 #' q_matrix_validation <- qmatrix_validation(rstn_ecpe)
-qmatrix_validation <- S7::new_generic("qmatrix_validation", "x",
-                                      function(x, ..., epsilon = .95,
-                                               force = FALSE) {
-                                        S7::S7_dispatch()
-                                      })
+qmatrix_validation <- S7::new_generic(
+  "qmatrix_validation",
+  "x",
+  function(x, ..., epsilon = .95, force = FALSE) {
+    S7::S7_dispatch()
+  }
+)
 
 # methods ----------------------------------------------------------------------
-S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
-                                                     force = FALSE) {
+S7::method(qmatrix_validation, measrdcm) <- function(
+  x,
+  epsilon = .95,
+  force = FALSE
+) {
   if (!rlang::is_empty(x@qmatrix_validation) && !force) {
     return(x@qmatrix_validation)
   }
 
   if (ncol(x@model_spec@qmatrix) == 1) {
-    rlang::abort("error_bad_method",
-                 message = glue::glue("The Q-matrix validation method can ",
-                                      "only be applied to assessments ",
-                                      "measuring more than one attribute."))
+    rlang::abort(
+      "error_bad_method",
+      message = glue::glue(
+        "The Q-matrix validation method can ",
+        "only be applied to assessments ",
+        "measuring more than one attribute."
+      )
+    )
   }
 
   if (rlang::is_empty(x@respondent_estimates)) {
@@ -69,39 +78,54 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
     posterior::subset_draws(variable = "pi") |>
     posterior::as_draws_df() |>
     tibble::as_tibble() |>
-    tidyr::pivot_longer(cols = dplyr::everything(),
-                        names_to = "parameter", values_to = "pi") |>
+    tidyr::pivot_longer(
+      cols = dplyr::everything(),
+      names_to = "parameter",
+      values_to = "pi"
+    ) |>
     dplyr::filter(!(.data$parameter %in% c(".chain", ".iteration", ".draw"))) |>
-    dplyr::mutate(parameter = sub("pi\\[", "", .data$parameter),
-                  parameter = sub("]", "", .data$parameter)) |>
-    tidyr::separate_wider_delim(cols = "parameter", delim = ",",
-                                names = c("item_id", "profile_id")) |>
+    dplyr::mutate(
+      parameter = sub("pi\\[", "", .data$parameter),
+      parameter = sub("]", "", .data$parameter)
+    ) |>
+    tidyr::separate_wider_delim(
+      cols = "parameter",
+      delim = ",",
+      names = c("item_id", "profile_id")
+    ) |>
     dplyr::select("profile_id", "item_id", "prob" = "pi") |>
-    dplyr::mutate(profile_id = as.numeric(.data$profile_id),
-                  item_id = as.numeric(.data$item_id))
+    dplyr::mutate(
+      profile_id = as.numeric(.data$profile_id),
+      item_id = as.numeric(.data$item_id)
+    )
 
   # posterior probabilities of each class
   strc_param <- measr_extract(x, "strc_param")
   strc_param <- strc_param |>
     dplyr::mutate(estimate = E(.data$estimate)) |>
     dplyr::select("class", "estimate") |>
-    dplyr::mutate(class = sub("\\[", "", class),
-                  class = sub("]", "", class))
+    dplyr::mutate(class = sub("\\[", "", class), class = sub("]", "", class))
 
   validation_output <- tibble::tibble()
 
   # calculate sigma_1:K* (e.g., sigma_1:2)
   for (ii in seq_len(nrow(qmatrix))) {
     max_specification <- all_profiles[nrow(all_profiles), ]
-    max_sigma <- calc_sigma(q = max_specification, strc_param = strc_param,
-                            pi_mat = pi_mat, ii)
+    max_sigma <- calc_sigma(
+      q = max_specification,
+      strc_param = strc_param,
+      pi_mat = pi_mat,
+      ii
+    )
 
     max_specification <- max_specification |>
       dplyr::mutate(pvaf = max_sigma / max_sigma)
 
     possible_specifications <- tibble::tibble()
-    possible_specifications <- dplyr::bind_rows(possible_specifications,
-                                                max_specification)
+    possible_specifications <- dplyr::bind_rows(
+      possible_specifications,
+      max_specification
+    )
 
     full_set_profiles <- create_profiles(ncol(qmatrix))
     colnames(full_set_profiles) <- colnames(all_profiles)
@@ -110,8 +134,12 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
     # calculate sigma (e.g., sigma_1:3)
     for (jj in 2:(nrow(full_set_profiles) - 1)) {
       q <- full_set_profiles[jj, ]
-      sigma_q <- calc_sigma(q = q, strc_param = strc_param, pi_mat = pi_mat,
-                            ii = ii)
+      sigma_q <- calc_sigma(
+        q = q,
+        strc_param = strc_param,
+        pi_mat = pi_mat,
+        ii = ii
+      )
 
       # calculate sigma / sigma_1:K (i.e., PVAF)
       pvaf <- sigma_q / max_sigma
@@ -131,8 +159,9 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
     # accounted for (PVAF)
     correct_spec <- possible_specifications |>
       dplyr::select(-"pvaf") |>
-      dplyr::mutate(total_atts =
-                      rowSums(dplyr::across(dplyr::where(is.numeric)))) |>
+      dplyr::mutate(
+        total_atts = rowSums(dplyr::across(dplyr::where(is.numeric)))
+      ) |>
       dplyr::filter(.data$total_atts == min(.data$total_atts)) |>
       dplyr::select(-"total_atts") |>
       dplyr::left_join(possible_specifications, by = colnames(all_profiles)) |>
@@ -145,14 +174,20 @@ S7::method(qmatrix_validation, measrdcm) <- function(x, epsilon = .95,
       dplyr::select(-"pvaf")
 
     actual_spec <- qmatrix[ii, ]
-    validation_flag <- nrow(dplyr::anti_join(correct_spec, actual_spec,
-                                             by = colnames(actual_spec))) != 0
+    validation_flag <- nrow(dplyr::anti_join(
+      correct_spec,
+      actual_spec,
+      by = colnames(actual_spec)
+    )) !=
+      0
 
-    item_output <- tibble::tibble(item_id = ii,
-                                  validation_flag = validation_flag,
-                                  original_specification = list(actual_spec),
-                                  empirical_specification = list(correct_spec),
-                                  pvaf = final_pvaf)
+    item_output <- tibble::tibble(
+      item_id = ii,
+      validation_flag = validation_flag,
+      original_specification = list(actual_spec),
+      empirical_specification = list(correct_spec),
+      pvaf = final_pvaf
+    )
     validation_output <- dplyr::bind_rows(validation_output, item_output)
   }
 
