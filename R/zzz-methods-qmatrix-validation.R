@@ -51,10 +51,6 @@ S7::method(qmatrix_validation, measrdcm) <- function(
   epsilon = .95,
   force = FALSE
 ) {
-  if (!rlang::is_empty(x@qmatrix_validation) && !force) {
-    return(x@qmatrix_validation)
-  }
-
   if (ncol(x@model_spec@qmatrix) == 1) {
     rlang::abort(
       "error_bad_method",
