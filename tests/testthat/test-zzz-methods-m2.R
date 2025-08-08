@@ -22,13 +22,15 @@ test_that("m2 works", {
 
   m2_mod <- add_fit(rstn_dina, method = "m2", ci = 0.8)
   expect_equal(m2_mod@fit$m2, m2)
-  expect_equal(measr_extract(m2_mod, "m2"),
-               dplyr::select(m2, "m2", "df", "pval"))
-  expect_equal(measr_extract(m2_mod, "rmsea"),
-               dplyr::select(m2, "rmsea", "80% CI"))
-  expect_equal(measr_extract(m2_mod, "srmsr"),
-               dplyr::select(m2, "srmsr"))
-
+  expect_equal(
+    measr_extract(m2_mod, "m2"),
+    dplyr::select(m2, "m2", "df", "pval")
+  )
+  expect_equal(
+    measr_extract(m2_mod, "rmsea"),
+    dplyr::select(m2, "rmsea", "80% CI")
+  )
+  expect_equal(measr_extract(m2_mod, "srmsr"), dplyr::select(m2, "srmsr"))
 
   m2 <- fit_m2(rstn_dino, ci = 0.95)
   expect_equal(m2$m2, 565.0893, tolerance = 0.1)
@@ -53,12 +55,15 @@ test_that("m2 works", {
 
   m2_mod <- add_fit(rstn_dino, method = "m2", ci = 0.95)
   expect_equal(m2_mod@fit$m2, m2)
-  expect_equal(measr_extract(m2_mod, "m2"),
-               dplyr::select(m2, "m2", "df", "pval"))
-  expect_equal(measr_extract(m2_mod, "rmsea"),
-               dplyr::select(m2, "rmsea", "95% CI"))
-  expect_equal(measr_extract(m2_mod, "srmsr"),
-               dplyr::select(m2, "srmsr"))
+  expect_equal(
+    measr_extract(m2_mod, "m2"),
+    dplyr::select(m2, "m2", "df", "pval")
+  )
+  expect_equal(
+    measr_extract(m2_mod, "rmsea"),
+    dplyr::select(m2, "rmsea", "95% CI")
+  )
+  expect_equal(measr_extract(m2_mod, "srmsr"), dplyr::select(m2, "srmsr"))
 
   # recalculating returns same object
   m2_recalc <- fit_m2(m2_mod)

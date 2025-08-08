@@ -67,6 +67,8 @@ reference:
   - bic
   - loo-waic
   - loglik_array
+  - log_mll
+  - bayes_factor
 
 - subtitle: Add evaluations to model objects
   desc: >
@@ -84,6 +86,8 @@ reference:
 - title: internal
   contents:
   - measr_examples
+  - measrdcm
+  - stan-classes
 
 articles:
 - title: Get started

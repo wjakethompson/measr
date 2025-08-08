@@ -14,9 +14,11 @@ test_that("Yen's Q3 works", {
   q3star <- yens_q3(q3_dina, summary = "q3star")
   expect_true(is.numeric(q3star))
   expect_true(dplyr::between(q3star, 0, 1))
-  expect_equal(q3star,
-               max(abs(yens_output$resid_corr)) -
-                 mean(abs(yens_output$resid_corr)))
+  expect_equal(
+    q3star,
+    max(abs(yens_output$resid_corr)) -
+      mean(abs(yens_output$resid_corr))
+  )
 })
 
 test_that("respondent estimates get added", {

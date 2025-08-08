@@ -8,7 +8,8 @@ eval_silent <- function(expr) {
   envir <- parent.frame()
 
   try_out <- try(utils::capture.output(
-    out <- eval(expr, envir), type = "message"
+    out <- eval(expr, envir),
+    type = "message"
   ))
   if (methods::is(try_out, "try-error")) {
     # try again without suppressing error messages

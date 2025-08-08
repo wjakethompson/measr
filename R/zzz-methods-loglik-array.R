@@ -28,14 +28,16 @@ S7::method(loglik_array, measrdcm) <- function(model) {
     precompiled = stanmodels$gqs_loglik
   )
   out <- capture.output( #nolint
-    mod <- do.call(stan_function_call$call_function,
-                   stan_function_call$args)
+    mod <- do.call(stan_function_call$call_function, stan_function_call$args)
   )
 
-  extract_stan_draws(backend = model@backend, method = gqs(),
-                     model = mod, vars = "log_lik")
+  extract_stan_draws(
+    backend = model@backend,
+    method = gqs(),
+    model = mod,
+    vars = "log_lik"
+  )
 }
-
 
 
 loglik <- S7::new_generic("loglik", "model")
@@ -44,10 +46,13 @@ S7::method(loglik, measrdcm) <- function(model) {
   calc_loglik(model@backend, model@method, model = model)
 }
 
-calc_loglik <- S7::new_generic("calc_loglik", c("backend", "method"),
+calc_loglik <- S7::new_generic(
+  "calc_loglik",
+  c("backend", "method"),
   function(backend, method, model) {
     S7::S7_dispatch()
-  })
+  }
+)
 
 S7::method(calc_loglik, list(stanbackend, mcmc)) <-
   function(backend, method, model) {

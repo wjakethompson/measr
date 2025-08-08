@@ -11,6 +11,7 @@
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
 #' @importFrom rstan sampling
+#' @importFrom bridgesampling bridge_sampler
 #' @importFrom tibble tibble
 #' @useDynLib measr, .registration = TRUE
 ## usethis namespace: end

@@ -40,18 +40,31 @@
 #'   `probs`.
 #' @export
 score <- S7::new_generic(
-  "score", "x",
-  function(x, newdata = NULL, missing = NA, identifier = NULL,
-           summary = TRUE, probs = c(0.025, 0.975),
-           force = FALSE) {
+  "score",
+  "x",
+  function(
+    x,
+    newdata = NULL,
+    missing = NA,
+    identifier = NULL,
+    summary = TRUE,
+    probs = c(0.025, 0.975),
+    force = FALSE
+  ) {
     S7::S7_dispatch()
   }
 )
 
 S7::method(score, measrdcm) <-
-  function(x, newdata = NULL, missing = NA, identifier = NULL,
-           summary = TRUE, probs = c(0.025, 0.975),
-           force = FALSE) {
+  function(
+    x,
+    newdata = NULL,
+    missing = NA,
+    identifier = NULL,
+    summary = TRUE,
+    probs = c(0.025, 0.975),
+    force = FALSE
+  ) {
     # check for existing scores ------------------------------------------------
     check_bool(force)
     check_bool(summary)
@@ -67,7 +80,9 @@ S7::method(score, measrdcm) <-
     if (!is.null(newdata)) {
       check_string(identifier, allow_null = TRUE)
       clean_data <- rdcmchecks::clean_data(
-        newdata, identifier = identifier, missing = missing,
+        newdata,
+        identifier = identifier,
+        missing = missing,
         cleaned_qmatrix = list(
           clean_qmatrix = x@model_spec@qmatrix,
           attribute_names = x@model_spec@qmatrix_meta$attribute_names,
@@ -97,22 +112,27 @@ S7::method(score, measrdcm) <-
       precompiled = stanmodels$gqs_probs
     )
     out <- utils::capture.output( # nolint
-      mod <- do.call(stan_function_call$call_function,
-                     stan_function_call$args)
+      mod <- do.call(stan_function_call$call_function, stan_function_call$args)
     )
 
     # get mastery information --------------------------------------------------
-    res_list <- calculate_probs(model = x, gq = mod,
-                                resp_id = clean_data$respondent_identifier)
+    res_list <- calculate_probs(
+      model = x,
+      gq = mod,
+      resp_id = clean_data$respondent_identifier
+    )
 
     # return results -----------------------------------------------------------
     ret_list <- if (!summary) {
       calculate_probs_no_summary(res_list = res_list, method = x@method)
     } else {
-      calculate_probs_summary(res_list = res_list, probs = probs,
-                              method = x@method,
-                              resp_id = clean_data$respondent_identifier)
+      calculate_probs_summary(
+        res_list = res_list,
+        probs = probs,
+        method = x@method,
+        resp_id = clean_data$respondent_identifier
+      )
     }
 
     ret_list
-}
+  }

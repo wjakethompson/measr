@@ -44,38 +44,52 @@ calculate_probs <- function(model, gq, resp_id) {
     ) |>
     dplyr::rename(!!resp_id := "resp_id")
 
-  list(class_probabilities = class_probs,
-       attribute_probabilities = attr_probs)
+  list(class_probabilities = class_probs, attribute_probabilities = attr_probs)
 }
 
 calculate_probs_no_summary <- function(res_list, method) {
-  if (!S7::S7_inherits(method, optim)) return(res_list)
+  if (!S7::S7_inherits(method, optim)) {
+    return(res_list)
+  }
 
-  lapply(res_list,
-         function(.x) {
-           dplyr::mutate(.x, dplyr::across(dplyr::where(posterior::is_rvar),
-                                           posterior::E))
-         })
+  lapply(res_list, function(.x) {
+    dplyr::mutate(
+      .x,
+      dplyr::across(dplyr::where(posterior::is_rvar), posterior::E)
+    )
+  })
 }
 
 calculate_probs_summary <- function(res_list, probs, method, resp_id) {
-  lapply(res_list, summarize_probs, probs = probs, method = method,
-         id = resp_id)
+  lapply(
+    res_list,
+    summarize_probs,
+    probs = probs,
+    method = method,
+    id = resp_id
+  )
 }
 
 summarize_probs <- function(res, probs, method, id) {
-  summary_names <- colnames(res)[!grepl(glue::glue("{id}|chain|iteration|draw"),
-                                        colnames(res))]
-  type <- dplyr::if_else(all(grepl("\\[[0-1,]+\\]", summary_names)),
-                         "class", "attribute")
+  summary_names <- colnames(res)[
+    !grepl(glue::glue("{id}|chain|iteration|draw"), colnames(res))
+  ]
+  type <- dplyr::if_else(
+    all(grepl("\\[[0-1,]+\\]", summary_names)),
+    "class",
+    "attribute"
+  )
 
   res |>
-    dplyr::mutate(dplyr::across(dplyr::where(posterior::is_rvar),
-                                ~lapply(.x, summarize_rvar, probs = probs,
-                                        method = method))) |>
-    tidyr::pivot_longer(cols = dplyr::all_of(summary_names),
-                        names_to = type,
-                        values_to = "summary") |>
+    dplyr::mutate(dplyr::across(
+      dplyr::where(posterior::is_rvar),
+      ~ lapply(.x, summarize_rvar, probs = probs, method = method)
+    )) |>
+    tidyr::pivot_longer(
+      cols = dplyr::all_of(summary_names),
+      names_to = type,
+      values_to = "summary"
+    ) |>
     tidyr::unnest("summary")
 }
 
@@ -84,10 +98,12 @@ summarize_rvar <- function(rv, probs, method) {
     return(tibble::tibble(probability = posterior::E(rv)))
   }
 
-  tibble::tibble(probability = posterior::E(rv),
-                 bounds = tibble::as_tibble_row(
-                   stats::quantile(rv, probs = probs, names = TRUE),
-                   .name_repair = ~paste0(probs * 100, "%")
-                 )) |>
+  tibble::tibble(
+    probability = posterior::E(rv),
+    bounds = tibble::as_tibble_row(
+      stats::quantile(rv, probs = probs, names = TRUE),
+      .name_repair = ~ paste0(probs * 100, "%")
+    )
+  ) |>
     tidyr::unnest("bounds")
 }

@@ -10,7 +10,7 @@
 \usage{
 add_criterion(
   x,
-  criterion = c("loo", "waic", "aic", "bic"),
+  criterion = c("loo", "waic", "log_mll", "aic", "bic"),
   overwrite = FALSE,
   save = TRUE,
   ...,
@@ -39,8 +39,9 @@ add_respondent_estimates(
 \item{x}{A \link[=dcm_estimate]{measrdcm} object.}
 
 \item{criterion}{A vector of information criteria to calculate and add to the
-model object. Must be \code{"loo"} or \code{"waic"} for models estimated with MCMC,
-or \code{"aic"} or \code{"bic"} for models estimated with the optimizer.}
+model object. Must be \code{"loo"}, \code{"waic"}, or \code{"log_mll"} for models
+estimated with MCMC, or \code{"aic"} or \code{"bic"} for models estimated with the
+optimizer.}
 
 \item{overwrite}{Logical. Indicates whether specified elements that have
 already been added to the estimated model should be overwritten. Default is
@@ -107,9 +108,10 @@ checks (Park et al., 2015; Sinharay & Almond, 2007; Sinharay et al., 2006;
 Thompson, 2019), depending on which methods are specified.
 
 For \code{add_criterion()}, relative fit criteria are added to the \verb{$criteria}
-element of the fitted model. This function wraps \code{\link[=loo]{loo()}} or \code{\link[=waic]{waic()}} to
-calculate the LOO-CV (Vehtari et al., 2017) or WAIC (Watanabe, 2010),
-respectively, for models estimated with MCMC.
+element of the fitted model. For models estimated with MCMC, this function
+wraps \code{\link[=loo]{loo()}} or \code{\link[=waic]{waic()}} to calculate the LOO-CV (Vehtari et al., 2017) or
+WAIC (Watanabe, 2010), respectively, or \code{\link[=log_mll]{log_mll()}} to calculate the log
+marginal likelihood, which is used for calculating Bayes factors.
 For models estimated with the optimizer, this wraps \code{\link[=aic]{aic()}} or \code{\link[=bic]{bic()}}
 to estimate the AIC (Akaike, 1973) or BIC (Schwarz, 1978), respectively.
 
