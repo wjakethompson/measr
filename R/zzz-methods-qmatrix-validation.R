@@ -115,7 +115,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(
     )
 
     max_specification <- max_specification |>
-      dplyr::mutate(pvaf = max_sigma / max_sigma)
+      dplyr::mutate(pvaf = 1)
 
     possible_specifications <- tibble::tibble()
     possible_specifications <- dplyr::bind_rows(
