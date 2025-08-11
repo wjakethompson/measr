@@ -123,13 +123,14 @@ S7::method(qmatrix_validation, measrdcm) <- function(
       max_specification
     )
 
-    full_set_profiles <- create_profiles(ncol(qmatrix))
-    colnames(full_set_profiles) <- colnames(all_profiles)
+    # create set of all possible Q-matrix specifications
+    full_set_specifications <- create_profiles(ncol(qmatrix))
+    colnames(full_set_specifications) <- colnames(all_profiles)
 
     # iterate through the 2^K - 1 possible specifications for each item to
     # calculate sigma (e.g., sigma_1:3)
-    for (jj in 2:(nrow(full_set_profiles) - 1)) {
-      q <- full_set_profiles[jj, ]
+    for (jj in 2:(nrow(full_set_specifications) - 1)) {
+      q <- full_set_specifications[jj, ]
       sigma_q <- calc_sigma(
         q = q,
         strc_param = strc_param,
