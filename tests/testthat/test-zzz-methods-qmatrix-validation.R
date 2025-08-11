@@ -20,4 +20,10 @@ test_that("Q-matrix validation works for ecpe", {
     ),
     28
   )
+
+  err <- rlang::catch_cnd(qmatrix_validation(x = dina_mod))
+  expect_match(
+    err$message,
+    "The Q-matrix validation method can\\nonly be applied to assessments"
+  )
 })
