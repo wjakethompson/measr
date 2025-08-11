@@ -104,6 +104,10 @@ S7::method(qmatrix_validation, measrdcm) <- function(
 
   validation_output <- tibble::tibble()
 
+  # create set of all possible Q-matrix specifications
+  full_set_specifications <- create_profiles(ncol(qmatrix))
+  colnames(full_set_specifications) <- colnames(all_profiles)
+
   # calculate sigma_1:K* (e.g., sigma_1:2)
   for (ii in seq_len(nrow(qmatrix))) {
     max_specification <- all_profiles[nrow(all_profiles), ]
@@ -123,9 +127,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(
       max_specification
     )
 
-    # create set of all possible Q-matrix specifications
-    full_set_specifications <- create_profiles(ncol(qmatrix))
-    colnames(full_set_specifications) <- colnames(all_profiles)
+
 
     # iterate through the 2^K - 1 possible specifications for each item to
     # calculate sigma (e.g., sigma_1:3)
