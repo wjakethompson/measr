@@ -127,8 +127,6 @@ S7::method(qmatrix_validation, measrdcm) <- function(
       max_specification
     )
 
-
-
     # iterate through the 2^K - 1 possible specifications for each item to
     # calculate sigma (e.g., sigma_1:3)
     for (jj in 2:(nrow(full_set_specifications) - 1)) {
@@ -145,9 +143,9 @@ S7::method(qmatrix_validation, measrdcm) <- function(
       q <- q |>
         dplyr::mutate(pvaf = pvaf)
 
-      # flagging profiles where sigma / sigma_1:K < epsilon
+      # flagging profiles where sigma / sigma_1:K >= epsilon
       # only profiles where sigma / sigma_1:K >= epsilon are appropriate
-      keep_spec <- (sigma_q / max_sigma) > epsilon
+      keep_spec <- (sigma_q / max_sigma) >= epsilon
       if (keep_spec) {
         possible_specifications <- dplyr::bind_rows(possible_specifications, q)
       }
