@@ -95,6 +95,13 @@ S7::method(qmatrix_validation, measrdcm) <- function(
       item_id = as.numeric(.data$item_id)
     )
 
+  if (S7::S7_inherits(x@method, mcmc)) {
+    pi_mat <- pi_mat |>
+      dplyr::group_by(.data$profile_id, .data$item_id) |>
+      dplyr::summarize(prob = mean(.data$prob), .groups = "keep") |>
+      dplyr::ungroup()
+  }
+
   # posterior probabilities of each class
   strc_param <- measr_extract(x, "strc_param")
   strc_param <- strc_param |>
