@@ -11,6 +11,19 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
       prior(uniform(0, 15), type = "maineffect")
     )
   )
+  ecpe_lcdm_spec <- dcm_specify(
+    qmatrix = dcmdata::ecpe_qmatrix |>
+      tibble::rowid_to_column("item_num") |>
+      dplyr::filter(.data$item_num <= 10) |>
+      dplyr::select(-"item_num"),
+    identifier = "item_id",
+    measurement_model = lcdm(),
+    structural_model = unconstrained(),
+    priors = c(
+      prior(uniform(-15, 15), type = "intercept"),
+      prior(uniform(0, 15), type = "maineffect")
+    )
+  )
   dina_spec <- dcm_specify(
     qmatrix = dcmdata::mdm_qmatrix,
     identifier = "item",
@@ -34,6 +47,26 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
         backend = "cmdstanr",
         iter_sampling = 500,
         iter_warmup = 1000,
+        chains = 2,
+        parallel_chains = 2
+      )
+    )
+  )
+
+  out <- capture.output(
+    suppressMessages(
+      cmds_ecpe_lcdm <- dcm_estimate(
+        ecpe_lcdm_spec,
+        data = dcmdata::ecpe_data |>
+          dplyr::select(resp_id:E10) |>
+          dplyr::filter(.data$resp_id <= 500),
+        identifier = "resp_id",
+        missing = NA,
+        method = "mcmc",
+        seed = 63277,
+        backend = "cmdstanr",
+        iter_sampling = 250,
+        iter_warmup = 500,
         chains = 2,
         parallel_chains = 2
       )
@@ -872,5 +905,31 @@ test_that("respondent probabilities are correct", {
     mdm_preds$attribute_prob |>
       dplyr::select("respondent", "attribute", "probability") |>
       tidyr::pivot_wider(names_from = "attribute", values_from = "probability")
+  )
+})
+
+# q-matrix validation ----------------------------------------------------------
+test_that("q-matrix validation works", {
+  skip_on_cran()
+
+  qmat_valid_res <- qmatrix_validation(x = cmds_ecpe_lcdm)
+
+  expect_equal(
+    names(qmat_valid_res),
+    c(
+      "item_id",
+      "validation_flag",
+      "original_specification",
+      "empirical_specification",
+      "pvaf"
+    )
+  )
+  expect_equal(nrow(qmat_valid_res), 10)
+  expect_equal(
+    nrow(
+      qmat_valid_res |>
+        dplyr::filter(!validation_flag)
+    ),
+    10
   )
 })
