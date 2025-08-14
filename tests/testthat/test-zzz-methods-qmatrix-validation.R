@@ -40,6 +40,7 @@ test_that("Q-matrix validation works for ecpe", {
   err <- rlang::catch_cnd(qmatrix_validation(x = dina_mod))
   expect_match(
     err$message,
-    "The Q-matrix validation method can only be applied to assessments measuring more than one attribute\."
+    paste0("The Q-matrix validation method can only be applied to assessments ",
+           "measuring more than one attribute.")
   )
 })
