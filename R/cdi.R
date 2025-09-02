@@ -52,7 +52,7 @@
 #'
 #' cdi(rstn_ecpe_lcdm)
 cdi <- function(model, weight_prevalence = TRUE) {
-  rdcmchecks::check_S7(model, class = "measrdcm")
+  S7::check_is_S7(x, class = measrdcm)
   check_bool(weight_prevalence)
 
   stan_draws <- get_draws(model, vars = c("log_Vc", "pi"))
