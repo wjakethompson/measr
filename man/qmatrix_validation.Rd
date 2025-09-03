@@ -2,47 +2,82 @@
 % Please edit documentation in R/zzz-methods-qmatrix-validation.R
 \name{qmatrix_validation}
 \alias{qmatrix_validation}
-\title{Add Q-matrix validation model objects}
+\title{Q-matrix validation}
 \usage{
-qmatrix_validation(x, ..., epsilon = 0.95, force = FALSE)
+qmatrix_validation(x, ..., pvaf_threshold = 0.95)
 }
 \arguments{
 \item{x}{A \link[=dcm_estimate]{measrdcm} object.}
 
 \item{...}{Unused.}
 
-\item{epsilon}{The threshold for proportion of variance accounted for to flag
-items for appropriate empirical specifications. The default is .95 as
-implemented by de la Torre and Chiu (2016).}
-
-\item{force}{If the criterion has already been added to the
-model object with \code{\link[=add_criterion]{add_criterion()}}, should it be recalculated. Default is
-\code{FALSE}.}
+\item{pvaf_threshold}{The threshold for proportion of variance accounted for
+to flag items for appropriate empirical specifications. The default is .95
+as implemented by de la Torre and Chiu (2016).}
 }
 \value{
-A tibble containing the estimated item-level discrimination indices
-used to empirically validate the Q-matrix.
+A \link[tibble:tibble-package]{tibble} containing the Q-matrix
+validation results. There is one row per item with 5 columns:
+\itemize{
+\item The item identifier, as specified in the Q-matrix  and used to estimate the
+model.
+\item \code{original_specification}: The original Q-matrix entry for the item.
+\item \code{original_pvaf}: The proportion of variance accounted for by the original
+specification, compared to a specification where the item measures all
+attributes.
+\item \code{empirical_specification}: The Q-matrix specification that measures the
+fewest attributes with a proportion of variance accounted for over the
+the specified \code{pvaf_threshold} threshold. If the original specification is
+optimal, \code{empirical_specification} will be \code{NA}.
+\item \code{empirical_pvaf}: The proportion of variance accounted for by the empirical
+specification, compared to a specification where the item measures all
+attributes. If the original specification is optimal, \code{emprirical_pvaf}
+will be \code{NA}.
+}
 }
 \description{
-Add Q-matrix validation metrics to fitted model objects. This function is a
-wrapper around other functions to compute the metrics. The benefit of
-using this wrapper is that the Q-matrix validation metrics are saved as part
-of the model object so that time-intensive calculations do not need to be
-repeated.
+Calculate Q-matrix validation metrics for a fitted model objects using
+methods described by de la Torre and Chiu (2016). See details for additional
+information.
+}
+\details{
+Q-matrix validation is conducted by evaluating the proporation of variance
+accounted for by different Q-matrix specifications. Following the method
+described by de la Torre and Chiu (2016), we use the following steps for
+each item:
+\enumerate{
+\item Calculate the total variance explained if an item measured all possible
+attributes.
+\item For each possible Q-matrix entry, calculate the variance explained if the
+item measured the given attributes. Calculate the proportion of variance
+explained (PVAF) as the variance explained by the current Q-matrix entry
+divided by the variance explained by the saturated entry (Step 1).
+\item After computing the PVAF for all possible Q-matrix entries, filter to only
+those with a PVAF greater than the specified \code{pvaf_threshold} threshold.
+\item Filter the remaining Q-matrix entries to those that measure the fewest
+number of attributes (i.e., we prefer a more parsimonious model).
+\item If there is more than one Q-matrix entry remaining, select the entry with
+the highest PVAF.
+}
 }
 \examples{
 \dontshow{if (measr_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-mod_spec <- dcm_specify(qmatrix = dcmdata::ecpe_qmatrix,
-                        measurement_model = dcmstan::lcdm(),
-                        structural_model =
-                          dcmstan::hdcm(hierarchy =
-                                          paste0("lexical -> cohesive -> ",
-                                                 "morphosyntactic")),
-                        identifier = "item_id")
-rstn_ecpe <- dcm_estimate(mod_spec, data = dcmdata::ecpe_data,
-                          identifier = "resp_id", backend = "rstan",
-                          method = "optim")
-rstn_ecpe <- add_respondent_estimates(rstn_ecpe)
+mod_spec <- dcm_specify(
+  qmatrix = dcmdata::ecpe_qmatrix,
+  identifier = "item_id",
+  measurement_model = dcmstan::lcdm(),
+  structural_model = dcmstan::hdcm(
+    hierarchy = "lexical -> cohesive -> morphosyntactic"
+  )
+)
+rstn_ecpe <- dcm_estimate(
+  mod_spec,
+  data = dcmdata::ecpe_data,
+  identifier = "resp_id",
+  backend = "rstan",
+  method = "optim"
+)
+
 q_matrix_validation <- qmatrix_validation(rstn_ecpe)
 \dontshow{\}) # examplesIf}
 }
@@ -51,3 +86,5 @@ de la Torre, J., & Chiu, C.-Y. (2016). A general method of
 empirical Q-matrix validation. \emph{Psychometrika, 81}(2), 253-273.
 \doi{10.1007/s11336-015-9467-8}
 }
+\concept{Chiu}
+\concept{Torre}
