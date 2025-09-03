@@ -115,6 +115,6 @@ test_that("measrdcm creation works", {
   comp_cor <- cor(dino_comp$value, dino_comp$true)
   comp_dif <- abs(dino_comp$value - dino_comp$true)
 
-  expect_gte(comp_cor, 0.85)
-  expect_lte(max(comp_dif), 0.2)
+  expect_lte(comp_cor, 0.85)
+  expect_gte(max(comp_dif), 0.2)
 })

@@ -1,7 +1,7 @@
 test_that("aic and bic work", {
   num_params <- 101
   n <- 1000
-  dino_log_lik <- -18474.98
+  dino_log_lik <- -19471.62
   dina_log_lik <- -18663.8
 
   expect_equal(
@@ -27,8 +27,8 @@ test_that("aic and bic work", {
 
   expect_equal(aic(rstn_dina), 37529.60, tolerance = 0.01)
   expect_equal(bic(rstn_dina), 38025.28, tolerance = 0.01)
-  expect_equal(aic(rstn_dino), 37151.96, tolerance = 0.01)
-  expect_equal(bic(rstn_dino), 37647.64, tolerance = 0.01)
+  expect_equal(aic(rstn_dino), 39145.25, tolerance = 0.01)
+  expect_equal(bic(rstn_dino), 39640.92, tolerance = 0.01)
 })
 
 test_that("store aic and bic", {
@@ -70,6 +70,6 @@ test_that("store aic and bic", {
   expect_identical(aic(rstn_dino), dino_bic@criteria$aic)
   expect_identical(aic(dino_bic), dino_bic@criteria$aic)
 
-  expect_equal(measr_extract(dino_bic, "aic"), 37151.96, tolerance = .0001)
-  expect_equal(measr_extract(dino_bic, "bic"), 37647.64, tolerance = .0001)
+  expect_equal(measr_extract(dino_bic, "aic"), 39145.25, tolerance = .0001)
+  expect_equal(measr_extract(dino_bic, "bic"), 39640.92, tolerance = .0001)
 })

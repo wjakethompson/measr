@@ -1,6 +1,27 @@
 test_that("Q-matrix validation works for ecpe", {
+  # correctly specified dina model ---------------------------------------------
   qmat_valid_res <- qmatrix_validation(x = rstn_dina)
+  expect_equal(
+    names(qmat_valid_res),
+    c(
+      "item_id",
+      "original_specification",
+      "original_pvaf",
+      "empirical_specification",
+      "empirical_pvaf"
+    )
+  )
+  expect_equal(nrow(qmat_valid_res), 35)
+  expect_equal(
+    nrow(
+      qmat_valid_res |>
+        dplyr::filter(is.na(empirical_specification))
+    ),
+    35
+  )
 
+  # misspecified dino model ----------------------------------------------------
+  qmat_valid_res <- qmatrix_validation(x = rstn_dino)
   expect_equal(
     names(qmat_valid_res),
     c(
