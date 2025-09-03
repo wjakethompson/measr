@@ -1,26 +1,27 @@
 test_that("Q-matrix validation works for ecpe", {
-  rstn_dina <- add_respondent_estimates(rstn_dina)
   qmat_valid_res <- qmatrix_validation(x = rstn_dina)
 
   expect_equal(
     names(qmat_valid_res),
     c(
       "item_id",
-      "validation_flag",
       "original_specification",
+      "original_pvaf",
       "empirical_specification",
-      "pvaf"
+      "empirical_pvaf"
     )
   )
   expect_equal(nrow(qmat_valid_res), 35)
   expect_equal(
     nrow(
       qmat_valid_res |>
-        dplyr::filter(!validation_flag)
+        dplyr::filter(is.na(empirical_specification))
     ),
     35
   )
+})
 
+test_that("qmatrix validation errors for 1 attribute", {
   dina_spec <- dcmstan::dcm_specify(
     qmatrix = dcmdata::mdm_qmatrix,
     identifier = "item",
