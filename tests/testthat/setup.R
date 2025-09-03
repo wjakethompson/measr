@@ -4,7 +4,7 @@ dina_spec <- dcmstan::dcm_specify(
 )
 
 # estimate dino with misspecified Q-matrix for items 1 & 3 (over) and
-# 5 & 9 (under)
+# items 5 & 9 (under)
 dino_spec <- dcmstan::dcm_specify(
   qmatrix = dplyr::mutate(
     q_matrix,
