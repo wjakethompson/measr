@@ -104,63 +104,78 @@ S7::method(qmatrix_validation, measrdcm) <- function(
   all_profiles <- create_profiles(x@model_spec)
   names(qmatrix) <- names(all_profiles)
 
-  pi_mat <- get_draws(x, vars = c("pi")) |>
-    posterior::subset_draws(variable = "pi") |>
-    posterior::as_draws_df() |>
-    tibble::as_tibble() |>
-    tidyr::pivot_longer(
-      cols = dplyr::everything(),
-      names_to = "parameter",
-      values_to = "pi"
-    ) |>
-    dplyr::filter(!(.data$parameter %in% c(".chain", ".iteration", ".draw"))) |>
-    dplyr::mutate(
-      parameter = sub("pi\\[", "", .data$parameter),
-      parameter = sub("]", "", .data$parameter)
-    ) |>
-    tidyr::separate_wider_delim(
-      cols = "parameter",
-      delim = ",",
-      names = c("item_id", "profile_id")
-    ) |>
-    dplyr::select("profile_id", "item_id", "prob" = "pi") |>
-    dplyr::mutate(
-      profile_id = as.numeric(.data$profile_id),
-      item_id = as.numeric(.data$item_id)
-    )
-
-  if (S7::S7_inherits(x@method, mcmc)) {
-    pi_mat <- pi_mat |>
-      dplyr::group_by(.data$profile_id, .data$item_id) |>
-      dplyr::summarize(prob = mean(.data$prob), .groups = "keep") |>
-      dplyr::ungroup()
-  }
-
   # posterior probabilities of each class
   strc_param <- measr_extract(x, "strc_param")
+  if (S7::S7_inherits(x@method, mcmc)) {
+    strc_param <- strc_param |>
+      dplyr::mutate(estimate = E(.data$estimate))
+  }
   strc_param <- strc_param |>
-    dplyr::mutate(estimate = E(.data$estimate)) |>
     dplyr::select("class", "estimate") |>
     dplyr::mutate(class = sub("\\[", "", class), class = sub("]", "", class))
+
+  # pull the posterior probabilities for student-level membership in each
+  # latent class
+  class_probs <- measr_extract(x, "class_prob") |>
+    tidyr::pivot_longer(cols = -c("resp_id"), names_to = "class",
+                        values_to = "prob") |>
+    dplyr::mutate(class = sub("\\[", "", class), class = sub("]", "", class))
+
+  # calculate sample sizes for each latent class based on posterior
+  # probabilities
+  class_n <- class_probs |>
+    dplyr::left_join(strc_param |>
+                       dplyr::select("class") |>
+                       tibble::rowid_to_column("class_num"),
+                     by = "class") |>
+    dplyr::group_by(.data$class_num) |>
+    dplyr::summarize(N = sum(.data$prob), .groups = 'keep') |>
+    dplyr::ungroup()
+
+  # calculate an empirical pi matrix
+  emp_pi_mat <- x@data$clean_data |>
+    dplyr::left_join(x@data$item_names |>
+                       tibble::as_tibble() |>
+                       dplyr::rename("item_num" = "value") |>
+                       dplyr::mutate(!!rlang::sym(x@data$item_identifier) :=
+                                       names(x@data$item_names)),
+                     by = c("item_id" = x@data$item_identifier)) |>
+    dplyr::left_join(class_probs, by = x@data$respondent_identifier,
+                     relationship = "many-to-many") |>
+    dplyr::left_join(strc_param |>
+                       dplyr::select("class") |>
+                       tibble::rowid_to_column("class_num"),
+                     by = "class") |>
+    dplyr::mutate(val = .data$prob * .data$score) |>
+    dplyr::group_by(.data$item_num, .data$class_num) |>
+    dplyr::summarize(val = sum(.data$val), .groups = 'keep') |>
+    dplyr::ungroup() |>
+    dplyr::left_join(class_n, by = "class_num") |>
+    dplyr::mutate(val = .data$val / .data$N) |>
+    dplyr::select("profile_id" = "class_num",
+                  "item_id" = "item_num",
+                  "prob" = "val")
 
   validation_output <- tibble::tibble()
 
   # create set of all possible Q-matrix specifications
   all_qmatrix_specifications <- create_profiles(ncol(qmatrix))
-  colnames(all_qmatrix_specifications) <- colnames(all_profiles)
+  att_names <- colnames(all_qmatrix_specifications) <- colnames(all_profiles)
 
   # calculate sigma_1:K* (e.g., sigma_1:2)
   for (ii in seq_len(nrow(qmatrix))) {
     max_specification <- all_profiles[nrow(all_profiles), ]
     max_sigma <- calc_sigma(
+      att_names = att_names,
       q = max_specification,
       strc_param = strc_param,
-      pi_mat = pi_mat,
+      pi_mat = emp_pi_mat,
       ii
     )
 
     max_specification <- max_specification |>
-      dplyr::mutate(pvaf = 1)
+      dplyr::mutate(sigma = max_sigma,
+                    pvaf = 1)
 
     possible_specifications <- tibble::tibble()
     possible_specifications <- dplyr::bind_rows(
@@ -173,16 +188,18 @@ S7::method(qmatrix_validation, measrdcm) <- function(
     for (jj in 2:(nrow(all_qmatrix_specifications) - 1)) {
       q <- all_qmatrix_specifications[jj, ]
       sigma_q <- calc_sigma(
+        att_names = att_names,
         q = q,
         strc_param = strc_param,
-        pi_mat = pi_mat,
+        pi_mat = emp_pi_mat,
         ii = ii
       )
 
       # calculate sigma / sigma_1:K (i.e., PVAF)
       pvaf <- sigma_q / max_sigma
       q <- q |>
-        dplyr::mutate(pvaf = pvaf)
+        dplyr::mutate(sigma = sigma_q,
+                      pvaf = pvaf)
 
       # flagging profiles where sigma / sigma_1:K >= pvaf_threshold
       # only profiles where sigma / sigma_1:K >= pvaf_threshold are appropriate
@@ -196,14 +213,15 @@ S7::method(qmatrix_validation, measrdcm) <- function(
     # when there is a tie, profile chosen based on proportion of variance
     # accounted for (PVAF)
     correct_spec <- possible_specifications |>
-      dplyr::select(-"pvaf") |>
+      dplyr::select(-"pvaf", -"sigma") |>
       dplyr::mutate(
         total_atts = rowSums(dplyr::across(dplyr::where(is.numeric)))
       ) |>
       dplyr::filter(.data$total_atts == min(.data$total_atts)) |>
       dplyr::select(-"total_atts") |>
       dplyr::left_join(possible_specifications, by = colnames(all_profiles)) |>
-      dplyr::filter(.data$pvaf == max(.data$pvaf))
+      dplyr::filter(.data$sigma == max(.data$sigma)) |>
+      dplyr::select(-"sigma")
 
     final_pvaf <- correct_spec |>
       dplyr::pull(.data$pvaf)
@@ -213,9 +231,10 @@ S7::method(qmatrix_validation, measrdcm) <- function(
 
     actual_spec <- qmatrix[ii, ]
     original_sigma <- calc_sigma(
+      att_names = att_names,
       q = actual_spec,
       strc_param = strc_param,
-      pi_mat = pi_mat,
+      pi_mat = emp_pi_mat,
       ii = ii
     )
     validation_flag <- nrow(dplyr::anti_join(
