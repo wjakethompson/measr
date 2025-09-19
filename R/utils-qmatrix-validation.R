@@ -1,4 +1,4 @@
-calc_sigma <- function(q, strc_param, pi_mat, ii) {
+calc_sigma <- function(att_names, q, strc_param, pi_mat, ii) {
   # count the number of measured attributes for Q-matrix specification q
   atts_meas <- sum(q)
 
@@ -28,7 +28,7 @@ calc_sigma <- function(q, strc_param, pi_mat, ii) {
   # attributes were mastered (e.g., 000 and 001 are aggregated within 00 when
   # the first and second attributes are measured)
   condensed_strc_param <- strc_param |>
-    tidyr::separate(col = "class", into = colnames(q)) |>
+    tidyr::separate(col = "class", into = att_names) |>
     dplyr::left_join(
       poss_subsets |>
         dplyr::mutate(dplyr::across(
@@ -44,7 +44,7 @@ calc_sigma <- function(q, strc_param, pi_mat, ii) {
   # calculate the weighted p-value, aggregated within the subset of each of the
   # possible profiles based on the measured attributes
   condensed_p <- strc_param |>
-    tidyr::separate(col = "class", into = colnames(q)) |>
+    tidyr::separate(col = "class", into = att_names) |>
     tibble::rowid_to_column("prof_num") |>
     dplyr::left_join(
       pi_mat |>
