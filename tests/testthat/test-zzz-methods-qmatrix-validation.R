@@ -1,6 +1,7 @@
 test_that("Q-matrix validation works for ecpe", {
-  # correctly specified dina model ---------------------------------------------
-  qmat_valid_res <- qmatrix_validation(x = rstn_dina)
+  # correctly specified lcdm model with ecpe data ------------------------------
+  # should match the results from the gdina package ----------------------------
+  qmat_valid_res <- qmatrix_validation(x = rstn_lcdm)
   expect_equal(
     names(qmat_valid_res),
     c(
@@ -11,35 +12,22 @@ test_that("Q-matrix validation works for ecpe", {
       "empirical_pvaf"
     )
   )
-  expect_equal(nrow(qmat_valid_res), 35)
+  expect_equal(nrow(qmat_valid_res), 28)
   expect_equal(
     nrow(
       qmat_valid_res |>
         dplyr::filter(is.na(empirical_specification))
     ),
-    35
+    26
   )
-
-  # misspecified dino model ----------------------------------------------------
-  qmat_valid_res <- qmatrix_validation(x = rstn_dino)
-  expect_equal(
-    names(qmat_valid_res),
-    c(
-      "item_id",
-      "original_specification",
-      "original_pvaf",
-      "empirical_specification",
-      "empirical_pvaf"
-    )
-  )
-  expect_equal(nrow(qmat_valid_res), 35)
-  expect_equal(
-    nrow(
-      qmat_valid_res |>
-        dplyr::filter(is.na(empirical_specification))
-    ),
-    35
-  )
+  expect_equal(qmat_valid_res |>
+                 dplyr::filter(!is.na(empirical_specification)) |>
+                 dplyr::pull(.data$item_id),
+               c("E9", "E13"))
+  expect_equal(qmat_valid_res |>
+                 dplyr::filter(.data$item_id %in% c("E9", "E13")) |>
+                 dplyr::pull(.data$empirical_specification),
+               c("[1, 0, 1]", "[1, 0, 1]"))
 })
 
 test_that("qmatrix validation errors for 1 attribute", {
