@@ -11,7 +11,7 @@
 #' @param ... Unused.
 #'
 #' @details
-#' Q-matrix validation is conducted by evaluating the proporation of variance
+#' Q-matrix validation is conducted by evaluating the proportion of variance
 #' accounted for by different Q-matrix specifications. Following the method
 #' described by de la Torre and Chiu (2016), we use the following steps for
 #' each item:
@@ -117,9 +117,10 @@ S7::method(qmatrix_validation, measrdcm) <- function(
   # pull the posterior probabilities for student-level membership in each
   # latent class
   class_probs <- measr_extract(x, "class_prob") |>
-    tidyr::pivot_longer(cols = -c("resp_id"), names_to = "class",
-                        values_to = "prob") |>
-    dplyr::mutate(class = sub("\\[", "", class), class = sub("]", "", class))
+    tidyr::pivot_longer(cols = -c(x@data$respondent_identifier),
+                        names_to = "class", values_to = "prob") |>
+    dplyr::mutate(class = sub("\\[", "", class), class = sub("]", "", class)) |>
+    dplyr::rename("resp_id" = x@data$respondent_identifier)
 
   # calculate sample sizes for each latent class based on posterior
   # probabilities
@@ -140,7 +141,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(
                        dplyr::mutate(!!rlang::sym(x@data$item_identifier) :=
                                        names(x@data$item_names)),
                      by = c("item_id" = x@data$item_identifier)) |>
-    dplyr::left_join(class_probs, by = x@data$respondent_identifier,
+    dplyr::left_join(class_probs, by = "resp_id",
                      relationship = "many-to-many") |>
     dplyr::left_join(strc_param |>
                        dplyr::select("class") |>
