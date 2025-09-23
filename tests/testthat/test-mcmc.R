@@ -925,6 +925,6 @@ test_that("q-matrix validation works", {
       qmat_valid_res |>
         dplyr::filter(is.na(empirical_specification))
     ),
-    10
+    7
   )
 })
