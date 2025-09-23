@@ -3,10 +3,9 @@ dina_spec <- dcmstan::dcm_specify(
   measurement_model = dina()
 )
 
-# estimate dino with misspecified Q-matrix for items 1 & 3 (over) and
-# items 5 & 9 (under)
 dino_spec <- dcmstan::dcm_specify(
-  qmatrix = q_matrix[, -1],
+  qmatrix = q_matrix,
+  identifier = "item",
   measurement_model = dino()
 )
 
@@ -39,7 +38,7 @@ out <- capture.output(
       method = "optim",
       backend = "rstan",
       seed = 63277,
-      precompiled = measr:::stanmodels$test_dina
+      precompiled = stanmodels$test_dina
     )
   )
 )
