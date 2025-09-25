@@ -130,7 +130,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(
                        tibble::rowid_to_column("class_num"),
                      by = "class") |>
     dplyr::group_by(.data$class_num) |>
-    dplyr::summarize(N = sum(.data$prob), .groups = 'keep') |>
+    dplyr::summarize(N = sum(.data$prob), .groups = "keep") |>
     dplyr::ungroup()
 
   # calculate an empirical pi matrix
@@ -149,7 +149,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(
                      by = "class") |>
     dplyr::mutate(val = .data$prob * .data$score) |>
     dplyr::group_by(.data$item_num, .data$class_num) |>
-    dplyr::summarize(val = sum(.data$val), .groups = 'keep') |>
+    dplyr::summarize(val = sum(.data$val), .groups = "keep") |>
     dplyr::ungroup() |>
     dplyr::left_join(class_n, by = "class_num") |>
     dplyr::mutate(val = .data$val / .data$N) |>
