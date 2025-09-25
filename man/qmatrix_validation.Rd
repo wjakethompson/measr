@@ -41,7 +41,7 @@ methods described by de la Torre and Chiu (2016). See details for additional
 information.
 }
 \details{
-Q-matrix validation is conducted by evaluating the proporation of variance
+Q-matrix validation is conducted by evaluating the proportion of variance
 accounted for by different Q-matrix specifications. Following the method
 described by de la Torre and Chiu (2016), we use the following steps for
 each item:
