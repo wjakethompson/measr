@@ -117,45 +117,60 @@ S7::method(qmatrix_validation, measrdcm) <- function(
   # pull the posterior probabilities for student-level membership in each
   # latent class
   class_probs <- measr_extract(x, "class_prob") |>
-    tidyr::pivot_longer(cols = -c(x@data$respondent_identifier),
-                        names_to = "class", values_to = "prob") |>
+    tidyr::pivot_longer(
+      cols = -c(x@data$respondent_identifier),
+      names_to = "class",
+      values_to = "prob"
+    ) |>
     dplyr::mutate(class = sub("\\[", "", class), class = sub("]", "", class)) |>
     dplyr::rename("resp_id" = x@data$respondent_identifier)
 
   # calculate sample sizes for each latent class based on posterior
   # probabilities
   class_n <- class_probs |>
-    dplyr::left_join(strc_param |>
-                       dplyr::select("class") |>
-                       tibble::rowid_to_column("class_num"),
-                     by = "class") |>
+    dplyr::left_join(
+      strc_param |>
+        dplyr::select("class") |>
+        tibble::rowid_to_column("class_num"),
+      by = "class"
+    ) |>
     dplyr::group_by(.data$class_num) |>
     dplyr::summarize(N = sum(.data$prob), .groups = "keep") |>
     dplyr::ungroup()
 
   # calculate an empirical pi matrix
   emp_pi_mat <- x@data$clean_data |>
-    dplyr::left_join(x@data$item_names |>
-                       tibble::as_tibble() |>
-                       dplyr::rename("item_num" = "value") |>
-                       dplyr::mutate(!!rlang::sym(x@data$item_identifier) :=
-                                       names(x@data$item_names)),
-                     by = c("item_id" = x@data$item_identifier)) |>
-    dplyr::left_join(class_probs, by = "resp_id",
-                     relationship = "many-to-many") |>
-    dplyr::left_join(strc_param |>
-                       dplyr::select("class") |>
-                       tibble::rowid_to_column("class_num"),
-                     by = "class") |>
+    dplyr::left_join(
+      x@data$item_names |>
+        tibble::as_tibble() |>
+        dplyr::rename("item_num" = "value") |>
+        dplyr::mutate(
+          !!rlang::sym(x@data$item_identifier) := names(x@data$item_names)
+        ),
+      by = c("item_id" = x@data$item_identifier)
+    ) |>
+    dplyr::left_join(
+      class_probs,
+      by = "resp_id",
+      relationship = "many-to-many"
+    ) |>
+    dplyr::left_join(
+      strc_param |>
+        dplyr::select("class") |>
+        tibble::rowid_to_column("class_num"),
+      by = "class"
+    ) |>
     dplyr::mutate(val = .data$prob * .data$score) |>
     dplyr::group_by(.data$item_num, .data$class_num) |>
     dplyr::summarize(val = sum(.data$val), .groups = "keep") |>
     dplyr::ungroup() |>
     dplyr::left_join(class_n, by = "class_num") |>
     dplyr::mutate(val = .data$val / .data$N) |>
-    dplyr::select("profile_id" = "class_num",
-                  "item_id" = "item_num",
-                  "prob" = "val")
+    dplyr::select(
+      "profile_id" = "class_num",
+      "item_id" = "item_num",
+      "prob" = "val"
+    )
 
   validation_output <- tibble::tibble()
 
@@ -175,8 +190,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(
     )
 
     max_specification <- max_specification |>
-      dplyr::mutate(sigma = max_sigma,
-                    pvaf = 1)
+      dplyr::mutate(sigma = max_sigma, pvaf = 1)
 
     possible_specifications <- tibble::tibble()
     possible_specifications <- dplyr::bind_rows(
@@ -199,8 +213,7 @@ S7::method(qmatrix_validation, measrdcm) <- function(
       # calculate sigma / sigma_1:K (i.e., PVAF)
       pvaf <- sigma_q / max_sigma
       q <- q |>
-        dplyr::mutate(sigma = sigma_q,
-                      pvaf = pvaf)
+        dplyr::mutate(sigma = sigma_q, pvaf = pvaf)
 
       # flagging profiles where sigma / sigma_1:K >= pvaf_threshold
       # only profiles where sigma / sigma_1:K >= pvaf_threshold are appropriate

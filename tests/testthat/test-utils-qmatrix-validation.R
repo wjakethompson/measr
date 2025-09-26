@@ -50,8 +50,13 @@ test_that("calc_sigma works - all attributes", {
     prob = c(rep(.225, 7), .725, rep(.225, 7), .725)
   )
 
-  test_sigma <- calc_sigma(att_names = att_names, q = spec, strc_param = strc,
-                           pi_mat = pi, ii = 1)
+  test_sigma <- calc_sigma(
+    att_names = att_names,
+    q = spec,
+    strc_param = strc,
+    pi_mat = pi,
+    ii = 1
+  )
 
   expect_equal(typeof(test_sigma), "double")
   expect_equal(length(test_sigma), 1)
@@ -110,8 +115,13 @@ test_that("calc_sigma works - attribute subset", {
     prob = c(rep(.225, 7), .725, rep(.225, 7), .725)
   )
 
-  test_sigma <- calc_sigma(att_names, q = spec, strc_param = strc, pi_mat = pi,
-                           ii = 1)
+  test_sigma <- calc_sigma(
+    att_names,
+    q = spec,
+    strc_param = strc,
+    pi_mat = pi,
+    ii = 1
+  )
 
   expect_equal(typeof(test_sigma), "double")
   expect_equal(length(test_sigma), 1)
@@ -123,8 +133,13 @@ test_that("calc_sigma works - attribute subset", {
   ) |>
     tidyr::pivot_wider(names_from = "att", values_from = "meas")
 
-  test_sigma <- calc_sigma(att_names, q = spec, strc_param = strc, pi_mat = pi,
-                           ii = 1)
+  test_sigma <- calc_sigma(
+    att_names,
+    q = spec,
+    strc_param = strc,
+    pi_mat = pi,
+    ii = 1
+  )
 
   expect_equal(typeof(test_sigma), "double")
   expect_equal(length(test_sigma), 1)
@@ -136,8 +151,13 @@ test_that("calc_sigma works - attribute subset", {
   ) |>
     tidyr::pivot_wider(names_from = "att", values_from = "meas")
 
-  test_sigma <- calc_sigma(att_names, q = spec, strc_param = strc, pi_mat = pi,
-                           ii = 1)
+  test_sigma <- calc_sigma(
+    att_names,
+    q = spec,
+    strc_param = strc,
+    pi_mat = pi,
+    ii = 1
+  )
 
   expect_equal(typeof(test_sigma), "double")
   expect_equal(length(test_sigma), 1)

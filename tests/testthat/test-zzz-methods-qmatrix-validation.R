@@ -20,14 +20,18 @@ test_that("Q-matrix validation works for ecpe", {
     ),
     26
   )
-  expect_equal(qmat_valid_res |>
-                 dplyr::filter(!is.na(empirical_specification)) |>
-                 dplyr::pull(.data$item_id),
-               c("E9", "E13"))
-  expect_equal(qmat_valid_res |>
-                 dplyr::filter(.data$item_id %in% c("E9", "E13")) |>
-                 dplyr::pull(.data$empirical_specification),
-               c("[1, 0, 1]", "[1, 0, 1]"))
+  expect_equal(
+    qmat_valid_res |>
+      dplyr::filter(!is.na(empirical_specification)) |>
+      dplyr::pull(.data$item_id),
+    c("E9", "E13")
+  )
+  expect_equal(
+    qmat_valid_res |>
+      dplyr::filter(.data$item_id %in% c("E9", "E13")) |>
+      dplyr::pull(.data$empirical_specification),
+    c("[1, 0, 1]", "[1, 0, 1]")
+  )
 })
 
 test_that("qmatrix validation errors for 1 attribute", {
