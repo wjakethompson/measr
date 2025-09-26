@@ -132,7 +132,7 @@ add_criterion <- function(
   ...,
   r_eff = NA
 ) {
-  rdcmchecks::check_S7(x, class = "measrfit")
+  S7::check_is_S7(x, measrfit)
   criterion <- rlang::arg_match(
     criterion,
     values = c("loo", "waic", "log_mll", "aic", "bic"),
@@ -176,7 +176,7 @@ add_criterion <- function(
 #' @export
 #' @rdname model_evaluation
 add_reliability <- function(x, overwrite = FALSE, save = TRUE, ...) {
-  rdcmchecks::check_S7(x, class = "measrfit")
+  S7::check_is_S7(x, class = measrfit)
   check_bool(overwrite)
   check_bool(save)
 
@@ -202,7 +202,7 @@ add_fit <- function(
   ...,
   ci = 0.9
 ) {
-  rdcmchecks::check_S7(x, class = "measrfit")
+  S7::check_is_S7(x, class = measrfit)
   method <- rlang::arg_match(method, values = c("m2", "ppmc"), multiple = TRUE)
   check_bool(overwrite)
   check_bool(save)
@@ -247,7 +247,7 @@ add_respondent_estimates <- function(
   overwrite = FALSE,
   save = TRUE
 ) {
-  rdcmchecks::check_S7(x, class = "measrfit")
+  S7::check_is_S7(x, class = measrfit)
   check_bool(overwrite)
   check_bool(save)
 

@@ -56,6 +56,7 @@ reference:
   desc: >
     Evaluate assumptions of the estimated model
   contents:
+    - qmatrix_validation
     - yens_q3
 
 - subtitle: Model comparisons

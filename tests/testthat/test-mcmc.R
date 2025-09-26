@@ -39,9 +39,8 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
       )
     )
   )
-
   out <- capture.output(
-    suppressMessages(
+    suppressWarnings(suppressMessages(
       rstn_mdm_dina <- dcm_estimate(
         dina_spec,
         data = dcmdata::mdm_data,
@@ -52,6 +51,35 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
         backend = "rstan",
         iter = 1500,
         warmup = 1000,
+        chains = 2,
+        cores = 2,
+        refresh = 0
+      )
+    ))
+  )
+
+  # for q-matrix validation ----------------------------------------------------
+  dtmr_lcdm_spec <- dcm_specify(
+    qmatrix = dplyr::slice(dcmdata::dtmr_qmatrix, 1:10),
+    identifier = "item",
+    measurement_model = lcdm(),
+    structural_model = unconstrained(),
+    priors = c(
+      prior(uniform(-15, 15), type = "intercept"),
+      prior(uniform(0, 15), type = "maineffect")
+    )
+  )
+  out <- capture.output(
+    suppressMessages(
+      rstn_dtmr <- dcm_estimate(
+        dtmr_lcdm_spec,
+        data = dplyr::select(dplyr::slice(dcmdata::dtmr_data, 1:500), id:`8c`),
+        identifier = "id",
+        method = "mcmc",
+        seed = 63277,
+        backend = "rstan",
+        iter = 500,
+        warmup = 250,
         chains = 2,
         cores = 2,
         refresh = 0
@@ -872,5 +900,31 @@ test_that("respondent probabilities are correct", {
     mdm_preds$attribute_prob |>
       dplyr::select("respondent", "attribute", "probability") |>
       tidyr::pivot_wider(names_from = "attribute", values_from = "probability")
+  )
+})
+
+# q-matrix validation ----------------------------------------------------------
+test_that("q-matrix validation works", {
+  skip_on_cran()
+
+  qmat_valid_res <- qmatrix_validation(x = rstn_dtmr)
+
+  expect_equal(
+    names(qmat_valid_res),
+    c(
+      "item",
+      "original_specification",
+      "original_pvaf",
+      "empirical_specification",
+      "empirical_pvaf"
+    )
+  )
+  expect_equal(nrow(qmat_valid_res), 10)
+  expect_equal(
+    nrow(
+      qmat_valid_res |>
+        dplyr::filter(is.na(empirical_specification))
+    ),
+    7
   )
 })

@@ -36,9 +36,9 @@ test_that("m2 works", {
   expect_equal(m2$m2, 565.0893, tolerance = 0.1)
   expect_equal(m2$df, 529)
   expect_equal(m2$pval, 0.1344, tolerance = 0.1)
-  expect_equal(m2$rmsea, 0.0083, tolerance = 0.1)
-  expect_equal(m2$ci_lower, 0, tolerance = 0.1)
-  expect_equal(m2$ci_upper, 0.0144, tolerance = 0.1)
+  expect_equal(m2$rmsea, 0.0083, tolerance = 0.01)
+  expect_equal(m2$ci_lower, 0, tolerance = 0.01)
+  expect_equal(m2$ci_upper, 0.0144, tolerance = 0.01)
   expect_equal(m2$srmsr, 0.031, tolerance = 0.1)
 
   err <- rlang::catch_cnd(measr_extract(rstn_dino, "m2"))

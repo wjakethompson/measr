@@ -1,8 +1,8 @@
 test_that("aic and bic work", {
   num_params <- 101
   n <- 1000
-  dino_log_lik <- -18474.98
   dina_log_lik <- -18663.8
+  dino_log_lik <- -18474.98
 
   expect_equal(
     (-2 * dina_log_lik) + (2 * num_params),

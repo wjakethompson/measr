@@ -4,6 +4,7 @@ CDM
 CDMs
 CMD
 Cai
+Chiu
 Cmd
 CmdStan
 CmdStanModel
@@ -42,6 +43,8 @@ Olivares
 PPMC
 PPMCs
 Petrov
+Psychometrika
+PVAF
 RMSEA
 RStan
 Raftery
@@ -56,6 +59,7 @@ Sinica
 Templin
 Thissen
 Tian
+Torre
 Vehtari
 WAIC
 Watanabe
@@ -68,8 +72,10 @@ biserial
 blatent
 cmdstanr
 codecov
+crum
 dcmdata
 dcmstan
+de
 dichotomously
 dina
 doi
@@ -90,6 +96,7 @@ measr’s
 morphosyntactic
 pkgdown
 polytomously
+posteriori
 ppp
 pre
 psychometrics
