@@ -327,6 +327,25 @@ test_that("model comparisons work", {
   )
 })
 
+# aic/bic ----------------------------------------------------------------------
+test_that("aic and bic error", {
+  err <- rlang::catch_cnd(aic(cmds_mdm_lcdm))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
+
+  err <- rlang::catch_cnd(aic(rstn_mdm_dina))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
+
+  err <- rlang::catch_cnd(bic(cmds_mdm_lcdm))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
+
+  err <- rlang::catch_cnd(bic(rstn_mdm_dina))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
+})
+
 # bayes factors ----------------------------------------------------------------
 test_that("log_mll works", {
   err <- rlang::catch_cnd(log_mll(rstn_dina))
