@@ -4,6 +4,10 @@ Version: 1.0.0.9001
 Authors@R: c(
     person("W. Jake", "Thompson", , "wjakethompson@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7339-0300")),
+    person("Jeffrey", "Hoover", , "jeffrey.c.hoover@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0002-0276-0308")),
+    person("Auburn", "Jimenez", , "auburn.jimenez34@gmail.com", role = "ctb",
+           comment = c(ORCID = "0000-0002-7072-2960")),
     person("Nathan", "Jones", , "jonesnateb@gmail.com", role = "ctb",
            comment = c(ORCID = "0000-0001-6177-7161")),
     person("Matthew", "Johnson", , , role = "cph",
@@ -29,7 +33,7 @@ Imports:
     bridgesampling,
     cli,
     dcm2,
-    dcmstan (>= 0.0.0.9000),
+    dcmstan (>= 0.1.0),
     dplyr (>= 1.1.1),
     dtplyr,
     fs,
@@ -65,10 +69,6 @@ Suggests:
     spelling,
     testthat (>= 3.0.0),
     withr
-Remotes:
-    r-dcm/dcmdata,
-    r-dcm/dcmstan,
-    r-dcm/rdcmchecks
 Additional_repositories: https://stan-dev.r-universe.dev
 Config/testthat/edition: 3
 Config/Needs/website: r-dcm/rdcmtemplate, wjakethompson/wjake, showtext, ggdist, english
