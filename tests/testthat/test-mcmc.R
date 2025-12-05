@@ -82,11 +82,29 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
         warmup = 250,
         chains = 2,
         cores = 2,
+        control = list(max_treedepth = 15),
         refresh = 0
       )
     )
   )
 }
+
+# model validator --------------------------------------------------------------
+test_that("measrfit validator errors correctly", {
+  expect_error(
+    {
+      measrfit(backend = rstan(), method = optim(), model = cmds_mdm_lcdm@model)
+    },
+    "@model must be a list returned"
+  )
+})
+
+test_that("controls work", {
+  expect_identical(
+    rstn_dtmr@model@stan_args[[1]][["control"]][["max_treedepth"]],
+    15
+  )
+})
 
 # draws ------------------------------------------------------------------------
 test_that("as_draws works", {
@@ -836,6 +854,57 @@ test_that("model fit can be added", {
     measr_extract(test_model, "ppmc_pvalue_flags", ppmc_interval = 0.6),
     dplyr::filter(pval_check, ppp <= 0.2 | ppp >= 0.8)
   )
+})
+
+# reliability ------------------------------------------------------------------
+test_that("reliability works", {
+  reli <- reliability(cmds_mdm_lcdm, threshold = 0.5)
+
+  expect_equal(
+    names(reli),
+    c("pattern_reliability", "map_reliability", "eap_reliability")
+  )
+  expect_equal(names(reli$pattern_reliability), c("p_a", "p_c"))
+  expect_equal(names(reli$map_reliability), c("accuracy", "consistency"))
+
+  # column names ---------------------------------------------------------------
+  expect_equal(
+    names(reli$map_reliability$accuracy),
+    c(
+      "attribute",
+      "acc",
+      "lambda_a",
+      "kappa_a",
+      "youden_a",
+      "tetra_a",
+      "tp_a",
+      "tn_a"
+    )
+  )
+  expect_equal(
+    names(reli$map_reliability$consistency),
+    c(
+      "attribute",
+      "consist",
+      "lambda_c",
+      "kappa_c",
+      "youden_c",
+      "tetra_c",
+      "tp_c",
+      "tn_c",
+      "gammak",
+      "pc_prime"
+    )
+  )
+  expect_equal(
+    names(reli$eap_reliability),
+    c("attribute", "rho_pf", "rho_bs", "rho_i", "rho_tb")
+  )
+
+  # row names ------------------------------------------------------------------
+  expect_equal(reli$map_reliability$accuracy$attribute, "multiplication")
+  expect_equal(reli$map_reliability$consistency$attribute, "multiplication")
+  expect_equal(reli$eap_reliability$attribute, "multiplication")
 })
 
 # respondent scores ------------------------------------------------------------

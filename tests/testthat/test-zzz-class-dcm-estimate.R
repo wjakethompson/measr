@@ -118,3 +118,105 @@ test_that("measrdcm creation works", {
   expect_gte(comp_cor, 0.85)
   expect_lte(max(comp_dif), 0.2)
 })
+
+test_that("measrdcm setters work", {
+  new_fit <- measrfit()
+
+  # @model_spec ----------------------------------------------------------------
+  new_fit@model_spec <- rstn_dina@model_spec
+  expect_identical(new_fit@model_spec, rstn_dina@model_spec)
+  expect_error(
+    {
+      new_fit@model_spec <- dino_spec
+    },
+    "@model_spec is read-only"
+  )
+
+  # @data ----------------------------------------------------------------------
+  expect_error(
+    {
+      new_fit@data <- rstn_dina@data
+    },
+    "@data is read-only"
+  )
+
+  # @stancode ------------------------------------------------------------------
+  expect_error(
+    {
+      new_fit@stancode <- rstn_dina@stancode
+    },
+    "@stancode is read-only"
+  )
+
+  # @method --------------------------------------------------------------------
+  expect_error(
+    {
+      new_fit@method <- rstn_dina@method
+    },
+    "@method is read-only"
+  )
+
+  # @algorithm -----------------------------------------------------------------
+  expect_error(
+    {
+      new_fit@algorithm <- rstn_dina@algorithm
+    },
+    "@algorithm is read-only"
+  )
+
+  # @backend -------------------------------------------------------------------
+  expect_identical(new_fit@backend, stanbackend())
+  expect_error(
+    {
+      new_fit@backend <- rstn_dina@backend
+    },
+    "@backend is read-only"
+  )
+
+  # @model ---------------------------------------------------------------------
+  expect_error(
+    {
+      new_fit@model <- rstn_dina@model
+    },
+    "@model is read-only"
+  )
+
+  # @file ----------------------------------------------------------------------
+  expect_error(
+    {
+      new_fit@file <- "my/path"
+    },
+    "@file is read-only"
+  )
+
+  # @version -------------------------------------------------------------------
+  expect_error(
+    {
+      new_fit@version <- "0.0.0.9000"
+    },
+    "@version is read-only"
+  )
+})
+
+test_that("validator works", {
+  expect_error(
+    {
+      measrfit(backend = rstan(), method = mcmc(), model = rstn_dina@model)
+    },
+    "@model must be a .*stanfit.* object"
+  )
+
+  expect_error(
+    {
+      measrfit(backend = cmdstanr(), method = optim(), model = rstn_dina@model)
+    },
+    "@model must be a .*CmdStanMLE.* object"
+  )
+
+  expect_error(
+    {
+      measrfit(backend = cmdstanr(), method = mcmc(), model = rstn_dina@model)
+    },
+    "@model must be a .*CmdStanMCMC.* object"
+  )
+})
