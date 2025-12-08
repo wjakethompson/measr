@@ -59,27 +59,29 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
   )
 
   # for q-matrix validation ----------------------------------------------------
-  dtmr_lcdm_spec <- dcm_specify(
-    qmatrix = dplyr::slice(dcmdata::dtmr_qmatrix, 1:10),
-    identifier = "item",
-    measurement_model = lcdm(),
-    structural_model = unconstrained(),
-    priors = c(
-      prior(uniform(-15, 15), type = "intercept"),
-      prior(uniform(0, 15), type = "maineffect")
-    )
+  ecpe_dina_spec <- dcm_specify(
+    qmatrix = dplyr::slice(dcmdata::ecpe_qmatrix, 1:10),
+    identifier = "item_id",
+    measurement_model = dina(),
+    structural_model = unconstrained()
+  )
+
+  set.seed(3273)
+  test_data <- dplyr::select(
+    dplyr::slice(dcmdata::ecpe_data, 1:500),
+    resp_id:E10
   )
   out <- capture.output(
     suppressMessages(
-      rstn_dtmr <- dcm_estimate(
-        dtmr_lcdm_spec,
-        data = dplyr::select(dplyr::slice(dcmdata::dtmr_data, 1:500), id:`8c`),
-        identifier = "id",
+      rstn_ecpe <- dcm_estimate(
+        ecpe_dina_spec,
+        data = test_data,
+        identifier = "resp_id",
         method = "mcmc",
-        seed = 63277,
+        seed = 5007,
         backend = "rstan",
-        iter = 500,
-        warmup = 250,
+        iter = 750,
+        warmup = 500,
         chains = 2,
         cores = 2,
         control = list(max_treedepth = 15),
@@ -995,12 +997,12 @@ test_that("respondent probabilities are correct", {
 test_that("q-matrix validation works", {
   skip_on_cran()
 
-  qmat_valid_res <- qmatrix_validation(x = rstn_dtmr)
+  qmat_valid_res <- qmatrix_validation(x = rstn_ecpe)
 
   expect_equal(
     names(qmat_valid_res),
     c(
-      "item",
+      "item_id",
       "original_specification",
       "original_pvaf",
       "empirical_specification",
@@ -1013,6 +1015,6 @@ test_that("q-matrix validation works", {
       qmat_valid_res |>
         dplyr::filter(is.na(empirical_specification))
     ),
-    7
+    9
   )
 })
