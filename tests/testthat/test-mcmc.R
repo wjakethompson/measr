@@ -103,7 +103,7 @@ test_that("measrfit validator errors correctly", {
 
 test_that("controls work", {
   expect_identical(
-    rstn_dtmr@model@stan_args[[1]][["control"]][["max_treedepth"]],
+    rstn_ecpe@model@stan_args[[1]][["control"]][["max_treedepth"]],
     15
   )
 })
