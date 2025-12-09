@@ -59,34 +59,54 @@ if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
   )
 
   # for q-matrix validation ----------------------------------------------------
-  dtmr_lcdm_spec <- dcm_specify(
-    qmatrix = dplyr::slice(dcmdata::dtmr_qmatrix, 1:10),
-    identifier = "item",
-    measurement_model = lcdm(),
-    structural_model = unconstrained(),
-    priors = c(
-      prior(uniform(-15, 15), type = "intercept"),
-      prior(uniform(0, 15), type = "maineffect")
-    )
+  ecpe_dina_spec <- dcm_specify(
+    qmatrix = dplyr::slice(dcmdata::ecpe_qmatrix, 1:10),
+    identifier = "item_id",
+    measurement_model = dina(),
+    structural_model = unconstrained()
+  )
+
+  set.seed(3273)
+  test_data <- dplyr::select(
+    dplyr::slice(dcmdata::ecpe_data, 1:500),
+    resp_id:E10
   )
   out <- capture.output(
     suppressMessages(
-      rstn_dtmr <- dcm_estimate(
-        dtmr_lcdm_spec,
-        data = dplyr::select(dplyr::slice(dcmdata::dtmr_data, 1:500), id:`8c`),
-        identifier = "id",
+      rstn_ecpe <- dcm_estimate(
+        ecpe_dina_spec,
+        data = test_data,
+        identifier = "resp_id",
         method = "mcmc",
-        seed = 63277,
+        seed = 5007,
         backend = "rstan",
-        iter = 500,
-        warmup = 250,
+        iter = 750,
+        warmup = 500,
         chains = 2,
         cores = 2,
+        control = list(max_treedepth = 15),
         refresh = 0
       )
     )
   )
 }
+
+# model validator --------------------------------------------------------------
+test_that("measrfit validator errors correctly", {
+  expect_error(
+    {
+      measrfit(backend = rstan(), method = optim(), model = cmds_mdm_lcdm@model)
+    },
+    "@model must be a list returned"
+  )
+})
+
+test_that("controls work", {
+  expect_identical(
+    rstn_ecpe@model@stan_args[[1]][["control"]][["max_treedepth"]],
+    15
+  )
+})
 
 # draws ------------------------------------------------------------------------
 test_that("as_draws works", {
@@ -325,6 +345,25 @@ test_that("model comparisons work", {
       "se_waic"
     )
   )
+})
+
+# aic/bic ----------------------------------------------------------------------
+test_that("aic and bic error", {
+  err <- rlang::catch_cnd(aic(cmds_mdm_lcdm))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
+
+  err <- rlang::catch_cnd(aic(rstn_mdm_dina))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
+
+  err <- rlang::catch_cnd(bic(cmds_mdm_lcdm))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
+
+  err <- rlang::catch_cnd(bic(rstn_mdm_dina))
+  expect_s3_class(err, "rlang_error")
+  expect_match(err$message, "must be a model estimated with .*optim.*")
 })
 
 # bayes factors ----------------------------------------------------------------
@@ -819,6 +858,57 @@ test_that("model fit can be added", {
   )
 })
 
+# reliability ------------------------------------------------------------------
+test_that("reliability works", {
+  reli <- reliability(cmds_mdm_lcdm, threshold = 0.5)
+
+  expect_equal(
+    names(reli),
+    c("pattern_reliability", "map_reliability", "eap_reliability")
+  )
+  expect_equal(names(reli$pattern_reliability), c("p_a", "p_c"))
+  expect_equal(names(reli$map_reliability), c("accuracy", "consistency"))
+
+  # column names ---------------------------------------------------------------
+  expect_equal(
+    names(reli$map_reliability$accuracy),
+    c(
+      "attribute",
+      "acc",
+      "lambda_a",
+      "kappa_a",
+      "youden_a",
+      "tetra_a",
+      "tp_a",
+      "tn_a"
+    )
+  )
+  expect_equal(
+    names(reli$map_reliability$consistency),
+    c(
+      "attribute",
+      "consist",
+      "lambda_c",
+      "kappa_c",
+      "youden_c",
+      "tetra_c",
+      "tp_c",
+      "tn_c",
+      "gammak",
+      "pc_prime"
+    )
+  )
+  expect_equal(
+    names(reli$eap_reliability),
+    c("attribute", "rho_pf", "rho_bs", "rho_i", "rho_tb")
+  )
+
+  # row names ------------------------------------------------------------------
+  expect_equal(reli$map_reliability$accuracy$attribute, "multiplication")
+  expect_equal(reli$map_reliability$consistency$attribute, "multiplication")
+  expect_equal(reli$eap_reliability$attribute, "multiplication")
+})
+
 # respondent scores ------------------------------------------------------------
 test_that("respondent probabilities are correct", {
   skip_on_cran()
@@ -907,12 +997,12 @@ test_that("respondent probabilities are correct", {
 test_that("q-matrix validation works", {
   skip_on_cran()
 
-  qmat_valid_res <- qmatrix_validation(x = rstn_dtmr)
+  qmat_valid_res <- qmatrix_validation(x = rstn_ecpe)
 
   expect_equal(
     names(qmat_valid_res),
     c(
-      "item",
+      "item_id",
       "original_specification",
       "original_pvaf",
       "empirical_specification",
@@ -925,6 +1015,6 @@ test_that("q-matrix validation works", {
       qmat_valid_res |>
         dplyr::filter(is.na(empirical_specification))
     ),
-    7
+    9
   )
 })
