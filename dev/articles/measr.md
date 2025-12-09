@@ -1,0 +1,293 @@
+# Getting started with measr
+
+The goal of measr is to make it easy to estimate and evaluate diagnostic
+classification models (DCMs). DCMs are primarily useful for assessment
+or survey data where responses are recorded dichotomously (e.g.,
+right/wrong, yes/no) or polytomously (e.g., strongly agree, agree,
+disagree, strongly disagree). When using DCMs, the measured skills, or
+attributes, are categorical. Thus, these models are particularly useful
+when you are measuring multiple attributes that exist in different
+states. For example, an educational assessment may be interested in
+reporting whether or not students are proficient on a set of academic
+standards. Similarly, we might explore the presence or absence of
+attributes before and after an intervention.
+
+There are two main classes of functions we need to get started.
+Estimation functions are used for building the DCM using the [Stan
+probabilistic programming language](https://mc-stan.org) and getting
+estimates of respondent proficiency. Evaluation functions can then be
+applied to the fitted model to assess how well the estimates represent
+the observed data.
+
+## Installation
+
+Because measr uses *Stan* as a backend for estimating DCMs, an
+installation of [rstan](https://mc-stan.org/rstan/) or
+[cmdstanr](https://mc-stan.org/cmdstanr/) is required.
+
+### rstan
+
+Before installing rstan, your system must be configured to compile C++
+code. You can find instructions on the [RStan Getting
+Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
+guide for
+[Windows](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows),
+[Mac](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Mac),
+and
+[Linux](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux).
+
+The rstan package can then be installed directly from CRAN:
+
+``` r
+install.packages("rstan")
+```
+
+To verify the installation was successful, you can run a test model. If
+everything is set up correctly, the model should compile and sample. For
+additional troubleshooting help, see the [RStan Getting
+Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
+guide.
+
+``` r
+library(rstan)
+
+example(stan_model, package = "rstan", run.dontrun = TRUE)
+```
+
+### cmdstanr
+
+The cmdstanr package is not yet available on CRAN. The beta release can
+be installed from the *Stan* R package repository:
+
+``` r
+install.packages("cmdstanr",
+                 repos = c("https://mc-stan.org/r-packages/",
+                           getOption("repos")))
+```
+
+Or the development version can be installed from
+[GitHub](https://github.com/stan-dev/cmdstanr):
+
+``` r
+# install.packages("remotes")
+remotes::install_github("stan-dev/cmdstanr")
+```
+
+The cmdstanr package requires a suitable C++ toolchain. Requirements and
+instructions for ensuring your toolchain is properly set up are
+described in the [CmdStan User
+Guide](https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain).
+
+You can verify that the C++ toolchain is set up correctly with:
+
+``` r
+library(cmdstanr)
+
+check_cmdstan_toolchain()
+```
+
+Finally, cmdstanr requires that CmdStan (the shell interface to *Stan*).
+Once the toolchain is properly set up, CmdStan can be installed with:
+
+``` r
+install_cmdstan(cores = 2)
+```
+
+For additional installation help, getting the [Getting Started with
+CmdStanR](https://mc-stan.org/cmdstanr/articles/cmdstanr.html) vignette.
+
+### measr
+
+Once rstan and/or cmdstanr have been installed, we are ready to install
+measr. The released version of measr can be installed directly from
+CRAN:
+
+``` r
+install.packages("measr")
+```
+
+Or, the development version can be installed from
+[GitHub](https://github.com/wjakethompson/measr):
+
+``` r
+# install.packages("remotes")
+remotes::install_github("wjakethompson/measr")
+```
+
+Once everything has been installed, we’re ready to start estimating and
+evaluating our DCMs.
+
+``` r
+library(measr)
+#> 
+#> Attaching package: 'measr'
+#> The following object is masked from 'package:stats':
+#> 
+#>     optim
+```
+
+## Model Estimation
+
+To illustrate, we’ll fit a loglinear cognitive diagnostic model (LCDM)
+to an assessment of English language proficiency (see [Templin &
+Hoffman, 2013](#ref-templin-emip-2013)). There are many different
+subtypes of DCMs that make different assumptions about how the
+attributes relate to each other. The LCDM is a general model that makes
+very few assumptions about the compensatory nature of the relationships
+between attributes. For details on the LCDM, see Henson & Templin
+([2019](#ref-lcdm-handbook)).
+
+The data set we’re using contains 29 items that together measure three
+attributes: morphosyntactic rules, cohesive rules, and lexical rules.
+The Q-matrix defines which attributes are measured by each item. For
+example, item E1 measures morphosyntactic and cohesive rules. The data
+is further described in
+[`?ecpe`](https://dcmdata.r-dcm.org/reference/ecpe.html).
+
+``` r
+library(dcmdata)
+
+ecpe_data
+#> # A tibble: 2,922 × 29
+#>    resp_id    E1    E2    E3    E4    E5    E6    E7    E8    E9   E10
+#>      <int> <int> <int> <int> <int> <int> <int> <int> <int> <int> <int>
+#>  1       1     1     1     1     0     1     1     1     1     1     1
+#>  2       2     1     1     1     1     1     1     1     1     1     1
+#>  3       3     1     1     1     1     1     1     0     1     1     1
+#>  4       4     1     1     1     1     1     1     1     1     1     1
+#>  5       5     1     1     1     1     1     1     1     1     1     1
+#>  6       6     1     1     1     1     1     1     1     1     1     1
+#>  7       7     1     1     1     1     1     1     1     1     1     1
+#>  8       8     0     1     1     1     1     1     0     1     1     1
+#>  9       9     1     1     1     1     1     1     1     1     1     1
+#> 10      10     1     1     1     1     0     0     1     1     1     1
+#> # ℹ 2,912 more rows
+#> # ℹ 18 more variables: E11 <int>, E12 <int>, E13 <int>, E14 <int>,
+#> #   E15 <int>, E16 <int>, E17 <int>, E18 <int>, E19 <int>, E20 <int>,
+#> #   E21 <int>, E22 <int>, E23 <int>, E24 <int>, E25 <int>, E26 <int>,
+#> #   E27 <int>, E28 <int>
+
+ecpe_qmatrix
+#> # A tibble: 28 × 4
+#>    item_id morphosyntactic cohesive lexical
+#>    <chr>             <int>    <int>   <int>
+#>  1 E1                    1        1       0
+#>  2 E2                    0        1       0
+#>  3 E3                    1        0       1
+#>  4 E4                    0        0       1
+#>  5 E5                    0        0       1
+#>  6 E6                    0        0       1
+#>  7 E7                    1        0       1
+#>  8 E8                    0        1       0
+#>  9 E9                    0        0       1
+#> 10 E10                   1        0       0
+#> # ℹ 18 more rows
+```
+
+We can estimate the LCDM by first specifying the model using
+[`dcm_specify()`](https://dcmstan.r-dcm.org/reference/dcm_specify.html).
+We specify the Q-matrix and the column name of the item identifiers. The
+function also allows us to define the type of DCM we want to estimate,
+in this case, an LCDM with unconstrained attributes.
+
+Once we have created the specification, we can estimate the model using
+[`dcm_estimate()`](https://measr.info/dev/reference/dcm_estimate.md). We
+provide our model specification, along with the data set and the column
+name of the respondent identifiers. We can also add arguments to control
+the estimation process. The `method` defines how the model should be
+estimated. For computational efficiency, I’ve selected `"optim"`, which
+uses Stan’s optimizer to estimate the model. For a fully Bayesian
+estimation, you can change this `method = "mcmc"`. The `backend` defines
+which Stan engine to use for the estimation. The default is `"rstan"`,
+which will then use the [rstan](https://mc-stan.org/rstan) package for
+estimating the model. Alternatively, `backend = "cmdstanr"` will use the
+[cmdstanr](https://mc-stan.org/cmdstanr) package. For more details and
+options for customizing the model specification and estimation, see the
+[model estimation
+article](https://measr.info/articles/model-estimation.html) on the measr
+website.
+
+``` r
+ecpe_spec <- dcm_specify(ecpe_qmatrix, identifier = "item_id",
+                         measurement_model = lcdm(),
+                         structural_model = unconstrained())
+
+ecpe_lcdm <- dcm_estimate(ecpe_spec, data = ecpe_data, identifier = "resp_id",
+                          method = "optim", backend = "rstan")
+```
+
+Once the model as estimated, we can use
+[`measr_extract()`](https://measr.info/dev/reference/measr_extract.md)
+to pull out the probability that each respondent is proficient on each
+of the attributes. For example, the first respondent has probabilities
+near 1 for all attributes, indicating a high degree of confidence that
+they are proficient in all attributes. On the other hand, respondent 8
+has relatively low probabilities for morphosyntactic and cohesive
+attributes, and is likely only proficient in lexical rules.
+
+``` r
+ecpe_lcdm <- add_respondent_estimates(ecpe_lcdm)
+measr_extract(ecpe_lcdm, "attribute_prob")
+#> # A tibble: 2,922 × 4
+#>    resp_id morphosyntactic cohesive lexical
+#>    <chr>             <dbl>    <dbl>   <dbl>
+#>  1 1               0.997      0.962  1.000 
+#>  2 2               0.995      0.911  1.000 
+#>  3 3               0.985      0.990  1.000 
+#>  4 4               0.998      0.991  1.000 
+#>  5 5               0.989      0.984  0.956 
+#>  6 6               0.993      0.991  1.000 
+#>  7 7               0.993      0.991  1.000 
+#>  8 8               0.00453    0.462  0.963 
+#>  9 9               0.949      0.986  0.998 
+#> 10 10              0.627      0.139  0.0928
+#> # ℹ 2,912 more rows
+```
+
+## Model Evaluation
+
+There are many ways to evaluate our estimated model including model fit,
+model comparisons, and reliability. For a complete listing of available
+options, see
+[`?model_evaluation`](https://measr.info/dev/reference/model_evaluation.md).
+To illustrate how these functions work, we’ll look at the classification
+accuracy and consistency metrics described by Johnson & Sinharay
+([2018](#ref-johnson2018)).
+
+We start by adding the reliability information to our estimated model
+using
+[`add_reliability()`](https://measr.info/dev/reference/model_evaluation.md).
+We can then extract that information, again using
+[`measr_extract()`](https://measr.info/dev/reference/measr_extract.md).
+For these indices, numbers close to 1 indicate a high level of
+classification accuracy or consistency. These numbers are not amazing,
+but overall look pretty good. For guidance on cutoff values for “good,”
+“fair,” etc. reliability, see Johnson & Sinharay
+([2018](#ref-johnson2018)).
+
+``` r
+ecpe_lcdm <- add_reliability(ecpe_lcdm)
+measr_extract(ecpe_lcdm, "classification_reliability")
+#> # A tibble: 3 × 3
+#>   attribute       accuracy consistency
+#>   <chr>              <dbl>       <dbl>
+#> 1 morphosyntactic    0.896       0.832
+#> 2 cohesive           0.858       0.810
+#> 3 lexical            0.918       0.858
+```
+
+## References
+
+Henson, R., & Templin, J. (2019). Loglinear cognitive diagnostic model
+(LCDM). In M. von Davier & Y.-S. Lee (Eds.), *Handbook of Diagnostic
+Classification Models* (pp. 171–185). Springer International Publishing.
+<https://doi.org/10.1007/978-3-030-05584-4_8>
+
+Johnson, M. S., & Sinharay, S. (2018). Measures of agreement to assess
+attribute-level classification accuracy and consistency for cognitive
+diagnostic assessments. *Journal of Educational Measurement*, *55*(4),
+635–664. <https://doi.org/10.1111/jedm.12196>
+
+Templin, J., & Hoffman, L. (2013). Obtaining diagnostic classification
+model estimates using Mplus. *Educational Measurement: Issues and
+Practice*, *32*(2), 37–50. <https://doi.org/10.1111/emip.12010>

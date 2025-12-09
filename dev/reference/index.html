@@ -53,14 +53,12 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
       <h3 id="specification">Specification<a class="anchor" aria-label="anchor" href="#specification"></a></h3>
       <div class="section-desc"><p>Specify a diagnostic model, including measurement model, structural model, and prior distributions.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -71,19 +69,22 @@
 
         </dt>
         <dd>Specify a diagnostic classification model (from dcmstan)</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="https://dcmstan.r-dcm.org/reference/get_parameters.html" class="external-link">get_parameters()</a></code>
 
         </dt>
         <dd>Identify parameters included in a diagnostic classification model (from dcmstan)</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="https://dcmstan.r-dcm.org/reference/prior.html" class="external-link">prior()</a></code> <code><a href="https://dcmstan.r-dcm.org/reference/prior.html" class="external-link">prior_string()</a></code>
 
         </dt>
         <dd>Prior definitions for diagnostic classification models (from dcmstan)</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="https://dcmstan.r-dcm.org/reference/default_dcm_priors.html" class="external-link">default_dcm_priors()</a></code>
 
@@ -94,8 +95,7 @@
       <h3 id="estimation">Estimation<a class="anchor" aria-label="anchor" href="#estimation"></a></h3>
       <div class="section-desc"><p>Estimate the model using Markov chain Monte Carlo or Stan’s optimizer.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -111,14 +111,12 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
       <h3 id="reliability">Reliability<a class="anchor" aria-label="anchor" href="#reliability"></a></h3>
       <div class="section-desc"><p>Estimate the pattern- or attribute-level classification accuracy and consistency.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -129,7 +127,8 @@
 
         </dt>
         <dd>Estimate the reliability of a diagnostic classification model</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="cdi.html">cdi()</a></code>
 
@@ -140,8 +139,7 @@
       <h3 id="model-fit">Model fit<a class="anchor" aria-label="anchor" href="#model-fit"></a></h3>
       <div class="section-desc"><p>Evaluate the fit of the estimated model to the observed data.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -152,7 +150,8 @@
 
         </dt>
         <dd>Estimate the M<sub>2</sub> fit statistic for diagnostic classification models</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="fit_ppmc.html">fit_ppmc()</a></code>
 
@@ -163,8 +162,7 @@
       <h3 id="model-assumptions">Model assumptions<a class="anchor" aria-label="anchor" href="#model-assumptions"></a></h3>
       <div class="section-desc"><p>Evaluate assumptions of the estimated model</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -175,7 +173,8 @@
 
         </dt>
         <dd>Q-matrix validation</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="yens_q3.html">yens_q3()</a></code>
 
@@ -186,8 +185,7 @@
       <h3 id="model-comparisons">Model comparisons<a class="anchor" aria-label="anchor" href="#model-comparisons"></a></h3>
       <div class="section-desc"><p>Assess the relative fit of two competing models.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -198,25 +196,29 @@
 
         </dt>
         <dd>Maximum likelihood based information criteria</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="loo-waic.html">loo(<i>&lt;measr::measrdcm&gt;</i>)</a></code> <code><a href="loo-waic.html">waic(<i>&lt;measr::measrdcm&gt;</i>)</a></code> <code><a href="loo-waic.html">loo_compare(<i>&lt;measr::measrdcm&gt;</i>)</a></code>
 
         </dt>
         <dd>Relative fit for Bayesian models</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="loglik_array.html">loglik_array()</a></code>
 
         </dt>
         <dd>Extract the log-likelihood of an estimated model</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="log_mll.html">log_mll()</a></code>
 
         </dt>
         <dd>Log marginal likelihood calculation</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="bayes_factor.html">bayes_factor()</a></code>
 
@@ -227,8 +229,7 @@
       <h3 id="add-evaluations-to-model-objects">Add evaluations to model objects<a class="anchor" aria-label="anchor" href="#add-evaluations-to-model-objects"></a></h3>
       <div class="section-desc"><p>Add reliability, model fit, and model comparison information to an estimated model object.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -244,8 +245,7 @@
 
       <div class="section-desc"><p>View and use an estimated model.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -256,7 +256,8 @@
 
         </dt>
         <dd>Extract components of a <code>measrfit</code> object</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="score.html">score()</a></code>
 
@@ -272,7 +273,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

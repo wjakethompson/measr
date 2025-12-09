@@ -217,7 +217,7 @@ Plot code
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html" class="external-link">expand_limits</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Item *p*-value"</span>, y <span class="op">=</span> <span class="st">"Measured attributes"</span><span class="op">)</span></span></code></pre></div>
-</details><p><img src="ecpe_files/figure-html/pvalue-plot-1.png" alt="Scatter plot showing item p-values on the x-axis and attribute combinations from the Q-matrix on the y-axis." width="90%" style="display: block; margin: auto;"></p>
+</details><p><img src="ecpe_files/figure-html/pvalue-plot-1.png" class="r-plt" alt="Scatter plot showing item p-values on the x-axis and attribute combinations from the Q-matrix on the y-axis." width="90%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="dcm-estimation">DCM Estimation<a class="anchor" aria-label="anchor" href="#dcm-estimation"></a>
@@ -328,7 +328,7 @@ Plot code
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">class</span>, y <span class="op">=</span> <span class="va">prob</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">msr_colors</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Class"</span>, y <span class="op">=</span> <span class="st">"Base rate"</span><span class="op">)</span></span></code></pre></div>
-</details><p><img src="ecpe_files/figure-html/strc-plot-1.png" alt="Bar graph showing the estimated proportion of respondents with each attribute profile." width="90%" style="display: block; margin: auto;"></p>
+</details><p><img src="ecpe_files/figure-html/strc-plot-1.png" class="r-plt" alt="Bar graph showing the estimated proportion of respondents with each attribute profile." width="90%" style="display: block; margin: auto;"></p>
 <p>We can also collapse across classes to calculate the base rate of
 proficiency for each individual attribute. Overall, the model estimates
 that 38% of respondents are proficient on morphosyntactic rules, 54% of
@@ -410,7 +410,7 @@ Plot code
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"measr"</span>, y <span class="op">=</span> <span class="st">"Templin &amp; Hoffman (2013)"</span>,</span>
 <span>       color <span class="op">=</span> <span class="st">"Parameter Type"</span>, shape <span class="op">=</span> <span class="st">"Parameter Type"</span><span class="op">)</span></span></code></pre></div>
-</details><p><img src="ecpe_files/figure-html/lcdm-param-compare-1.png" alt="Figure shows a strong correlation between item parameters, with only a few discrepancies off of the line of perfect agreement." width="90%" style="display: block; margin: auto;"></p>
+</details><p><img src="ecpe_files/figure-html/lcdm-param-compare-1.png" class="r-plt" alt="Figure shows a strong correlation between item parameters, with only a few discrepancies off of the line of perfect agreement." width="90%" style="display: block; margin: auto;"></p>
 <p>There are some parameters that deviate from the line of perfect
 agreement, but these are expected. For example, take item E7, which
 measures morphosyntactic and lexical rules. Both measr and <span class="citation">Templin &amp; Hoffman (<a href="#ref-templin-emip-2013">2013</a>)</span> report values of
@@ -715,7 +715,7 @@ Plot code
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Raw score"</span>, y <span class="op">=</span> <span class="st">"Respondents"</span>,</span>
 <span>       color_ramp <span class="op">=</span> <span class="st">"Credible Interval"</span>, fill <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>override.aes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</details><p><img src="ecpe_files/figure-html/rawscore-dist-1.png" alt="Line plot showing the observed number of respondents at each raw score point, superimposed over an interval showing the expected number of respondents at each score point according to the estimated model." width="90%" style="display: block; margin: auto;"></p>
+</details><p><img src="ecpe_files/figure-html/rawscore-dist-1.png" class="r-plt" alt="Line plot showing the observed number of respondents at each raw score point, superimposed over an interval showing the expected number of respondents at each score point according to the estimated model." width="90%" style="display: block; margin: auto;"></p>
 <p>We can quantify how different the observed raw score distribution is
 from the replicated data sets by calculating a χ<sup>2</sup>-like
 statistic. To do this, we first calculate the expected number of
@@ -756,7 +756,7 @@ Plot code
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="cn">NULL</span>, x <span class="op">=</span> <span class="st">"&amp;chi;^2^&lt;sub&gt;rep&lt;/sub&gt;"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.ticks.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</details><p><img src="ecpe_files/figure-html/chisq-dist-1.png" alt="Dot plot showing the distribution of chi-square values from the replicated data sets." width="90%" style="display: block; margin: auto;"></p>
+</details><p><img src="ecpe_files/figure-html/chisq-dist-1.png" class="r-plt" alt="Dot plot showing the distribution of chi-square values from the replicated data sets." width="90%" style="display: block; margin: auto;"></p>
 <p>In summary, both the M<sub>2</sub> and raw score PPMC indicate poor
 fit of our estimated LCDM to the observed data. This is not unexpected,
 given that some classes are very small. Recall from our discussion of
@@ -1076,7 +1076,7 @@ Statistics</em>, <em>46</em>(1), 58–84. <a href="https://doi.org/10.3102/10769
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
