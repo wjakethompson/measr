@@ -50,8 +50,8 @@ model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.00013 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.3 seconds.
+#> Chain 1: Gradient evaluation took 0.000131 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.31 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -68,15 +68,15 @@ model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
 #> Chain 1: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 4000 / 4000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 7.398 seconds (Warm-up)
-#> Chain 1:                7.26 seconds (Sampling)
-#> Chain 1:                14.658 seconds (Total)
+#> Chain 1:  Elapsed Time: 7.458 seconds (Warm-up)
+#> Chain 1:                7.335 seconds (Sampling)
+#> Chain 1:                14.793 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.000125 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.25 seconds.
+#> Chain 2: Gradient evaluation took 0.000135 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.35 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -93,9 +93,9 @@ model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
 #> Chain 2: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 4000 / 4000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 7.556 seconds (Warm-up)
-#> Chain 2:                9.011 seconds (Sampling)
-#> Chain 2:                16.567 seconds (Total)
+#> Chain 2:  Elapsed Time: 7.622 seconds (Warm-up)
+#> Chain 2:                9.091 seconds (Sampling)
+#> Chain 2:                16.713 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -118,15 +118,15 @@ model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
 #> Chain 3: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 4000 / 4000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 7.42 seconds (Warm-up)
-#> Chain 3:                6.114 seconds (Sampling)
-#> Chain 3:                13.534 seconds (Total)
+#> Chain 3:  Elapsed Time: 7.481 seconds (Warm-up)
+#> Chain 3:                6.166 seconds (Sampling)
+#> Chain 3:                13.647 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 0.00013 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 1.3 seconds.
+#> Chain 4: Gradient evaluation took 0.000125 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 1.25 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -143,9 +143,9 @@ model <- dcm_estimate(dcm_spec = model_spec, data = dcmdata::mdm_data,
 #> Chain 4: Iteration: 3600 / 4000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 4000 / 4000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 7.704 seconds (Warm-up)
-#> Chain 4:                7.127 seconds (Sampling)
-#> Chain 4:                14.831 seconds (Total)
+#> Chain 4:  Elapsed Time: 7.752 seconds (Warm-up)
+#> Chain 4:                7.204 seconds (Sampling)
+#> Chain 4:                14.956 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 2 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
